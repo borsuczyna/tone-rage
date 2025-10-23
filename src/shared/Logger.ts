@@ -14,15 +14,16 @@ export default class Logger {
     constructor(parentName: string) {
         this.parentName = parentName;
     }
-    public info(message: string) {
-        console.log(`\x1b[32m[INFO]\x1b[0m \x1b[36m[${this.parentName}]\x1b[0m ${message}`);
+    
+    public info(...args: any[]) {
+        console.log(`\x1b[32m[INFO]\x1b[0m \x1b[36m[${this.parentName}]\x1b[0m`, ...args);
     }
 
-    public error(message: string) {
-        console.error(`\x1b[31m[ERROR]\x1b[0m \x1b[36m[${this.parentName}]\x1b[0m ${message}`);
+    public error(...args: any[]) {
+        console.error(`\x1b[31m[ERROR]\x1b[0m \x1b[36m[${this.parentName}]\x1b[0m`, ...args);
     }
 
-    public debug(message: string) {
-        console.debug(`\x1b[35m[DEBUG]\x1b[0m \x1b[36m[${this.parentName}]\x1b[0m ${message}`);
+    public debug(...args: any[]) {
+        console.debug(`\x1b[35m[DEBUG]\x1b[0m \x1b[36m[${this.parentName}]\x1b[0m`, ...args);
     }
 }

@@ -1,13 +1,10 @@
 import Database from "./Database/Database";
-import UserService from "./Services/UserService";
+import VehicleService from "./Services/VehicleService";
+import Tests from "./Tests/Tests";
 
 (async () => {
     await Database.init();
+    await VehicleService.init();
 
-    async function createUserTest() {
-        const userId = await UserService.createUser("johndoe", "johndoe@example.com", "password123");
-        console.log("Create user result:", userId);
-    }
-
-    await createUserTest();
+    Tests.getPositionCommandTest();
 })();
