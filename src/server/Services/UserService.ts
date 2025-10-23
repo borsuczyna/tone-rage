@@ -7,6 +7,11 @@ interface CreateUserResult {
     error?: string;
 }
 
+interface LoginResult {
+    user: UserEntity | null;
+    error?: string;
+}
+
 export default class UserService {
     public static async createUser(username: string, email: string, password: string): Promise<CreateUserResult> {
         let existingUser = await UserService.getUserByUsernameOrEmail(username);
@@ -24,8 +29,9 @@ export default class UserService {
         const newUser = await UserEntity.create(username, email, password);
         const userId = await Database.InsertEntity('users', newUser);
         if (!userId) {
-            return { userId: null, error: "Failed to create user" };
+            return { userId: null, error: "Failed to create user, contact support" };
         }
+
         return { userId };
     }
 
@@ -48,11 +54,17 @@ export default class UserService {
         );
     }
 
-    public static async loginUser(identifier: string, password: string): Promise<UserEntity | null> {
+    public static async loginUser(identifier: string, password: string): Promise<LoginResult> {
         const passwordHash = await PasswordHash.hashPassword(password);
-        return await Database.First<UserEntity>(
+        const user = await Database.First<UserEntity>(
             "SELECT * FROM users WHERE (username = ? OR email = ?) AND passwordHash = ?",
             [identifier, identifier, passwordHash]
         );
+
+        if (!user) {
+            return { user: null, error: "Invalid username or password" };
+        }
+
+        return { user };
     }
 }
