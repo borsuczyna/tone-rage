@@ -1,9 +1,12 @@
+import { Config } from "@/Config";
 import Database from "@/Database/Database";
 import { VehicleEntity } from "@/Database/Entities/VehicleEntity";
+import PrivateVehicle from "@/Entities/PrivateVehicle";
 import Logger from "@shared/Logger";
+import TimerService from "@shared/Services/TimerService";
 
 export default class VehicleService {
-    private static vehicles: VehicleMp[] = [];
+    private static vehicles: PrivateVehicle[] = [];
     private static logger: Logger = Logger.getLogger(VehicleService);
 
     private static destroyAllVehicles() {
@@ -14,37 +17,64 @@ export default class VehicleService {
 
     private static loadVehicle(data: VehicleEntity) {
         try {
-            let model = mp.joaat(data.model);
-            let position = data.positionVector;
-            let vehicle = mp.vehicles.new(model, position, {
-                color: data.colorArray
-            });
-
-            vehicle.rotation = data.rotationVector;
-            
-            this.vehicles.push(vehicle);
+            let privateVehicle = new PrivateVehicle(data);
+            this.vehicles.push(privateVehicle);
         } catch (error) {
             this.logger.error(`Failed to load vehicle`, error);
         }
     }
 
-    private static saveVehicle(data: VehicleEntity) {
-        let query = `UPDATE vehicles SET 
-            model = ?, 
-            position = ?,
-            rotation = ?, 
-            color = ? 
-            WHERE uid = ?`;
+    private static buildSaveQuery(data: PrivateVehicle): { query: string; params: any[] } {
+        const query = `
+            UPDATE vehicles SET
+                model = ?,
+                position = ?,
+                rotation = ?,
+                color = ?
+            WHERE uid = ?
+        `;
 
-        let params = [
-            data.model,
-            data.position,
-            data.rotation,
-            data.color,
-            data.uid
-        ];
+        const model = data.model;
+        const position = `${data.vehicle.position.x},${data.vehicle.position.y},${data.vehicle.position.z}`;
+        const rotation = `${data.vehicle.rotation.x},${data.vehicle.rotation.y},${data.vehicle.rotation.z}`;
+        const color = data.color.join(',');
 
-        Database.Execute(query, params);
+        const params = [model, position, rotation, color, data.uid];
+        return { query, params };
+    }
+
+    public static getVehicleByUid(uid: number): PrivateVehicle | undefined {
+        return this.vehicles.find(v => v.uid === uid);
+    }
+
+    public static getVehicleByEntity(vehicle: VehicleMp): PrivateVehicle | undefined {
+        return this.vehicles.find(v => v.vehicle === vehicle);
+    }
+
+    private static async saveVehicle(data: PrivateVehicle) {
+        const { query, params } = this.buildSaveQuery(data);
+        await Database.Execute(query, params);
+    }
+
+    private static async saveVehicles() {
+        const batchSize = 100;
+
+        for (let i = 0; i < this.vehicles.length; i += batchSize) {
+            const batch = this.vehicles.slice(i, i + batchSize);
+            const queries: string[] = [];
+            const allParams: any[] = [];
+
+            for (const vehicle of batch) {
+                const { query, params } = this.buildSaveQuery(vehicle);
+                queries.push(query.trim());
+                allParams.push(...params);
+            }
+
+            const finalQuery = queries.join('; '); // multiple UPDATEs in one query
+            await Database.Execute(finalQuery, allParams);
+        }
+
+        this.logger.info(`Saved ${this.vehicles.length} vehicles to database`);
     }
 
     public static async reloadVehiclesFromDatabase() {
@@ -65,6 +95,7 @@ export default class VehicleService {
     public static async init() {
         try {
             await this.reloadVehiclesFromDatabase();
+            TimerService.setTimer(this.saveVehicles.bind(this), Config.SaveInterval.Vehicles, 0); // Save every 60 seconds
             this.logger.info('VehicleService initialized successfully');
         } catch (error) {
             this.logger.error(`Failed to initialize VehicleService: ${error}`);

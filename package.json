@@ -5,7 +5,11 @@
 		"format": "prettier --write {src,scripts}/**/*.ts",
 		"build:production": "rollup -c ./scripts/rollup.config.js --environment NODE_ENV:production",
 		"build": "rollup -c ./scripts/rollup.config.js",
-		"watch": "rollup -w -c ./scripts/rollup.config.js"
+		"watch": "rollup -w -c ./scripts/rollup.config.js",
+		"dev": "nodemon",
+		"run": "npm run build && npm run server",
+		"dev:powershell": "powershell -ExecutionPolicy Bypass -File ./auto-restart.ps1",
+		"server": "cd dist && ragemp-server.exe"
 	},
 	"repository": {
 		"type": "git",
@@ -27,7 +31,9 @@
 		"@swc/helpers": "^0.3.2",
 		"@types/node": "^17.0.45",
 		"builtin-modules": "^3.2.0",
+		"concurrently": "^9.2.1",
 		"fs-jetpack": "^4.2.0",
+		"nodemon": "^3.1.10",
 		"prettier": "^2.5.0",
 		"rollup": "^2.60.1",
 		"rollup-plugin-swc3": "^0.1.4",
