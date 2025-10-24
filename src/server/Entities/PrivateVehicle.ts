@@ -3,9 +3,13 @@ import { VehicleEntity } from "@/Database/Entities/VehicleEntity";
 export default class PrivateVehicle {
     uid: number;
     model: string;
-    color: [Array2d, Array2d];
+    color: [RGB, RGB];
     vehicle: VehicleMp;
-
+    
+    get colorString(): string {
+        return this.color.map(c => c.join(',')).join(',');
+    }
+    
     constructor(data: VehicleEntity) {
         this.uid = data.uid;
         this.model = data.model;
@@ -18,6 +22,11 @@ export default class PrivateVehicle {
         });
 
         this.vehicle.rotation = data.rotationVector;
+    }
+
+    setColor(color: [RGB, RGB]) {
+        this.color = color;
+        this.vehicle.setColorRGB(...color[0], ...color[1]);
     }
 
     destroy() {

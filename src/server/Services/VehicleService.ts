@@ -37,18 +37,10 @@ export default class VehicleService {
         const model = data.model;
         const position = `${data.vehicle.position.x},${data.vehicle.position.y},${data.vehicle.position.z}`;
         const rotation = `${data.vehicle.rotation.x},${data.vehicle.rotation.y},${data.vehicle.rotation.z}`;
-        const color = data.color.join(',');
+        const color = data.colorString;
 
         const params = [model, position, rotation, color, data.uid];
         return { query, params };
-    }
-
-    public static getVehicleByUid(uid: number): PrivateVehicle | undefined {
-        return this.vehicles.find(v => v.uid === uid);
-    }
-
-    public static getVehicleByEntity(vehicle: VehicleMp): PrivateVehicle | undefined {
-        return this.vehicles.find(v => v.vehicle === vehicle);
     }
 
     private static async saveVehicle(data: PrivateVehicle) {
@@ -75,6 +67,14 @@ export default class VehicleService {
         }
 
         this.logger.info(`Saved ${this.vehicles.length} vehicles to database`);
+    }
+
+    public static getVehicleByUid(uid: number): PrivateVehicle | undefined {
+        return this.vehicles.find(v => v.uid === uid);
+    }
+
+    public static getVehicleByEntity(vehicle: VehicleMp): PrivateVehicle | undefined {
+        return this.vehicles.find(v => v.vehicle === vehicle);
     }
 
     public static async reloadVehiclesFromDatabase() {
