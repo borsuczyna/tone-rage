@@ -1,4 +1,3 @@
-import process from "process";
 import VehicleService from "./VehicleService";
 import Logger from "@shared/Logger";
 
@@ -15,6 +14,10 @@ export default class ShutdownService {
     }
 
     public static async init() {
-        process.on('exit', this.onShutdownDetected.bind(this));
+        mp.events.add('serverShutdown', async () => {
+            mp.events.delayShutdown = true;
+            await this.onShutdownDetected();
+            mp.events.delayShutdown = false;
+        });
     }
 }

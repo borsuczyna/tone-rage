@@ -46,8 +46,7 @@
 		"bcryptjs": "^3.0.2",
 		"colorette": "^2.0.16",
 		"dotenv": "^16.0.0",
-		"mysql2": "^3.15.3",
-		"process": "^0.11.10"
+		"mysql2": "^3.15.3"
 	},
 	"prettier": {
 		"$schema": "http://json.schemastore.org/prettierrc",
