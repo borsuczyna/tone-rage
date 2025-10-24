@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styles from './CircleInterface.module.css'
 
-export default function CircleInterface(): React.ReactNode {
+export default function CircleInterface() {
     const [angle, setAngle] = useState(45);
 
     return (

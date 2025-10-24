@@ -32,6 +32,16 @@ export default class InterfaceService {
                 this.toggleInterfaceVisibility(args[1]);
                 mp.gui.chat.push(`Toggled visibility of interface: ${args[1]}`);
                 return;
+            } else if (commandName === 'test') {
+                if (!args[1]) {
+                    mp.gui.chat.push('Usage: /test <value>');
+                    return;
+                }
+
+                const value = parseInt(args[1], 10);
+                this.callInterfaceEvent('testEvent', value);
+                mp.gui.chat.push(`Sent testEvent with value: ${value}`);
+                return;
             }
         });
     }

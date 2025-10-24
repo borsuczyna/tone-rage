@@ -11,6 +11,11 @@ export function mountRageInterface() {
 }
 
 export function mountRageEvents() {
+    if (typeof mp === "undefined" || !mp?.events) {
+        console.warn("mp.events is not available");
+        return;
+    }
+        
     mp.events.add('setInterfaceVisible', (name: string, visible: boolean) => {
         setInterfaceVisible(name, visible);
     });

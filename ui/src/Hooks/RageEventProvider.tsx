@@ -1,21 +1,32 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-/**
- * Hook that registers a RAGE:MP client event and cleans it up automatically.
- * @param eventName The name of the event to listen for.
- * @param callback The callback to run when the event fires.
- */
 export function useRageEvent(eventName: string, callback: (...args: any[]) => void) {
+    const savedCallback = useRef(callback);
+    const mounted = useRef(true);
+
+    // keep callback updated
+    useEffect(() => {
+        savedCallback.current = callback;
+    }, [callback]);
+
     useEffect(() => {
         if (typeof mp === "undefined" || !mp?.events) {
             console.warn("mp.events is not available — are you running inside RAGE:MP client?");
             return;
         }
 
-        mp.events.add(eventName, callback);
+        mounted.current = true;
+
+        const handler = (...args: any[]) => {
+            if (!mounted.current) return; // ignore if unmounted
+            savedCallback.current(...args);
+        };
+
+        mp.events.add(eventName, handler);
 
         return () => {
-            mp.events.remove(eventName, callback);
+            mounted.current = false; // mark unmounted
+            mp.events.remove(eventName, handler);
         };
-    }, [eventName, callback]);
+    }, [eventName]);
 }
