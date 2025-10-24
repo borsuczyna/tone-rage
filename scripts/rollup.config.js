@@ -10,6 +10,7 @@ import commonjsPlugin from '@rollup/plugin-commonjs';
 import tsPaths from 'rollup-plugin-tsconfig-paths';
 import typescriptPlugin from 'rollup-plugin-typescript2';
 import { terser } from 'rollup-plugin-terser';
+import { execSync } from 'child_process';
 
 config({
 	path: path.resolve('.env')
@@ -114,6 +115,38 @@ function copyFiles() {
 cleanUp();
 copyFiles();
 
+/**
+ * Custom plugin to build UI after server compilation
+ */
+function buildUIPlugin(isDevelopment) {
+	return {
+		name: 'build-ui',
+		writeBundle() {
+			try {
+				successMessage('Building UI...', 'UI Build');
+				const buildCommand = isDevelopment ? 'npm run build-fast' : 'npm run build';
+				execSync(buildCommand, { 
+					cwd: path.resolve('./ui'),
+					stdio: 'inherit'
+				});
+				successMessage('UI build completed successfully', 'UI Build');
+			} catch (error) {
+				errorMessage(`UI build failed: ${error.message}`, 'UI Build');
+				throw error;
+			}
+		}
+	};
+}
+
+// Moves files from ui/dist to dist/client_packages/ui
+function moveUIBuild() {
+	const source = path.resolve('./ui/dist');
+	const destination = path.resolve('./dist/client_packages/ui');
+
+	jetpack.copy(source, destination, { overwrite: true });
+	successMessage(`Moved UI build files from ${source} to ${destination}`, 'UI Build');
+}
+
 // use terser only if it is the typescript compiler in use
 const terserMinify =
 	isProduction && !useSWC
@@ -134,7 +167,15 @@ const generateConfig = (options = {}) => {
 		: resolvePath([buildOutput, 'client_packages', 'index.js']);
 
 	const serverPlugins = [];
+
+	const isBuildUI = process.env.BUILD_UI === 'true';
 	const plugins = [terserMinify];
+
+	if (isBuildUI) {
+		plugins.push(buildUIPlugin(!isProduction));
+	}
+
+	plugins.push(moveUIBuild());
 
 	const external = [...builtinModules, ...localInstalledPackages];
 	const tsConfigPath = resolvePath([sourcePath, isServer ? 'server' : 'client', 'tsconfig.json']);

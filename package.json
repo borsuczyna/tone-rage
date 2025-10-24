@@ -4,11 +4,12 @@
 	"scripts": {
 		"format": "prettier --write {src,scripts}/**/*.ts",
 		"build:production": "rollup -c ./scripts/rollup.config.js --environment NODE_ENV:production",
+		"build:ui": "rollup -c ./scripts/rollup.config.js --environment BUILD_UI:true",
 		"build": "rollup -c ./scripts/rollup.config.js",
 		"watch": "rollup -w -c ./scripts/rollup.config.js",
 		"dev": "nodemon",
 		"run": "npm run build && npm run server",
-		"dev:powershell": "powershell -ExecutionPolicy Bypass -File ./auto-restart.ps1",
+		"run:ui": "npm run build:ui && npm run server",
 		"server": "cd dist && ragemp-server.exe"
 	},
 	"repository": {
