@@ -118,18 +118,23 @@ copyFiles();
 /**
  * Custom plugin to build UI after server compilation
  */
-function buildUIPlugin(isDevelopment) {
+function buildUIPlugin(isBuildUI, isDevelopment) {
 	return {
 		name: 'build-ui',
 		writeBundle() {
 			try {
-				successMessage('Building UI...', 'UI Build');
-				const buildCommand = isDevelopment ? 'npm run build-fast' : 'npm run build';
-				execSync(buildCommand, { 
-					cwd: path.resolve('./ui'),
-					stdio: 'inherit'
-				});
-				successMessage('UI build completed successfully', 'UI Build');
+				if (isBuildUI) {
+					successMessage('Building UI...', 'UI Build');
+					const buildCommand = isDevelopment ? 'npm run build-fast' : 'npm run build';
+					execSync(buildCommand, { 
+						cwd: path.resolve('./ui'),
+						stdio: 'inherit'
+					});
+					successMessage('UI build completed successfully', 'UI Build');
+				}
+				
+				// Move UI files after build completes
+				moveUIBuild();
 			} catch (error) {
 				errorMessage(`UI build failed: ${error.message}`, 'UI Build');
 				throw error;
@@ -171,11 +176,10 @@ const generateConfig = (options = {}) => {
 	const isBuildUI = process.env.BUILD_UI === 'true';
 	const plugins = [terserMinify];
 
-	if (isBuildUI) {
-		plugins.push(buildUIPlugin(!isProduction));
+	// Only add UI build plugin to server build to avoid running it twice
+	if (!isServer) {
+		plugins.push(buildUIPlugin(isBuildUI, !isProduction));
 	}
-
-	plugins.push(moveUIBuild());
 
 	const external = [...builtinModules, ...localInstalledPackages];
 	const tsConfigPath = resolvePath([sourcePath, isServer ? 'server' : 'client', 'tsconfig.json']);
