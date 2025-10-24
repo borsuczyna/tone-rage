@@ -43,12 +43,12 @@ export default class VehicleService {
         return { query, params };
     }
 
-    private static async saveVehicle(data: PrivateVehicle) {
+    public static async saveVehicle(data: PrivateVehicle) {
         const { query, params } = this.buildSaveQuery(data);
         await Database.Execute(query, params);
     }
 
-    private static async saveVehicles() {
+    public static async saveVehicles() {
         const batchSize = 100;
 
         for (let i = 0; i < this.vehicles.length; i += batchSize) {
