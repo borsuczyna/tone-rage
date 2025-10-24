@@ -2,7 +2,7 @@ import VehicleService from "./VehicleService";
 import Logger from "@shared/Logger";
 
 export default class ShutdownService {
-    private static logger = Logger.getLogger(ShutdownService);
+    private static logger = Logger.getLogger(ShutdownService, true);
 
     public static async shutdown() {
         await VehicleService.saveVehicles();

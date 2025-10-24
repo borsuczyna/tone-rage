@@ -7,7 +7,7 @@ import TimerService from "@shared/Services/TimerService";
 
 export default class VehicleService {
     private static vehicles: PrivateVehicle[] = [];
-    private static logger: Logger = Logger.getLogger(VehicleService);
+    private static logger: Logger = Logger.getLogger(VehicleService, true);
 
     private static destroyAllVehicles() {
         for (let vehicle of this.vehicles) {
