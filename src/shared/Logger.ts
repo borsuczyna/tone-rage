@@ -26,4 +26,8 @@ export default class Logger {
     public debug(...args: any[]) {
         console.debug(`\x1b[35m[DEBUG]\x1b[0m \x1b[36m[${this.parentName}]\x1b[0m`, ...args);
     }
+
+    public warn(...args: any[]) {
+        console.warn(`\x1b[33m[WARN]\x1b[0m \x1b[36m[${this.parentName}]\x1b[0m`, ...args);
+    }
 }

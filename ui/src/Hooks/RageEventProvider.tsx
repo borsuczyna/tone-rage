@@ -11,7 +11,7 @@ export function useRageEvent(eventName: string, callback: (...args: any[]) => vo
 
     useEffect(() => {
         if (typeof mp === "undefined" || !mp?.events) {
-            console.warn("mp.events is not available — are you running inside RAGE:MP client?");
+            console.warn("mp.events is not available");
             return;
         }
 

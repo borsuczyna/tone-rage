@@ -18,7 +18,7 @@ export default class InterfaceService {
         this.setupCursorToggle();
     }
 
-    public static async initDebugCommands() {
+    public static async initDebug() {
         mp.events.add('playerCommand', (command: string) => {
             const args = command.split(' ');
             const commandName = args[0].toLowerCase();
