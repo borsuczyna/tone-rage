@@ -1,0 +1,23 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    background: url("./debug-bg.png") center center / 100% auto no-repeat;
+    background-color: #000;
+}
+
+@media (orientation: portrait) {
+    body {
+        background-size: 100% auto;
+        background-position: center center;
+    }
+}
+
+@media (orientation: landscape) {
+    body {
+        background-size: 100% auto;
+        background-position: center center;
+    }
+}

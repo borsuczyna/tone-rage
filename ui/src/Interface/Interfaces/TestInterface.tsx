@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import styles from './TestInterface.module.css'
+import styles from './styles/TestInterface.module.css'
 import { useRageEvent } from '../../Hooks/RageEventProvider';
 import { fetchClientData, fetchServerData } from '../../Hooks/Fetch';
 

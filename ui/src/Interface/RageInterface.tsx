@@ -1,15 +1,9 @@
-import React from "react";
-import { InterfaceVisibilityProvider, useInterfaceVisibility } from "../Hooks/InterfaceVisibilityProvider";
+import { useInterfaceVisibility } from "../Hooks/InterfaceVisibilityProvider";
+import Providers from "../Hooks/Providers";
 import TestInterface from "./Interfaces/TestInterface"
 import CircleInterface from "./Interfaces/CircleInterface";
-
-function Providers({ children }: { children: React.ReactNode }) {
-    return (
-        <InterfaceVisibilityProvider>
-            {children}
-        </InterfaceVisibilityProvider>
-    )
-}
+import NotificationsInterface from "./Interfaces/NotificationsInterface";
+import NotificationTester from "./Interfaces/NotificationTester";
 
 function Interfaces() {
     const { visibleInterfaces } = useInterfaceVisibility();
@@ -22,6 +16,8 @@ function Interfaces() {
             {/* Define here all the interface elements */}
             {isInterfaceVisible("TestInterface") && <TestInterface key="TestInterface" />}
             {isInterfaceVisible("CircleInterface") && <CircleInterface key="CircleInterface" />}
+            {isInterfaceVisible("NotificationsInterface") && <NotificationsInterface key="NotificationsInterface" />}
+            {isInterfaceVisible("NotificationTester") && <NotificationTester key="NotificationTester" />}
         </>
     )
 }

@@ -7,12 +7,13 @@ let externalIsInterfaceVisible : ((name: string) => boolean) | null = null;
 interface InterfaceVisibilityHook {
     visibleInterfaces: InterfaceMap;
     setInterfaceVisible: (name: string, visible: boolean) => void;
+    isInterfaceVisible: (name: string) => boolean;
 }
 
 const InterfaceVisibilityContext = createContext<InterfaceVisibilityHook | undefined>(undefined);
 
 export const InterfaceVisibilityProvider = ({ children }: { children: React.ReactNode }) => {
-    const [visibleInterfaces, setVisibleInterfaces] = useState<InterfaceMap>({});
+    const [visibleInterfaces, setVisibleInterfaces] = useState<InterfaceMap>({'NotificationsInterface': true, 'NotificationTester': true});
 
     const setInterfaceVisible = (name: string, visible: boolean) => {
         setVisibleInterfaces((prev) => ({ ...prev, [name]: visible }));
@@ -26,7 +27,7 @@ export const InterfaceVisibilityProvider = ({ children }: { children: React.Reac
     externalIsInterfaceVisible = isInterfaceVisible;
 
     return (
-        <InterfaceVisibilityContext.Provider value={{ visibleInterfaces, setInterfaceVisible }}>
+        <InterfaceVisibilityContext.Provider value={{ visibleInterfaces, setInterfaceVisible, isInterfaceVisible }}>
             {children}
         </InterfaceVisibilityContext.Provider>
     );

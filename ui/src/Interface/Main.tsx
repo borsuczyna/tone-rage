@@ -1,6 +1,16 @@
 import { createRoot } from "react-dom/client";
 import RageInterface from "./RageInterface";
 import { isInterfaceVisible, setInterfaceVisible } from "../Hooks/InterfaceVisibilityProvider";
+import './Interfaces/Styles/Main.css';
+
+export function isInBrowser() {
+    return typeof mp === "undefined";
+}
+
+// load debug background only when running in a regular browser environment
+if (isInBrowser()) {
+    void import('./Interfaces/Styles/DebugBg.css');
+}
 
 export function mountRageInterface() {
     const root = document.getElementById('root');
