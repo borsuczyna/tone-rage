@@ -1,6 +1,5 @@
 import { useNotifications } from 'src/Hooks/NotificationsProvider';
 import { NotificationType } from '@shared/Enums/NotificationType';
-import { dynamicIconImports } from 'lucide-react/dynamic';
 
 export default function NotificationTester() {
     const { addNotification } = useNotifications();
@@ -14,9 +13,7 @@ export default function NotificationTester() {
         };
 
         const { title, message } = messages[type];
-        const randomIconNames = Object.keys(dynamicIconImports);
-        const randomIcon = randomIconNames[Math.floor(Math.random() * randomIconNames.length)];
-        addNotification(title, message, type, randomIcon);
+        addNotification(title, message, type);
     };
 
     return (

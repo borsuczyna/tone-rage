@@ -55,6 +55,7 @@ export function NotificationsProvider({ children }: NotificationsProviderProps) 
         icon?: string,
         iconFillOpacity?: number
     ) => {
+        console.log('Adding notification:', { title, message, type, icon, iconFillOpacity });
         const newNotification: NotificationData = {
             title,
             message,
@@ -140,10 +141,10 @@ export function NotificationsProvider({ children }: NotificationsProviderProps) 
     );
 }
 
-export const addNotification = (title: string, message: string, type: NotificationType = NotificationType.Info) => {
+export const addNotification = (title: string, message: string, type: NotificationType = NotificationType.Info, icon?: string, iconFillOpacity?: number) => {
     if (!externalAddNotification) {
         console.warn('NotificationsProvider is not mounted yet');
         return;
     }
-    externalAddNotification(title, message, type);
+    externalAddNotification(title, message, type, icon, iconFillOpacity);
 };

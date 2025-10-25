@@ -1,10 +1,11 @@
 import type { NotificationData } from '@shared/Enums/NotificationData';
 import styles from '../../styles/NotificationsInterface.module.css';
-import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
+import * as Icons from "lucide-react";
 import { NotificationType } from '@shared/Enums/NotificationType';
+// import { NotificationType } from '@shared/Enums/NotificationType';
 
 const defaultIcons: {
-    [key in NotificationType]: IconName;
+    [key in NotificationType]: string;
 } = {
     [NotificationType.Info]: 'bell',
     [NotificationType.Warning]: 'alert-triangle',
@@ -19,14 +20,15 @@ export default function Notification({ data }: { data: NotificationData }) {
         data.hiding ? styles.hiding : ''
     ].filter(Boolean).join(' ');
 
-    const icon = data.icon ? data.icon as IconName : defaultIcons[data.type];
+    const icon = data.icon ? data.icon : defaultIcons[data.type];
     const iconFillOpacity = data.iconFillOpacity !== undefined ? data.iconFillOpacity : 0.1;
+    const IconJSX = (Icons as any)[icon.charAt(0).toUpperCase() + icon.slice(1).replace(/-([a-z])/g, (g: string) => g[1].toUpperCase())] || Icons['Bell'];
 
     return (
         <div className={styles.notificationWrapper}>
             <div className={notificationClasses}>
                 <div className={styles.titleWrapper}>
-                    <DynamicIcon className={styles.title} name={icon} fill="currentColor" fillOpacity={iconFillOpacity} size="1rem" />
+                    <IconJSX className={styles.title} fill="currentColor" fillOpacity={iconFillOpacity} size="1rem"  />
                     <span className={styles.title}>{data.title}</span>
                 </div>
                 <span className={styles.message}>{data.message}</span>

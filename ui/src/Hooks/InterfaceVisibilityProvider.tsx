@@ -13,7 +13,7 @@ interface InterfaceVisibilityHook {
 const InterfaceVisibilityContext = createContext<InterfaceVisibilityHook | undefined>(undefined);
 
 export const InterfaceVisibilityProvider = ({ children }: { children: React.ReactNode }) => {
-    const [visibleInterfaces, setVisibleInterfaces] = useState<InterfaceMap>({'NotificationsInterface': true, 'NotificationTester': true});
+    const [visibleInterfaces, setVisibleInterfaces] = useState<InterfaceMap>({});
 
     const setInterfaceVisible = (name: string, visible: boolean) => {
         setVisibleInterfaces((prev) => ({ ...prev, [name]: visible }));

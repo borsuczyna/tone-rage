@@ -18,6 +18,7 @@ export default defineConfig(({ mode }) => ({
     cssMinify: mode === 'development' ? false : true,
     rollupOptions: {
       output: {
+        preserveModules: false,
         // Skip chunk optimization for faster builds
         manualChunks: mode === 'development' ? undefined : (id) => {
           if (id.includes('node_modules')) {

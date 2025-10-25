@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-export function useRageEvent(eventName: string, callback: (...args: any[]) => void) {
+export function useRageEvent(eventName: string, callback: (data: any) => void) {
     const savedCallback = useRef(callback);
     const mounted = useRef(true);
 
@@ -17,9 +17,9 @@ export function useRageEvent(eventName: string, callback: (...args: any[]) => vo
 
         mounted.current = true;
 
-        const handler = (...args: any[]) => {
+        const handler = (data: string) => {
             if (!mounted.current) return; // ignore if unmounted
-            savedCallback.current(...args);
+            savedCallback.current(JSON.parse(data));
         };
 
         mp.events.add(eventName, handler);

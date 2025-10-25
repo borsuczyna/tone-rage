@@ -46,13 +46,13 @@ export default class InterfaceService {
         });
     }
 
-    public static callInterfaceEvent(eventName: string, ...args: any[]) {
+    public static callInterfaceEvent(eventName: string, data: any) {
         if (!this.browser) {
             this.logger.error(`Cannot call interface event "${eventName}": Browser instance is null`);
             return;
         }
 
-        this.browser.call(eventName, ...args);
+        this.browser.call(eventName, JSON.stringify(data));
     }
 
     public static setInterfaceVisible(name: string, visible: boolean) {
