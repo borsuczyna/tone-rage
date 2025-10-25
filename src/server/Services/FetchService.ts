@@ -1,7 +1,6 @@
-import { validateHash } from "@shared/Hash";
 import Logger from "@shared/Logger";
-import TimerService from "@shared/Services/TimerService";
 import AnticheatService from "./AnticheatService";
+import EventService from "./EventService";
 
 interface FetchListener {
     eventName: string;
@@ -10,12 +9,10 @@ interface FetchListener {
 
 export default class FetchService {
     private static fetchListeners: FetchListener[] = [];
-    private static hashHistory: Map<string, Date> = new Map();
     public static logger: Logger = Logger.getLogger(FetchService, true);
 
     public static async init() {
-        mp.events.add('fetch:getData', this.onFetchRequest.bind(this));
-        TimerService.setTimer(this.clearOldHashes.bind(this), 60000, 0);
+        EventService.registerListener('fetch:getData', this.onFetchRequest.bind(this));
     }
 
     public static getFetchListener(eventName: string): FetchListener | undefined {
@@ -33,7 +30,7 @@ export default class FetchService {
     }
     
     private static async onFetchRequest(client: PlayerMp, eventName: string, hash: string, dataAsJson: string) {
-        if (!this.verifyHash(eventName, hash)) {
+        if (!AnticheatService.verifyHash(eventName, hash)) {
             AnticheatService.clientInvalidHash(client, eventName, hash, dataAsJson);
             return;
         }
@@ -44,29 +41,6 @@ export default class FetchService {
             const response = await listener.callback(client, data);
             client.call('fetch:receiveData', [hash, JSON.stringify(response)]);
         }
-    }
-
-    private static verifyHash(eventName: string, hash: string): boolean {
-        const lastUsed = this.hashHistory.get(hash);
-        const now = new Date();
-        const timeElapsed = lastUsed ? (now.getTime() - lastUsed.getTime()) / 1000 : Infinity;
-
-        if (timeElapsed < 60) {
-            return false; // Hash resent too soon
-        }
-
-        this.hashHistory.set(hash, now);
-        return validateHash(eventName, hash);
-    }
-
-    private static clearOldHashes() {
-        const now = new Date();
-        this.hashHistory.forEach((lastUsed, hash) => {
-            const timeElapsed = (now.getTime() - lastUsed.getTime()) / 1000;
-            if (timeElapsed > 60) {
-                this.hashHistory.delete(hash);
-            }
-        });
     }
 
     public static async initDebug() {

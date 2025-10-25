@@ -1,6 +1,7 @@
 import { generateHash, validateHash } from "@shared/Hash";
 import InterfaceService from "./InterfaceService";
 import Logger from "@shared/Logger";
+import EventService from "./EventService";
 
 interface FetchResolver {
     resolve: (data: any) => void;
@@ -38,7 +39,7 @@ export default class FetchService {
 
     public static async fetchData<T>(eventName: string, data: any): Promise<T> {
         const hash = generateHash(eventName);
-        mp.events.callRemote('fetch:getData', eventName, hash, JSON.stringify(data));
+        EventService.triggerEvent('fetch:getData', eventName, hash, JSON.stringify(data));
 
         return new Promise<T>((resolve, reject) => {
             this.pendingFetches[hash] = { resolve, reject };
