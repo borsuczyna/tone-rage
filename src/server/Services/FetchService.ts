@@ -16,7 +16,8 @@ interface ResponseEnvelope {
 export default class FetchService {
 	private static fetchListeners: FetchListener[] = [];
 	public static logger: Logger = Logger.getLogger(FetchService, true);
-	private static readonly SECRET_KEY = process.env.SESSION_SECRET || 'dev_secret';
+	// Use dedicated HMAC_SECRET_KEY env variable, fall back to SESSION_SECRET, then to dev_secret
+	private static readonly SECRET_KEY = process.env.HMAC_SECRET_KEY || process.env.SESSION_SECRET || 'dev_secret';
 
 	public static async init() {
 		EventService.registerListener('fetch:getData', this.onFetchRequest.bind(this));

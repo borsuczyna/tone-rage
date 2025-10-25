@@ -81,8 +81,13 @@ async function verifySignature(hash: string, payload: string, signature: string)
             ['sign', 'verify']
         );
 
-        // Convert hex signature to ArrayBuffer
-        const signatureBytes = new Uint8Array(signature.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16)));
+        // Validate and convert hex signature to ArrayBuffer
+        const hexMatch = signature.match(/.{1,2}/g);
+        if (!hexMatch || signature.length % 2 !== 0) {
+            console.error('Invalid signature format: not a valid hex string');
+            return false;
+        }
+        const signatureBytes = new Uint8Array(hexMatch.map(byte => parseInt(byte, 16)));
 
         // Verify the signature
         return await crypto.subtle.verify(
@@ -106,6 +111,11 @@ function onFetchResponse(hash: string, responseAsJson: string) {
             clearTimeout(fetchResolver.timeoutId);
         }
 
+        // Cleanup function to remove pending fetch
+        const cleanup = () => {
+            delete pendingFetches[hash];
+        };
+
         // Try to parse as envelope first
         try {
             const parsed = JSON.parse(responseAsJson);
@@ -123,22 +133,20 @@ function onFetchResponse(hash: string, responseAsJson: string) {
                         console.error(`Signature verification failed for fetch response: hash=${hash}`);
                         fetchResolver.reject(new Error('Response signature verification failed'));
                     }
-                    delete pendingFetches[hash];
                 }).catch(error => {
                     console.error('Error during signature verification:', error);
                     fetchResolver.reject(error);
-                    delete pendingFetches[hash];
-                });
+                }).finally(cleanup);
             } else {
                 // Old-style response without envelope (backwards compatibility)
                 console.warn(`Received unsigned response for hash=${hash}. Consider upgrading server to send signed responses.`);
                 fetchResolver.resolve(parsed);
-                delete pendingFetches[hash];
+                cleanup();
             }
         } catch (error) {
             console.error('Failed to parse fetch response:', error);
             fetchResolver.reject(error);
-            delete pendingFetches[hash];
+            cleanup();
         }
     }
 }
