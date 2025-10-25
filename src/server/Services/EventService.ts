@@ -24,12 +24,13 @@ export default class EventService {
     }
 
     private static onEventTriggered(client: PlayerMp, hash: string, eventName: string, encodedData: string) {
+        const decodedData = decodeData<any[]>(encodedData);
+
         if (!AnticheatService.verifyHash(eventName, hash)) {
-            AnticheatService.clientInvalidHash(client, eventName, hash, encodedData);
+            AnticheatService.clientInvalidHash(client, eventName, hash, JSON.stringify(decodedData));
             return;
         }
 
-        const decodedData = decodeData<any[]>(encodedData);
         const listeners = this.listeners.filter(listener => listener.eventName === eventName);
         listeners.forEach(listener => listener.callback(client, ...decodedData));
     }

@@ -11,7 +11,7 @@ export default class AnticheatService {
     }
 
     public static clientInvalidHash(client: PlayerMp, eventName: string, hash: string, eventData: string) {
-        this.logger.warn(`Client sent invalid hash: player=${client.name}, event=${eventName}, hash=${hash}`);
+        this.logger.error(`Client sent invalid hash: player=${client.name}, event=${eventName}, hash=${hash}, data=${eventData}`);
         client.kick('Anticheat: A1');
     }
 
