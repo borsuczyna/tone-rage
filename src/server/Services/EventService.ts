@@ -1,37 +1,35 @@
-import { decodeData } from "@shared/DataEncoder";
-import AnticheatService from "./AnticheatService";
+import { decodeData } from '@shared/DataEncoder';
+import AnticheatService from './AnticheatService';
 
 interface EventListener {
-    eventName: string;
-    callback: (client: PlayerMp, ...args: any[]) => void;
+	eventName: string;
+	callback: (client: PlayerMp, ...args: any[]) => void;
 }
 
 export default class EventService {
-    private static listeners: EventListener[] = [];
+	private static listeners: EventListener[] = [];
 
-    public static init() {
-        mp.events.add('event:trigger', this.onEventTriggered.bind(this));
-    }
+	public static init() {
+		mp.events.add('event:trigger', this.onEventTriggered.bind(this));
+	}
 
-    public static registerListener(eventName: string, callback: (...args: any[]) => void) {
-        this.listeners.push({ eventName, callback });
-    }
+	public static registerListener(eventName: string, callback: (...args: any[]) => void) {
+		this.listeners.push({ eventName, callback });
+	}
 
-    public static removeListener(eventName: string, callback: (...args: any[]) => void) {
-        this.listeners = this.listeners.filter(
-            listener => listener.eventName !== eventName || listener.callback !== callback
-        );
-    }
+	public static removeListener(eventName: string, callback: (...args: any[]) => void) {
+		this.listeners = this.listeners.filter((listener) => listener.eventName !== eventName || listener.callback !== callback);
+	}
 
-    private static onEventTriggered(client: PlayerMp, hash: string, eventName: string, encodedData: string) {
-        const decodedData = decodeData<any[]>(encodedData);
+	private static onEventTriggered(client: PlayerMp, hash: string, eventName: string, encodedData: string) {
+		const decodedData = decodeData<any[]>(encodedData);
 
-        if (!AnticheatService.verifyHash(eventName, hash)) {
-            AnticheatService.clientInvalidHash(client, eventName, hash, JSON.stringify(decodedData));
-            return;
-        }
+		if (!AnticheatService.verifyHash(eventName, hash)) {
+			AnticheatService.clientInvalidHash(client, eventName, hash, JSON.stringify(decodedData));
+			return;
+		}
 
-        const listeners = this.listeners.filter(listener => listener.eventName === eventName);
-        listeners.forEach(listener => listener.callback(client, ...decodedData));
-    }
+		const listeners = this.listeners.filter((listener) => listener.eventName === eventName);
+		listeners.forEach((listener) => listener.callback(client, ...decodedData));
+	}
 }
