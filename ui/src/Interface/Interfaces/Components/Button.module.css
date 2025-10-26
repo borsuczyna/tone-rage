@@ -153,8 +153,6 @@
     background: rgba(255, 255, 255, 0.1);
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
 }
 
 .glass:hover {
@@ -219,7 +217,7 @@
 }
 
 .link:hover {
-    color: var(--tone-purple);
+    color: var(--tone-cyan);
     transform: none;
 }
 

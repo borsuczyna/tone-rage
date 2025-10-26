@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import styles from './UpdatesPanel.module.css';
-import updateData from '@shared/Updates';
+import updateData from '@shared/UpdatesData';
 
 export default function UpdatesPanel() {
     // Get only the last 3 updates

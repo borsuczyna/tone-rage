@@ -25,7 +25,7 @@ export default function RegisterForm({
         <div className={styles.authForm}>
             <div className={styles.header}>
                 <h1>Create Account</h1>
-                <p>Join the racing community</p>
+                <p>Register your account</p>
             </div>
             
             <InputField
@@ -66,7 +66,7 @@ export default function RegisterForm({
             
             <Switch
                 id="acceptRules"
-                label={<>I accept the <Button variant="link" size="small" glow={false} onClick={onShowRules}>Terms & Rules</Button></>}
+                label={<>I accept the<Button variant="link" size="small" glow={false} onClick={onShowRules}>Terms & Rules</Button></>}
                 checked={registerData.acceptRules}
                 onChange={(checked) => setRegisterData(prev => ({ ...prev, acceptRules: checked }))}
                 size="medium"
