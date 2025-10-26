@@ -3,7 +3,7 @@ import { addNotification, useNotifications } from 'src/Hooks/NotificationsProvid
 import styles from './styles/NotificationsInterface.module.css';
 import Notification from './Components/Notifications/Notification';
 import { useRageEvent } from 'src/Hooks/RageEventProvider';
-import type { NotificationData } from '@shared/Enums/NotificationData';
+import type { NotificationData } from '@shared/Models/NotificationData';
 
 export default function NotificationsInterface() {
     const { notifications } = useNotifications();

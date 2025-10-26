@@ -1,0 +1,69 @@
+/* Main CSS Variables - TONE Color Scheme */
+:root {
+  /* TONE Logo Primary Colors */
+  --tone-cyan: #00bfff;
+  --tone-purple: #8a2be2;
+  --tone-pink: #ff1493;
+  
+  /* TONE Color Variations */
+  --tone-cyan-light: #1ebfff;
+  --tone-purple-light: #9932cc;
+  --tone-pink-light: #ff69b4;
+  
+  --tone-cyan-dark: #0099cc;
+  --tone-purple-dark: #6a1b9a;
+  --tone-pink-dark: #c2185b;
+  
+  /* TONE Gradients */
+  --tone-gradient-primary: linear-gradient(135deg, var(--tone-cyan), var(--tone-purple), var(--tone-pink));
+  --tone-gradient-secondary: linear-gradient(135deg, var(--tone-cyan-light), var(--tone-purple-light), var(--tone-pink-light));
+  --tone-gradient-subtle: linear-gradient(135deg, var(--tone-cyan), var(--tone-purple));
+  
+  /* TONE Alpha Colors (with transparency) */
+  --tone-cyan-alpha-10: rgba(0, 191, 255, 0.1);
+  --tone-cyan-alpha-20: rgba(0, 191, 255, 0.2);
+  --tone-cyan-alpha-40: rgba(0, 191, 255, 0.4);
+  --tone-cyan-alpha-50: rgba(0, 191, 255, 0.5);
+  --tone-cyan-alpha-60: rgba(0, 191, 255, 0.6);
+  --tone-cyan-alpha-70: rgba(0, 191, 255, 0.7);
+  --tone-cyan-alpha-80: rgba(0, 191, 255, 0.8);
+  --tone-cyan-alpha-90: rgba(0, 191, 255, 0.9);
+  
+  --tone-purple-alpha-10: rgba(138, 43, 226, 0.1);
+  --tone-purple-alpha-20: rgba(138, 43, 226, 0.2);
+  --tone-purple-alpha-40: rgba(138, 43, 226, 0.4);
+  --tone-purple-alpha-50: rgba(138, 43, 226, 0.5);
+  --tone-purple-alpha-60: rgba(138, 43, 226, 0.6);
+  --tone-purple-alpha-70: rgba(138, 43, 226, 0.7);
+  --tone-purple-alpha-80: rgba(138, 43, 226, 0.8);
+  --tone-purple-alpha-90: rgba(138, 43, 226, 0.9);
+  
+  --tone-pink-alpha-10: rgba(255, 20, 147, 0.1);
+  --tone-pink-alpha-20: rgba(255, 20, 147, 0.2);
+  --tone-pink-alpha-40: rgba(255, 20, 147, 0.4);
+  --tone-pink-alpha-50: rgba(255, 20, 147, 0.5);
+  --tone-pink-alpha-60: rgba(255, 20, 147, 0.6);
+  --tone-pink-alpha-70: rgba(255, 20, 147, 0.7);
+  --tone-pink-alpha-80: rgba(255, 20, 147, 0.8);
+  --tone-pink-alpha-90: rgba(255, 20, 147, 0.9);
+  
+  /* TONE Gradient Alpha Combinations */
+  --tone-gradient-alpha-light: linear-gradient(135deg, var(--tone-cyan-alpha-50), var(--tone-purple-alpha-50));
+  --tone-gradient-alpha-medium: linear-gradient(135deg, var(--tone-cyan-alpha-70), var(--tone-purple-alpha-70));
+  --tone-gradient-alpha-strong: linear-gradient(135deg, var(--tone-cyan-alpha-90), var(--tone-purple-alpha-90));
+  
+  /* TONE Radial Gradients */
+  --tone-radial-background: radial-gradient(circle at 30% 70%, var(--tone-cyan-alpha-20) 0%, var(--tone-purple-alpha-10) 50%, var(--tone-pink-alpha-10) 100%);
+  
+  /* TONE Box Shadows */
+  --tone-shadow-cyan: 0 4px 12px var(--tone-cyan-alpha-40);
+  --tone-shadow-cyan-hover: 0 6px 20px var(--tone-cyan-alpha-60);
+  --tone-shadow-purple: 0 4px 12px var(--tone-purple-alpha-40);
+  --tone-shadow-pink: 0 4px 12px var(--tone-pink-alpha-40);
+  
+  /* TONE Focus/Glow Effects */
+  --tone-focus-cyan: 0 0 0 3px var(--tone-cyan-alpha-20);
+  --tone-glow-cyan: 0 0 10px var(--tone-cyan-alpha-50);
+  --tone-glow-purple: 0 0 10px var(--tone-purple-alpha-50);
+  --tone-glow-pink: 0 0 10px var(--tone-pink-alpha-50);
+}

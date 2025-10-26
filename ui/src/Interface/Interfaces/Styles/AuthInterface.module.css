@@ -1,0 +1,188 @@
+/* AuthInterface.module.css */
+@import '../../../styles/tone-variables.css';
+
+.container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: white;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(20, 20, 30, 0.95), rgba(30, 30, 45, 0.95));
+}
+
+.container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--tone-radial-background);
+    pointer-events: none;
+}
+
+.contentWrapper {
+    display: flex;
+    gap: 2rem;
+    height: 45rem;
+    max-height: 45rem;
+    position: relative;
+    z-index: 1;
+}
+
+.authPanel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 28rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Auth Form Styles */
+.authForm {
+    width: 100%;
+    padding: 2rem;
+    animation: scaleUp 0.3s ease-out;
+    position: relative;
+    z-index: 1;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    background: var(--tone-gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.header p {
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.authLinks {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+}
+
+/* Rules Container */
+.rulesContainer {
+    animation: scaleUp 0.3s ease-out;
+    position: relative;
+    z-index: 1;
+    overflow-y: scroll;
+    max-height: 45rem;
+    width: calc(100% - 4rem);
+    padding: 2rem;
+    height: calc(100% - 4rem);
+}
+
+.rulesContent {
+    margin-bottom: 2rem;
+}
+
+.ruleSection {
+    margin-bottom: 2rem;
+}
+
+.ruleSection h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--tone-cyan);
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.ruleSection ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.ruleSection li {
+    padding: 0.5rem 0;
+    color: rgba(255, 255, 255, 0.8);
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.ruleSection li::before {
+    content: '•';
+    color: var(--tone-cyan);
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+.rulesActions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Animations */
+@keyframes scaleUp {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Custom Scrollbar Styling */
+.rulesContainer::-webkit-scrollbar {
+    width: 8px;
+}
+
+.rulesContainer::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.rulesContainer::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.7), rgba(138, 43, 226, 0.7));
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.rulesContainer::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.9), rgba(138, 43, 226, 0.9));
+}
+
+.rulesContainer::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 1), rgba(138, 43, 226, 1));
+}
+
+/* Firefox scrollbar styling */
+.rulesContainer {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(6, 182, 212, 0.7) rgba(255, 255, 255, 0.05);
+}

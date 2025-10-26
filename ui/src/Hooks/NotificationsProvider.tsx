@@ -1,8 +1,8 @@
 import { createContext, useContext, useState, useCallback } from 'react';
 import type { ReactNode } from 'react';
 import { generateHash } from '@shared/Hash';
-import type { NotificationData } from '@shared/Enums/NotificationData';
-import { NotificationType } from '@shared/Enums/NotificationType';
+import type { NotificationData } from '@shared/Models/NotificationData';
+import { NotificationType } from '@shared/Models/NotificationType';
 
 type AddNotificationFunction = (title: string, message: string, type?: NotificationType, icon?: string, iconFillOpacity?: number) => void;
 let externalAddNotification: AddNotificationFunction | null = null;

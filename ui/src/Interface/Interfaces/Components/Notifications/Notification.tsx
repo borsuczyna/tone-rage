@@ -1,8 +1,8 @@
-import type { NotificationData } from '@shared/Enums/NotificationData';
+import type { NotificationData } from '@shared/Models/NotificationData';
 import styles from '../../styles/NotificationsInterface.module.css';
 import * as Icons from "lucide-react";
-import { NotificationType } from '@shared/Enums/NotificationType';
-// import { NotificationType } from '@shared/Enums/NotificationType';
+import { NotificationType } from '@shared/Models/NotificationType';
+// import { NotificationType } from '@shared/Models/NotificationType';
 
 const defaultIcons: {
     [key in NotificationType]: string;

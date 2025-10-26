@@ -1,0 +1,134 @@
+@import "../../../../styles/tone-variables.css";
+
+.updatesPanel {
+    width: 60rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.updateCard {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    overflow: hidden;
+    animation: slideInRight 0.6s ease-out;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+    border-radius: 1rem;
+}
+
+.updateCard.transitioning {
+    opacity: 0;
+}
+
+.updateImageContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.updateImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.updateCard:hover .updateImage {
+    transform: scale(1.05);
+}
+
+.updateContent {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2rem;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    color: white;
+    z-index: 2;
+}
+
+.updateHeader {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.updateHeader h2 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    letter-spacing: -0.5px;
+}
+
+.version {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(10px);
+}
+
+.updateDescription {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    text-align: left;
+    margin-bottom: 1.5rem;
+}
+
+.updateIndicators {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    z-index: 2;
+}
+
+.indicator {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.indicator:hover {
+    background: rgba(255, 255, 255, 0.5);
+    transform: scale(1.1);
+}
+
+.indicator.active {
+    width: 1.25rem; /* 2.5x wider */
+    background: linear-gradient(135deg, var(--tone-purple), var(--tone-pink));
+    transform: scale(1.2);
+    box-shadow: 0 0 15px rgba(212, 6, 205, 0.6);
+    border-radius: 0.625rem; /* Adjust border radius for wider shape */
+}
+
+/* Animations */
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

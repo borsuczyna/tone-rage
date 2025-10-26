@@ -1,0 +1,233 @@
+/* TONE Button Component Styles */
+@import '../../../styles/tone-variables.css';
+
+.buttonWrapper {
+    position: relative;
+    display: inline-block;
+    text-wrap: nowrap;
+}
+
+.toneButton {
+    position: relative;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    z-index: 2;
+    box-sizing: border-box;
+}
+
+/* Button Sizes */
+.small {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    min-width: 80px;
+}
+
+.medium {
+    padding: 0.875rem 2rem;
+    font-size: 0.9rem;
+    min-width: 140px;
+}
+
+.large {
+    padding: 1.125rem 2.5rem;
+    font-size: 1rem;
+    min-width: 180px;
+}
+
+/* Glow effect - positioned behind main button */
+.glowEffect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    filter: blur(8px);
+    opacity: 0.8;
+    pointer-events: none;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+/* Primary variant */
+.primary {
+    background: linear-gradient(135deg, var(--tone-cyan), var(--tone-purple), var(--tone-pink), var(--tone-purple), var(--tone-cyan));
+    background-size: 200% 200%;
+    background-position: 0% 50%;
+    color: white;
+    border: none;
+}
+
+.primary:hover {
+    transform: translateY(-2px);
+    background-position: 100% 50%;
+}
+
+.primary:active {
+    transform: translateY(0);
+}
+
+.primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.glowEffect.primary {
+    background: linear-gradient(135deg, var(--tone-cyan), var(--tone-purple), var(--tone-pink), var(--tone-purple), var(--tone-cyan));
+    background-size: 200% 200%;
+    background-position: 0% 50%;
+}
+
+.buttonWrapper:hover .glowEffect.primary {
+    background-position: 100% 50%;
+}
+
+/* Secondary variant */
+.secondary {
+    background: transparent;
+    color: var(--tone-cyan);
+    border: 2px solid var(--tone-cyan);
+}
+
+.secondary:hover {
+    background: rgba(6, 182, 212, 0.1);
+    transform: translateY(-1px);
+    border-color: var(--tone-purple);
+    color: var(--tone-purple);
+}
+
+.secondary:active {
+    transform: translateY(0);
+}
+
+.secondary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.glowEffect.secondary {
+    background: var(--tone-cyan);
+}
+
+.buttonWrapper:hover .glowEffect.secondary {
+    background: var(--tone-purple);
+    opacity: 0.3;
+}
+
+/* Dark variant */
+.dark {
+    background: rgba(20, 20, 30, 0.9);
+    color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark:hover {
+    background: rgba(30, 30, 45, 0.9);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+.dark:active {
+    transform: translateY(0);
+}
+
+.dark:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Glass variant */
+.glass {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.glass:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.glass:active {
+    transform: translateY(0);
+}
+
+.glass:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.glowEffect.glass {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.3), rgba(168, 85, 247, 0.3));
+}
+
+.buttonWrapper:hover .glowEffect.glass {
+    opacity: 0.6;
+}
+
+/* Ghost variant */
+.ghost {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.8);
+    border: none;
+}
+
+.ghost:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    transform: translateY(-1px);
+}
+
+.ghost:active {
+    transform: translateY(0);
+}
+
+.ghost:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Link variant */
+.link {
+    background: none;
+    border: none;
+    color: var(--tone-cyan);
+    text-decoration: underline;
+    text-transform: none;
+    letter-spacing: normal;
+    font-weight: 500;
+    padding: 0.25rem 0.5rem;
+    min-width: auto;
+}
+
+.link:hover {
+    color: var(--tone-purple);
+    transform: none;
+}
+
+.link:active {
+    transform: none;
+}
+
+.link:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

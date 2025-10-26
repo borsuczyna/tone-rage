@@ -1,0 +1,47 @@
+/* InputField Component Styles */
+@import '../../../styles/tone-variables.css';
+
+.inputGroup {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.inputGroup label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9rem;
+}
+
+.inputGroup input {
+    width: 100%;
+    padding: 0.875rem 1rem 0.875rem 3rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.inputGroup input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.inputGroup input:focus {
+    outline: none;
+    border-color: var(--tone-cyan);
+    box-shadow: var(--tone-focus-cyan);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.inputIcon {
+    position: absolute;
+    left: 1rem;
+    bottom: 0.875rem;
+    color: rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+    z-index: 1;
+}

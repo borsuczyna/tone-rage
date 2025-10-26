@@ -1,4 +1,4 @@
-import { NotificationType } from "@shared/Enums/NotificationType";
+import { NotificationType } from "@shared/Models/NotificationType";
 import InterfaceService from "./InterfaceService";
 
 export default class NotificationService {
