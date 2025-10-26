@@ -34,3 +34,17 @@ export function mountRageEvents() {
         setInterfaceVisible(name, !isInterfaceVisible(name));
     });
 }
+
+// change rem size
+function updateRemSize() {
+    const baseSize = 16;
+    const newSize = baseSize * (window.innerWidth / 1920);
+    document.documentElement.style.fontSize = `${newSize}px`;
+}
+
+window.addEventListener('resize', () => {
+    updateRemSize();
+});
+
+// initial rem size setup
+updateRemSize();

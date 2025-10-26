@@ -1,9 +1,11 @@
 import Logger from "@shared/Logger";
+import TimerService from "@shared/Services/TimerService";
 
 export default class InterfaceService {
     private static browser: BrowserMp = null!;
     private static logger: Logger = Logger.getLogger(InterfaceService);
     private static cursorVisible: boolean = false;
+    private static cursorToggleControls: boolean = false;
 
     public static init() {
         this.browser = mp.browsers.new('package://ui/index.html');
@@ -16,6 +18,9 @@ export default class InterfaceService {
 
         // Bind F3 key for cursor toggle
         this.setupCursorToggle();
+
+        // Set timer to update cursor state
+        TimerService.setTimer(this.updateCursor.bind(this), 500, 0);
     }
 
     public static async initDebug() {
@@ -79,8 +84,21 @@ export default class InterfaceService {
         });
     }
 
-    private static toggleCursor() {
-        this.cursorVisible = !this.cursorVisible;
-        mp.gui.cursor.show(false, this.cursorVisible);
+    public static toggleCursor() {
+        this.setCursorVisible(!this.cursorVisible, false);
+    }
+
+    public static isCursorVisible(): boolean {
+        return this.cursorVisible;
+    }
+
+    public static setCursorVisible(visible: boolean, toggleControls: boolean = false) {
+        this.cursorVisible = visible;
+        this.cursorToggleControls = toggleControls;
+        this.updateCursor();
+    }
+
+    private static updateCursor() {
+        mp.gui.cursor.show(this.cursorToggleControls, this.cursorVisible);
     }
 }

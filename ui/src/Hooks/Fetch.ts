@@ -1,8 +1,10 @@
 import { generateHash } from "@shared/Hash";
+import translate from "@shared/Translation/Translation";
 
 interface FetchResolver {
     resolve: (data: any) => void;
     reject: (error: any) => void;
+    timeoutId: number;
 }
 
 const pendingFetches: Record<string, FetchResolver> = {};
@@ -10,10 +12,17 @@ const pendingFetches: Record<string, FetchResolver> = {};
 async function fetchData<T>(eventName: string, data: any, client: boolean = false): Promise<T> {
     const hash = generateHash(eventName);
 
-    mp.trigger('interface:fetchData', eventName, hash, client, JSON.stringify(data));
+    if (typeof mp !== "undefined" && mp?.trigger) {
+        mp.trigger('interface:fetchData', eventName, hash, client, JSON.stringify(data));
+    }
 
     return new Promise<T>((resolve, reject) => {
-        pendingFetches[hash] = { resolve, reject };
+        const timeoutId = setTimeout(() => {
+            delete pendingFetches[hash];
+            reject(new Error(translate('fetch.timeout')));
+        }, 10000);
+
+        pendingFetches[hash] = { resolve, reject, timeoutId };
     });
 }
 
@@ -34,12 +43,13 @@ export function registerFetchResolver() {
     mp.events.add('interface:fetchResponse', onFetchResponse);
 }
 
-function onFetchResponse(hash: string, responseAsJson: string) {
+function onFetchResponse(dataAsJson: string) {
+    const [hash, data] = JSON.parse(dataAsJson);
     const fetchResolver = pendingFetches[hash];
     
     if (fetchResolver) {
-        const response = JSON.parse(responseAsJson);
-        fetchResolver.resolve(response);
+        clearTimeout(fetchResolver.timeoutId);
+        fetchResolver.resolve(data);
         delete pendingFetches[hash];
     }
 }

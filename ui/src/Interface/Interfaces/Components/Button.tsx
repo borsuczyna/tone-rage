@@ -1,4 +1,5 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import * as Icons from "lucide-react";
 import styles from './Button.module.css';
 
 interface ToneButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -6,6 +7,7 @@ interface ToneButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: 'primary' | 'secondary' | 'dark' | 'glass' | 'ghost' | 'link';
     size?: 'small' | 'medium' | 'large';
     glow?: boolean;
+    loading?: boolean;
 }
 
 export default function Button({ 
@@ -13,15 +15,19 @@ export default function Button({
     variant = 'primary', 
     size = 'medium',
     glow = true,
+    loading = false,
     className = '',
     style,
+    disabled,
     ...buttonProps
 }: ToneButtonProps) {
     const buttonClass = `${styles.toneButton} ${styles[variant]} ${styles[size]} ${className}`;
     const glowClass = `${styles.glowEffect} ${styles[variant]}`;
+    const isDisabled = disabled || loading;
+    const wrapperClass = `${styles.buttonWrapper} ${isDisabled ? styles.disabled : ''}`;
     
     return (
-        <div className={styles.buttonWrapper} style={style}>
+        <div className={wrapperClass} style={style}>
             {/* Glow effect - only for variants that support it */}
             {glow && (variant === 'primary' || variant === 'secondary' || variant === 'glass') && (
                 <button 
@@ -30,7 +36,7 @@ export default function Button({
                     tabIndex={-1}
                     style={style}
                 >
-                    {children}
+                    {loading ? <Icons.Loader2 size={16} className={styles.spin} /> : children}
                 </button>
             )}
             
@@ -39,8 +45,13 @@ export default function Button({
                 {...buttonProps}
                 className={buttonClass}
                 style={style}
+                disabled={isDisabled}
             >
-                {children}
+                {loading ? (
+                    <Icons.Loader2 size={16} className={styles.spin} />
+                ) : (
+                    children
+                )}
             </button>
         </div>
     );

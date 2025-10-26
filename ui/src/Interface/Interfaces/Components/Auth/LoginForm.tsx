@@ -12,13 +12,15 @@ interface LoginFormProps {
     setLoginData: Dispatch<SetStateAction<AuthLoginData>>;
     onLogin: () => void;
     onSwitchToRegister: () => void;
+    isLoading?: boolean;
 }
 
 export default function LoginForm({ 
     loginData, 
     setLoginData, 
     onLogin, 
-    onSwitchToRegister 
+    onSwitchToRegister,
+    isLoading = false
 }: LoginFormProps) {
     return (
         <div className={styles.authForm}>
@@ -34,6 +36,7 @@ export default function LoginForm({
                 placeholder={translate('auth.login.username.placeholder')}
                 value={loginData.username}
                 onChange={(value) => setLoginData(prev => ({ ...prev, username: value }))}
+                disabled={isLoading}
             />
             
             <InputField
@@ -43,6 +46,7 @@ export default function LoginForm({
                 placeholder={translate('auth.login.password.placeholder')}
                 value={loginData.password}
                 onChange={(value) => setLoginData(prev => ({ ...prev, password: value }))}
+                disabled={isLoading}
             />
             
             <Switch
@@ -51,16 +55,17 @@ export default function LoginForm({
                 checked={loginData.rememberMe}
                 onChange={(checked) => setLoginData(prev => ({ ...prev, rememberMe: checked }))}
                 size="medium"
+                disabled={isLoading}
             />
             
-            <Button variant="primary" onClick={onLogin} style={{width: '100%'}}>
+            <Button variant="primary" onClick={onLogin} style={{width: '100%'}} loading={isLoading} disabled={isLoading}>
                 <Icons.LogIn size={16} />
                 {translate('auth.login.button')}
             </Button>
             
             <div className={styles.authLinks}>
                 <span>{translate('auth.login.noAccount')}</span>
-                <Button variant="link" size="small" glow={false} onClick={onSwitchToRegister}>
+                <Button variant="link" size="small" glow={false} onClick={onSwitchToRegister} disabled={isLoading}>
                     {translate('auth.login.signUp')}
                 </Button>
             </div>

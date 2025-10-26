@@ -1,6 +1,8 @@
 import Database from "@/Database/Database";
 import { UserEntity } from "@/Database/Entities/UserEntity";
 import PasswordHash from "@/Utils/PasswordHash";
+import EmailValidator from "@shared/EmailValidator";
+import PasswordValidator from "@shared/PasswordValidator";
 
 interface CreateUserResult {
     userId: number | null;
@@ -14,14 +16,26 @@ interface LoginResult {
 
 export default class UserService {
     public static async createUser(username: string, email: string, password: string): Promise<CreateUserResult> {
+        if (username.length < 3 || username.length > 20) {
+            return { userId: null, error: 'auth.register.usernameLength' };
+        }
+
+        if (!EmailValidator.validate(email)) {
+            return { userId: null, error: 'auth.register.invalidEmail' };
+        }
+
+        if (!PasswordValidator.validate(password)) {
+            return { userId: null, error: 'auth.register.weakPassword' };
+        }
+
         let existingUser = await UserService.getUserByUsernameOrEmail(username);
         if (existingUser) {
             return {
                 userId: null,
                 error: (
                     existingUser.username === username ?
-                    "Username already taken" :
-                    "Email already registered"
+                    'auth.register.usernameTaken' :
+                    'auth.register.emailTaken'
                 )
             };
         }
@@ -29,7 +43,7 @@ export default class UserService {
         const newUser = await UserEntity.create(username, email, password);
         const userId = await Database.InsertEntity('users', newUser);
         if (!userId) {
-            return { userId: null, error: "Failed to create user, contact support" };
+            return { userId: null, error: 'auth.register.failed' };
         }
 
         return { userId };
@@ -55,14 +69,18 @@ export default class UserService {
     }
 
     public static async loginUser(identifier: string, password: string): Promise<LoginResult> {
-        const passwordHash = await PasswordHash.hashPassword(password);
         const user = await Database.First<UserEntity>(
-            "SELECT * FROM users WHERE (username = ? OR email = ?) AND passwordHash = ?",
-            [identifier, identifier, passwordHash]
+            "SELECT * FROM users WHERE username = ? OR email = ?",
+            [identifier, identifier]
         );
 
         if (!user) {
-            return { user: null, error: "Invalid username or password" };
+            return { user: null, error: "auth.login.failed" };
+        }
+
+        const passwordMatch = await PasswordHash.comparePasswords(password, user.passwordHash);
+        if (!passwordMatch) {
+            return { user: null, error: "auth.login.failed" };
         }
 
         return { user };

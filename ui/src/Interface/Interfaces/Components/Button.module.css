@@ -72,6 +72,11 @@
     background-position: 100% 50%;
 }
 
+.primary:hover:disabled {
+    transform: none;
+    background-position: 0% 50%;
+}
+
 .primary:active {
     transform: translateY(0);
 }
@@ -92,6 +97,10 @@
     background-position: 100% 50%;
 }
 
+.buttonWrapper:has(.toneButton:disabled):hover .glowEffect.primary {
+    background-position: 0% 50%;
+}
+
 /* Secondary variant */
 .secondary {
     background: transparent;
@@ -104,6 +113,13 @@
     transform: translateY(-1px);
     border-color: var(--tone-purple);
     color: var(--tone-purple);
+}
+
+.secondary:hover:disabled {
+    background: transparent;
+    transform: none;
+    border-color: var(--tone-cyan);
+    color: var(--tone-cyan);
 }
 
 .secondary:active {
@@ -125,6 +141,11 @@
     opacity: 0.3;
 }
 
+.buttonWrapper:has(.toneButton:disabled):hover .glowEffect.secondary {
+    background: var(--tone-cyan);
+    opacity: 0.8;
+}
+
 /* Dark variant */
 .dark {
     background: rgba(20, 20, 30, 0.9);
@@ -136,6 +157,12 @@
     background: rgba(30, 30, 45, 0.9);
     border-color: rgba(255, 255, 255, 0.3);
     transform: translateY(-1px);
+}
+
+.dark:hover:disabled {
+    background: rgba(20, 20, 30, 0.9);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: none;
 }
 
 .dark:active {
@@ -162,6 +189,13 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
+.glass:hover:disabled {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: none;
+    box-shadow: none;
+}
+
 .glass:active {
     transform: translateY(0);
 }
@@ -180,6 +214,10 @@
     opacity: 0.3;
 }
 
+.buttonWrapper:has(.toneButton:disabled):hover .glowEffect.glass {
+    opacity: 0.8;
+}
+
 /* Ghost variant */
 .ghost {
     background: transparent;
@@ -191,6 +229,12 @@
     background: rgba(255, 255, 255, 0.1);
     color: white;
     transform: translateY(-1px);
+}
+
+.ghost:hover:disabled {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.8);
+    transform: none;
 }
 
 .ghost:active {
@@ -221,6 +265,11 @@
     transform: none;
 }
 
+.link:hover:disabled {
+    color: var(--tone-cyan);
+    opacity: 0.6;
+}
+
 .link:active {
     transform: none;
 }
@@ -228,4 +277,18 @@
 .link:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+}
+
+/* Loading Animation */
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }

@@ -51,20 +51,18 @@ export default class FetchService {
             FetchService.logger.warn(`Invalid hash for fetch request: event=${eventName}, hash=${hash}`);
             return;
         }
-        
+
         const data = JSON.parse(dataAsJson);
 
         if (client) {
             const listener = FetchService.getFetchListener(eventName);
             if (listener) {
                 const response = listener.callback(data);
-                InterfaceService.callInterfaceEvent('interface:fetchResponse', hash, JSON.stringify(response));
-            } else {
-                mp.gui.chat.push(`No fetch listener registered for event: ${eventName}`);
+                InterfaceService.callInterfaceEvent('interface:fetchResponse', [hash, response]);
             }
         } else {
             const response = await FetchService.fetchData(eventName, data);
-            InterfaceService.callInterfaceEvent('interface:fetchResponse', hash, JSON.stringify(response));
+            InterfaceService.callInterfaceEvent('interface:fetchResponse', [hash, response]);
         }
     }
 

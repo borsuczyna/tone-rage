@@ -60,5 +60,20 @@
     "updates.newVehicles.title": "NEW VEHICLES",
     "updates.newVehicles.description": "Added a variety of new vehicles including sports cars, motorcycles, and trucks. Each vehicle comes with unique handling characteristics and customization options.",
     "updates.initial.title": "INITIAL RELEASE",
-    "updates.initial.description": "Welcome to our racing server! Experience thrilling races, competitive gameplay, and a vibrant community. Get ready to hit the tracks and show off your skills!"
+    "updates.initial.description": "Welcome to our racing server! Experience thrilling races, competitive gameplay, and a vibrant community. Get ready to hit the tracks and show off your skills!",
+
+    "default.error": "Error",
+    "auth.login.failed": "Login failed. Please check your credentials and try again.",
+    "auth.login.missingFields": "Please fill in all required fields.",
+    "auth.login.success": "Login successful. Welcome back!",
+    "auth.register.success": "Registration successful.",
+    "auth.register.failed": "Registration failed. Please try again.",
+    "auth.register.missingFields": "Please fill in all required fields.",
+    "auth.register.passwordsDoNotMatch": "Passwords do not match. Please check and try again.",
+    "auth.register.acceptRulesError": "You must accept the terms and rules to register.",
+    "auth.register.usernameTaken": "Username is already taken. Please choose another.",
+    "auth.register.emailTaken": "Email is already registered. Please use a different email.",
+    "auth.register.invalidEmail": "Invalid email address. Please enter a valid email.",
+    "auth.register.weakPassword": "Password is too weak. Please choose a stronger password.",
+    "fetch.timeout": "Connection timed out. Please try again."
 }

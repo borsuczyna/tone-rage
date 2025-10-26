@@ -1,5 +1,6 @@
 import Database from "./Database/Database";
 import AnticheatService from "./Services/AnticheatService";
+import AuthService from "./Services/AuthService";
 import EventService from "./Services/EventService";
 import FetchService from "./Services/FetchService";
 import ShutdownService from "./Services/ShutdownService";
@@ -13,6 +14,7 @@ import Tests from "./Tests/Tests";
     await VehicleService.init();
     await ShutdownService.init();
     await FetchService.init();
+    await AuthService.init();
 
     // Debug
     Tests.getPositionCommandTest();

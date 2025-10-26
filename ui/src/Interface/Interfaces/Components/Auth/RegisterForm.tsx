@@ -13,6 +13,7 @@ interface RegisterFormProps {
     onRegister: () => void;
     onSwitchToLogin: () => void;
     onShowRules: () => void;
+    isLoading?: boolean;
 }
 
 export default function RegisterForm({ 
@@ -20,7 +21,8 @@ export default function RegisterForm({
     setRegisterData, 
     onRegister, 
     onSwitchToLogin,
-    onShowRules
+    onShowRules,
+    isLoading = false
 }: RegisterFormProps) {
     return (
         <div className={styles.authForm}>
@@ -36,6 +38,7 @@ export default function RegisterForm({
                 placeholder={translate('auth.register.username.placeholder')}
                 value={registerData.username}
                 onChange={(value) => setRegisterData(prev => ({ ...prev, username: value }))}
+                disabled={isLoading}
             />
             
             <InputField
@@ -45,6 +48,7 @@ export default function RegisterForm({
                 placeholder={translate('auth.register.email.placeholder')}
                 value={registerData.email}
                 onChange={(value) => setRegisterData(prev => ({ ...prev, email: value }))}
+                disabled={isLoading}
             />
             
             <InputField
@@ -54,6 +58,7 @@ export default function RegisterForm({
                 placeholder={translate('auth.register.password.placeholder')}
                 value={registerData.password}
                 onChange={(value) => setRegisterData(prev => ({ ...prev, password: value }))}
+                disabled={isLoading}
             />
             
             <InputField
@@ -63,24 +68,26 @@ export default function RegisterForm({
                 placeholder={translate('auth.register.confirmPassword.placeholder')}
                 value={registerData.confirmPassword}
                 onChange={(value) => setRegisterData(prev => ({ ...prev, confirmPassword: value }))}
+                disabled={isLoading}
             />
             
             <Switch
                 id="acceptRules"
-                label={<>{translate('auth.register.acceptRules')}<Button variant="link" size="small" glow={false} onClick={onShowRules}>{translate('auth.register.termsRules')}</Button></>}
+                label={<>{translate('auth.register.acceptRules')}<Button variant="link" size="small" glow={false} onClick={onShowRules} disabled={isLoading}>{translate('auth.register.termsRules')}</Button></>}
                 checked={registerData.acceptRules}
                 onChange={(checked) => setRegisterData(prev => ({ ...prev, acceptRules: checked }))}
                 size="medium"
+                disabled={isLoading}
             />
             
-            <Button variant="primary" onClick={onRegister} style={{ width: '100%' }}>
+            <Button variant="primary" onClick={onRegister} style={{ width: '100%' }} loading={isLoading} disabled={isLoading}>
                 <Icons.UserPlus size={16} />
                 {translate('auth.register.button')}
             </Button>
             
             <div className={styles.authLinks}>
                 <span>{translate('auth.register.hasAccount')}</span>
-                <Button variant="link" size="small" glow={false} onClick={onSwitchToLogin}>
+                <Button variant="link" size="small" glow={false} onClick={onSwitchToLogin} disabled={isLoading}>
                     {translate('auth.register.signIn')}
                 </Button>
             </div>
