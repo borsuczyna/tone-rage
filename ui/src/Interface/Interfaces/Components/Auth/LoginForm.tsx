@@ -1,5 +1,6 @@
 import type { Dispatch, SetStateAction } from 'react';
 import * as Icons from "lucide-react";
+import translate from '@shared/Translation/Translation';
 import Button from '../Button';
 import InputField from '../InputField';
 import Switch from '../Switch';
@@ -22,31 +23,31 @@ export default function LoginForm({
     return (
         <div className={styles.authForm}>
             <div className={styles.header}>
-                <h1>Welcome Back</h1>
-                <p>Login to your account</p>
+                <h1>{translate('auth.login.welcome')}</h1>
+                <p>{translate('auth.login.subtitle')}</p>
             </div>
             
             <InputField
                 icon={<Icons.User size={20} />}
-                label="Username"
+                label={translate('auth.login.username')}
                 type="text"
-                placeholder="Enter your username"
+                placeholder={translate('auth.login.username.placeholder')}
                 value={loginData.username}
                 onChange={(value) => setLoginData(prev => ({ ...prev, username: value }))}
             />
             
             <InputField
                 icon={<Icons.Lock size={20} />}
-                label="Password"
+                label={translate('auth.login.password')}
                 type="password"
-                placeholder="Enter your password"
+                placeholder={translate('auth.login.password.placeholder')}
                 value={loginData.password}
                 onChange={(value) => setLoginData(prev => ({ ...prev, password: value }))}
             />
             
             <Switch
                 id="rememberMe"
-                label="Remember me"
+                label={translate('auth.login.rememberMe')}
                 checked={loginData.rememberMe}
                 onChange={(checked) => setLoginData(prev => ({ ...prev, rememberMe: checked }))}
                 size="medium"
@@ -54,13 +55,13 @@ export default function LoginForm({
             
             <Button variant="primary" onClick={onLogin} style={{width: '100%'}}>
                 <Icons.LogIn size={16} />
-                LOGIN
+                {translate('auth.login.button')}
             </Button>
             
             <div className={styles.authLinks}>
-                <span>Don't have an account? </span>
+                <span>{translate('auth.login.noAccount')} </span>
                 <Button variant="link" size="small" glow={false} onClick={onSwitchToRegister}>
-                    Sign Up
+                    {translate('auth.login.signUp')}
                 </Button>
             </div>
         </div>

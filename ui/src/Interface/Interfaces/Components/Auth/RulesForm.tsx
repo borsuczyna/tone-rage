@@ -1,4 +1,5 @@
 import * as Icons from "lucide-react";
+import translate from '@shared/Translation/Translation';
 import Button from '../Button';
 import styles from '../../Styles/AuthInterface.module.css';
 import rulesData from '@shared/RulesData';
@@ -12,8 +13,8 @@ export default function RulesForm({ onBackToLogin, onAcceptAndRegister }: RulesF
     return (
         <div className={styles.rulesContainer}>
             <div className={styles.header}>
-                <h1>Server Rules</h1>
-                <p>Please read and understand our community guidelines</p>
+                <h1>{translate('auth.rules.title')}</h1>
+                <p>{translate('auth.rules.subtitle')}</p>
             </div>
             
             <div className={styles.rulesContent}>
@@ -36,11 +37,11 @@ export default function RulesForm({ onBackToLogin, onAcceptAndRegister }: RulesF
             <div className={styles.rulesActions}>
                 <Button variant="glass" size="medium" onClick={onBackToLogin} style={{flex: 1, width: '100%'}}>
                     <Icons.ArrowLeft size={'1rem'} />
-                    Back to Login
+                    {translate('auth.rules.backToLogin')}
                 </Button>
                 <Button variant="primary" size="medium" onClick={onAcceptAndRegister} style={{flex: 1, width: '100%'}}>
                     <Icons.Check size={'1rem'} />
-                    Accept & Register
+                    {translate('auth.rules.acceptAndRegister')}
                 </Button>
             </div>
         </div>

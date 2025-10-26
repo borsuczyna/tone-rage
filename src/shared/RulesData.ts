@@ -1,42 +1,44 @@
+import translate from './Translation/Translation';
+
 const rulesData = [
     {
-        title: "General Rules",
+        title: translate('rules.general.title'),
         icon: 'Shield',
         rules: [
-            "Respect all players and staff members",
-            "No harassment, discrimination, or toxic behavior",
-            "Use appropriate language in all communications",
-            "Follow roleplay scenarios realistically"
+            translate('rules.general.rule1'),
+            translate('rules.general.rule2'),
+            translate('rules.general.rule3'),
+            translate('rules.general.rule4')
         ]
     },
     {
-        title: "Racing Rules",
+        title: translate('rules.racing.title'),
         icon: 'Car',
         rules: [
-            "No ramming or intentional collisions",
-            "Maintain fair racing practices",
-            "No exploiting game mechanics",
-            "Respect track limits and racing lines"
+            translate('rules.racing.rule1'),
+            translate('rules.racing.rule2'),
+            translate('rules.racing.rule3'),
+            translate('rules.racing.rule4')
         ]
     },
     {
-        title: "Prohibited Actions",
+        title: translate('rules.prohibited.title'),
         icon: 'Ban',
         rules: [
-            "Cheating, hacking, or using unauthorized modifications",
-            "Exploiting bugs or glitches",
-            "Sharing account information",
-            "Advertising other servers or external content"
+            translate('rules.prohibited.rule1'),
+            translate('rules.prohibited.rule2'),
+            translate('rules.prohibited.rule3'),
+            translate('rules.prohibited.rule4')
         ]
     },
     {
-        title: "Consequences",
+        title: translate('rules.consequences.title'),
         icon: 'Gavel',
         rules: [
-            "Warnings for minor infractions",
-            "Temporary bans for serious violations",
-            "Permanent bans for severe or repeated offenses",
-            "Appeals can be submitted through official channels"
+            translate('rules.consequences.rule1'),
+            translate('rules.consequences.rule2'),
+            translate('rules.consequences.rule3'),
+            translate('rules.consequences.rule4')
         ]
     }
 ];
