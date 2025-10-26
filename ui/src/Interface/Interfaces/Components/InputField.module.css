@@ -32,8 +32,8 @@
 
 .inputGroup input:focus {
     outline: none;
-    border-color: var(--tone-cyan);
-    box-shadow: var(--tone-focus-cyan);
+    border-color: rgba(0, 191, 255, 0.3);
+    box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.1);
     background: rgba(255, 255, 255, 0.08);
 }
 

@@ -59,7 +59,7 @@ export default function LoginForm({
             </Button>
             
             <div className={styles.authLinks}>
-                <span>{translate('auth.login.noAccount')} </span>
+                <span>{translate('auth.login.noAccount')}</span>
                 <Button variant="link" size="small" glow={false} onClick={onSwitchToRegister}>
                     {translate('auth.login.signUp')}
                 </Button>

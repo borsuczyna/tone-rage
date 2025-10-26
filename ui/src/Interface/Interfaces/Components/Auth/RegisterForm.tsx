@@ -79,7 +79,7 @@ export default function RegisterForm({
             </Button>
             
             <div className={styles.authLinks}>
-                <span>{translate('auth.register.hasAccount')} </span>
+                <span>{translate('auth.register.hasAccount')}</span>
                 <Button variant="link" size="small" glow={false} onClick={onSwitchToLogin}>
                     {translate('auth.register.signIn')}
                 </Button>
