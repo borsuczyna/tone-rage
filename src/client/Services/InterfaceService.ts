@@ -23,34 +23,6 @@ export default class InterfaceService {
 		TimerService.setTimer(this.updateCursor.bind(this), 500, 0);
 	}
 
-	public static async initDebug() {
-		mp.events.add('playerCommand', (command: string) => {
-			const args = command.split(' ');
-			const commandName = args[0].toLowerCase();
-
-			if (commandName === 'uiv') {
-				if (!args[1]) {
-					mp.gui.chat.push('Usage: /uiv <interfaceName>');
-					return;
-				}
-
-				this.toggleInterfaceVisibility(args[1]);
-				mp.gui.chat.push(`Toggled visibility of interface: ${args[1]}`);
-				return;
-			} else if (commandName === 'test') {
-				if (!args[1]) {
-					mp.gui.chat.push('Usage: /test <value>');
-					return;
-				}
-
-				const value = parseInt(args[1], 10);
-				this.callInterfaceEvent('testEvent', value);
-				mp.gui.chat.push(`Sent testEvent with value: ${value}`);
-				return;
-			}
-		});
-	}
-
 	public static callInterfaceEvent(eventName: string, data: any) {
 		if (!this.browser) {
 			this.logger.error(`Cannot call interface event "${eventName}": Browser instance is null`);

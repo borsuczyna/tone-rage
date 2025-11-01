@@ -40,14 +40,4 @@ export default class FetchService {
 			client.call('fetch:receiveData', [hash, JSON.stringify(response)]);
 		}
 	}
-
-	public static async initDebug() {
-		FetchService.registerFetchListener('getClientInfo', (client, { infoType }: { infoType: string }) => {
-			if (infoType === 'version') {
-				return client.name + ' - 1.0.0-debug';
-			}
-
-			return 'unknown';
-		});
-	}
 }

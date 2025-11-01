@@ -72,14 +72,4 @@ export default class FetchService {
 			resolver.resolve(JSON.parse(dataAsJson));
 		}
 	}
-
-	public static async initDebug() {
-		FetchService.registerFetchListener('getClientInfo', ({ infoType }: { infoType: string }) => {
-			if (infoType === 'version') {
-				return '1.0.0-debug';
-			}
-
-			return 'unknown';
-		});
-	}
 }

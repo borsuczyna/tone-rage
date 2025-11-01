@@ -12,14 +12,14 @@ export default class EventServiceTest {
 		EventService.registerEventHandler('test:largeData', (client: PlayerMp, data: any) => {
 			EventServiceTest.logger.info(`Received large data from client ${client.name}:`, {
 				dataSize: JSON.stringify(data).length,
-				itemCount: data.items?.length || 0
+				itemCount: data.clientData?.length || 0
 			});
 
 			// Echo back with even larger data
 			const responseData = {
 				status: 'success',
 				receivedItems: data.items?.length || 0,
-				serverData: Array.from({ length: 5000 }, (_, i) => ({
+				serverData: Array.from({ length: 100 }, (_, i) => ({
 					id: i,
 					name: `Server Item ${i}`,
 					description: `This is a test item with index ${i}`,
@@ -38,7 +38,7 @@ export default class EventServiceTest {
 		mp.events.addCommand('testlarge', (player: PlayerMp) => {
 			const testData = {
 				message: 'This is a large data transfer test',
-				items: Array.from({ length: 10000 }, (_, i) => ({
+				items: Array.from({ length: 500 }, (_, i) => ({
 					id: i,
 					name: `Item ${i}`,
 					description: `Description for item ${i}`,

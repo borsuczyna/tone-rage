@@ -7,6 +7,7 @@ import ShutdownService from './Services/ShutdownService';
 import VehicleService from './Services/VehicleService';
 import Tests from './Tests/Tests';
 import EventServiceTest from './Tests/EventServiceTest';
+import FetchServiceTest from './Tests/FetchServiceTest';
 
 (async () => {
 	await Database.init();
@@ -20,5 +21,5 @@ import EventServiceTest from './Tests/EventServiceTest';
 	// Debug
 	Tests.getPositionCommandTest();
 	EventServiceTest.init();
-	await FetchService.initDebug();
+	FetchServiceTest.init();
 })();

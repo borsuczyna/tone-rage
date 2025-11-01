@@ -40,17 +40,16 @@ export default class EventService {
 	 */
 	public static triggerClientEvent(client: PlayerMp, eventName: string, ...args: any[]) {
 		const encodedData = encodeData(args);
-		const hash = generateHash(eventName);
 
 		// Check if data needs to be chunked
 		if (encodedData.length <= 32000) {
 			// Send directly without chunking
-			client.call('event:receive', [hash, eventName, encodedData]);
+			client.call('event:receive', [eventName, encodedData]);
 		} else {
 			// Send in chunks
 			const chunks = chunkData(encodedData);
 			chunks.forEach((chunk) => {
-				client.call('event:receive:chunk', [hash, eventName, chunk]);
+				client.call('event:receive:chunk', [eventName, chunk]);
 			});
 		}
 	}
@@ -67,14 +66,23 @@ export default class EventService {
 		listeners.forEach((listener) => listener.callback(client, ...decodedData));
 	}
 
-	private static onChunkReceived(client: PlayerMp, hash: string, eventName: string, chunk: DataChunk) {
+	private static onChunkReceived(client: PlayerMp, hash: string, eventName: string, chunkDataJson: string) {
 		// Get or create chunk assembler for this client
 		if (!this.chunkAssemblers.has(client.id)) {
 			this.chunkAssemblers.set(client.id, new ChunkAssembler());
 		}
 
+		// Parse the JSON string back to DataChunk object
+		let chunkData: DataChunk;
+		try {
+			chunkData = JSON.parse(chunkDataJson);
+		} catch (error) {
+			console.error(`Failed to parse chunk data for client ${client.id}:`, chunkDataJson);
+			return;
+		}
+
 		const assembler = this.chunkAssemblers.get(client.id)!;
-		const completeData = assembler.addChunk(chunk);
+		const completeData = assembler.addChunk(chunkData);
 
 		if (completeData) {
 			// All chunks received, process the event

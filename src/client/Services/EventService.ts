@@ -54,19 +54,20 @@ export default class EventService {
 			// Send in chunks
 			const chunks = chunkData(encodedData);
 			chunks.forEach((chunk) => {
-				mp.events.callRemote('event:trigger:chunk', hash, eventName, chunk);
+				mp.gui.chat.push(`Sending chunk ${chunk.index + 1}/${chunk.total} for event ${eventName}`);
+				mp.events.callRemote('event:trigger:chunk', hash, eventName, JSON.stringify(chunk));
 			});
 		}
 	}
 
-	private static onEventReceived(hash: string, eventName: string, encodedData: string) {
+	private static onEventReceived(eventName: string, encodedData: string) {
 		const decodedData = decodeData<any[]>(encodedData);
 
 		const listeners = this.listeners.filter((listener) => listener.eventName === eventName);
 		listeners.forEach((listener) => listener.callback(...decodedData));
 	}
 
-	private static onChunkReceived(hash: string, eventName: string, chunk: DataChunk) {
+	private static onChunkReceived(eventName: string, chunk: DataChunk) {
 		const completeData = this.chunkAssembler.addChunk(chunk);
 
 		if (completeData) {
