@@ -9,8 +9,8 @@ export default class ElementDataService {
 	/** Storage for element data: elementId -> key -> value */
 	private static elementData: Map<number, Map<string, any>> = new Map();
 
-	/** Pending get requests: requestId -> callback */
-	private static pendingRequests: Map<string, (value: any) => void> = new Map();
+	/** Pending get requests: composite key (elementId_key) -> callbacks array */
+	private static pendingRequests: Map<string, Array<(value: any) => void>> = new Map();
 
 	/**
 	 * Initialize the service and register event handlers
@@ -81,11 +81,18 @@ export default class ElementDataService {
 	 * @param callback Callback function to receive the value
 	 */
 	public static getElementDataFromServer(elementId: number, elementType: string, key: string, callback: (value: any) => void) {
-		const requestId = `${elementId}_${key}_${Date.now()}`;
-		this.pendingRequests.set(requestId, callback);
+		const requestKey = `${elementId}_${key}`;
 
-		// Request from server
-		EventService.triggerServerEvent('elementData:get', elementId, elementType, key);
+		// Add callback to the list for this request key
+		if (!this.pendingRequests.has(requestKey)) {
+			this.pendingRequests.set(requestKey, []);
+		}
+		this.pendingRequests.get(requestKey)!.push(callback);
+
+		// Request from server (only send request if this is the first callback for this key)
+		if (this.pendingRequests.get(requestKey)!.length === 1) {
+			EventService.triggerServerEvent('elementData:get', elementId, elementType, key);
+		}
 	}
 
 	/**
@@ -105,15 +112,14 @@ export default class ElementDataService {
 	 * Handle element data response from server
 	 */
 	private static onElementDataResponse(elementId: number, key: string, value: any) {
-		// Find matching pending request
-		const requestId = Array.from(this.pendingRequests.keys()).find((id) => id.startsWith(`${elementId}_${key}_`));
+		// Find matching pending requests using O(1) lookup
+		const requestKey = `${elementId}_${key}`;
+		const callbacks = this.pendingRequests.get(requestKey);
 
-		if (requestId) {
-			const callback = this.pendingRequests.get(requestId);
-			if (callback) {
-				callback(value);
-				this.pendingRequests.delete(requestId);
-			}
+		if (callbacks) {
+			// Call all pending callbacks for this request
+			callbacks.forEach((callback) => callback(value));
+			this.pendingRequests.delete(requestKey);
 		}
 
 		// Also store locally

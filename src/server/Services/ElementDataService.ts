@@ -119,6 +119,9 @@ export default class ElementDataService {
 
 	/**
 	 * Handle client request to set element data
+	 * Note: The server determines the final ShareMode based on configured permissions,
+	 * not based on what the client requests. This is a security feature to prevent
+	 * clients from bypassing permission restrictions.
 	 */
 	private static onClientSetElementData(client: PlayerMp, elementId: number, elementType: string, key: string, value: any) {
 		// Check if client has permission to write this key
@@ -135,7 +138,7 @@ export default class ElementDataService {
 			return;
 		}
 
-		// Determine share mode based on permission
+		// Determine share mode based on permission (server controls the final ShareMode for security)
 		const shareMode = permission === ClientWritePermission.AllClients ? ShareMode.Everywhere : ShareMode.ServerOnly;
 
 		// Set the data
@@ -164,11 +167,20 @@ export default class ElementDataService {
 		this.elementData.forEach((dataMap, elementId) => {
 			dataMap.forEach((entry) => {
 				// Only sync data that should be shared with clients
-				if (entry.shareMode === ShareMode.Everywhere || entry.shareMode === ShareMode.SpecificClient) {
+				if (entry.shareMode === ShareMode.Everywhere) {
 					const element = this.getElementById(elementId);
 					if (element) {
 						const elementType = this.getElementType(element);
 						EventService.triggerClientEvent(player, 'elementData:sync', elementId, elementType, entry.key, entry.value);
+					}
+				} else if (entry.shareMode === ShareMode.SpecificClient) {
+					// Only sync SpecificClient data if this player is the element itself
+					if (elementId === player.id) {
+						const element = this.getElementById(elementId);
+						if (element) {
+							const elementType = this.getElementType(element);
+							EventService.triggerClientEvent(player, 'elementData:sync', elementId, elementType, entry.key, entry.value);
+						}
 					}
 				}
 			});

@@ -10,12 +10,13 @@ export default class ElementDataServiceTest {
 
 		// Test: Set local client data
 		const testLocalData = () => {
+			const localPlayerId = mp.players.local.remoteId;
 			// Set client-only data (doesn't sync)
-			ElementDataService.setElementData(1, 'player', 'localSetting', 'client-value', ShareMode.ClientOnly);
+			ElementDataService.setElementData(localPlayerId, 'player', 'localSetting', 'client-value', ShareMode.ClientOnly);
 			mp.console.logInfo('Set local client data');
 
 			// Read it back
-			const value = ElementDataService.getElementData(1, 'localSetting');
+			const value = ElementDataService.getElementData(localPlayerId, 'localSetting');
 			mp.console.logInfo(`Read local data: ${value}`);
 		};
 
