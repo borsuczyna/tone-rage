@@ -19,6 +19,9 @@ import NotificationServiceTest from './Tests/NotificationServiceTest';
 	await LoginPanel.init();
 
 	// Debug
+	await InterfaceService.initDebug();
+	await FetchService.initDebug();
+	await NotificationService.initDebug();
 	EventServiceTest.init();
 	InterfaceServiceTest.init();
 	FetchServiceTest.init();
