@@ -22,7 +22,7 @@ export default class EventService {
 		// Generate and send salt to the player
 		const serverSalt = AnticheatService.getServerSalt();
 		const playerSalt = AnticheatService.generatePlayerSalt(player.id);
-		const fullSalt = serverSalt + playerSalt;
+		const fullSalt = `${serverSalt}:${playerSalt}`;
 
 		// Send the full salt to the client
 		player.call('event:setSalt', [fullSalt]);

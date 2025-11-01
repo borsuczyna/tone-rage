@@ -40,6 +40,11 @@ export default class EventService {
 	 * Trigger a server event with support for large data
 	 */
 	public static triggerServerEvent(eventName: string, ...args: any[]) {
+		if (!this.salt) {
+			console.error('Cannot trigger server event: salt not received from server yet');
+			return;
+		}
+
 		const encodedData = encodeData(args);
 		const hash = generateHash(eventName, this.salt);
 

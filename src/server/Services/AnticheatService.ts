@@ -31,8 +31,12 @@ export default class AnticheatService {
 	}
 
 	public static getFullSalt(playerId: number): string {
-		const playerSalt = this.playerSalts.get(playerId) || '';
-		return this.serverSalt + playerSalt;
+		const playerSalt = this.playerSalts.get(playerId);
+		if (!playerSalt) {
+			this.logger.error(`Player salt not found for player ID: ${playerId}`);
+			throw new Error(`Player salt not found for player ID: ${playerId}`);
+		}
+		return `${this.serverSalt}:${playerSalt}`;
 	}
 
 	public static clientInvalidHash(client: PlayerMp, eventName: string, hash: string, eventData: string) {
