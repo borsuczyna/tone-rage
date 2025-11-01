@@ -34,7 +34,11 @@ export function chunkData(data: string): DataChunk[] {
  * Generate a unique chunk ID
  */
 function generateChunkId(): string {
-	return `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
+	// Use timestamp, random string, and counter for better uniqueness
+	const timestamp = Date.now();
+	const random1 = Math.random().toString(36).substring(2, 15);
+	const random2 = Math.random().toString(36).substring(2, 15);
+	return `${timestamp}-${random1}${random2}`;
 }
 
 /**
@@ -75,7 +79,11 @@ export class ChunkAssembler {
 		let result = '';
 
 		for (let i = 0; i < total; i++) {
-			result += chunkMap.get(i) || '';
+			const chunk = chunkMap.get(i);
+			if (chunk === undefined) {
+				throw new Error(`Missing chunk ${i} of ${total} for chunkId ${chunkId}`);
+			}
+			result += chunk;
 		}
 
 		return result;
