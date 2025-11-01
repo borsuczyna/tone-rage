@@ -124,9 +124,25 @@ EventService.registerEventHandler('loadInventory', (inventory: any) => {
 });
 ```
 
+## Testing
+
+A test implementation is included in the codebase:
+
+**Server Test**: `src/server/Tests/EventServiceTest.ts`
+**Client Test**: `src/client/Tests/EventServiceTest.ts`
+
+To test large data transfer:
+1. Start the server and connect a client
+2. Run the command `/testlarge` in the game
+3. The server will send a large dataset (~10,000 items) to the client
+4. The client will receive it and send back ~3,000 items to the server
+5. The server will respond with ~5,000 items back to the client
+6. Check the console/chat for confirmation messages
+
 ## Notes
 
 1. Large data transfers will take multiple network calls (one per chunk)
 2. The system ensures all chunks are received before firing the event handler
 3. Each client has its own chunk assembler on the server side
 4. Chunks are identified by a unique ID to prevent mixing data from different events
+5. Missing chunks will throw an error to prevent data corruption

@@ -4,6 +4,7 @@ import EventService from './Services/EventService';
 import FetchService from './Services/FetchService';
 import InterfaceService from './Services/InterfaceService';
 import NotificationService from './Services/NotificationService';
+import EventServiceTest from './Tests/EventServiceTest';
 
 (async () => {
 	await DiscordRPCService.init();
@@ -15,6 +16,7 @@ import NotificationService from './Services/NotificationService';
 	await LoginPanel.init();
 
 	// Debug
+	EventServiceTest.init();
 	await InterfaceService.initDebug();
 	await FetchService.initDebug();
 	await NotificationService.initDebug();
