@@ -11,6 +11,7 @@ export default class EventService {
 	private static listeners: EventListener[] = [];
 	private static chunkAssembler: ChunkAssembler = new ChunkAssembler();
 	private static initialized: boolean = false;
+	private static salt: string = '';
 
 	/**
 	 * Initialize the event service
@@ -20,7 +21,12 @@ export default class EventService {
 
 		mp.events.add('event:receive', this.onEventReceived.bind(this));
 		mp.events.add('event:receive:chunk', this.onChunkReceived.bind(this));
+		mp.events.add('event:setSalt', this.onSetSalt.bind(this));
 		this.initialized = true;
+	}
+
+	private static onSetSalt(salt: string) {
+		this.salt = salt;
 	}
 
 	/**
@@ -35,7 +41,7 @@ export default class EventService {
 	 */
 	public static triggerServerEvent(eventName: string, ...args: any[]) {
 		const encodedData = encodeData(args);
-		const hash = generateHash(eventName);
+		const hash = generateHash(eventName, this.salt);
 
 		// Check if data needs to be chunked
 		if (encodedData.length <= 32000) {
