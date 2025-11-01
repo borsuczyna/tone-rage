@@ -1,8 +1,8 @@
-import InterfaceService from "@/Services/InterfaceService";
+import InterfaceService from '@/Services/InterfaceService';
 
 export default class LoginPanel {
-    public static async init() {
-        InterfaceService.setInterfaceVisible('AuthInterface', true);
-        InterfaceService.setCursorVisible(true, true);
-    }
+	public static async init() {
+		InterfaceService.setInterfaceVisible('AuthInterface', true);
+		InterfaceService.setCursorVisible(true, true);
+	}
 }

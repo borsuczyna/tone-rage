@@ -1,3 +1,3 @@
 export class DatabaseEntity {
-    uid: number = 0;
+	uid: number = 0;
 }
