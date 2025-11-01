@@ -41,7 +41,7 @@ export default class EventService {
 	 */
 	public static triggerServerEvent(eventName: string, ...args: any[]) {
 		if (!this.salt) {
-			console.error('Cannot trigger server event: salt not received from server yet');
+			console.error('Cannot trigger server event: waiting for salt from server. Ensure client is properly connected.');
 			return;
 		}
 

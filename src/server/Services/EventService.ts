@@ -20,9 +20,8 @@ export default class EventService {
 
 	private static onPlayerJoin(player: PlayerMp) {
 		// Generate and send salt to the player
-		const serverSalt = AnticheatService.getServerSalt();
-		const playerSalt = AnticheatService.generatePlayerSalt(player.id);
-		const fullSalt = `${serverSalt}:${playerSalt}`;
+		AnticheatService.generatePlayerSalt(player.id);
+		const fullSalt = AnticheatService.getFullSalt(player.id);
 
 		// Send the full salt to the client
 		player.call('event:setSalt', [fullSalt]);
