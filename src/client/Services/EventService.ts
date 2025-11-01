@@ -1,6 +1,7 @@
 import { encodeData, decodeData } from '@shared/DataEncoder';
 import { generateHash } from '@shared/Hash';
 import { chunkData, ChunkAssembler, DataChunk } from '@shared/ChunkingUtils';
+import Logger from '@shared/Logger';
 
 interface EventListener {
 	eventName: string;
@@ -12,6 +13,7 @@ export default class EventService {
 	private static chunkAssembler: ChunkAssembler = new ChunkAssembler();
 	private static initialized: boolean = false;
 	private static salt: string = '';
+	private static logger: Logger = Logger.getLogger(EventService);
 
 	/**
 	 * Initialize the event service
@@ -41,7 +43,7 @@ export default class EventService {
 	 */
 	public static triggerServerEvent(eventName: string, ...args: any[]) {
 		if (!this.salt) {
-			console.error('Cannot trigger server event: waiting for salt from server. Ensure client is properly connected.');
+			this.logger.error('Cannot trigger server event: waiting for salt from server. Ensure client is properly connected.');
 			return;
 		}
 
