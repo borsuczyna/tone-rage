@@ -31,15 +31,6 @@ export default class EventService {
 	}
 
 	/**
-	 * Legacy method - kept for backward compatibility
-	 */
-	public static triggerEvent(eventName: string, ...args: any[]) {
-		const encodedData = encodeData(args);
-		const hash = generateHash(eventName);
-		mp.events.callRemote('event:trigger', hash, eventName, encodedData);
-	}
-
-	/**
 	 * Trigger a server event with support for large data
 	 */
 	public static triggerServerEvent(eventName: string, ...args: any[]) {
@@ -54,7 +45,6 @@ export default class EventService {
 			// Send in chunks
 			const chunks = chunkData(encodedData);
 			chunks.forEach((chunk) => {
-				mp.gui.chat.push(`Sending chunk ${chunk.index + 1}/${chunk.total} for event ${eventName}`);
 				mp.events.callRemote('event:trigger:chunk', hash, eventName, JSON.stringify(chunk));
 			});
 		}

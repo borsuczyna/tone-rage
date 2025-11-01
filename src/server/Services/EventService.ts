@@ -1,6 +1,5 @@
 import { decodeData, encodeData } from '@shared/DataEncoder';
 import { chunkData, ChunkAssembler, DataChunk } from '@shared/ChunkingUtils';
-import { generateHash } from '@shared/Hash';
 import AnticheatService from './AnticheatService';
 
 interface EventListener {

@@ -16,13 +16,15 @@ export default function InputField({
 }: InputFieldProps) {
     return (
         <div className={styles.inputGroup}>
-            {icon && <div className={styles.inputIcon}>{icon}</div>}
             <label>{label}</label>
-            <input
-                {...inputProps}
-                className={className}
-                onChange={(e) => onChange(e.target.value)}
-            />
+            <div className={styles.inputWrapper}>
+                {icon && <div className={styles.inputIcon}>{icon}</div>}
+                <input
+                    {...inputProps}
+                    className={className}
+                    onChange={(e) => onChange(e.target.value)}
+                />
+            </div>
         </div>
     );
 }

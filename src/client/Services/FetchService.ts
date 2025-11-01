@@ -20,7 +20,7 @@ export default class FetchService {
 
 	public static async init() {
 		mp.events.add('interface:fetchData', this.onFetchRequest.bind(this));
-		mp.events.add('fetch:receiveData', this.receiveFetchData.bind(this));
+		EventService.registerEventHandler('fetch:receiveData', this.receiveFetchData.bind(this));
 	}
 
 	public static getFetchListener(eventName: string): FetchListener | undefined {
@@ -37,7 +37,7 @@ export default class FetchService {
 
 	public static async fetchData<T>(eventName: string, data: any): Promise<T> {
 		const hash = generateHash(eventName);
-		EventService.triggerEvent('fetch:getData', eventName, hash, JSON.stringify(data));
+		EventService.triggerServerEvent('fetch:getData', eventName, hash, JSON.stringify(data));
 
 		return new Promise<T>((resolve, reject) => {
 			this.pendingFetches[hash] = { resolve, reject };

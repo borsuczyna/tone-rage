@@ -37,7 +37,7 @@ export default class FetchService {
 		if (listener) {
 			const data = JSON.parse(dataAsJson);
 			const response = await listener.callback(client, data);
-			client.call('fetch:receiveData', [hash, JSON.stringify(response)]);
+			EventService.triggerClientEvent(client, 'fetch:receiveData', hash, JSON.stringify(response));
 		}
 	}
 }
