@@ -18,7 +18,7 @@ function simpleEncode(input: string): string {
 }
 
 export function generateHash(input: string, salt?: string): string {
-	const saltedInput = salt ? input + salt : input;
+	const saltedInput = salt ? `${input}:${salt}` : input;
 	const encoded = simpleEncode(saltedInput);
 	let hash = '';
 	let index = 0;
@@ -38,7 +38,7 @@ export function generateHash(input: string, salt?: string): string {
 }
 
 export function validateHash(input: string, hash: string, salt?: string): boolean {
-	const saltedInput = salt ? input + salt : input;
+	const saltedInput = salt ? `${input}:${salt}` : input;
 	const encoded = simpleEncode(saltedInput);
 	let index = 0;
 
