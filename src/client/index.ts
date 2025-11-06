@@ -5,16 +5,19 @@ import ElementDataService from './Services/ElementDataService';
 import FetchService from './Services/FetchService';
 import InterfaceService from './Services/InterfaceService';
 import NotificationService from './Services/NotificationService';
+import PlayerDataDisplayService from './Services/PlayerDataDisplayService';
 // import EventServiceTest from './Tests/EventServiceTest';
 // import ElementDataServiceTest from './Tests/ElementDataServiceTest';
 // import InterfaceServiceTest from './Tests/InterfaceServiceTest';
 // import FetchServiceTest from './Tests/FetchServiceTest';
 // import NotificationServiceTest from './Tests/NotificationServiceTest';
+// import PlayerDataDisplayServiceTest from './Tests/PlayerDataDisplayServiceTest';
 
 (async () => {
 	await DiscordRPCService.init();
 	EventService.init();
 	ElementDataService.init();
+	PlayerDataDisplayService.init();
 
 	await InterfaceService.init();
 	await FetchService.init();
@@ -27,4 +30,5 @@ import NotificationService from './Services/NotificationService';
 	// InterfaceServiceTest.init();
 	// FetchServiceTest.init();
 	// NotificationServiceTest.init();
+	// PlayerDataDisplayServiceTest.init();
 })();

@@ -9,7 +9,7 @@ import Logger from '@shared/Logger';
  */
 export default class ElementDataService {
 	/** Storage for element data: elementId -> key -> ElementDataEntry */
-	private static elementData: Map<number, Map<string, ElementDataEntry>> = new Map();
+	private static elementData: Map<string, Map<string, ElementDataEntry>> = new Map();
 	private static logger = Logger.getLogger(ElementDataService);
 
 	/**
@@ -33,15 +33,26 @@ export default class ElementDataService {
 	 * @param value The data value
 	 * @param shareMode How the data should be shared
 	 */
-	public static set(element: PlayerMp | VehicleMp, key: string, value: any, shareMode: ShareMode = ShareMode.Local, ignoreClient: PlayerMp | null = null) {
-		const elementId = element.id;
+	public static set(
+		element: PlayerMp | VehicleMp,
+		key: string,
+		value: any,
+		shareMode: ShareMode = ShareMode.Local,
+		ignoreClient: PlayerMp | null = null
+	) {
+		const elementId = this.getElementInfo(element);
 
 		// Get or create element data map
 		if (!this.elementData.has(elementId)) {
 			this.elementData.set(elementId, new Map());
 		}
 
-		const dataMap = this.elementData.get(elementId)!;
+		let dataMap = this.elementData.get(elementId);
+		if (!dataMap) {
+			dataMap = new Map<string, ElementDataEntry>();
+			this.elementData.set(elementId, dataMap);
+		}
+
 		const entry: ElementDataEntry = { key, value, shareMode };
 		dataMap.set(key, entry);
 
@@ -55,7 +66,7 @@ export default class ElementDataService {
 	 * @returns The data value or undefined if not found
 	 */
 	public static get(element: PlayerMp | VehicleMp, key: string): any {
-		const elementId = element.id;
+		const elementId = this.getElementInfo(element);
 		const dataMap = this.elementData.get(elementId);
 		if (!dataMap) return undefined;
 
@@ -69,7 +80,7 @@ export default class ElementDataService {
 	 * @returns Map of all element data entries
 	 */
 	public static getAll(element: PlayerMp | VehicleMp): Map<string, ElementDataEntry> {
-		const elementId = element.id;
+		const elementId = this.getElementInfo(element);
 		return this.elementData.get(elementId) || new Map();
 	}
 
@@ -102,7 +113,7 @@ export default class ElementDataService {
 					if (ignoreClient !== null && (element as PlayerMp).id === ignoreClient.id) {
 						return;
 					}
-					
+
 					EventService.triggerClientEvent(element as PlayerMp, 'elementData:sync', elementId, entry.key, entry.value);
 				}
 				break;
@@ -118,7 +129,7 @@ export default class ElementDataService {
 	 * not based on what the client requests. This is a security feature to prevent
 	 * clients from bypassing permission restrictions.
 	 */
-	private static onClientSetElementData(client: PlayerMp, elementId: number, elementType: string, shareMode: ShareMode, key: string, value: any) {
+	private static onClientSetElementData(client: PlayerMp, elementId: string, shareMode: ShareMode, key: string, value: any) {
 		// Check if client has permission to write this key
 		if (!canSyncElementDataKey(key, shareMode)) {
 			this.logger.warn(`Client ${client.name} attempted to set element data key '${key}' with invalid share mode`);
@@ -126,7 +137,7 @@ export default class ElementDataService {
 		}
 
 		// Get the element
-		const element = this.getElementByIdAndType(elementId, elementType);
+		const element = this.getElementByIdAndType(elementId);
 		if (!element) {
 			this.logger.warn(`Client ${client.name} attempted to set element data for non-existent element ${elementId}`);
 			return;
@@ -162,18 +173,32 @@ export default class ElementDataService {
 	 * Clean up element data when player quits
 	 */
 	private static onPlayerQuit(player: PlayerMp) {
-		this.elementData.delete(player.id);
+		const elementId = this.getElementInfo(player);
+		this.elementData.delete(elementId);
 	}
 
 	/**
 	 * Get element by ID and type
 	 */
-	private static getElementByIdAndType(elementId: number, elementType: string): PlayerMp | VehicleMp | undefined {
+	private static getElementByIdAndType(elementId: string): PlayerMp | VehicleMp | undefined {
+		// split elementId to get id and type
+		const [idStr, elementType] = elementId.split(':');
+		const elementIdNum = parseInt(idStr, 10);
+
 		if (elementType === 'player') {
-			return mp.players.at(elementId);
+			return mp.players.at(elementIdNum);
 		} else if (elementType === 'vehicle') {
-			return mp.vehicles.at(elementId);
+			return mp.vehicles.at(elementIdNum);
 		}
 		return undefined;
+	}
+
+	/**
+	 * Get element type and ID from an element
+	 */
+	private static getElementInfo(element: PlayerMp | VehicleMp): string {
+		const elementId = element.id;
+		const elementType = element.type === 'player' ? 'player' : 'vehicle';
+		return `${elementId}:${elementType}`;
 	}
 }

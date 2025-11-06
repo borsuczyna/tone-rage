@@ -7,7 +7,7 @@ import EventService from './EventService';
  */
 export default class ElementDataService {
 	/** Storage for element data: elementId -> key -> value */
-	private static elementData: Map<number, Map<string, any>> = new Map();
+	private static elementData: Map<string, Map<string, any>> = new Map();
 
 	/**
 	 * Initialize the service and register event handlers
@@ -27,14 +27,22 @@ export default class ElementDataService {
 	 * @param value The data value
 	 * @param shareMode How the data should be shared
 	 */
-	public static set(elementId: number, elementType: string, key: string, value: any, shareMode: ShareMode = ShareMode.Local) {
+	public static set(element: PlayerMp | VehicleMp, key: string, value: any, shareMode: ShareMode = ShareMode.Local) {
 		// Store locally
-		if (!this.elementData.has(elementId)) {
-			this.elementData.set(elementId, new Map());
+		// let { elementId, elementType } = this.getElementInfo(element);
+		// if (!this.elementData.has(elementId)) {
+		// 	this.elementData.set(elementId, new Map());
+		// }
+		const elementId = this.getElementInfo(element);
+
+		let dataMap = this.elementData.get(elementId);
+		if (!dataMap) {
+			dataMap = new Map<string, any>();
+			this.elementData.set(elementId, dataMap);
 		}
 
-		const dataMap = this.elementData.get(elementId)!;
 		dataMap.set(key, value);
+		mp.gui.chat.push(`ElementDataService: Set data for ${elementId} - ${key} = ${value} (shareMode: ${shareMode})`);
 
 		// Sync based on share mode
 		switch (shareMode) {
@@ -45,12 +53,12 @@ export default class ElementDataService {
 
 			case ShareMode.Server:
 				// Send to server only
-				EventService.triggerServerEvent('elementData:set', elementId, elementType, ShareMode.Server, key, value);
+				EventService.triggerServerEvent('elementData:set', elementId, ShareMode.Server, key, value);
 				break;
 
 			case ShareMode.Everywhere:
 				// Send to server to broadcast to all clients
-				EventService.triggerServerEvent('elementData:set', elementId, elementType, ShareMode.Everywhere, key, value);
+				EventService.triggerServerEvent('elementData:set', elementId, ShareMode.Everywhere, key, value);
 				break;
 
 			default:
@@ -64,7 +72,8 @@ export default class ElementDataService {
 	 * @param key The data key
 	 * @returns The data value or undefined if not found
 	 */
-	public static get(elementId: number, key: string): any {
+	public static get(element: PlayerMp | VehicleMp, key: string): any {
+		const elementId = this.getElementInfo(element);
 		const dataMap = this.elementData.get(elementId);
 		if (!dataMap) return undefined;
 
@@ -74,7 +83,7 @@ export default class ElementDataService {
 	/**
 	 * Handle element data sync from server
 	 */
-	private static onElementDataSync(elementId: number, key: string, value: any) {
+	private static onElementDataSync(elementId: string, key: string, value: any) {
 		// Store locally
 		if (!this.elementData.has(elementId)) {
 			this.elementData.set(elementId, new Map());
@@ -102,7 +111,17 @@ export default class ElementDataService {
 	/**
 	 * Get all element data for an element
 	 */
-	public static getAll(elementId: number): Map<string, any> {
+	public static getAll(element: PlayerMp | VehicleMp): Map<string, any> {
+		const elementId = this.getElementInfo(element);
 		return this.elementData.get(elementId) || new Map();
+	}
+
+	/**
+	 * Get element type and ID from an element
+	 */
+	private static getElementInfo(element: PlayerMp | VehicleMp): string {
+		const elementId = element.id;
+		const elementType = element.type === 'player' ? 'player' : 'vehicle';
+		return `${elementId}:${elementType}`;
 	}
 }

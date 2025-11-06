@@ -9,7 +9,7 @@ export enum ShareMode {
 	/** Synced to specific client only (only valid when element is PlayerMp) */
 	SpecificClient = 'specific_client',
 	/** Client only - data stays on client (not synced to server) */
-	Server = 'server',
+	Server = 'server'
 }
 
 /**
@@ -25,4 +25,4 @@ export interface ElementDataEntry {
  * Bulk sync data structure
  */
 
-export type BulkSyncData = Array<{ elementId: number; key: string; value: any }>;
+export type BulkSyncData = Array<{ elementId: string; key: string; value: any }>;
