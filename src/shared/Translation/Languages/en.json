@@ -75,5 +75,9 @@
     "auth.register.emailTaken": "Email is already registered. Please use a different email.",
     "auth.register.invalidEmail": "Invalid email address. Please enter a valid email.",
     "auth.register.weakPassword": "Password is too weak. Please choose a stronger password.",
-    "fetch.timeout": "Connection timed out. Please try again."
+    "fetch.timeout": "Connection timed out. Please try again.",
+    
+    "spawn.title": "Select Spawn Location",
+    "spawn.subtitle": "Choose where you want to start your journey",
+    "spawn.confirm": "CONFIRM LOCATION"
 }
