@@ -9,7 +9,7 @@ export enum ShareMode {
 	/** Synced to specific client only (only valid when element is PlayerMp) */
 	SpecificClient = 'specific_client',
 	/** Client only - data stays on client (not synced to server) */
-	Server = 'server',
+	Server = 'server'
 }
 
 /**

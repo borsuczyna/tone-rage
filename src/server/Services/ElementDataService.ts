@@ -33,7 +33,13 @@ export default class ElementDataService {
 	 * @param value The data value
 	 * @param shareMode How the data should be shared
 	 */
-	public static set(element: PlayerMp | VehicleMp, key: string, value: any, shareMode: ShareMode = ShareMode.Local, ignoreClient: PlayerMp | null = null) {
+	public static set(
+		element: PlayerMp | VehicleMp,
+		key: string,
+		value: any,
+		shareMode: ShareMode = ShareMode.Local,
+		ignoreClient: PlayerMp | null = null
+	) {
 		const elementId = element.id;
 
 		// Get or create element data map
@@ -92,7 +98,7 @@ export default class ElementDataService {
 					if (ignoreClient !== null && player.id === ignoreClient.id) {
 						return;
 					}
-					
+
 					EventService.triggerClientEvent(player, 'elementData:sync', elementId, elementType, entry.key, entry.value);
 				});
 				break;
@@ -103,7 +109,7 @@ export default class ElementDataService {
 					if (ignoreClient !== null && (element as PlayerMp).id === ignoreClient.id) {
 						return;
 					}
-					
+
 					EventService.triggerClientEvent(element as PlayerMp, 'elementData:sync', elementId, elementType, entry.key, entry.value);
 				}
 				break;
