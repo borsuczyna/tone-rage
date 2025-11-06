@@ -57,7 +57,12 @@ export default class PlayerDataDisplayService {
 				// Convert value to string, handle objects/arrays
 				let valueStr: string;
 				if (typeof value === 'object' && value !== null) {
-					valueStr = JSON.stringify(value);
+					try {
+						valueStr = JSON.stringify(value);
+					} catch (error) {
+						// Handle circular references or non-serializable values
+						valueStr = '[Object]';
+					}
 				} else {
 					valueStr = String(value);
 				}
@@ -68,7 +73,7 @@ export default class PlayerDataDisplayService {
 			const text = dataLines.join('\n');
 
 			// Display 3D text above player's head
-			// Offset Y by 1.0 to position above the player
+			// Offset Z by 1.0 to position above the player
 			mp.game.graphics.drawText(text, [pos.x, pos.y, pos.z + 1.0], {
 				font: 4,
 				color: [255, 255, 255, 255],
