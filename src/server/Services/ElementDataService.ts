@@ -1,4 +1,4 @@
-import { ShareMode, ElementDataEntry } from '@shared/Models/ElementDataModels';
+import { ShareMode, ElementDataEntry, BulkSyncData } from '@shared/Models/ElementDataModels';
 import EventService from './EventService';
 import { canSyncElementDataKey } from '@/Utils/ElementDataKeys';
 import Logger from '@shared/Logger';
@@ -78,7 +78,6 @@ export default class ElementDataService {
 	 */
 	private static syncElementData(ignoreClient: PlayerMp | null, element: PlayerMp | VehicleMp, entry: ElementDataEntry) {
 		const elementId = element.id;
-		const elementType = this.getElementType(element);
 
 		switch (entry.shareMode) {
 			case ShareMode.Server:
@@ -93,7 +92,7 @@ export default class ElementDataService {
 						return;
 					}
 					
-					EventService.triggerClientEvent(player, 'elementData:sync', elementId, elementType, entry.key, entry.value);
+					EventService.triggerClientEvent(player, 'elementData:sync', elementId, entry.key, entry.value);
 				});
 				break;
 
@@ -104,7 +103,7 @@ export default class ElementDataService {
 						return;
 					}
 					
-					EventService.triggerClientEvent(element as PlayerMp, 'elementData:sync', elementId, elementType, entry.key, entry.value);
+					EventService.triggerClientEvent(element as PlayerMp, 'elementData:sync', elementId, entry.key, entry.value);
 				}
 				break;
 
@@ -141,28 +140,22 @@ export default class ElementDataService {
 	 * When a player joins, sync all relevant element data to them
 	 */
 	private static onPlayerJoin(player: PlayerMp) {
-		// Sync all element data that should be visible to this player
+		// Sync all element data that should be visible to this player in one go
+		const syncData: BulkSyncData = [];
 		this.elementData.forEach((dataMap, elementId) => {
 			dataMap.forEach((entry) => {
 				// Only sync data that should be shared with clients
-				if (entry.shareMode === ShareMode.Everywhere) {
-					const element = this.getElementById(elementId);
-					if (element) {
-						const elementType = this.getElementType(element);
-						EventService.triggerClientEvent(player, 'elementData:sync', elementId, elementType, entry.key, entry.value);
-					}
-				} else if (entry.shareMode === ShareMode.SpecificClient) {
-					// Only sync SpecificClient data if this player is the element itself
-					if (elementId === player.id) {
-						const element = this.getElementById(elementId);
-						if (element) {
-							const elementType = this.getElementType(element);
-							EventService.triggerClientEvent(player, 'elementData:sync', elementId, elementType, entry.key, entry.value);
-						}
-					}
+				if (entry.shareMode !== ShareMode.Everywhere) {
+					return;
 				}
+
+				syncData.push({ elementId, key: entry.key, value: entry.value });
 			});
 		});
+
+		if (syncData.length > 0) {
+			EventService.triggerClientEvent(player, 'elementData:bulkSync', syncData);
+		}
 	}
 
 	/**
@@ -170,21 +163,6 @@ export default class ElementDataService {
 	 */
 	private static onPlayerQuit(player: PlayerMp) {
 		this.elementData.delete(player.id);
-	}
-
-	/**
-	 * Get element by ID (searches both players and vehicles)
-	 */
-	private static getElementById(elementId: number): PlayerMp | VehicleMp | undefined {
-		// Try to find player
-		const player = mp.players.at(elementId);
-		if (player) return player;
-
-		// Try to find vehicle
-		const vehicle = mp.vehicles.at(elementId);
-		if (vehicle) return vehicle;
-
-		return undefined;
 	}
 
 	/**
@@ -197,12 +175,5 @@ export default class ElementDataService {
 			return mp.vehicles.at(elementId);
 		}
 		return undefined;
-	}
-
-	/**
-	 * Get element type as string
-	 */
-	private static getElementType(element: PlayerMp | VehicleMp): string {
-		return element.type === 'player' ? 'player' : 'vehicle';
 	}
 }
