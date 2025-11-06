@@ -25,4 +25,4 @@ export interface ElementDataEntry {
  * Bulk sync data structure
  */
 
-export type BulkSyncData = Array<{ elementId: number; key: string; value: any }>;
+export type BulkSyncData = Array<{ elementId: string; key: string; value: any }>;

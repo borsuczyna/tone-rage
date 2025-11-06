@@ -189,13 +189,6 @@ export default class ElementDataService {
 	}
 
 	/**
-	 * Get element type as string
-	 */
-	private static getElementType(element: PlayerMp | VehicleMp): string {
-		return element.type === 'player' ? 'player' : 'vehicle';
-	}
-
-	/**
 	 * Get element type and ID from an element
 	 */
 	private static getElementInfo(element: PlayerMp | VehicleMp): string {
