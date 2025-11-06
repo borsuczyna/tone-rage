@@ -35,8 +35,14 @@ export default class ElementDataService {
 		// }
 		const elementId = this.getElementInfo(element);
 
-		const dataMap = this.elementData.get(elementId)!;
+		let dataMap = this.elementData.get(elementId);
+		if (!dataMap) {
+			dataMap = new Map<string, any>();
+			this.elementData.set(elementId, dataMap);
+		}
+
 		dataMap.set(key, value);
+		mp.gui.chat.push(`ElementDataService: Set data for ${elementId} - ${key} = ${value} (shareMode: ${shareMode})`);
 
 		// Sync based on share mode
 		switch (shareMode) {

@@ -90,7 +90,7 @@ export default class PlayerDataDisplayService {
 			mp.game.graphics.drawText(text, [pos.x, pos.y, pos.z + 1.0], {
 				font: 4,
 				color: [255, 255, 255, 255],
-				scale: [0.35, 0.35],
+				scale: [0.5, 0.5],
 				outline: true,
 				centre: true
 			});

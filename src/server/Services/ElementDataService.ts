@@ -47,7 +47,12 @@ export default class ElementDataService {
 			this.elementData.set(elementId, new Map());
 		}
 
-		const dataMap = this.elementData.get(elementId)!;
+		let dataMap = this.elementData.get(elementId);
+		if (!dataMap) {
+			dataMap = new Map<string, ElementDataEntry>();
+			this.elementData.set(elementId, dataMap);
+		}
+
 		const entry: ElementDataEntry = { key, value, shareMode };
 		dataMap.set(key, entry);
 
