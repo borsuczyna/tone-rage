@@ -20,3 +20,9 @@ export interface ElementDataEntry {
 	value: any;
 	shareMode: ShareMode;
 }
+
+/**
+ * Bulk sync data structure
+ */
+
+export type BulkSyncData = Array<{ elementId: number; key: string; value: any }>;

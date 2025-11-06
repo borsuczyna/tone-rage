@@ -1,4 +1,4 @@
-import { ShareMode } from '@shared/Models/ElementDataModels';
+import { BulkSyncData, ShareMode } from '@shared/Models/ElementDataModels';
 import EventService from './EventService';
 
 /**
@@ -15,6 +15,9 @@ export default class ElementDataService {
 	public static init() {
 		// Handle element data sync from server
 		EventService.registerEventHandler('elementData:sync', this.onElementDataSync.bind(this));
+
+		// Handle bulk sync
+		EventService.registerEventHandler('elementData:bulkSync', this.onBulkElementDataSync.bind(this));
 	}
 
 	/**
@@ -82,6 +85,21 @@ export default class ElementDataService {
 
 		const dataMap = this.elementData.get(elementId)!;
 		dataMap.set(key, value);
+	}
+
+	/**
+	 * Handle bulk element data sync from server
+	 */
+	private static onBulkElementDataSync(data: BulkSyncData) {
+		data.forEach(({ elementId, key, value }) => {
+			// Store locally
+			if (!this.elementData.has(elementId)) {
+				this.elementData.set(elementId, new Map());
+			}
+
+			const dataMap = this.elementData.get(elementId)!;
+			dataMap.set(key, value);
+		});
 	}
 
 	/**
