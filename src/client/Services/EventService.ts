@@ -1,6 +1,7 @@
 import { encodeData, decodeData } from '@shared/DataEncoder';
 import { generateHash } from '@shared/Hash';
 import { chunkData, ChunkAssembler, DataChunk } from '@shared/ChunkingUtils';
+import Logger from '@shared/Logger';
 
 interface EventListener {
 	eventName: string;
@@ -11,6 +12,8 @@ export default class EventService {
 	private static listeners: EventListener[] = [];
 	private static chunkAssembler: ChunkAssembler = new ChunkAssembler();
 	private static initialized: boolean = false;
+	private static salt: string = '';
+	private static logger: Logger = Logger.getLogger(EventService);
 
 	/**
 	 * Initialize the event service
@@ -20,7 +23,14 @@ export default class EventService {
 
 		mp.events.add('event:receive', this.onEventReceived.bind(this));
 		mp.events.add('event:receive:chunk', this.onChunkReceived.bind(this));
+		mp.events.add('event:setSalt', this.onSetSalt.bind(this));
 		this.initialized = true;
+	}
+
+	private static onSetSalt(salt: string) {
+		this.salt = salt;
+		mp.gui.chat.push('EventService: Received salt from server, ready to send events.');
+		mp.gui.chat.push(`Salt: ${salt}`);
 	}
 
 	/**
@@ -34,8 +44,13 @@ export default class EventService {
 	 * Trigger a server event with support for large data
 	 */
 	public static triggerServerEvent(eventName: string, ...args: any[]) {
+		if (!this.salt) {
+			this.logger.error('Cannot trigger server event: waiting for salt from server. Ensure client is properly connected.');
+			return;
+		}
+
 		const encodedData = encodeData(args);
-		const hash = generateHash(eventName);
+		const hash = generateHash(eventName, this.salt);
 
 		// Check if data needs to be chunked
 		if (encodedData.length <= 32000) {

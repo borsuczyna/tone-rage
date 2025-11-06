@@ -14,6 +14,24 @@ export default class EventService {
 	public static init() {
 		mp.events.add('event:trigger', this.onEventTriggered.bind(this));
 		mp.events.add('event:trigger:chunk', this.onChunkReceived.bind(this));
+		mp.events.add('playerJoin', this.onPlayerJoin.bind(this));
+		mp.events.add('playerQuit', this.onPlayerQuit.bind(this));
+	}
+
+	private static onPlayerJoin(player: PlayerMp) {
+		// Generate and send salt to the player
+		AnticheatService.generatePlayerSalt(player.id);
+		const fullSalt = AnticheatService.getFullSalt(player.id);
+
+		// Send the full salt to the client
+		player.call('event:setSalt', [fullSalt]);
+		console.log(`Sent salt to player ${player.id}: ${fullSalt}`);
+	}
+
+	private static onPlayerQuit(player: PlayerMp) {
+		// Clean up player salt and chunk assembler
+		AnticheatService.removePlayerSalt(player.id);
+		this.chunkAssemblers.delete(player.id);
 	}
 
 	/**
@@ -56,7 +74,7 @@ export default class EventService {
 	private static onEventTriggered(client: PlayerMp, hash: string, eventName: string, encodedData: string) {
 		const decodedData = decodeData<any[]>(encodedData);
 
-		if (!AnticheatService.verifyHash(eventName, hash)) {
+		if (!AnticheatService.verifyHash(eventName, hash, client.id)) {
 			AnticheatService.clientInvalidHash(client, eventName, hash, JSON.stringify(decodedData));
 			return;
 		}
@@ -87,7 +105,7 @@ export default class EventService {
 			// All chunks received, process the event
 			const decodedData = decodeData<any[]>(completeData);
 
-			if (!AnticheatService.verifyHash(eventName, hash)) {
+			if (!AnticheatService.verifyHash(eventName, hash, client.id)) {
 				AnticheatService.clientInvalidHash(client, eventName, hash, JSON.stringify(decodedData));
 				return;
 			}

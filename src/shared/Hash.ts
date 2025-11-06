@@ -5,12 +5,21 @@ function randomChar(): string {
 	return chars.charAt(Math.floor(Math.random() * chars.length));
 }
 
+export function generateSalt(): string {
+	let salt = '';
+	for (let i = 0; i < 32; i++) {
+		salt += randomChar();
+	}
+	return salt;
+}
+
 function simpleEncode(input: string): string {
 	return input.replace(/[^a-zA-Z0-9]/g, '');
 }
 
-export function generateHash(input: string): string {
-	const encoded = simpleEncode(input);
+export function generateHash(input: string, salt?: string): string {
+	const saltedInput = salt ? `${input}:${salt}` : input;
+	const encoded = simpleEncode(saltedInput);
 	let hash = '';
 	let index = 0;
 
@@ -28,8 +37,9 @@ export function generateHash(input: string): string {
 	return hash;
 }
 
-export function validateHash(input: string, hash: string): boolean {
-	const encoded = simpleEncode(input);
+export function validateHash(input: string, hash: string, salt?: string): boolean {
+	const saltedInput = salt ? `${input}:${salt}` : input;
+	const encoded = simpleEncode(saltedInput);
 	let index = 0;
 
 	for (let i = 0; i < pattern.length; i++) {
