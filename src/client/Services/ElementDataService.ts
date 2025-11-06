@@ -24,7 +24,7 @@ export default class ElementDataService {
 	 * @param value The data value
 	 * @param shareMode How the data should be shared
 	 */
-	public static setElementData(elementId: number, elementType: string, key: string, value: any, shareMode: ShareMode = ShareMode.Local) {
+	public static set(elementId: number, elementType: string, key: string, value: any, shareMode: ShareMode = ShareMode.Local) {
 		// Store locally
 		if (!this.elementData.has(elementId)) {
 			this.elementData.set(elementId, new Map());
@@ -61,7 +61,7 @@ export default class ElementDataService {
 	 * @param key The data key
 	 * @returns The data value or undefined if not found
 	 */
-	public static getElementData(elementId: number, key: string): any {
+	public static get(elementId: number, key: string): any {
 		const dataMap = this.elementData.get(elementId);
 		if (!dataMap) return undefined;
 
@@ -84,7 +84,7 @@ export default class ElementDataService {
 	/**
 	 * Get all element data for an element
 	 */
-	public static getAllElementData(elementId: number): Map<string, any> {
+	public static getAll(elementId: number): Map<string, any> {
 		return this.elementData.get(elementId) || new Map();
 	}
 }

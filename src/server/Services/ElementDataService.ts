@@ -33,7 +33,7 @@ export default class ElementDataService {
 	 * @param value The data value
 	 * @param shareMode How the data should be shared
 	 */
-	public static setElementData(element: PlayerMp | VehicleMp, key: string, value: any, shareMode: ShareMode = ShareMode.Local, ignoreClient: PlayerMp | null = null) {
+	public static set(element: PlayerMp | VehicleMp, key: string, value: any, shareMode: ShareMode = ShareMode.Local, ignoreClient: PlayerMp | null = null) {
 		const elementId = element.id;
 
 		// Get or create element data map
@@ -54,7 +54,7 @@ export default class ElementDataService {
 	 * @param key The data key
 	 * @returns The data value or undefined if not found
 	 */
-	public static getElementData(element: PlayerMp | VehicleMp, key: string): any {
+	public static get(element: PlayerMp | VehicleMp, key: string): any {
 		const elementId = element.id;
 		const dataMap = this.elementData.get(elementId);
 		if (!dataMap) return undefined;
@@ -68,7 +68,7 @@ export default class ElementDataService {
 	 * @param element The element (player or vehicle)
 	 * @returns Map of all element data entries
 	 */
-	public static getAllElementData(element: PlayerMp | VehicleMp): Map<string, ElementDataEntry> {
+	public static getAll(element: PlayerMp | VehicleMp): Map<string, ElementDataEntry> {
 		const elementId = element.id;
 		return this.elementData.get(elementId) || new Map();
 	}
@@ -134,7 +134,7 @@ export default class ElementDataService {
 		}
 
 		// Set the data
-		this.setElementData(element, key, value, shareMode, client);
+		this.set(element, key, value, shareMode, client);
 	}
 
 	/**

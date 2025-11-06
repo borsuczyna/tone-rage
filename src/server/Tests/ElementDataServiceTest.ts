@@ -12,21 +12,21 @@ export default class ElementDataServiceTest {
 		// Test command: Set element data with different share modes
 		mp.events.addCommand('testdata', (player: PlayerMp, _fullText: string) => {
 			// Test 1: Server-only data
-			ElementDataService.setElementData(player, 'secret', 'server-secret-value', ShareMode.Server);
+			ElementDataService.set(player, 'secret', 'server-secret-value', ShareMode.Server);
 			ElementDataServiceTest.logger.info(`Set server-only data for player ${player.name}`);
 
 			// Test 2: Everywhere data
-			ElementDataService.setElementData(player, 'level', 42, ShareMode.Everywhere);
+			ElementDataService.set(player, 'level', 42, ShareMode.Everywhere);
 			ElementDataServiceTest.logger.info(`Set everywhere data for player ${player.name}`);
 
 			// Test 3: Specific client data
-			ElementDataService.setElementData(player, 'private-msg', 'This is private', ShareMode.SpecificClient);
+			ElementDataService.set(player, 'private-msg', 'This is private', ShareMode.SpecificClient);
 			ElementDataServiceTest.logger.info(`Set specific client data for player ${player.name}`);
 
 			// Test 4: Read data back
-			const secret = ElementDataService.getElementData(player, 'secret');
-			const level = ElementDataService.getElementData(player, 'level');
-			const privateMsg = ElementDataService.getElementData(player, 'private-msg');
+			const secret = ElementDataService.get(player, 'secret');
+			const level = ElementDataService.get(player, 'level');
+			const privateMsg = ElementDataService.get(player, 'private-msg');
 
 			player.outputChatBox(`Secret: ${secret}, Level: ${level}, Private: ${privateMsg}`);
 		});
@@ -42,24 +42,24 @@ export default class ElementDataServiceTest {
 			const vehicle = player.vehicle;
 
 			// Set vehicle data with different share modes
-			ElementDataService.setElementData(vehicle, 'owner', player.name, ShareMode.Everywhere);
-			ElementDataService.setElementData(vehicle, 'fuel', 75, ShareMode.Everywhere);
-			ElementDataService.setElementData(vehicle, 'engineHealth', 1000, ShareMode.Server);
+			ElementDataService.set(vehicle, 'owner', player.name, ShareMode.Everywhere);
+			ElementDataService.set(vehicle, 'fuel', 75, ShareMode.Everywhere);
+			ElementDataService.set(vehicle, 'engineHealth', 1000, ShareMode.Server);
 
 			ElementDataServiceTest.logger.info(`Set vehicle data for vehicle ${vehicle.id}`);
 			player.outputChatBox('Vehicle data set successfully!');
 
 			// Read back
-			const owner = ElementDataService.getElementData(vehicle, 'owner');
-			const fuel = ElementDataService.getElementData(vehicle, 'fuel');
-			const engineHealth = ElementDataService.getElementData(vehicle, 'engineHealth');
+			const owner = ElementDataService.get(vehicle, 'owner');
+			const fuel = ElementDataService.get(vehicle, 'fuel');
+			const engineHealth = ElementDataService.get(vehicle, 'engineHealth');
 
 			player.outputChatBox(`Owner: ${owner}, Fuel: ${fuel}, Engine: ${engineHealth}`);
 		});
 
 		// Test command: Get all element data
 		mp.events.addCommand('getalldata', (player: PlayerMp) => {
-			const allData = ElementDataService.getAllElementData(player);
+			const allData = ElementDataService.getAll(player);
 			ElementDataServiceTest.logger.info(`Player ${player.name} has ${allData.size} data entries`);
 
 			let output = 'Your element data: ';

@@ -3,6 +3,7 @@ import { UserEntity } from '@/Database/Entities/UserEntity';
 import PasswordHash from '@/Utils/PasswordHash';
 import EmailValidator from '@shared/EmailValidator';
 import PasswordValidator from '@shared/PasswordValidator';
+import ElementDataService from './ElementDataService';
 
 interface CreateUserResult {
 	userId: number | null;
@@ -74,5 +75,9 @@ export default class UserService {
 		}
 
 		return { user };
+	}
+
+	public static async assignUserData(client: PlayerMp, user: UserEntity): Promise<void> {
+		// ElementDataService.set
 	}
 }
