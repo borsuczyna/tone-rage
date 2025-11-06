@@ -28,7 +28,7 @@ export default class FetchService {
 	}
 
 	private static async onFetchRequest(client: PlayerMp, eventName: string, hash: string, dataAsJson: string) {
-		if (!AnticheatService.verifyHash(eventName, hash)) {
+		if (!AnticheatService.verifyHash(eventName, hash, client.id)) {
 			AnticheatService.clientInvalidHash(client, eventName, hash, dataAsJson);
 			return;
 		}

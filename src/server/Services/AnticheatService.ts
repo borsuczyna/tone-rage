@@ -41,7 +41,7 @@ export default class AnticheatService {
 
 	public static clientInvalidHash(client: PlayerMp, eventName: string, hash: string, eventData: string) {
 		this.logger.error(`Client sent invalid hash: player=${client.name}, event=${eventName}, hash=${hash}, data=${eventData}`);
-		client.kick('Anticheat: A1');
+		this.kick(client, 'Anticheat: A1');
 	}
 
 	public static verifyHash(eventName: string, hash: string, playerId: number): boolean {
@@ -55,6 +55,7 @@ export default class AnticheatService {
 
 		this.hashHistory.set(hash, now);
 		const fullSalt = this.getFullSalt(playerId);
+		console.log(`Verifying hash for player ${playerId}, event ${eventName}, hash ${hash}, using salt ${fullSalt}`);
 		return validateHash(eventName, hash, fullSalt);
 	}
 
@@ -66,5 +67,10 @@ export default class AnticheatService {
 				this.hashHistory.delete(hash);
 			}
 		});
+	}
+
+	public static kick(client: PlayerMp, reason: string) {
+		// client.kick(reason);
+		this.logger.info(`Kicked player ${client.name} for reason: ${reason}`);
 	}
 }
