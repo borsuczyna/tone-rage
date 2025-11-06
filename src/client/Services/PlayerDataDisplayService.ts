@@ -27,6 +27,19 @@ export default class PlayerDataDisplayService {
 		if (command === 'toggledatadisplay') {
 			this.isEnabled = !this.isEnabled;
 			mp.gui.chat.push(`Player data display: ${this.isEnabled ? 'enabled' : 'disabled'}`);
+		} else if (command.startsWith('adddata')) {
+			// Example command: /adddata key value
+			const parts = command.split(' ');
+			if (parts.length < 3) {
+				mp.gui.chat.push('Usage: /adddata key value');
+				return;
+			}
+
+			const key = parts[1];
+			const value = parts.slice(2).join(' ');
+
+			// Add the data to the element
+			ElementDataService.set(mp.players.local, key, value);
 		}
 	}
 
@@ -46,7 +59,7 @@ export default class PlayerDataDisplayService {
 			const pos = player.position;
 
 			// Get all element data for this player
-			const elementData = ElementDataService.getAll(player.remoteId);
+			const elementData = ElementDataService.getAll(player);
 
 			// Skip if no data
 			if (!elementData || elementData.size === 0) return;
