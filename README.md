@@ -1,92 +1,55 @@
-<p align="center" style="font-size: 26px">
-	<b>A Typescript Boilerplate for RAGE:MP with simple setup and usage.</b>
-</p>
+# RAGE:MP TypeScript Boilerplate
 
-<br>
+A modern TypeScript framework for RAGE:MP multiplayer servers with built-in services, authentication, and database integration.
 
-Remember to 🌟 this Github if you 💖 it.
+## ✨ Features
 
-> For Javascript Edition, see: [ragemp-javascript](https://github.com/leonardssh/ragemp-javascript)
+- **Full TypeScript Support** - Complete type definitions for client, server, and CEF
+- **Service Architecture** - Pre-built services for events, authentication, vehicles, and more
+- **Database Integration** - MySQL support with TypeORM entities
+- **Modern UI** - React-based UI with Vite bundling
+- **Fast Build** - SWC compiler for lightning-fast transpilation
+- **Hot Reload** - Development mode with automatic rebuilding
 
-## 📌 Features
-
--   Full RAGE:MP Type Support for VSCode
--   Built in rollup config for transpile and auto-copy (incredibly fast using the [SWC](https://github.com/swc-project/swc))
--   Prettier Configuration for code formatting.
-
-## 📥 Installation
-
-### Prerequisites
-
--   [Install NodeJS 16+](https://nodejs.org/en/download/current/)
--   [Install GIT](https://git-scm.com/downloads)
-
-### Clone the Repository
-
-Use the command below in any terminal, command prompt, etc.
+## 🚀 Quick Start
 
 ```sh
-git clone https://github.com/leonardssh/ragemp-typescript.git
+# Clone the repository
+git clone https://github.com/borsuczyna/tone-rage.git
+cd tone-rage
+
+# Install dependencies
+pnpm install
+
+# Build and run
+pnpm run build
 ```
 
-### Install the necessary modules
+## 📁 Project Structure
 
-Use the command below in any terminal, command prompt, etc.
-
-```sh
-cd ragemp-typescript
-npm install
+```
+src/
+├── client/     # Client-side scripts
+├── server/     # Server-side logic, database, services
+├── shared/     # Shared utilities and models
+ui/             # React-based user interface
 ```
 
-### Rename the `.env.example` file to `.env`
+## 🛠️ Available Scripts
 
-Without it, rollup will not be able to copy the files properly
+- `pnpm run build` - Build the project
+- `pnpm run watch` - Watch mode for development
+- `pnpm run dev` - Run with nodemon
+- `pnpm run build:ui` - Build UI separately
 
-### Compiler Configuration
+## 📦 Built With
 
-The boilerplate comes with 2 compilers:
+- TypeScript
+- Rollup + SWC
+- MySQL2
+- React + Vite
+- bcryptjs for authentication
 
-1. [SWC](https://swc.rs/) - ⚡ultra fast (no support for const enums)
-2. [Typescript](https://www.npmjs.com/package/rollup-plugin-typescript2) - 🐢 very slow (support for const enums)
+## � License
 
-> To use SWC, set `COMPILER_USE_SWC` to true, and for `TYPESCRIPT` to false
-
-```bash
-PRODUCTION_MODE=false
-COMPILER_USE_SWC=true // <--- CHANGE THE COMPILER BETWEEN SWC & TYPESCRIPT
-```
-
-### Build the server
-
-Use the command below in any terminal, command prompt, etc. This will transpile and copy the files to the `dist` folder. Folder which is used for production.
-
-```sh
-npm run build
-```
-
-![](https://i.imgur.com/p6hbXmg.png)
-
-### Get Server Files
-
-Grab the server files from `RAGEMP/server-files` and drop them in the `dist` folder.
-
-### Start the Server
-
-```sh
-cd ./dist
-./ragemp-server.exe
-```
-
-## 👨‍💻 Contributing
-
-To contribute to this repository, feel free to create a new fork of the repository and submit a pull request.
-
-1. Fork / Clone and select the `main` branch.
-2. Create a new branch in your fork.
-3. Make your changes.
-4. Commit your changes, and push them.
-5. Submit a Pull Request [here](https://github.com/LeonardSSH/ragemp-typescript/pulls)!
-
-## 📋 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License - see [LICENSE](LICENSE) for details.
