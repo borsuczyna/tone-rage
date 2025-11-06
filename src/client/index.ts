@@ -11,6 +11,7 @@ import PlayerDataDisplayService from './Services/PlayerDataDisplayService';
 // import InterfaceServiceTest from './Tests/InterfaceServiceTest';
 // import FetchServiceTest from './Tests/FetchServiceTest';
 // import NotificationServiceTest from './Tests/NotificationServiceTest';
+// import PlayerDataDisplayServiceTest from './Tests/PlayerDataDisplayServiceTest';
 
 (async () => {
 	await DiscordRPCService.init();
@@ -29,4 +30,5 @@ import PlayerDataDisplayService from './Services/PlayerDataDisplayService';
 	// InterfaceServiceTest.init();
 	// FetchServiceTest.init();
 	// NotificationServiceTest.init();
+	// PlayerDataDisplayServiceTest.init();
 })();
