@@ -55,7 +55,6 @@ export default class AnticheatService {
 
 		this.hashHistory.set(hash, now);
 		const fullSalt = this.getFullSalt(playerId);
-		console.log(`Verifying hash for player ${playerId}, event ${eventName}, hash ${hash}, using salt ${fullSalt}`);
 		return validateHash(eventName, hash, fullSalt);
 	}
 

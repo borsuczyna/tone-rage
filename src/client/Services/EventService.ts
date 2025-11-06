@@ -29,8 +29,6 @@ export default class EventService {
 
 	private static onSetSalt(salt: string) {
 		this.salt = salt;
-		mp.gui.chat.push('EventService: Received salt from server, ready to send events.');
-		mp.gui.chat.push(`Salt: ${salt}`);
 	}
 
 	/**

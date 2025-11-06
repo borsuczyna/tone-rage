@@ -25,7 +25,6 @@ export default class EventService {
 
 		// Send the full salt to the client
 		player.call('event:setSalt', [fullSalt]);
-		console.log(`Sent salt to player ${player.id}: ${fullSalt}`);
 	}
 
 	private static onPlayerQuit(player: PlayerMp) {
