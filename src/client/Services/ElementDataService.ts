@@ -42,7 +42,6 @@ export default class ElementDataService {
 		}
 
 		dataMap.set(key, value);
-		mp.gui.chat.push(`ElementDataService: Set data for ${elementId} - ${key} = ${value} (shareMode: ${shareMode})`);
 
 		// Sync based on share mode
 		switch (shareMode) {
@@ -85,6 +84,7 @@ export default class ElementDataService {
 	 */
 	private static onElementDataSync(elementId: string, key: string, value: any) {
 		// Store locally
+		mp.gui.chat.push(`ElementDataService: Syncing data for ${elementId} - ${key} = ${value} from server`);
 		if (!this.elementData.has(elementId)) {
 			this.elementData.set(elementId, new Map());
 		}

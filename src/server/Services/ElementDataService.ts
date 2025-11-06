@@ -88,7 +88,7 @@ export default class ElementDataService {
 	 * Sync element data based on share mode
 	 */
 	private static syncElementData(ignoreClient: PlayerMp | null, element: PlayerMp | VehicleMp, entry: ElementDataEntry) {
-		const elementId = element.id;
+		const elementId = this.getElementInfo(element);
 
 		switch (entry.shareMode) {
 			case ShareMode.Server:
@@ -98,13 +98,7 @@ export default class ElementDataService {
 
 			case ShareMode.Everywhere:
 				// Sync to all clients
-				mp.players.forEach((player) => {
-					if (ignoreClient !== null && player.id === ignoreClient.id) {
-						return;
-					}
-					
-					EventService.triggerClientEvent(player, 'elementData:sync', elementId, entry.key, entry.value);
-				});
+				EventService.triggerAllClientsEventExcept(ignoreClient, 'elementData:sync', elementId, entry.key, entry.value);
 				break;
 
 			case ShareMode.SpecificClient:

@@ -11,7 +11,7 @@ export default class AuthService {
 		FetchService.registerFetchListener('auth:register', this.handleRegister.bind(this));
 	}
 
-	private static async handleLogin(_client: PlayerMp, data: AuthLoginData): Promise<AuthResponse> {
+	private static async handleLogin(client: PlayerMp, data: AuthLoginData): Promise<AuthResponse> {
 		this.logger.info(`Login attempt for username: ${data.username}`);
 
 		const result = await UserService.loginUser(data.username, data.password);
@@ -24,6 +24,8 @@ export default class AuthService {
 		}
 
 		this.logger.info(`Login successful for username: ${data.username}`);
+		UserService.assignUserData(client, result.user);
+		
 		return {
 			success: true,
 			message: 'auth.login.success'

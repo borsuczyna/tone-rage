@@ -70,6 +70,31 @@ export default class EventService {
 		}
 	}
 
+	/**
+	 * Trigger all clients with an event (for broadcasting)
+	 */
+	public static triggerAllClientsEvent(eventName: string, ...args: any[]) {
+		mp.players.forEach((player) => {
+			this.triggerClientEvent(player, eventName, ...args);
+		});
+	}
+
+	/**
+	 * Trigger all clients with exception of one client
+	 */
+	public static triggerAllClientsEventExcept(exceptClient: PlayerMp | null, eventName: string, ...args: any[]) {
+		if (!exceptClient) {
+			this.triggerAllClientsEvent(eventName, ...args);
+			return;
+		}
+		
+		mp.players.forEach((player) => {
+			if (player.id !== exceptClient.id) {
+				this.triggerClientEvent(player, eventName, ...args);
+			}
+		});
+	}
+
 	private static onEventTriggered(client: PlayerMp, hash: string, eventName: string, encodedData: string) {
 		const decodedData = decodeData<any[]>(encodedData);
 

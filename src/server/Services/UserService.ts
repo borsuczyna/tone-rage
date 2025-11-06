@@ -5,6 +5,7 @@ import EmailValidator from '@shared/EmailValidator';
 import PasswordValidator from '@shared/PasswordValidator';
 import ElementDataService from './ElementDataService';
 import { ShareMode } from '@shared/Models/ElementDataModels';
+import EventService from './EventService';
 
 interface CreateUserResult {
 	userId: number | null;
@@ -80,5 +81,7 @@ export default class UserService {
 
 	public static async assignUserData(client: PlayerMp, user: UserEntity): Promise<void> {
 		ElementDataService.set(client, 'userId', user.uid, ShareMode.Everywhere);
+
+		EventService.triggerClientEvent(client, 'user:finishAuthentication');
 	}
 }

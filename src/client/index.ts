@@ -22,7 +22,7 @@ import PlayerDataDisplayService from './Services/PlayerDataDisplayService';
 	await InterfaceService.init();
 	await FetchService.init();
 	await NotificationService.init();
-	// await LoginPanel.init();
+	await LoginPanel.init();
 
 	// Debug
 	// EventServiceTest.init();
