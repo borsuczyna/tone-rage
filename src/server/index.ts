@@ -6,10 +6,10 @@ import ElementDataService from './Services/ElementDataService';
 import FetchService from './Services/FetchService';
 import ShutdownService from './Services/ShutdownService';
 import VehicleService from './Services/VehicleService';
-import Tests from './Tests/Tests';
-import EventServiceTest from './Tests/EventServiceTest';
-import ElementDataServiceTest from './Tests/ElementDataServiceTest';
-import FetchServiceTest from './Tests/FetchServiceTest';
+// import Tests from './Tests/Tests';
+// import EventServiceTest from './Tests/EventServiceTest';
+// import ElementDataServiceTest from './Tests/ElementDataServiceTest';
+// import FetchServiceTest from './Tests/FetchServiceTest';
 
 (async () => {
 	await Database.init();
@@ -22,8 +22,8 @@ import FetchServiceTest from './Tests/FetchServiceTest';
 	await AuthService.init();
 
 	// Debug
-	Tests.getPositionCommandTest();
-	EventServiceTest.init();
-	ElementDataServiceTest.init();
-	FetchServiceTest.init();
+	// Tests.getPositionCommandTest();
+	// EventServiceTest.init();
+	// ElementDataServiceTest.init();
+	// FetchServiceTest.init();
 })();

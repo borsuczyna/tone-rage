@@ -1,5 +1,5 @@
 import ElementDataService from '../Services/ElementDataService';
-import { ShareMode, ClientWritePermission } from '@shared/Models/ElementDataModels';
+import { ShareMode } from '@shared/Models/ElementDataModels';
 import Logger from '@shared/Logger';
 
 export default class ElementDataServiceTest {
@@ -9,15 +9,10 @@ export default class ElementDataServiceTest {
 	 * Test element data system
 	 */
 	public static init() {
-		// Configure client write permissions
-		ElementDataService.setClientWritePermission('health', ClientWritePermission.ServerOnly);
-		ElementDataService.setClientWritePermission('score', ClientWritePermission.AllClients);
-		ElementDataService.setClientWritePermission('customData', ClientWritePermission.AllClients);
-
 		// Test command: Set element data with different share modes
-		mp.events.addCommand('testdata', (player: PlayerMp, fullText: string) => {
+		mp.events.addCommand('testdata', (player: PlayerMp, _fullText: string) => {
 			// Test 1: Server-only data
-			ElementDataService.setElementData(player, 'secret', 'server-secret-value', ShareMode.ServerOnly);
+			ElementDataService.setElementData(player, 'secret', 'server-secret-value', ShareMode.Server);
 			ElementDataServiceTest.logger.info(`Set server-only data for player ${player.name}`);
 
 			// Test 2: Everywhere data
@@ -49,7 +44,7 @@ export default class ElementDataServiceTest {
 			// Set vehicle data with different share modes
 			ElementDataService.setElementData(vehicle, 'owner', player.name, ShareMode.Everywhere);
 			ElementDataService.setElementData(vehicle, 'fuel', 75, ShareMode.Everywhere);
-			ElementDataService.setElementData(vehicle, 'engineHealth', 1000, ShareMode.ServerOnly);
+			ElementDataService.setElementData(vehicle, 'engineHealth', 1000, ShareMode.Server);
 
 			ElementDataServiceTest.logger.info(`Set vehicle data for vehicle ${vehicle.id}`);
 			player.outputChatBox('Vehicle data set successfully!');

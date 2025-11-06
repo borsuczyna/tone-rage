@@ -12,26 +12,28 @@ export default class ElementDataServiceTest {
 		const testLocalData = () => {
 			const localPlayerId = mp.players.local.remoteId;
 			// Set client-only data (doesn't sync)
-			ElementDataService.setElementData(localPlayerId, 'player', 'localSetting', 'client-value', ShareMode.ClientOnly);
-			mp.console.logInfo('Set local client data');
+			ElementDataService.setElementData(localPlayerId, 'player', 'localSetting', 'client-value', ShareMode.Local);
+			// mp.console.logInfo('Set local client data');
+			mp.gui.chat.push('Set local client data');
 
 			// Read it back
 			const value = ElementDataService.getElementData(localPlayerId, 'localSetting');
-			mp.console.logInfo(`Read local data: ${value}`);
+			// mp.console.logInfo(`Read local data: ${value}`);
+			mp.gui.chat.push(`Read local data: ${value}`);
 		};
 
 		// Test: Set and sync to server
 		const testSyncToServer = () => {
 			// This should sync to server only
-			ElementDataService.setElementData(mp.players.local.remoteId, 'player', 'clientScore', 100, ShareMode.ClientToServer);
-			mp.console.logInfo('Set and synced data to server');
+			ElementDataService.setElementData(mp.players.local.remoteId, 'player', 'clientScore', 100, ShareMode.Server);
+			mp.gui.chat.push('Set and synced data to server');
 		};
 
 		// Test: Set and sync to all
 		const testSyncToAll = () => {
 			// This should sync to all clients via server
-			ElementDataService.setElementData(mp.players.local.remoteId, 'player', 'customData', { name: 'test', value: 42 }, ShareMode.ClientToAll);
-			mp.console.logInfo('Set and synced data to all clients');
+			ElementDataService.setElementData(mp.players.local.remoteId, 'player', 'customData', { name: 'test', value: 42 }, ShareMode.Everywhere);
+			mp.gui.chat.push('Set and synced data to all clients');
 		};
 
 		// Run tests after a delay to ensure services are ready
