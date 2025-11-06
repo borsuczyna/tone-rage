@@ -29,10 +29,6 @@ export default class ElementDataService {
 	 */
 	public static set(element: PlayerMp | VehicleMp, key: string, value: any, shareMode: ShareMode = ShareMode.Local) {
 		// Store locally
-		// let { elementId, elementType } = this.getElementInfo(element);
-		// if (!this.elementData.has(elementId)) {
-		// 	this.elementData.set(elementId, new Map());
-		// }
 		const elementId = this.getElementInfo(element);
 
 		let dataMap = this.elementData.get(elementId);
