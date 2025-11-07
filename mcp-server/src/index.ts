@@ -10,13 +10,17 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 
 /**
  * MCP Server for tone-rage RAGE:MP project
  * Provides tools to interact with the game server codebase
  */
 
-const PROJECT_ROOT = path.resolve(process.cwd(), '..');
+// Resolve the project root directory relative to this script's location
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const PROJECT_ROOT = path.resolve(__dirname, '../..');
 
 // Helper function to read files safely
 async function readFile(filePath: string): Promise<string> {
