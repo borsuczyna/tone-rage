@@ -25,13 +25,13 @@ async function readFile(filePath: string): Promise<string> {
 }
 
 // Helper function to list directory contents
-async function listDirectory(dirPath: string): Promise<string[]> {
+async function listDirectory(dirPath: string): Promise<Array<{ name: string; type: string }>> {
 	const fullPath = path.join(PROJECT_ROOT, dirPath);
 	const entries = await fs.readdir(fullPath, { withFileTypes: true });
 	return entries.map((entry) => ({
 		name: entry.name,
 		type: entry.isDirectory() ? 'directory' : 'file',
-	})) as any;
+	}));
 }
 
 // Helper function to search for files
