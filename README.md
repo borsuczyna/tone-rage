@@ -10,6 +10,7 @@ A modern TypeScript framework for RAGE:MP multiplayer servers with built-in serv
 - **Modern UI** - React-based UI with Vite bundling
 - **Fast Build** - SWC compiler for lightning-fast transpilation
 - **Hot Reload** - Development mode with automatic rebuilding
+- **MCP Server** - Model Context Protocol server for AI assistant integration
 
 ## 🚀 Quick Start
 
@@ -33,6 +34,7 @@ src/
 ├── server/     # Server-side logic, database, services
 ├── shared/     # Shared utilities and models
 ui/             # React-based user interface
+mcp-server/     # Model Context Protocol server for AI integration
 ```
 
 ## 🛠️ Available Scripts
@@ -41,6 +43,18 @@ ui/             # React-based user interface
 - `pnpm run watch` - Watch mode for development
 - `pnpm run dev` - Run with nodemon
 - `pnpm run build:ui` - Build UI separately
+
+## 🤖 MCP Server
+
+The project includes a Model Context Protocol (MCP) server that allows AI assistants to interact with the codebase. See [mcp-server/README.md](mcp-server/README.md) for details.
+
+To set up the MCP server:
+
+```sh
+cd mcp-server
+npm install
+npm run build
+```
 
 ## 📦 Built With
 
