@@ -52,19 +52,32 @@ npm run build
 
 ### With Claude Desktop
 
-Add this to your Claude Desktop configuration (`claude_desktop_config.json`):
+1. First, build the MCP server (see Installation section above)
+
+2. Find your Claude Desktop configuration file:
+   - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+   - Linux: `~/.config/Claude/claude_desktop_config.json`
+
+3. Add this configuration (replace `/absolute/path/to/` with your actual path):
 
 ```json
 {
   "mcpServers": {
     "tone-rage": {
       "command": "node",
-      "args": ["/path/to/tone-rage/mcp-server/dist/index.js"],
-      "cwd": "/path/to/tone-rage/mcp-server"
+      "args": ["/absolute/path/to/tone-rage/mcp-server/dist/index.js"],
+      "cwd": "/absolute/path/to/tone-rage/mcp-server"
     }
   }
 }
 ```
+
+4. Restart Claude Desktop
+
+5. You should now see "tone-rage" in the available MCP servers
+
+See `claude_desktop_config.json.example` for a template.
 
 ### With Other MCP Clients
 
@@ -111,6 +124,8 @@ Once connected, you can ask AI assistants things like:
 - "Read the EventService implementation"
 
 The MCP server will use the appropriate tools to fulfill these requests.
+
+For more detailed examples and usage patterns, see [USAGE.md](USAGE.md).
 
 ## License
 
