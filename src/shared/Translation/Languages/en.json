@@ -66,6 +66,7 @@
     "auth.login.failed": "Login failed. Please check your credentials and try again.",
     "auth.login.missingFields": "Please fill in all required fields.",
     "auth.login.success": "Login successful. Welcome back!",
+    "auth.login.alreadyLoggedIn": "This account is already logged in from another session.",
     "auth.register.success": "Registration successful.",
     "auth.register.failed": "Registration failed. Please try again.",
     "auth.register.missingFields": "Please fill in all required fields.",

@@ -88,7 +88,7 @@ export default class ElementDataService {
 	 * Sync element data based on share mode
 	 */
 	private static syncElementData(ignoreClient: PlayerMp | null, element: PlayerMp | VehicleMp, entry: ElementDataEntry) {
-		const elementId = element.id;
+		const elementId = this.getElementInfo(element);
 
 		switch (entry.shareMode) {
 			case ShareMode.Server:

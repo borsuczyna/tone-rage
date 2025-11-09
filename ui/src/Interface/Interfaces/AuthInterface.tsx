@@ -99,6 +99,7 @@ export default function AuthInterface() {
             if (response?.success) {
                 addNotification(translate('default.success'), translate('auth.register.success'), NotificationType.Success);
                 setCurrentPage('login');
+                setLoginData({ ...loginData, username: registerData.username, password: registerData.password });
                 await handleLogin();
             } else {
                 addNotification(translate('default.error'), translate(response?.message || 'auth.register.failed'), NotificationType.Error);

@@ -88,4 +88,15 @@ export default class UserService {
         client.heading = spawn.position[3] || 0;
         client.alpha = 255;
     }
+
+    public static getActivePlayerByUserId(userId: number): PlayerMp | null {
+        const players = mp.players.toArray();
+        for (const player of players) {
+            const pid = ElementDataService.get(player, 'userId') as number | null;
+            if (pid === userId) {
+                return player;
+            }
+        }
+        return null;
+    }
 }

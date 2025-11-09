@@ -16,7 +16,7 @@ export default class AuthService {
         client.alpha = 0;
     }
 
-	private static async handleLogin(_client: PlayerMp, data: AuthLoginData): Promise<AuthResponse> {
+	private static async handleLogin(client: PlayerMp, data: AuthLoginData): Promise<AuthResponse> {
 		this.logger.info(`Login attempt for username: ${data.username}`);
 
 		const result = await UserService.loginUser(data.username, data.password);
@@ -28,7 +28,18 @@ export default class AuthService {
 			};
 		}
 
+        const userId = result.user.uid;
+        const player = UserService.getActivePlayerByUserId(userId);
+        if (player) {
+			this.logger.warn(`Login failed for username: ${data.username}, reason: already logged in`);
+            return {
+                success: false,
+                message: 'auth.login.alreadyLoggedIn'
+            };
+		}
+
 		this.logger.info(`Login successful for username: ${data.username}`);
+        await UserService.assignUserData(client, result.user);
 
 		return {
 			success: true,
