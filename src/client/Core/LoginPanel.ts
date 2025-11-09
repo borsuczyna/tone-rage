@@ -1,8 +1,27 @@
+import EventService from '@/Services/EventService';
 import InterfaceService from '@/Services/InterfaceService';
+import SpawnPanel from './SpawnPanel';
+import TimerService from '@shared/Services/TimerService';
 
 export default class LoginPanel {
 	public static async init() {
-		InterfaceService.setInterfaceVisible('AuthInterface', true);
-		InterfaceService.setCursorVisible(true, true);
+		this.setVisible(true);
+        EventService.registerEventHandler('auth:loginSuccess', this.handleLoginSuccess.bind(this));
 	}
+
+    private static handleLoginSuccess() {
+        TimerService.setTimer(this.hideLoginPanel.bind(this), 400, 1);
+    }
+
+    private static setVisible(visible: boolean) {
+        InterfaceService.setInterfaceVisible('AuthInterface', visible);
+        InterfaceService.setCursorVisible(visible, visible);
+        mp.game.ui.displayHud(!visible);
+        mp.game.ui.displayRadar(!visible);
+    }
+
+    private static hideLoginPanel() {
+        this.setVisible(false);
+        SpawnPanel.setVisible(true);
+    }
 }

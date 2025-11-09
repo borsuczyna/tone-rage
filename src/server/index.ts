@@ -6,7 +6,8 @@ import ElementDataService from './Services/ElementDataService';
 import FetchService from './Services/FetchService';
 import ShutdownService from './Services/ShutdownService';
 import VehicleService from './Services/VehicleService';
-// import Tests from './Tests/Tests';
+import Tests from './Tests/Tests';
+import SpawnService from './Services/SpawnService';
 // import EventServiceTest from './Tests/EventServiceTest';
 // import ElementDataServiceTest from './Tests/ElementDataServiceTest';
 // import FetchServiceTest from './Tests/FetchServiceTest';
@@ -20,9 +21,11 @@ import VehicleService from './Services/VehicleService';
 	await ShutdownService.init();
 	await FetchService.init();
 	await AuthService.init();
+    await SpawnService.init();
 
 	// Debug
-	// Tests.getPositionCommandTest();
+	Tests.getPositionCommandTest();
+    Tests.createVehicleCommandTest();
 	// EventServiceTest.init();
 	// ElementDataServiceTest.init();
 	// FetchServiceTest.init();

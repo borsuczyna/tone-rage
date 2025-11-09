@@ -24,6 +24,7 @@ export default class EventService {
 		mp.events.add('event:receive', this.onEventReceived.bind(this));
 		mp.events.add('event:receive:chunk', this.onChunkReceived.bind(this));
 		mp.events.add('event:setSalt', this.onSetSalt.bind(this));
+		mp.events.add('interface:triggerEvent', this.onInterfaceEventReceived.bind(this));
 		this.initialized = true;
 	}
 
@@ -36,6 +37,15 @@ export default class EventService {
 	 */
 	public static registerEventHandler(eventName: string, callback: (...args: any[]) => void) {
 		this.listeners.push({ eventName, callback });
+	}
+
+    /**
+     * Remove an event handler
+     */
+	public static removeEventHandler(eventName: string, callback: (...args: any[]) => void) {
+		this.listeners = this.listeners.filter(
+			(listener) => listener.eventName !== eventName || listener.callback !== callback
+		);
 	}
 
 	/**
@@ -68,6 +78,13 @@ export default class EventService {
 
 		const listeners = this.listeners.filter((listener) => listener.eventName === eventName);
 		listeners.forEach((listener) => listener.callback(...decodedData));
+	}
+
+	private static onInterfaceEventReceived(eventName: string, jsonData: string) {
+        const data = JSON.parse(jsonData);
+
+		const listeners = this.listeners.filter((listener) => listener.eventName === eventName);
+		listeners.forEach((listener) => listener.callback(data));
 	}
 
 	private static onChunkReceived(eventName: string, chunk: DataChunk) {

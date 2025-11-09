@@ -6,7 +6,7 @@ import RegisterForm from './Components/Auth/RegisterForm';
 import RulesForm from './Components/Auth/RulesForm';
 import UpdatesPanel from './Components/Auth/UpdatesPanel';
 import type { AuthLoginData, AuthRegisterData, AuthResponse } from '@shared/Models/AuthData';
-import { fetchServerData } from 'src/Hooks/Fetch';
+import { fetchServerData, triggerEvent } from 'src/Hooks/Fetch';
 import { addNotification } from 'src/Hooks/NotificationsProvider';
 import translate from '@shared/Translation/Translation';
 import EmailValidator from '@shared/EmailValidator';
@@ -19,6 +19,7 @@ export default function AuthInterface() {
     const { isInterfaceVisible } = useInterfaceVisibility();
     const [currentPage, setCurrentPage] = useState<AuthPage>('login');
     const [isLoading, setIsLoading] = useState(false);
+    const [isDisappearing, setIsDisappearing] = useState(false);
     
     // Form states
     const [loginData, setLoginData] = useState<AuthLoginData>({
@@ -47,6 +48,9 @@ export default function AuthInterface() {
             let response = await fetchServerData<AuthResponse>('auth:login', loginData);
             if (response?.success) {
                 addNotification(translate('default.success'), translate('auth.login.success'), NotificationType.Success);
+                setIsDisappearing(true);
+                triggerEvent('auth:loginSuccess');
+
             } else {
                 addNotification(translate('default.error'), translate(response?.message || 'auth.login.failed'), NotificationType.Error);
                 setIsLoading(false);
@@ -109,7 +113,7 @@ export default function AuthInterface() {
     if (!isInterfaceVisible('AuthInterface')) return null;
 
     return (
-        <div className={styles.container}>
+        <div className={`${styles.container} ${isDisappearing ? styles.disappearing : ''}`}>
             <div className={styles.contentWrapper}>
                 <div className={styles.authPanel}>
                     {currentPage === 'login' && (

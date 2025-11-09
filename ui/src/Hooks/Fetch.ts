@@ -34,6 +34,12 @@ export async function fetchServerData<T>(eventName: string, data: any): Promise<
     return fetchData<T>(eventName, data, false);
 }
 
+export function triggerEvent(eventName: string, data?: any) {
+    if (typeof mp !== "undefined" && mp?.trigger) {
+        mp.trigger('interface:triggerEvent', eventName, JSON.stringify(data));
+    }
+}
+
 export function registerFetchResolver() {
     if (typeof mp === "undefined" || !mp?.events) {
         console.warn("mp.events is not available");

@@ -34,6 +34,7 @@
     max-height: 45rem;
     position: relative;
     z-index: 1;
+    transition: transform 1s ease-in, opacity 1s ease-in;
 }
 
 .authPanel {
@@ -157,6 +158,24 @@
         opacity: 1;
         transform: scale(1);
     }
+}
+
+@keyframes disappear {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+.disappearing {
+    animation: disappear 0.4s ease-out forwards;
+}
+
+.disappearing .contentWrapper {
+    transform: scale(0.8);
+    opacity: 0;
 }
 
 /* Custom Scrollbar Styling */

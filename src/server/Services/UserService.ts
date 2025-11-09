@@ -5,6 +5,7 @@ import EmailValidator from '@shared/EmailValidator';
 import PasswordValidator from '@shared/PasswordValidator';
 import ElementDataService from './ElementDataService';
 import { ShareMode } from '@shared/Models/ElementDataModels';
+import { SpawnLocation } from '@shared/SpawnsData';
 
 interface CreateUserResult {
 	userId: number | null;
@@ -81,4 +82,10 @@ export default class UserService {
 	public static async assignUserData(client: PlayerMp, user: UserEntity): Promise<void> {
 		ElementDataService.set(client, 'userId', user.uid, ShareMode.Everywhere);
 	}
+
+    public static async spawnPlayerAtLocation(client: PlayerMp, spawn: SpawnLocation): Promise<void> {
+        client.position = new mp.Vector3(spawn.position[0], spawn.position[1], spawn.position[2]);
+        client.heading = spawn.position[3] || 0;
+        client.alpha = 255;
+    }
 }

@@ -7,9 +7,14 @@ export default class AuthService {
 	private static logger: Logger = Logger.getLogger(AuthService);
 
 	public static async init() {
+        mp.events.add('playerJoin', this.handlePlayerJoin.bind(this));
 		FetchService.registerFetchListener('auth:login', this.handleLogin.bind(this));
 		FetchService.registerFetchListener('auth:register', this.handleRegister.bind(this));
 	}
+
+    private static handlePlayerJoin(client: PlayerMp) {
+        client.alpha = 0;
+    }
 
 	private static async handleLogin(_client: PlayerMp, data: AuthLoginData): Promise<AuthResponse> {
 		this.logger.info(`Login attempt for username: ${data.username}`);
@@ -24,6 +29,7 @@ export default class AuthService {
 		}
 
 		this.logger.info(`Login successful for username: ${data.username}`);
+
 		return {
 			success: true,
 			message: 'auth.login.success'

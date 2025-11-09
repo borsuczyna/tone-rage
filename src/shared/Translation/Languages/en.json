@@ -79,5 +79,7 @@
     
     "spawn.title": "Select Spawn Location",
     "spawn.subtitle": "Choose where you want to start your journey",
-    "spawn.confirm": "Confirm location"
+    "spawn.confirm": "Confirm location",
+    "spawn.invalidLocation": "Invalid spawn location selected. Please choose a different location.",
+    "spawn.notificationTitle": "Spawn selection"
 }
