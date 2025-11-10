@@ -103,9 +103,6 @@ export default function SpawnSelectionInterface() {
                         <Icons.Check size={16} />
                         {translate('spawn.confirm')}
                     </Button>
-                    <button onClick={() => addNotification('test', 'test', 'error')}>
-                    Test Notification
-                </button>
                 </div>
             </div>
         </div>

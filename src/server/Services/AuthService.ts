@@ -10,6 +10,12 @@ export default class AuthService {
         mp.events.add('playerJoin', this.handlePlayerJoin.bind(this));
 		FetchService.registerFetchListener('auth:login', this.handleLogin.bind(this));
 		FetchService.registerFetchListener('auth:register', this.handleRegister.bind(this));
+
+        // gdy gracz zdechnie to go odrodz
+        mp.events.add('playerDeath', (player: PlayerMp) => {
+            const pos = player.position;
+            player.spawn(new mp.Vector3(pos.x, pos.y, pos.z + 1));
+        });
 	}
 
     private static handlePlayerJoin(client: PlayerMp) {
