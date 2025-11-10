@@ -1,19 +1,15 @@
 import EventService from '@/Services/EventService';
 import InterfaceService from '@/Services/InterfaceService';
 import RenderService from '@/Services/RenderService';
-import TimerService from '@shared/Services/TimerService';
 import { spawnData, SpawnLocation } from '@shared/SpawnsData';
 
 export default class SpawnPanel {
     private static selectedSpawn: SpawnLocation | null = null;
     private static camera: CameraMp | null = null;
-    private static disappearAnimation: boolean = false;
 
 	public static async setVisible(visible: boolean) {
 		InterfaceService.setInterfaceVisible('SpawnSelectionInterface', visible);
 		InterfaceService.setCursorVisible(visible, visible);
-
-        this.disappearAnimation = false;
         
         if (visible) {
             EventService.registerEventHandler('spawn:preview', this.handleSpawnPreview.bind(this));
@@ -47,8 +43,7 @@ export default class SpawnPanel {
     }
 
     private static handleSpawnSelect() {
-        this.disappearAnimation = true;
-        TimerService.setTimer(this.setVisible.bind(this, false), 900, 1);
+        this.setVisible(false);
     }
 
     private static renderLoop() {
@@ -69,12 +64,7 @@ export default class SpawnPanel {
             this.selectedSpawn.position[2]
         );
 
-        let targetPos: Vector3;
-        if (this.disappearAnimation) {
-            targetPos = lookAtPos;
-        } else {
-            targetPos = lookAtPos.add(new mp.Vector3(Math.sin(gameTick * 0.0001) * 70, Math.cos(gameTick * 0.0001) * 70, this.selectedSpawn.cameraHeight ?? 70));
-        }
+        let targetPos: Vector3 = lookAtPos.add(new mp.Vector3(Math.sin(gameTick * 0.0001) * 70, Math.cos(gameTick * 0.0001) * 70, this.selectedSpawn.cameraHeight ?? 70));
 
         // Smoothly interpolate camera position towards target spawn position
         const lerpFactor = RenderService.deltaTime * 0.001;
@@ -89,17 +79,12 @@ export default class SpawnPanel {
             false
         );
 
-        if (newCamPos.z < groundZ + 30 && !this.disappearAnimation) {
+        if (newCamPos.z < groundZ + 30) {
             newCamPos.z = groundZ + 30;
         }
 
         this.camera.setCoord(newCamPos.x, newCamPos.y, newCamPos.z);
         this.camera.pointAtCoord(lookAtPos.x, lookAtPos.y, lookAtPos.z);
-
-        // Move player to camera position + 10
-        if (!this.disappearAnimation) {
-            mp.players.local.setCoords(newCamPos.x, newCamPos.y, newCamPos.z + 10, false, false, false, false);
-        }
     }
 
     private static lerpVectors(start: Vector3, end: Vector3, factor: number): Vector3 {
