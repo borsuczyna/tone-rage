@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useInterfaceVisibility } from 'src/Hooks/InterfaceVisibilityProvider';
 import styles from './Styles/SpawnSelectionInterface.module.css';
 import * as Icons from 'lucide-react';
 import translate from '@shared/Translation/Translation';
@@ -10,10 +9,10 @@ import { addNotification } from 'src/Hooks/NotificationsProvider';
 import { loginMusicManager } from 'src/Utils/LoginMusicManager';
 
 export default function SpawnSelectionInterface() {
-    const { isInterfaceVisible } = useInterfaceVisibility();
     const [expandedCategories, setExpandedCategories] = useState<Set<number>>(new Set());
     const [selectedSpawn, setSelectedSpawn] = useState<[number, number] | null>(null);
     const [isDisappearing, setIsDisappearing] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const toggleCategory = (categoryId: number) => {
         setExpandedCategories(prev => {
@@ -35,6 +34,7 @@ export default function SpawnSelectionInterface() {
     const handleConfirmSpawn = async () => {
         if (!selectedSpawn) return;
 
+        setIsLoading(true);
         setIsDisappearing(true);
         triggerEvent('spawn:select');
 
@@ -46,10 +46,9 @@ export default function SpawnSelectionInterface() {
         if (!response.success) {
             addNotification(translate('spawn.notificationTitle'), translate(response.message || 'spawn.invalidLocation'), 'error');
             setIsDisappearing(false);
+            setIsLoading(false);
         }
     };
-
-    if (!isInterfaceVisible('SpawnSelectionInterface')) return null;
 
     return (
         <div className={`${styles.container} ${isDisappearing ? styles.disappearing : ''}`}>
@@ -102,6 +101,7 @@ export default function SpawnSelectionInterface() {
                         variant="primary" 
                         onClick={handleConfirmSpawn}
                         disabled={!selectedSpawn}
+                        loading={isLoading}
                         style={{ width: '100%' }}
                     >
                         <Icons.Check size={16} />

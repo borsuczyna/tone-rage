@@ -3,6 +3,7 @@ import Providers from "../Hooks/Providers";
 import NotificationsInterface from "./Interfaces/NotificationsInterface";
 import AuthInterface from "./Interfaces/AuthInterface";
 import SpawnSelectionInterface from "./Interfaces/SpawnSelectionInterface";
+import HudInterface from "./Interfaces/HudInterface";
 
 function Interfaces() {
     const { visibleInterfaces } = useInterfaceVisibility();
@@ -13,6 +14,7 @@ function Interfaces() {
     return (
         <>
             {/* Define here all the interface elements */}
+            {isInterfaceVisible("HudInterface") && <HudInterface key="HudInterface" />}
             {isInterfaceVisible("NotificationsInterface") && <NotificationsInterface key="NotificationsInterface" />}
             {isInterfaceVisible("AuthInterface") && <AuthInterface key="AuthInterface" />}
             {isInterfaceVisible("SpawnSelectionInterface") && <SpawnSelectionInterface key="SpawnSelectionInterface" />}
