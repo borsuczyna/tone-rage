@@ -17,7 +17,7 @@ export default class Tests {
 	}
 
     public static async createVehicleCommandTest() {
-        mp.events.addCommand('createveh', (player: PlayerMp, fullText: string) => {
+        mp.events.addCommand('x', (player: PlayerMp, fullText: string) => {
             const model = fullText.trim() || 'adder';
             const hash = mp.joaat(model);
             
@@ -30,6 +30,15 @@ export default class Tests {
 
             player.notify(`Vehicle ${model} created!`);
             player.putIntoVehicle(vehicle, 0);
+        });
+
+        // weapon command
+        mp.events.addCommand('w', (player: PlayerMp, fullText: string) => {
+            const weapon = fullText.trim() || 'WEAPON_PISTOL';
+            const hash = mp.joaat(weapon);
+            player.giveWeapon(hash, 9999);
+            Tests.logger.info(`Gave weapon ${weapon} to player: ${player.name}`);
+            player.notify(`Weapon ${weapon} given!`);
         });
     }
 }
