@@ -13,6 +13,7 @@ export default function SpawnSelectionInterface() {
     const [expandedCategories, setExpandedCategories] = useState<Set<number>>(new Set());
     const [selectedSpawn, setSelectedSpawn] = useState<[number, number] | null>(null);
     const [isDisappearing, setIsDisappearing] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const toggleCategory = (categoryId: number) => {
         setExpandedCategories(prev => {
@@ -34,6 +35,7 @@ export default function SpawnSelectionInterface() {
     const handleConfirmSpawn = async () => {
         if (!selectedSpawn) return;
 
+        setIsLoading(true);
         setIsDisappearing(true);
         triggerEvent('spawn:select');
 
@@ -42,10 +44,9 @@ export default function SpawnSelectionInterface() {
         if (!response.success) {
             addNotification(translate('spawn.notificationTitle'), translate(response.message || 'spawn.invalidLocation'), 'error');
             setIsDisappearing(false);
+            setIsLoading(false);
         }
     };
-
-    if (!isInterfaceVisible('SpawnSelectionInterface')) return null;
 
     return (
         <div className={`${styles.container} ${isDisappearing ? styles.disappearing : ''}`}>
@@ -98,6 +99,7 @@ export default function SpawnSelectionInterface() {
                         variant="primary" 
                         onClick={handleConfirmSpawn}
                         disabled={!selectedSpawn}
+                        loading={isLoading}
                         style={{ width: '100%' }}
                     >
                         <Icons.Check size={16} />
