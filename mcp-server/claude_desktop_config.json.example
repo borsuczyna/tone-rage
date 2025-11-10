@@ -1,0 +1,10 @@
+{
+	"mcpServers": {
+		"tone-rage": {
+			"command": "node",
+			"args": ["/absolute/path/to/tone-rage/mcp-server/dist/index.js"],
+			"cwd": "/absolute/path/to/tone-rage/mcp-server",
+			"env": {}
+		}
+	}
+}
