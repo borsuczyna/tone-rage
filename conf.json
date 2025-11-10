@@ -5,7 +5,7 @@
 	"stream-distance": 500.0,
 	"announce": false,
 	"csharp": "disabled",
-	"bind": "26.10.86.196",
+	"bind": "127.0.0.1",
 	"port": 22005,
 	"encryption": false,
 	"url": "https://rage.mp",
