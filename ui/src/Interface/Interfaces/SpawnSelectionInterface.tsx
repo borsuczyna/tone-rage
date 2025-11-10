@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useInterfaceVisibility } from 'src/Hooks/InterfaceVisibilityProvider';
 import styles from './Styles/SpawnSelectionInterface.module.css';
 import * as Icons from 'lucide-react';
 import translate from '@shared/Translation/Translation';
@@ -9,7 +8,6 @@ import { fetchServerData, triggerEvent } from 'src/Hooks/Fetch';
 import { addNotification } from 'src/Hooks/NotificationsProvider';
 
 export default function SpawnSelectionInterface() {
-    const { isInterfaceVisible } = useInterfaceVisibility();
     const [expandedCategories, setExpandedCategories] = useState<Set<number>>(new Set());
     const [selectedSpawn, setSelectedSpawn] = useState<[number, number] | null>(null);
     const [isDisappearing, setIsDisappearing] = useState(false);
@@ -105,6 +103,9 @@ export default function SpawnSelectionInterface() {
                         <Icons.Check size={16} />
                         {translate('spawn.confirm')}
                     </Button>
+                    <button onClick={() => addNotification('test', 'test', 'error')}>
+                    Test Notification
+                </button>
                 </div>
             </div>
         </div>

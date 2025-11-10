@@ -8,7 +8,7 @@ import type { NotificationData } from '@shared/Models/NotificationData';
 export default function NotificationsInterface() {
     const { notifications } = useNotifications();
     const { isInterfaceVisible } = useInterfaceVisibility();
-    const top = isInterfaceVisible('HudInterface') ? '4rem' : '1rem';
+    const top = isInterfaceVisible('HudInterface') ? '14rem' : '1rem';
 
     useRageEvent('addNotification', (data: NotificationData) => {
         addNotification(data.title, data.message, data.type, data.icon, data.iconFillOpacity);

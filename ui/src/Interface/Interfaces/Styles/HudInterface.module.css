@@ -1,0 +1,169 @@
+.main {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.playerInfo {
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+    padding: 0.5rem 1rem;
+}
+
+.avatarContainer {
+    position: relative;
+    width: 9.375rem;
+    height: 9.375rem;
+    overflow: visible;
+}
+
+.backgroundBar {
+    fill: none;
+    stroke: rgb(37, 37, 37);
+    stroke-width: 0.8125rem;
+}
+
+.backgroundRing {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 12.5rem;
+    height: 12.5rem;
+    transform: translate(-50%, -50%) rotate(90deg);
+    z-index: 1;
+}
+
+.healthBar {
+    fill: none;
+    stroke: rgba(255, 59, 82, 1);
+    stroke-width: 0.8125rem;
+    stroke-linecap: round;
+    stroke-dasharray: 471;
+    transition: stroke-dashoffset 0.3s ease;
+    filter: drop-shadow(0 0 0.5rem rgba(255, 59, 82, 0.8));
+}
+
+.expBar {
+    fill: none;
+    stroke: url(#expGradient);
+    stroke-width: 0.8125rem;
+    stroke-linecap: round;
+    stroke-dasharray: 471;
+    transition: stroke-dashoffset 0.3s ease;
+}
+
+.expBarGlow {
+    fill: none;
+    stroke: url(#expGradient);
+    stroke-width: 1.25rem;
+    stroke-linecap: round;
+    stroke-dasharray: 471;
+    transition: stroke-dashoffset 0.3s ease;
+    filter: blur(0.5rem);
+    opacity: 0.8;
+}
+
+.avatar {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    z-index: 2;
+}
+
+.levelBadge {
+    position: absolute;
+    bottom: -1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgb(34, 34, 34);
+    color: white;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: bold;
+    border: 0.1875rem solid rgb(62, 62, 62);
+    z-index: 10;
+}
+
+.playerDetails {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+}
+
+.username {
+    color: rgb(255, 255, 255);
+    font-size: 1.15rem;
+    font-weight: 600;
+    text-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.5);
+}
+
+.money {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: #4ade80;
+    font-size: 1.15rem;
+    font-weight: 700;
+    text-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.5);
+}
+
+.money svg {
+    color: #4ade80;
+}
+
+.jobInfo {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 100%);
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    min-width: 250px;
+    text-align: right;
+}
+
+.jobTitle {
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    text-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.5);
+    margin-bottom: 0.5rem;
+    text-align: right;
+}
+
+.jobStats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.jobStat {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: right;
+}
+
+.jobLabel {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+    font-weight: 400;
+}
+
+.jobValue {
+    color: #4ade80;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.5);
+}

@@ -2,6 +2,7 @@ import EventService from '@/Services/EventService';
 import InterfaceService from '@/Services/InterfaceService';
 import RenderService from '@/Services/RenderService';
 import { spawnData, SpawnLocation } from '@shared/SpawnsData';
+import Hud from './Hud';
 
 export default class SpawnPanel {
     private static selectedSpawn: SpawnLocation | null = null;
@@ -44,6 +45,7 @@ export default class SpawnPanel {
 
     private static handleSpawnSelect() {
         this.setVisible(false);
+        Hud.setVisible(true);
     }
 
     private static renderLoop() {

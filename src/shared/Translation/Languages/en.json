@@ -82,5 +82,10 @@
     "spawn.subtitle": "Choose where you want to start your journey",
     "spawn.confirm": "Confirm location",
     "spawn.invalidLocation": "Invalid spawn location selected. Please choose a different location.",
-    "spawn.notificationTitle": "Spawn selection"
+    "spawn.notificationTitle": "Spawn selection",
+    
+    "hud.job.work": "Work",
+    "hud.job.workingTime": "Working time:",
+    "hud.job.earnedMoney": "Earned money:",
+    "hud.job.averageEarnings": "Average earnings:"
 }

@@ -1,6 +1,3 @@
-import ElementDataService from '../Services/ElementDataService';
-import { ShareMode } from '@shared/Models/ElementDataModels';
-
 export default class PlayerDataDisplayServiceTest {
 	/**
 	 * Test PlayerDataDisplayService by setting sample element data
@@ -12,14 +9,14 @@ export default class PlayerDataDisplayServiceTest {
 		mp.events.add('playerCommand', (command: string) => {
 			if (command === 'testdatadisplay') {
 				// Set some test element data for the local player
-				const localPlayerId = mp.players.local.remoteId;
+				// const localPlayerId = mp.players.local.remoteId;
 
 				// Set various types of data
-				ElementDataService.set(localPlayerId, 'player', 'level', 10, ShareMode.Local);
-				ElementDataService.set(localPlayerId, 'player', 'score', 1234, ShareMode.Local);
-				ElementDataService.set(localPlayerId, 'player', 'team', 'red', ShareMode.Local);
-				ElementDataService.set(localPlayerId, 'player', 'status', 'active', ShareMode.Local);
-				ElementDataService.set(localPlayerId, 'player', 'stats', { health: 100, armor: 50, stamina: 80 }, ShareMode.Local);
+				// ElementDataService.set(localPlayerId, 'player', 'level', 10, ShareMode.Local);
+				// ElementDataService.set(localPlayerId, 'player', 'score', 1234, ShareMode.Local);
+				// ElementDataService.set(localPlayerId, 'player', 'team', 'red', ShareMode.Local);
+				// ElementDataService.set(localPlayerId, 'player', 'status', 'active', ShareMode.Local);
+				// ElementDataService.set(localPlayerId, 'player', 'stats', { health: 100, armor: 50, stamina: 80 }, ShareMode.Local);
 
 				mp.gui.chat.push('Test data set! Use /toggledatadisplay to view it');
 			}

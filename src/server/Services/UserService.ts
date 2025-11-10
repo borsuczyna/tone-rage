@@ -4,6 +4,7 @@ import PasswordHash from '@/Utils/PasswordHash';
 import EmailValidator from '@shared/EmailValidator';
 import PasswordValidator from '@shared/PasswordValidator';
 import ElementDataService from './ElementDataService';
+import UserInfoService from './UserInfoService';
 import { ShareMode } from '@shared/Models/ElementDataModels';
 import { SpawnLocation } from '@shared/SpawnsData';
 
