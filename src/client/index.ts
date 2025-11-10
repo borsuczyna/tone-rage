@@ -6,6 +6,7 @@ import FetchService from './Services/FetchService';
 import InterfaceService from './Services/InterfaceService';
 import NotificationService from './Services/NotificationService';
 import PlayerDataDisplayService from './Services/PlayerDataDisplayService';
+import CredentialsStorageService from './Services/CredentialsStorageService';
 import Hud from './Core/Hud';
 // import EventServiceTest from './Tests/EventServiceTest';
 // import ElementDataServiceTest from './Tests/ElementDataServiceTest';
@@ -19,6 +20,7 @@ import Hud from './Core/Hud';
 	EventService.init();
 	ElementDataService.init();
 	PlayerDataDisplayService.init();
+	CredentialsStorageService.init();
 
 	await InterfaceService.init();
 	await FetchService.init();

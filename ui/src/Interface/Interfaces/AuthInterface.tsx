@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useInterfaceVisibility } from 'src/Hooks/InterfaceVisibilityProvider';
 import styles from './Styles/AuthInterface.module.css';
 import LoginForm from './Components/Auth/LoginForm';
@@ -12,6 +12,8 @@ import translate from '@shared/Translation/Translation';
 import EmailValidator from '@shared/EmailValidator';
 import PasswordValidator from '@shared/PasswordValidator';
 import { NotificationType } from '@shared/Models/NotificationType';
+import { loginMusicManager } from 'src/Utils/LoginMusicManager';
+import { useRageEvent } from 'src/Hooks/RageEventProvider';
 
 type AuthPage = 'login' | 'register' | 'rules';
 
@@ -20,7 +22,38 @@ export default function AuthInterface() {
     const [currentPage, setCurrentPage] = useState<AuthPage>('login');
     const [isLoading, setIsLoading] = useState(false);
     const [isDisappearing, setIsDisappearing] = useState(false);
-    
+
+    // Start login music when interface becomes visible
+    useEffect(() => {
+        if (isInterfaceVisible('AuthInterface')) {
+            loginMusicManager.startMusic();
+        } else {
+            loginMusicManager.stopMusic();
+        }
+
+        return () => {
+            loginMusicManager.stopMusic();
+        };
+    }, [isInterfaceVisible]);
+
+    // Load saved credentials from client storage on component mount
+    useEffect(() => {
+        if (isInterfaceVisible('AuthInterface')) {
+            triggerEvent('credentials:load');
+        }
+    }, [isInterfaceVisible]);
+
+    // Handle credentials loaded from client storage
+    useRageEvent('credentials:loaded', (credentials: { username: string; password: string; rememberMe: boolean } | null) => {
+        if (credentials && credentials.rememberMe) {
+            setLoginData({
+                username: credentials.username,
+                password: credentials.password,
+                rememberMe: true
+            });
+        }
+    });
+
     // Form states
     const [loginData, setLoginData] = useState<AuthLoginData>({
         username: '',
@@ -41,12 +74,19 @@ export default function AuthInterface() {
             addNotification(translate('default.error'), translate('auth.login.missingFields'), NotificationType.Error);
             return;
         }
-        
+
         setIsLoading(true);
-        
+
         try {
             let response = await fetchServerData<AuthResponse>('auth:login', loginData);
             if (response?.success) {
+                // Save credentials to client storage
+                triggerEvent('credentials:save', {
+                    username: loginData.username,
+                    password: loginData.password,
+                    rememberMe: loginData.rememberMe
+                });
+
                 addNotification(translate('default.success'), translate('auth.login.success'), NotificationType.Success);
                 setIsDisappearing(true);
                 triggerEvent('auth:loginSuccess');

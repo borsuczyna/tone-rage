@@ -6,6 +6,7 @@ import Button from './Components/Button';
 import { spawnData, type SpawnResponse } from '@shared/SpawnsData';
 import { fetchServerData, triggerEvent } from 'src/Hooks/Fetch';
 import { addNotification } from 'src/Hooks/NotificationsProvider';
+import { loginMusicManager } from 'src/Utils/LoginMusicManager';
 
 export default function SpawnSelectionInterface() {
     const [expandedCategories, setExpandedCategories] = useState<Set<number>>(new Set());
@@ -36,6 +37,9 @@ export default function SpawnSelectionInterface() {
         setIsLoading(true);
         setIsDisappearing(true);
         triggerEvent('spawn:select');
+
+        // Fade out login music
+        loginMusicManager.fadeOutAndStop(2000);
 
         const response = await fetchServerData<SpawnResponse>('spawn:select', selectedSpawn);
 
