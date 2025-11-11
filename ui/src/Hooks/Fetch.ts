@@ -1,5 +1,7 @@
 import { generateHash } from "@shared/Hash";
 import translate from "@shared/Translation/Translation";
+import { CustomEventHandler } from "./RageEventProvider";
+import { chunkData } from "@shared/ChunkingUtils";
 
 interface FetchResolver {
     resolve: (data: any) => void;
@@ -36,7 +38,14 @@ export async function fetchServerData<T>(eventName: string, data: any): Promise<
 
 export function triggerEvent(eventName: string, data?: any) {
     if (typeof mp !== "undefined" && mp?.trigger) {
-        mp.trigger('interface:triggerEvent', eventName, JSON.stringify(data));
+        const encodedData = JSON.stringify(data);
+
+        // Send in chunks
+        const chunks = chunkData(encodedData);
+        console.log(`Triggering event ${eventName} in ${chunks.length} chunks`);
+        chunks.forEach((chunk) => {
+            mp.trigger('interface:triggerEvent:chunk', eventName, JSON.stringify(chunk));
+        });
     }
 }
 
@@ -46,11 +55,10 @@ export function registerFetchResolver() {
         return;
     }
     
-    mp.events.add('interface:fetchResponse', onFetchResponse);
+    CustomEventHandler.registerEventHandler('interface:fetchResponse', onFetchResponse);
 }
 
-function onFetchResponse(dataAsJson: string) {
-    const [hash, data] = JSON.parse(dataAsJson);
+function onFetchResponse([hash, data]: [string, any]) {
     const fetchResolver = pendingFetches[hash];
     
     if (fetchResolver) {

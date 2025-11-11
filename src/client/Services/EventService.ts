@@ -21,10 +21,9 @@ export default class EventService {
 	public static init() {
 		if (this.initialized) return;
 
-		mp.events.add('event:receive', this.onEventReceived.bind(this));
 		mp.events.add('event:receive:chunk', this.onChunkReceived.bind(this));
 		mp.events.add('event:setSalt', this.onSetSalt.bind(this));
-		mp.events.add('interface:triggerEvent', this.onInterfaceEventReceived.bind(this));
+        mp.events.add('interface:triggerEvent:chunk', this.onInterfaceChunkReceived.bind(this));
 		this.initialized = true;
 	}
 
@@ -60,37 +59,28 @@ export default class EventService {
 		const encodedData = encodeData(args);
 		const hash = generateHash(eventName, this.salt);
 
-		// Check if data needs to be chunked
-		if (encodedData.length <= 32000) {
-			// Send directly without chunking
-			mp.events.callRemote('event:trigger', hash, eventName, encodedData);
-		} else {
-			// Send in chunks
-			const chunks = chunkData(encodedData);
-			chunks.forEach((chunk) => {
-				mp.events.callRemote('event:trigger:chunk', hash, eventName, JSON.stringify(chunk));
-			});
-		}
+        const chunks = chunkData(encodedData);
+        chunks.forEach((chunk) => {
+            mp.events.callRemote('event:trigger:chunk', hash, eventName, JSON.stringify(chunk));
+        });
 	}
 
-	private static onEventReceived(eventName: string, encodedData: string) {
-		const decodedData = decodeData<any[]>(encodedData);
+    private static onInterfaceChunkReceived(eventName: string, jsonChunk: string) {
+        const chunk: DataChunk = JSON.parse(jsonChunk);
+        const completeData = this.chunkAssembler.addChunk(chunk);
 
-		const listeners = this.listeners.filter((listener) => listener.eventName === eventName);
-		listeners.forEach((listener) => listener.callback(...decodedData));
-	}
+        if (completeData != null) {
+            const data = JSON.parse(completeData || 'null');
 
-	private static onInterfaceEventReceived(eventName: string, jsonData: string) {
-        const data = JSON.parse(jsonData);
-
-		const listeners = this.listeners.filter((listener) => listener.eventName === eventName);
-		listeners.forEach((listener) => listener.callback(data));
-	}
+            const listeners = this.listeners.filter((listener) => listener.eventName === eventName);
+            listeners.forEach((listener) => listener.callback(data));
+        }
+    }
 
 	private static onChunkReceived(eventName: string, chunk: DataChunk) {
 		const completeData = this.chunkAssembler.addChunk(chunk);
 
-		if (completeData) {
+		if (completeData != null) {
 			// All chunks received, process the event
 			const decodedData = decodeData<any[]>(completeData);
 

@@ -1,5 +1,5 @@
 // Configuration for data chunking
-export const CHUNK_SIZE = 32000; // Safe size for RageMP events (leave some buffer from 65535 limit)
+export const CHUNK_SIZE = 320; // Safe size for RageMP events (leave some buffer from 65535 limit)
 
 export interface DataChunk {
 	chunkId: string; // Unique identifier for this data transfer
@@ -11,10 +11,18 @@ export interface DataChunk {
 /**
  * Split data into chunks for transmission
  */
-export function chunkData(data: string): DataChunk[] {
+export function chunkData(data: string | undefined): DataChunk[] {
+    if (data === undefined) {
+        data = '';
+    }
+
 	const chunks: DataChunk[] = [];
 	const chunkId = generateChunkId();
-	const totalChunks = Math.ceil(data.length / CHUNK_SIZE);
+	let totalChunks = Math.ceil(data.length / CHUNK_SIZE);
+
+    if (totalChunks === 0) {
+        totalChunks = 1; // Ensure at least one chunk for empty data
+    }
 
 	for (let i = 0; i < totalChunks; i++) {
 		const start = i * CHUNK_SIZE;

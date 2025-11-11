@@ -1,4 +1,8 @@
+import HandlingData from '@shared/Models/HandlingData';
+import EventService from './EventService';
 import InterfaceService from './InterfaceService';
+import NotificationService from './NotificationService';
+import { NotificationType } from '@shared/Models/NotificationType';
 
 /**
  * HandlingEditorService - Manages the handling editor interface for the current player's vehicle
@@ -14,10 +18,12 @@ export default class HandlingEditorService {
 		mp.events.add('playerCommand', this.onCommand.bind(this));
 
 		// Register event to receive handling data requests
-		mp.events.add('handlingEditor:getData', this.getVehicleHandlingData.bind(this));
+		// mp.events.add('handlingEditor:getData', this.getVehicleHandlingData.bind(this));
+        EventService.registerEventHandler('handlingEditor:getData', this.getVehicleHandlingData.bind(this));
 
 		// Register event to apply handling changes
-		mp.events.add('handlingEditor:applyChanges', this.applyHandlingChanges.bind(this));
+		// mp.events.add('handlingEditor:applyChanges', this.applyHandlingChanges.bind(this));
+        EventService.registerEventHandler('handlingEditor:applyChanges', this.applyHandlingChanges.bind(this));
 
 		// Register event to close the interface
 		mp.events.add('handlingEditor:close', this.closeHandlingEditor.bind(this));
@@ -41,7 +47,7 @@ export default class HandlingEditorService {
 		const vehicle = mp.players.local.vehicle;
 
 		if (!vehicle) {
-			mp.gui.chat.push('You must be in a vehicle to use the handling editor.');
+            NotificationService.addNotification(NotificationType.Warning, 'Handling Editor', 'You must be in a vehicle to use the handling editor.');
 			return;
 		}
 
@@ -88,49 +94,63 @@ export default class HandlingEditorService {
 	 */
 	private static sendVehicleHandlingData(vehicle: VehicleMp) {
 		try {
+            const mass = vehicle.getHandling('fMass');
+            NotificationService.addNotification(NotificationType.Info, 'Handling Editor', `Vehicle Mass: ${mass}`);
 			const handlingData = {
-				mass: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fMass'),
-				initialDragCoeff: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fInitialDragCoeff'),
-				downforceModifier: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fDownforceModifier'),
-				percentSubmerged: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fPercentSubmerged'),
-				driveBiasFront: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fDriveBiasFront'),
-				accelerationMultiplier: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fInitialDriveForce'),
-				driveInertia: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fDriveInertia'),
-				clutchChangeRateScaleUpShift: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fClutchChangeRateScaleUpShift'),
-				clutchChangeRateScaleDownShift: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fClutchChangeRateScaleDownShift'),
-				initialDriveMaxFlatVel: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fInitialDriveMaxFlatVel'),
-				brakeForce: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fBrakeForce'),
-				brakeBiasFront: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fBrakeBiasFront'),
-				handBrakeForce: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fHandBrakeForce'),
-				steeringLock: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fSteeringLock'),
-				tractionCurveMax: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fTractionCurveMax'),
-				tractionCurveMin: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fTractionCurveMin'),
-				tractionCurveLateral: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fTractionCurveLateral'),
-				tractionSpringDeltaMax: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fTractionSpringDeltaMax'),
-				lowSpeedTractionLossMult: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fLowSpeedTractionLossMult'),
-				camberStiffness: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fCamberStiffnesss'),
-				tractionBiasFront: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fTractionBiasFront'),
-				tractionLossMult: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fTractionLossMult'),
-				suspensionForce: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fSuspensionForce'),
-				suspensionCompDamp: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fSuspensionCompDamp'),
-				suspensionReboundDamp: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fSuspensionReboundDamp'),
-				suspensionUpperLimit: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fSuspensionUpperLimit'),
-				suspensionLowerLimit: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fSuspensionLowerLimit'),
-				suspensionRaise: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fSuspensionRaise'),
-				suspensionBiasFront: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fSuspensionBiasFront'),
-				antiRollBarForce: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fAntiRollBarForce'),
-				antiRollBarBiasFront: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fAntiRollBarBiasFront'),
-				rollCentreHeightFront: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fRollCentreHeightFront'),
-				rollCentreHeightRear: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fRollCentreHeightRear'),
-				collisionDamageMult: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fCollisionDamageMult'),
-				weaponDamageMult: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fWeaponDamageMult'),
-				deformationDamageMult: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fDeformationDamageMult'),
-				engineDamageMult: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fEngineDamageMult'),
-				petrolTankVolume: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fPetrolTankVolume'),
-				oilVolume: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fOilVolume'),
-				seatOffsetDistX: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fSeatOffsetDistX'),
-				seatOffsetDistY: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fSeatOffsetDistY'),
-				seatOffsetDistZ: mp.game.vehicle.getVehicleHandlingFloat(vehicle.handle, 'CHandlingData', 'fSeatOffsetDistZ')
+				// Physical Attributes
+				mass: vehicle.getHandling('fMass'),
+				initialDragCoeff: vehicle.getHandling('fInitialDragCoeff'),
+				downForceModifier: vehicle.getHandling('fDownForceModifier'),
+				percentSubmerged: vehicle.getHandling('fPercentSubmerged'),
+
+				// Transmission Attributes
+				driveBiasFront: vehicle.getHandling('fDriveBiasFront'),
+				initialDriveGears: vehicle.getHandling('nInitialDriveGears'),
+				initialDriveForce: vehicle.getHandling('fInitialDriveForce'),
+				driveInertia: vehicle.getHandling('fDriveInertia'),
+				clutchChangeRateScaleUpShift: vehicle.getHandling('fClutchChangeRateScaleUpShift'),
+				clutchChangeRateScaleDownShift: vehicle.getHandling('fClutchChangeRateScaleDownShift'),
+				initialDriveMaxFlatVel: vehicle.getHandling('fInitialDriveMaxFlatVel'),
+				brakeForce: vehicle.getHandling('fBrakeForce'),
+				brakeBiasFront: vehicle.getHandling('fBrakeBiasFront'),
+				handBrakeForce: vehicle.getHandling('fHandBrakeForce'),
+				steeringLock: vehicle.getHandling('fSteeringLock'),
+
+				// Wheel Traction Attributes
+				tractionCurveMax: vehicle.getHandling('fTractionCurveMax'),
+				tractionCurveMin: vehicle.getHandling('fTractionCurveMin'),
+				tractionCurveLateral: vehicle.getHandling('fTractionCurveLateral'),
+				tractionSpringDeltaMax: vehicle.getHandling('fTractionSpringDeltaMax'),
+				lowSpeedTractionLossMult: vehicle.getHandling('fLowSpeedTractionLossMult'),
+				camberStiffness: vehicle.getHandling('fCamberStiffnesss'),
+				tractionBiasFront: vehicle.getHandling('fTractionBiasFront'),
+				tractionLossMult: vehicle.getHandling('fTractionLossMult'),
+
+				// Suspension Attributes
+				suspensionForce: vehicle.getHandling('fSuspensionForce'),
+				suspensionCompDamp: vehicle.getHandling('fSuspensionCompDamp'),
+				suspensionReboundDamp: vehicle.getHandling('fSuspensionReboundDamp'),
+				suspensionUpperLimit: vehicle.getHandling('fSuspensionUpperLimit'),
+				suspensionLowerLimit: vehicle.getHandling('fSuspensionLowerLimit'),
+				suspensionRaise: vehicle.getHandling('fSuspensionRaise'),
+				suspensionBiasFront: vehicle.getHandling('fSuspensionBiasFront'),
+				antiRollBarForce: vehicle.getHandling('fAntiRollBarForce'),
+				antiRollBarBiasFront: vehicle.getHandling('fAntiRollBarBiasFront'),
+				rollCentreHeightFront: vehicle.getHandling('fRollCentreHeightFront'),
+				rollCentreHeightRear: vehicle.getHandling('fRollCentreHeightRear'),
+
+				// Damage Attributes
+				collisionDamageMult: vehicle.getHandling('fCollisionDamageMult'),
+				weaponDamageMult: vehicle.getHandling('fWeaponDamageMult'),
+				deformationDamageMult: vehicle.getHandling('fDeformationDamageMult'),
+				engineDamageMult: vehicle.getHandling('fEngineDamageMult'),
+				petrolTankVolume: vehicle.getHandling('fPetrolTankVolume'),
+				oilVolume: vehicle.getHandling('fOilVolume'),
+
+				// Miscellaneous Attributes
+				seatOffsetDistX: vehicle.getHandling('fSeatOffsetDistX'),
+				seatOffsetDistY: vehicle.getHandling('fSeatOffsetDistY'),
+				seatOffsetDistZ: vehicle.getHandling('fSeatOffsetDistZ')
 			};
 
 			InterfaceService.callInterfaceEvent('setHandlingData', handlingData);
@@ -142,31 +162,34 @@ export default class HandlingEditorService {
 	/**
 	 * Apply handling changes to the vehicle
 	 */
-	private static applyHandlingChanges(data: string) {
+	private static applyHandlingChanges(data: HandlingData) {
 		const vehicle = mp.players.local.vehicle;
 
 		if (!vehicle) {
-			mp.gui.chat.push('You must be in a vehicle to apply handling changes.');
+            NotificationService.addNotification(NotificationType.Warning, 'Handling Editor', 'You must be in a vehicle to apply handling changes.');
 			return;
 		}
 
 		try {
-			const handlingData = JSON.parse(data);
-
 			// Apply each handling property
-			Object.keys(handlingData).forEach((key) => {
-				const value = handlingData[key];
+			Object.keys(data).forEach((key: string) => {
+				const value = (data as any)[key];
 				const fieldName = this.getFieldNameFromKey(key);
 
 				if (fieldName) {
-					mp.game.vehicle.setVehicleHandlingFloat(vehicle.handle, 'CHandlingData', fieldName, value);
-				}
+					vehicle.setHandling(fieldName, value);
+				} else {
+                    NotificationService.addNotification(NotificationType.Warning, 'Handling Editor', `Unknown handling field for key: ${key}`);
+                }
 			});
 
-			mp.gui.chat.push('Handling changes applied successfully.');
+			const engineAcceleration = data.initialDriveForce || 0;
+            mp.gui.chat.push(`New Engine Drive Force: ${engineAcceleration}`);
+
+            NotificationService.addNotification(NotificationType.Success, 'Handling Editor', 'Handling changes applied successfully.');
 		} catch (error) {
 			mp.console.logError(`Error applying handling changes: ${error}`);
-			mp.gui.chat.push('Error applying handling changes.');
+            NotificationService.addNotification(NotificationType.Error, 'Handling Editor', 'Error applying handling changes.');
 		}
 	}
 
@@ -175,12 +198,16 @@ export default class HandlingEditorService {
 	 */
 	private static getFieldNameFromKey(key: string): string {
 		const fieldMap: { [key: string]: string } = {
+			// Physical Attributes
 			mass: 'fMass',
 			initialDragCoeff: 'fInitialDragCoeff',
-			downforceModifier: 'fDownforceModifier',
+			downForceModifier: 'fDownForceModifier',
 			percentSubmerged: 'fPercentSubmerged',
+
+			// Transmission Attributes
 			driveBiasFront: 'fDriveBiasFront',
-			accelerationMultiplier: 'fInitialDriveForce',
+			initialDriveGears: 'nInitialDriveGears',
+			initialDriveForce: 'fInitialDriveForce',
 			driveInertia: 'fDriveInertia',
 			clutchChangeRateScaleUpShift: 'fClutchChangeRateScaleUpShift',
 			clutchChangeRateScaleDownShift: 'fClutchChangeRateScaleDownShift',
@@ -189,6 +216,8 @@ export default class HandlingEditorService {
 			brakeBiasFront: 'fBrakeBiasFront',
 			handBrakeForce: 'fHandBrakeForce',
 			steeringLock: 'fSteeringLock',
+
+			// Wheel Traction Attributes
 			tractionCurveMax: 'fTractionCurveMax',
 			tractionCurveMin: 'fTractionCurveMin',
 			tractionCurveLateral: 'fTractionCurveLateral',
@@ -197,6 +226,8 @@ export default class HandlingEditorService {
 			camberStiffness: 'fCamberStiffnesss',
 			tractionBiasFront: 'fTractionBiasFront',
 			tractionLossMult: 'fTractionLossMult',
+
+			// Suspension Attributes
 			suspensionForce: 'fSuspensionForce',
 			suspensionCompDamp: 'fSuspensionCompDamp',
 			suspensionReboundDamp: 'fSuspensionReboundDamp',
@@ -208,12 +239,16 @@ export default class HandlingEditorService {
 			antiRollBarBiasFront: 'fAntiRollBarBiasFront',
 			rollCentreHeightFront: 'fRollCentreHeightFront',
 			rollCentreHeightRear: 'fRollCentreHeightRear',
+
+			// Damage Attributes
 			collisionDamageMult: 'fCollisionDamageMult',
 			weaponDamageMult: 'fWeaponDamageMult',
 			deformationDamageMult: 'fDeformationDamageMult',
 			engineDamageMult: 'fEngineDamageMult',
 			petrolTankVolume: 'fPetrolTankVolume',
 			oilVolume: 'fOilVolume',
+
+			// Miscellaneous Attributes
 			seatOffsetDistX: 'fSeatOffsetDistX',
 			seatOffsetDistY: 'fSeatOffsetDistY',
 			seatOffsetDistZ: 'fSeatOffsetDistZ'

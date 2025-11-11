@@ -3,74 +3,27 @@ import styles from './Styles/HandlingEditorInterface.module.css';
 import { triggerEvent } from 'src/Hooks/Fetch';
 import { useRageEvent } from 'src/Hooks/RageEventProvider';
 import * as Icons from 'lucide-react';
-
-interface HandlingData {
-	mass: number;
-	initialDragCoeff: number;
-	downforceModifier: number;
-	percentSubmerged: number;
-	driveBiasFront: number;
-	accelerationMultiplier: number;
-	driveInertia: number;
-	clutchChangeRateScaleUpShift: number;
-	clutchChangeRateScaleDownShift: number;
-	initialDriveMaxFlatVel: number;
-	brakeForce: number;
-	brakeBiasFront: number;
-	handBrakeForce: number;
-	steeringLock: number;
-	tractionCurveMax: number;
-	tractionCurveMin: number;
-	tractionCurveLateral: number;
-	tractionSpringDeltaMax: number;
-	lowSpeedTractionLossMult: number;
-	camberStiffness: number;
-	tractionBiasFront: number;
-	tractionLossMult: number;
-	suspensionForce: number;
-	suspensionCompDamp: number;
-	suspensionReboundDamp: number;
-	suspensionUpperLimit: number;
-	suspensionLowerLimit: number;
-	suspensionRaise: number;
-	suspensionBiasFront: number;
-	antiRollBarForce: number;
-	antiRollBarBiasFront: number;
-	rollCentreHeightFront: number;
-	rollCentreHeightRear: number;
-	collisionDamageMult: number;
-	weaponDamageMult: number;
-	deformationDamageMult: number;
-	engineDamageMult: number;
-	petrolTankVolume: number;
-	oilVolume: number;
-	seatOffsetDistX: number;
-	seatOffsetDistY: number;
-	seatOffsetDistZ: number;
-}
+import type HandlingData from '@shared/Models/HandlingData';
 
 const handlingCategories = {
-	'General': [
-		{ key: 'mass', label: 'Mass', min: 0, max: 10000, step: 10 },
-		{ key: 'initialDragCoeff', label: 'Initial Drag Coefficient', min: 0, max: 100, step: 0.1 },
-		{ key: 'downforceModifier', label: 'Downforce Modifier', min: 0, max: 100, step: 0.1 },
-		{ key: 'percentSubmerged', label: 'Percent Submerged', min: 0, max: 100, step: 1 }
+	'Physical': [
+		{ key: 'mass', label: 'Mass (kg)', min: 0, max: 10000, step: 10 },
+		{ key: 'initialDragCoeff', label: 'Initial Drag Coefficient', min: 10, max: 120, step: 0.1 },
+		{ key: 'downForceModifier', label: 'Downforce Modifier', min: 0, max: 100, step: 0.1 },
+		{ key: 'percentSubmerged', label: 'Percent Submerged', min: 0, max: 1, step: 0.01 }
 	],
-	'Drivetrain': [
+	'Transmission': [
 		{ key: 'driveBiasFront', label: 'Drive Bias Front', min: 0, max: 1, step: 0.01 },
-		{ key: 'accelerationMultiplier', label: 'Acceleration Multiplier', min: 0, max: 10, step: 0.1 },
-		{ key: 'driveInertia', label: 'Drive Inertia', min: 0, max: 10, step: 0.01 },
-		{ key: 'clutchChangeRateScaleUpShift', label: 'Clutch Rate Up Shift', min: 0, max: 10, step: 0.1 },
-		{ key: 'clutchChangeRateScaleDownShift', label: 'Clutch Rate Down Shift', min: 0, max: 10, step: 0.1 },
-		{ key: 'initialDriveMaxFlatVel', label: 'Max Flat Velocity', min: 0, max: 500, step: 1 }
-	],
-	'Brakes': [
-		{ key: 'brakeForce', label: 'Brake Force', min: 0, max: 10, step: 0.1 },
+		{ key: 'initialDriveGears', label: 'Initial Drive Gears', min: 1, max: 8, step: 1 },
+		{ key: 'initialDriveForce', label: 'Initial Drive Force', min: 0.01, max: 2, step: 0.01 },
+		{ key: 'driveInertia', label: 'Drive Inertia', min: 0.01, max: 2, step: 0.01 },
+		{ key: 'clutchChangeRateScaleUpShift', label: 'Clutch Rate Up Shift', min: 0, max: 13, step: 0.1 },
+		{ key: 'clutchChangeRateScaleDownShift', label: 'Clutch Rate Down Shift', min: 0, max: 13, step: 0.1 },
+		{ key: 'initialDriveMaxFlatVel', label: 'Max Flat Velocity', min: 0, max: 500, step: 1 },
+		{ key: 'brakeForce', label: 'Brake Force', min: 0.01, max: 2, step: 0.01 },
 		{ key: 'brakeBiasFront', label: 'Brake Bias Front', min: 0, max: 1, step: 0.01 },
-		{ key: 'handBrakeForce', label: 'Hand Brake Force', min: 0, max: 10, step: 0.1 }
-	],
-	'Steering': [
-		{ key: 'steeringLock', label: 'Steering Lock', min: 0, max: 90, step: 1 }
+		{ key: 'handBrakeForce', label: 'Hand Brake Force', min: 0, max: 10, step: 0.1 },
+		{ key: 'steeringLock', label: 'Steering Lock (degrees)', min: 1, max: 90, step: 1 }
 	],
 	'Traction': [
 		{ key: 'tractionCurveMax', label: 'Traction Curve Max', min: 0, max: 10, step: 0.1 },
@@ -79,7 +32,7 @@ const handlingCategories = {
 		{ key: 'tractionSpringDeltaMax', label: 'Traction Spring Delta Max', min: 0, max: 10, step: 0.1 },
 		{ key: 'lowSpeedTractionLossMult', label: 'Low Speed Traction Loss', min: 0, max: 10, step: 0.1 },
 		{ key: 'camberStiffness', label: 'Camber Stiffness', min: -10, max: 10, step: 0.1 },
-		{ key: 'tractionBiasFront', label: 'Traction Bias Front', min: 0, max: 1, step: 0.01 },
+		{ key: 'tractionBiasFront', label: 'Traction Bias Front', min: 0.01, max: 0.99, step: 0.01 },
 		{ key: 'tractionLossMult', label: 'Traction Loss Multiplier', min: 0, max: 10, step: 0.1 }
 	],
 	'Suspension': [
@@ -101,7 +54,7 @@ const handlingCategories = {
 		{ key: 'deformationDamageMult', label: 'Deformation Damage Multiplier', min: 0, max: 10, step: 0.1 },
 		{ key: 'engineDamageMult', label: 'Engine Damage Multiplier', min: 0, max: 10, step: 0.1 }
 	],
-	'Other': [
+	'Miscellaneous': [
 		{ key: 'petrolTankVolume', label: 'Petrol Tank Volume', min: 0, max: 200, step: 1 },
 		{ key: 'oilVolume', label: 'Oil Volume', min: 0, max: 100, step: 1 },
 		{ key: 'seatOffsetDistX', label: 'Seat Offset X', min: -5, max: 5, step: 0.01 },
@@ -112,10 +65,11 @@ const handlingCategories = {
 
 export default function HandlingEditorInterface() {
 	const [handlingData, setHandlingData] = useState<HandlingData | null>(null);
-	const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set(['General']));
+	const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set(['Physical']));
 	const [hasChanges, setHasChanges] = useState(false);
 
 	useRageEvent('setHandlingData', (data: HandlingData) => {
+        console.log('Received handling data:', data);
 		setHandlingData(data);
 		setHasChanges(false);
 	});
@@ -169,7 +123,7 @@ export default function HandlingEditorInterface() {
 	const handleApply = () => {
 		if (!handlingData) return;
 
-		triggerEvent('handlingEditor:applyChanges', JSON.stringify(handlingData));
+		triggerEvent('handlingEditor:applyChanges', handlingData);
 		setHasChanges(false);
 	};
 
