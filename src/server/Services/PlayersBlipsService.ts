@@ -103,8 +103,8 @@ export default class PlayersBlipsService {
         alpha: 255,
         shortRange: true,
         showCone: true,
-        category: 7, // Category 7 is for other players
-        showHeading: true, // Show heading indicator by default
+        // category: 7, // Category 7 is for other players
+        // showHeading: true, // Show heading indicator by default
     };
 
     /**
