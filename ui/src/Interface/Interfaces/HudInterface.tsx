@@ -1,6 +1,7 @@
 import { useUserInfo } from 'src/Hooks/UserInfoProvider';
 import styles from './Styles/HudInterface.module.css';
 import translate from '@shared/Translation/Translation';
+import { formatMoney } from '@shared/Money';
 
 export default function HudInterface() {
     const { userInfo, workInfo } = useUserInfo();
@@ -19,7 +20,7 @@ export default function HudInterface() {
             <div className={styles.playerInfo}>
                 <div className={styles.playerDetails}>
                     <span className={styles.username}>{username}</span>
-                    <span className={styles.money}>${money}</span>
+                    <span className={styles.money}>{formatMoney(money)}</span>
                 </div>
                 <div className={styles.avatarContainer}>
                     <svg className={styles.backgroundRing} viewBox="0 0 200 200">

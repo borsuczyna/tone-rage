@@ -8,6 +8,7 @@ import ShutdownService from './Services/ShutdownService';
 import VehicleService from './Services/VehicleService';
 import Tests from './Tests/Tests';
 import SpawnService from './Services/SpawnService';
+import UserService from './Services/UserService';
 // import EventServiceTest from './Tests/EventServiceTest';
 // import ElementDataServiceTest from './Tests/ElementDataServiceTest';
 // import FetchServiceTest from './Tests/FetchServiceTest';
@@ -22,6 +23,7 @@ import SpawnService from './Services/SpawnService';
 	await FetchService.init();
 	await AuthService.init();
     await SpawnService.init();
+    await UserService.init();
 
 	// Debug
 	Tests.getPositionCommandTest();

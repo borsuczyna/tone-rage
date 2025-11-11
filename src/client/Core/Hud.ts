@@ -1,3 +1,4 @@
+import ElementDataService from '@/Services/ElementDataService';
 import InterfaceService from '@/Services/InterfaceService';
 import TimerService, { Timer } from '@shared/Services/TimerService';
 
@@ -25,15 +26,17 @@ export default class Hud {
     private static update() {
         const username = mp.players.local.name;
         const health = mp.players.local.getHealth();
-        const exp = 0;
-        const money = 0;
+        const money = ElementDataService.get(mp.players.local, 'money') || 0;
+        const level = ElementDataService.get(mp.players.local, 'level') || 0;
+        const exp = ElementDataService.get(mp.players.local, 'exp') || 0;
 
         InterfaceService.callInterfaceEvent('updateUserInfo', {
             userInfo: {
                 username,
                 health,
-                exp,
                 money,
+                level,
+                exp,
             },
         });
     }
