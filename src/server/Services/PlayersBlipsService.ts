@@ -67,6 +67,7 @@ export interface BlipConfig {
     name?: string;
     showCone?: boolean;
     category?: number;
+    showHeading?: boolean; // Show heading indicator on blip
 }
 
 interface PlayerBlipConfig {
@@ -102,6 +103,8 @@ export default class PlayersBlipsService {
         alpha: 255,
         shortRange: true,
         showCone: true,
+        category: 7, // Category 7 is for other players
+        showHeading: true, // Show heading indicator by default
     };
 
     /**

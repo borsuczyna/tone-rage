@@ -67,6 +67,7 @@ interface BlipConfig {
     name?: string;
     showCone?: boolean;
     category?: number;
+    showHeading?: boolean; // Show heading indicator on blip
 }
 
 interface PlayerBlipData {
@@ -113,11 +114,19 @@ export default class PlayersBlipsService {
 
         // Register RAGE MP events
         mp.events.add('playerQuit', this.onPlayerQuit.bind(this));
+        mp.events.add('render', this.onRender.bind(this));
 
         // Enable radar display
         mp.game.ui.displayRadar(true);
 
         this.logger.info('Client-side PlayersBlipsService initialized successfully');
+    }
+
+    /**
+     * Render event - update blip positions every frame
+     */
+    private static onRender() {
+        this.updateBlipPositions();
     }
 
     /**
@@ -179,6 +188,12 @@ export default class PlayersBlipsService {
                 blip.setNameToPlayerName(player);
             }
 
+            // Apply category if specified
+            if (config.category !== undefined) blip.setCategory(config.category); 
+
+            // Show heading indicator if specified
+            if (config.showHeading !== undefined) blip.setShowHeadingIndicator(config.showHeading);
+
             // Store blip data
             this.playerBlips.set(playerId, {
                 blip: blip,
@@ -217,6 +232,12 @@ export default class PlayersBlipsService {
                 shortRange: config.shortRange !== false,
                 name: config.name,
             });
+
+            // Apply category if specified
+            if (config.category !== undefined) blip.setCategory(config.category); 
+
+            // Show heading indicator if specified (doesn't make sense for static blips, but included for completeness)
+            if (config.showHeading !== undefined) blip.setShowHeadingIndicator(config.showHeading); 
 
             this.customBlips.set(id, { blip, config });
             this.logger.debug(`Created custom blip with ID: ${id}`);
@@ -338,6 +359,8 @@ export default class PlayersBlipsService {
             if (config.scale !== undefined) blip.setScale(config.scale);
             if (config.alpha !== undefined) blip.setAlpha(config.alpha);
             if (config.shortRange !== undefined) blip.setAsShortRange(config.shortRange);
+            if (config.category !== undefined) blip.setCategory(config.category);
+            if (config.showHeading !== undefined) blip.setShowHeadingIndicator(config.showHeading);
 
             // Update stored config
             blipData.config = { ...blipData.config, ...config };
