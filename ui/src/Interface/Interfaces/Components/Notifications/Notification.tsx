@@ -1,5 +1,5 @@
 import type { NotificationData } from '@shared/Models/NotificationData';
-import styles from '../../styles/NotificationsInterface.module.css';
+import styles from '../../Styles/NotificationsInterface.module.css';
 import * as Icons from "lucide-react";
 import { NotificationType } from '@shared/Models/NotificationType';
 // import { NotificationType } from '@shared/Models/NotificationType';

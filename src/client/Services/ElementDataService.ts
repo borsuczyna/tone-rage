@@ -42,7 +42,6 @@ export default class ElementDataService {
 		}
 
 		dataMap.set(key, value);
-		mp.gui.chat.push(`ElementDataService: Set data for ${elementId} - ${key} = ${value} (shareMode: ${shareMode})`);
 
 		// Sync based on share mode
 		switch (shareMode) {

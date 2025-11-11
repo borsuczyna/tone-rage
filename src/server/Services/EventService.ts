@@ -12,7 +12,6 @@ export default class EventService {
 	private static chunkAssemblers: Map<number, ChunkAssembler> = new Map();
 
 	public static init() {
-		mp.events.add('event:trigger', this.onEventTriggered.bind(this));
 		mp.events.add('event:trigger:chunk', this.onChunkReceived.bind(this));
 		mp.events.add('playerJoin', this.onPlayerJoin.bind(this));
 		mp.events.add('playerQuit', this.onPlayerQuit.bind(this));
@@ -57,29 +56,11 @@ export default class EventService {
 	public static triggerClientEvent(client: PlayerMp, eventName: string, ...args: any[]) {
 		const encodedData = encodeData(args);
 
-		// Check if data needs to be chunked
-		if (encodedData.length <= 32000) {
-			// Send directly without chunking
-			client.call('event:receive', [eventName, encodedData]);
-		} else {
-			// Send in chunks
-			const chunks = chunkData(encodedData);
-			chunks.forEach((chunk) => {
-				client.call('event:receive:chunk', [eventName, chunk]);
-			});
-		}
-	}
-
-	private static onEventTriggered(client: PlayerMp, hash: string, eventName: string, encodedData: string) {
-		const decodedData = decodeData<any[]>(encodedData);
-
-		if (!AnticheatService.verifyHash(eventName, hash, client.id)) {
-			AnticheatService.clientInvalidHash(client, eventName, hash, JSON.stringify(decodedData));
-			return;
-		}
-
-		const listeners = this.listeners.filter((listener) => listener.eventName === eventName);
-		listeners.forEach((listener) => listener.callback(client, ...decodedData));
+        // Send in chunks
+        const chunks = chunkData(encodedData);
+        chunks.forEach((chunk) => {
+            client.call('event:receive:chunk', [eventName, chunk]);
+        });
 	}
 
 	private static onChunkReceived(client: PlayerMp, hash: string, eventName: string, chunkDataJson: string) {

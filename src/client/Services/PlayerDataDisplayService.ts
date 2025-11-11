@@ -1,4 +1,6 @@
+import { NotificationType } from '@shared/Models/NotificationType';
 import ElementDataService from './ElementDataService';
+import NotificationService from './NotificationService';
 
 /**
  * PlayerDataDisplayService - Debug feature to display all element data above players in 3D
@@ -26,12 +28,12 @@ export default class PlayerDataDisplayService {
 	private static onCommand(command: string) {
 		if (command === 'toggledatadisplay') {
 			this.isEnabled = !this.isEnabled;
-			mp.gui.chat.push(`Player data display: ${this.isEnabled ? 'enabled' : 'disabled'}`);
+            NotificationService.addNotification(NotificationType.Info, 'Player Data Display', `Player data display: ${this.isEnabled ? 'enabled' : 'disabled'}`);
 		} else if (command.startsWith('adddata')) {
 			// Example command: /adddata key value
 			const parts = command.split(' ');
 			if (parts.length < 3) {
-				mp.gui.chat.push('Usage: /adddata key value');
+                NotificationService.addNotification(NotificationType.Warning, 'Player Data Display', 'Usage: /adddata key value');
 				return;
 			}
 
