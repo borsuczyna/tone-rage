@@ -89,7 +89,7 @@ export default class UserService {
 	public static async assignUserData(client: PlayerMp, user: UserEntity): Promise<void> {
 		ElementDataService.set(client, 'userId', user.uid, ShareMode.Everywhere);
         ElementDataService.set(client, 'money', user.money, ShareMode.SpecificClient);
-        ElementDataService.set(client, 'bankMoney', user.bankMoney, ShareMode.SpecificClient);
+        ElementDataService.set(client, 'bankMoney', user.bankMoney, ShareMode.Server);
         ElementDataService.set(client, 'level', user.level, ShareMode.SpecificClient);
         ElementDataService.set(client, 'exp', user.exp, ShareMode.SpecificClient);
 	}
