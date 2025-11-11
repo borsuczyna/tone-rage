@@ -1,7 +1,7 @@
 import { useUserInfo } from 'src/Hooks/UserInfoProvider';
 import styles from './Styles/HudInterface.module.css';
 import translate from '@shared/Translation/Translation';
-import { formatMoney } from '@shared/Money';
+import { formatMoney } from '@shared/Services/MoneyService';
 
 export default function HudInterface() {
     const { userInfo, workInfo } = useUserInfo();

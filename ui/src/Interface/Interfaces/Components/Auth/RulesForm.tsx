@@ -36,11 +36,11 @@ export default function RulesForm({ onBackToLogin, onAcceptAndRegister }: RulesF
             
             <div className={styles.rulesActions}>
                 <Button variant="glass" size="medium" onClick={onBackToLogin} style={{flex: 1, width: '100%'}}>
-                    <Icons.ArrowLeft size={'1rem'} />
+                    <Icons.ArrowLeft size='1rem' />
                     {translate('auth.rules.backToLogin')}
                 </Button>
                 <Button variant="primary" size="medium" onClick={onAcceptAndRegister} style={{flex: 1, width: '100%'}}>
-                    <Icons.Check size={'1rem'} />
+                    <Icons.Check size='1rem' />
                     {translate('auth.rules.acceptAndRegister')}
                 </Button>
             </div>

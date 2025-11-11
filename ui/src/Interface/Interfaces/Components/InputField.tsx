@@ -3,27 +3,32 @@ import styles from './InputField.module.css';
 
 interface InputFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
     icon?: ReactNode;
-    label: string;
+    label?: string;
+    rightElement?: ReactNode;
+    groupStyle?: React.CSSProperties;
     onChange: (value: string) => void;
 }
 
 export default function InputField({ 
     icon, 
-    label, 
+    label,
+    groupStyle,
     onChange,
     className,
+    rightElement,
     ...inputProps
 }: InputFieldProps) {
     return (
-        <div className={styles.inputGroup}>
-            <label>{label}</label>
+        <div className={styles.inputGroup} style={groupStyle}>
+            {label && <label>{label}</label>}
             <div className={styles.inputWrapper}>
-                {icon && <div className={styles.inputIcon}>{icon}</div>}
+                {icon}
                 <input
                     {...inputProps}
                     className={className}
                     onChange={(e) => onChange(e.target.value)}
                 />
+                {rightElement}
             </div>
         </div>
     );

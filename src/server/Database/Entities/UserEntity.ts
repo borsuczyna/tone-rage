@@ -11,6 +11,7 @@ export class UserEntity extends DatabaseEntity {
     bankMoney: number = 0;
     level: number = 0;
     exp: number = 0;
+    adminLevel: number = 0;
 
 	constructor() {
 		super();

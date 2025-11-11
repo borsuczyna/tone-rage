@@ -4,6 +4,7 @@ import NotificationsInterface from "./Interfaces/NotificationsInterface";
 import AuthInterface from "./Interfaces/AuthInterface";
 import SpawnSelectionInterface from "./Interfaces/SpawnSelectionInterface";
 import HudInterface from "./Interfaces/HudInterface";
+import ScoreboardInterface from "./Interfaces/ScoreboardInterface";
 
 function Interfaces() {
     const { visibleInterfaces } = useInterfaceVisibility();
@@ -18,6 +19,7 @@ function Interfaces() {
             {isInterfaceVisible("NotificationsInterface") && <NotificationsInterface key="NotificationsInterface" />}
             {isInterfaceVisible("AuthInterface") && <AuthInterface key="AuthInterface" />}
             {isInterfaceVisible("SpawnSelectionInterface") && <SpawnSelectionInterface key="SpawnSelectionInterface" />}
+            {isInterfaceVisible("ScoreboardInterface") && <ScoreboardInterface key="ScoreboardInterface" />}
         </>
     )
 }
