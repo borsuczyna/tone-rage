@@ -1,6 +1,6 @@
 import { useInterfaceVisibility } from 'src/Hooks/InterfaceVisibilityProvider';
 import { addNotification, useNotifications } from 'src/Hooks/NotificationsProvider';
-import styles from './styles/NotificationsInterface.module.css';
+import styles from './Styles/NotificationsInterface.module.css';
 import Notification from './Components/Notifications/Notification';
 import { useRageEvent } from 'src/Hooks/RageEventProvider';
 import type { NotificationData } from '@shared/Models/NotificationData';
