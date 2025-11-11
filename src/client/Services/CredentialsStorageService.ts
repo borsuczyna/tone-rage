@@ -10,7 +10,7 @@ interface SavedCredentials {
 
 export default class CredentialsStorageService {
 	private static logger: Logger = Logger.getLogger(CredentialsStorageService);
-	private static readonly STORAGE_KEY = 'tone/auth_credentials';
+	private static readonly STORAGE_KEY = 'auth_credentials.json';
 	private static credentials: SavedCredentials | null = null;
 
 	public static init() {
