@@ -9,6 +9,7 @@ import Logo from './Components/Logo';
 import EmblemaElement from './Components/EmblemaElement';
 import InputField from './Components/InputField';
 import translate from '@shared/Translation/Translation';
+import { useRageEvent } from 'src/Hooks/RageEventProvider';
 
 const playerCategories = [
     {
@@ -77,6 +78,10 @@ export default function ScoreboardInterface() {
     const nextCategory = () => {
         setSelectedCategoryIndex((selectedCategoryIndex + 1) % playerCategories.length);
     };
+
+    useRageEvent('setScoreboardPlayers', (players: ScoreboardPlayerItem[]) => {
+        setPlayers(players);
+    });
 
     return (
         <div className={styles.container}>

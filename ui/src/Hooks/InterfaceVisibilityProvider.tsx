@@ -14,7 +14,7 @@ const InterfaceVisibilityContext = createContext<InterfaceVisibilityHook | undef
 
 export const InterfaceVisibilityProvider = ({ children }: { children: React.ReactNode }) => {
     const [visibleInterfaces, setVisibleInterfaces] = useState<InterfaceMap>({
-        'ScoreboardInterface': true,
+        // 'ScoreboardInterface': true,
         // 'HudInterface': true,
         // 'NotificationsInterface': true,
         // 'AuthInterface': true,  // Set to true for development/testing

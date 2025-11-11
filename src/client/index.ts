@@ -8,6 +8,7 @@ import NotificationService from './Services/NotificationService';
 import PlayerDataDisplayService from './Services/PlayerDataDisplayService';
 import CredentialsStorageService from './Services/CredentialsStorageService';
 import Hud from './Core/Hud';
+import Scoreboard from './Core/Scoreboard';
 // import EventServiceTest from './Tests/EventServiceTest';
 // import ElementDataServiceTest from './Tests/ElementDataServiceTest';
 // import InterfaceServiceTest from './Tests/InterfaceServiceTest';
@@ -27,6 +28,7 @@ import Hud from './Core/Hud';
 	await NotificationService.init();
 	await LoginPanel.init();
     await Hud.init();
+    await Scoreboard.init();
 
 	// Debug
 	// EventServiceTest.init();
