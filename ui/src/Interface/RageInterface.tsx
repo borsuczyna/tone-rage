@@ -5,6 +5,7 @@ import AuthInterface from "./Interfaces/AuthInterface";
 import SpawnSelectionInterface from "./Interfaces/SpawnSelectionInterface";
 import HudInterface from "./Interfaces/HudInterface";
 import ScoreboardInterface from "./Interfaces/ScoreboardInterface";
+import HandlingEditorInterface from "./Interfaces/HandlingEditorInterface";
 
 function Interfaces() {
     const { visibleInterfaces } = useInterfaceVisibility();
@@ -20,6 +21,7 @@ function Interfaces() {
             {isInterfaceVisible("AuthInterface") && <AuthInterface key="AuthInterface" />}
             {isInterfaceVisible("SpawnSelectionInterface") && <SpawnSelectionInterface key="SpawnSelectionInterface" />}
             {isInterfaceVisible("ScoreboardInterface") && <ScoreboardInterface key="ScoreboardInterface" />}
+            {isInterfaceVisible("HandlingEditorInterface") && <HandlingEditorInterface key="HandlingEditorInterface" />}
         </>
     )
 }

@@ -1,0 +1,243 @@
+import { useState, useEffect } from 'react';
+import styles from './Styles/HandlingEditorInterface.module.css';
+import { triggerEvent } from 'src/Hooks/Fetch';
+import { useRageEvent } from 'src/Hooks/RageEventProvider';
+import * as Icons from 'lucide-react';
+
+interface HandlingData {
+	mass: number;
+	initialDragCoeff: number;
+	downforceModifier: number;
+	percentSubmerged: number;
+	driveBiasFront: number;
+	accelerationMultiplier: number;
+	driveInertia: number;
+	clutchChangeRateScaleUpShift: number;
+	clutchChangeRateScaleDownShift: number;
+	initialDriveMaxFlatVel: number;
+	brakeForce: number;
+	brakeBiasFront: number;
+	handBrakeForce: number;
+	steeringLock: number;
+	tractionCurveMax: number;
+	tractionCurveMin: number;
+	tractionCurveLateral: number;
+	tractionSpringDeltaMax: number;
+	lowSpeedTractionLossMult: number;
+	camberStiffness: number;
+	tractionBiasFront: number;
+	tractionLossMult: number;
+	suspensionForce: number;
+	suspensionCompDamp: number;
+	suspensionReboundDamp: number;
+	suspensionUpperLimit: number;
+	suspensionLowerLimit: number;
+	suspensionRaise: number;
+	suspensionBiasFront: number;
+	antiRollBarForce: number;
+	antiRollBarBiasFront: number;
+	rollCentreHeightFront: number;
+	rollCentreHeightRear: number;
+	collisionDamageMult: number;
+	weaponDamageMult: number;
+	deformationDamageMult: number;
+	engineDamageMult: number;
+	petrolTankVolume: number;
+	oilVolume: number;
+	seatOffsetDistX: number;
+	seatOffsetDistY: number;
+	seatOffsetDistZ: number;
+}
+
+const handlingCategories = {
+	'General': [
+		{ key: 'mass', label: 'Mass', min: 0, max: 10000, step: 10 },
+		{ key: 'initialDragCoeff', label: 'Initial Drag Coefficient', min: 0, max: 100, step: 0.1 },
+		{ key: 'downforceModifier', label: 'Downforce Modifier', min: 0, max: 100, step: 0.1 },
+		{ key: 'percentSubmerged', label: 'Percent Submerged', min: 0, max: 100, step: 1 }
+	],
+	'Drivetrain': [
+		{ key: 'driveBiasFront', label: 'Drive Bias Front', min: 0, max: 1, step: 0.01 },
+		{ key: 'accelerationMultiplier', label: 'Acceleration Multiplier', min: 0, max: 10, step: 0.1 },
+		{ key: 'driveInertia', label: 'Drive Inertia', min: 0, max: 10, step: 0.01 },
+		{ key: 'clutchChangeRateScaleUpShift', label: 'Clutch Rate Up Shift', min: 0, max: 10, step: 0.1 },
+		{ key: 'clutchChangeRateScaleDownShift', label: 'Clutch Rate Down Shift', min: 0, max: 10, step: 0.1 },
+		{ key: 'initialDriveMaxFlatVel', label: 'Max Flat Velocity', min: 0, max: 500, step: 1 }
+	],
+	'Brakes': [
+		{ key: 'brakeForce', label: 'Brake Force', min: 0, max: 10, step: 0.1 },
+		{ key: 'brakeBiasFront', label: 'Brake Bias Front', min: 0, max: 1, step: 0.01 },
+		{ key: 'handBrakeForce', label: 'Hand Brake Force', min: 0, max: 10, step: 0.1 }
+	],
+	'Steering': [
+		{ key: 'steeringLock', label: 'Steering Lock', min: 0, max: 90, step: 1 }
+	],
+	'Traction': [
+		{ key: 'tractionCurveMax', label: 'Traction Curve Max', min: 0, max: 10, step: 0.1 },
+		{ key: 'tractionCurveMin', label: 'Traction Curve Min', min: 0, max: 10, step: 0.1 },
+		{ key: 'tractionCurveLateral', label: 'Traction Curve Lateral', min: 0, max: 100, step: 0.1 },
+		{ key: 'tractionSpringDeltaMax', label: 'Traction Spring Delta Max', min: 0, max: 10, step: 0.1 },
+		{ key: 'lowSpeedTractionLossMult', label: 'Low Speed Traction Loss', min: 0, max: 10, step: 0.1 },
+		{ key: 'camberStiffness', label: 'Camber Stiffness', min: -10, max: 10, step: 0.1 },
+		{ key: 'tractionBiasFront', label: 'Traction Bias Front', min: 0, max: 1, step: 0.01 },
+		{ key: 'tractionLossMult', label: 'Traction Loss Multiplier', min: 0, max: 10, step: 0.1 }
+	],
+	'Suspension': [
+		{ key: 'suspensionForce', label: 'Suspension Force', min: 0, max: 10, step: 0.1 },
+		{ key: 'suspensionCompDamp', label: 'Suspension Comp Damp', min: 0, max: 10, step: 0.1 },
+		{ key: 'suspensionReboundDamp', label: 'Suspension Rebound Damp', min: 0, max: 10, step: 0.1 },
+		{ key: 'suspensionUpperLimit', label: 'Suspension Upper Limit', min: -1, max: 1, step: 0.01 },
+		{ key: 'suspensionLowerLimit', label: 'Suspension Lower Limit', min: -1, max: 1, step: 0.01 },
+		{ key: 'suspensionRaise', label: 'Suspension Raise', min: -1, max: 1, step: 0.01 },
+		{ key: 'suspensionBiasFront', label: 'Suspension Bias Front', min: 0, max: 1, step: 0.01 },
+		{ key: 'antiRollBarForce', label: 'Anti Roll Bar Force', min: 0, max: 10, step: 0.1 },
+		{ key: 'antiRollBarBiasFront', label: 'Anti Roll Bar Bias Front', min: 0, max: 1, step: 0.01 },
+		{ key: 'rollCentreHeightFront', label: 'Roll Centre Height Front', min: 0, max: 1, step: 0.01 },
+		{ key: 'rollCentreHeightRear', label: 'Roll Centre Height Rear', min: 0, max: 1, step: 0.01 }
+	],
+	'Damage': [
+		{ key: 'collisionDamageMult', label: 'Collision Damage Multiplier', min: 0, max: 10, step: 0.1 },
+		{ key: 'weaponDamageMult', label: 'Weapon Damage Multiplier', min: 0, max: 10, step: 0.1 },
+		{ key: 'deformationDamageMult', label: 'Deformation Damage Multiplier', min: 0, max: 10, step: 0.1 },
+		{ key: 'engineDamageMult', label: 'Engine Damage Multiplier', min: 0, max: 10, step: 0.1 }
+	],
+	'Other': [
+		{ key: 'petrolTankVolume', label: 'Petrol Tank Volume', min: 0, max: 200, step: 1 },
+		{ key: 'oilVolume', label: 'Oil Volume', min: 0, max: 100, step: 1 },
+		{ key: 'seatOffsetDistX', label: 'Seat Offset X', min: -5, max: 5, step: 0.01 },
+		{ key: 'seatOffsetDistY', label: 'Seat Offset Y', min: -5, max: 5, step: 0.01 },
+		{ key: 'seatOffsetDistZ', label: 'Seat Offset Z', min: -5, max: 5, step: 0.01 }
+	]
+};
+
+export default function HandlingEditorInterface() {
+	const [handlingData, setHandlingData] = useState<HandlingData | null>(null);
+	const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set(['General']));
+	const [hasChanges, setHasChanges] = useState(false);
+
+	useRageEvent('setHandlingData', (data: HandlingData) => {
+		setHandlingData(data);
+		setHasChanges(false);
+	});
+
+	useEffect(() => {
+		// Request initial data
+		triggerEvent('handlingEditor:getData', null);
+	}, []);
+
+	const toggleCategory = (category: string) => {
+		setExpandedCategories((prev) => {
+			const newSet = new Set(prev);
+			if (newSet.has(category)) {
+				newSet.delete(category);
+			} else {
+				newSet.add(category);
+			}
+			return newSet;
+		});
+	};
+
+	const handleValueChange = (key: string, value: number) => {
+		if (!handlingData) return;
+
+		setHandlingData((prev) => {
+			if (!prev) return prev;
+			return {
+				...prev,
+				[key]: value
+			};
+		});
+		setHasChanges(true);
+	};
+
+	const handleApply = () => {
+		if (!handlingData) return;
+
+		triggerEvent('handlingEditor:applyChanges', JSON.stringify(handlingData));
+		setHasChanges(false);
+	};
+
+	const handleReset = () => {
+		triggerEvent('handlingEditor:getData', null);
+		setHasChanges(false);
+	};
+
+	if (!handlingData) {
+		return (
+			<div className={styles.container}>
+				<div className={styles.loading}>Loading...</div>
+			</div>
+		);
+	}
+
+	return (
+		<div className={styles.container}>
+			<div className={styles.panel}>
+				<div className={styles.header}>
+					<div className={styles.titleWrapper}>
+						<Icons.Settings size="1.5rem" />
+						<h1>Vehicle Handling Editor</h1>
+					</div>
+					<p className={styles.subtitle}>Adjust vehicle handling properties in real-time</p>
+				</div>
+
+				<div className={styles.content}>
+					{Object.entries(handlingCategories).map(([category, fields]) => (
+						<div key={category} className={styles.categorySection}>
+							<button className={styles.categoryHeader} onClick={() => toggleCategory(category)}>
+								<div className={styles.categoryTitle}>
+									<Icons.ChevronDown
+										size="1.2rem"
+										className={`${styles.chevron} ${expandedCategories.has(category) ? styles.expanded : ''}`}
+									/>
+									<span>{category}</span>
+								</div>
+							</button>
+
+							{expandedCategories.has(category) && (
+								<div className={styles.fieldsGrid}>
+									{fields.map((field) => (
+										<div key={field.key} className={styles.field}>
+											<label className={styles.fieldLabel}>{field.label}</label>
+											<div className={styles.fieldControl}>
+												<input
+													type="number"
+													className={styles.fieldInput}
+													value={(handlingData as any)[field.key] || 0}
+													onChange={(e) => handleValueChange(field.key, parseFloat(e.target.value) || 0)}
+													step={field.step}
+													min={field.min}
+													max={field.max}
+												/>
+												<input
+													type="range"
+													className={styles.fieldSlider}
+													value={(handlingData as any)[field.key] || 0}
+													onChange={(e) => handleValueChange(field.key, parseFloat(e.target.value) || 0)}
+													step={field.step}
+													min={field.min}
+													max={field.max}
+												/>
+											</div>
+										</div>
+									))}
+								</div>
+							)}
+						</div>
+					))}
+				</div>
+
+				<div className={styles.footer}>
+					<button className={styles.resetButton} onClick={handleReset} disabled={!hasChanges}>
+						<Icons.RotateCcw size="1rem" />
+						Reset
+					</button>
+					<button className={styles.applyButton} onClick={handleApply} disabled={!hasChanges}>
+						<Icons.Check size="1rem" />
+						Apply Changes
+					</button>
+				</div>
+			</div>
+		</div>
+	);
+}
