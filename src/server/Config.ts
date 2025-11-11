@@ -8,5 +8,5 @@ export const Config = {
 
 	SaveInterval: {
 		Vehicles: 60000 // Save vehicles every 60 seconds
-	}
+	},
 };
