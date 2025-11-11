@@ -7,6 +7,7 @@ import InterfaceService from './Services/InterfaceService';
 import NotificationService from './Services/NotificationService';
 import PlayerDataDisplayService from './Services/PlayerDataDisplayService';
 import CredentialsStorageService from './Services/CredentialsStorageService';
+import PlayersBlipsService from './Services/PlayersBlipsService';
 import Hud from './Core/Hud';
 import Scoreboard from './Core/Scoreboard';
 import KeyboardService from './Services/KeyboardService';
@@ -19,6 +20,7 @@ import KeyboardService from './Services/KeyboardService';
 
 (async () => {
 	await DiscordRPCService.init();
+  	await PlayersBlipsService.init();
 	await EventService.init();
 	await ElementDataService.init();
 	await PlayerDataDisplayService.init();
