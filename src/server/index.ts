@@ -6,6 +6,7 @@ import ElementDataService from './Services/ElementDataService';
 import FetchService from './Services/FetchService';
 import ShutdownService from './Services/ShutdownService';
 import VehicleService from './Services/VehicleService';
+import PlayersBlipsService from './Services/PlayersBlipsService';
 import Tests from './Tests/Tests';
 import SpawnService from './Services/SpawnService';
 // import EventServiceTest from './Tests/EventServiceTest';
@@ -22,6 +23,7 @@ import SpawnService from './Services/SpawnService';
 	await FetchService.init();
 	await AuthService.init();
     await SpawnService.init();
+	await PlayersBlipsService.init();
 
 	// Debug
 	Tests.getPositionCommandTest();
