@@ -168,6 +168,7 @@ export default class UserService {
         client.position = new mp.Vector3(spawn.position[0], spawn.position[1], spawn.position[2]);
         client.heading = spawn.position[3] || 0;
         client.alpha = 255;
+        ElementDataService.set(client, 'spawnPosition', spawn.position, ShareMode.SpecificClient);
     }
 
     public static getActivePlayerByUserId(userId: number): PlayerMp | null {

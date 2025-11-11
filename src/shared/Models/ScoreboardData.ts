@@ -1,6 +1,6 @@
 import { AdminLevel } from "./AdminLevel";
-import { Emblema } from "./Emblema";
-import { PlayerStatus } from "./PlayerStatus";
+import type { Emblema } from "./Emblema";
+import type { PlayerStatus } from "./PlayerStatus";
 
 export interface ScoreboardPlayerItem {
     id: number;

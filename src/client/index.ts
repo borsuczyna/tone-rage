@@ -9,6 +9,7 @@ import PlayerDataDisplayService from './Services/PlayerDataDisplayService';
 import CredentialsStorageService from './Services/CredentialsStorageService';
 import Hud from './Core/Hud';
 import Scoreboard from './Core/Scoreboard';
+import KeyboardService from './Services/KeyboardService';
 // import EventServiceTest from './Tests/EventServiceTest';
 // import ElementDataServiceTest from './Tests/ElementDataServiceTest';
 // import InterfaceServiceTest from './Tests/InterfaceServiceTest';
@@ -18,11 +19,11 @@ import Scoreboard from './Core/Scoreboard';
 
 (async () => {
 	await DiscordRPCService.init();
-	EventService.init();
-	ElementDataService.init();
-	PlayerDataDisplayService.init();
-	CredentialsStorageService.init();
-
+	await EventService.init();
+	await ElementDataService.init();
+	await PlayerDataDisplayService.init();
+	await CredentialsStorageService.init();
+    await KeyboardService.init();
 	await InterfaceService.init();
 	await FetchService.init();
 	await NotificationService.init();

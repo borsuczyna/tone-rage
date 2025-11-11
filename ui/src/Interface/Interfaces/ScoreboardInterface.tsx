@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './Styles/ScoreboardInterface.module.css';
 import * as Icons from 'lucide-react';
 import type { ScoreboardPlayerItem } from '@shared/Models/ScoreboardData';
@@ -15,7 +15,7 @@ const playerCategories = [
     {
         name: translate('scoreboard.categories.all'),
         icon: 'Users',
-        filter: (player: ScoreboardPlayerItem) => true
+        filter: (_: ScoreboardPlayerItem) => true
     },
     {
         name: translate('scoreboard.categories.admins'),
@@ -26,44 +26,12 @@ const playerCategories = [
     }
 ];
 
-// const placeholderPlayers: ScoreboardPlayerItem[] = [
-//     { id: 1, username: 'TheNoobisty', level: 921, ping: 12, status: 'playing', adminLevel: AdminLevel.User },
-//     { id: 2, username: 'revenom', level: 24, ping: 62, status: 'afk', adminLevel: AdminLevel.User },
-//     { id: 3, username: 'xorian', level: 200, ping: 11, adminLevel: AdminLevel.Admin, status: 'playing' },
-//     { id: 4, username: 'IQ', level: 12, ping: 51, status: 'playing', adminLevel: AdminLevel.User },
-//     { id: 5, username: 'borsuczyna', level: 0, ping: 51, status: 'playing', adminLevel: AdminLevel.Admin, emblemas: ['admin-administrator', 'admin-moderator', 'premium'] },
-//     { id: 1, username: 'TheNoobisty', level: 921, ping: 12, status: 'playing', adminLevel: AdminLevel.User },
-//     { id: 2, username: 'revenom', level: 24, ping: 62, status: 'afk', adminLevel: AdminLevel.User },
-//     { id: 3, username: 'xorian', level: 200, ping: 11, adminLevel: AdminLevel.Admin, status: 'playing' },
-//     { id: 4, username: 'IQ', level: 12, ping: 51, status: 'playing', adminLevel: AdminLevel.User },
-//     { id: 5, username: 'borsuczyna', level: 0, ping: 51, status: 'playing', adminLevel: AdminLevel.Admin, emblemas: ['admin-administrator', 'admin-moderator', 'premium'] },
-//     { id: 1, username: 'TheNoobisty', level: 921, ping: 12, status: 'playing', adminLevel: AdminLevel.User },
-//     { id: 2, username: 'revenom', level: 24, ping: 62, status: 'afk', adminLevel: AdminLevel.User },
-//     { id: 3, username: 'xorian', level: 200, ping: 11, adminLevel: AdminLevel.Admin, status: 'playing' },
-//     { id: 4, username: 'IQ', level: 12, ping: 51, status: 'playing', adminLevel: AdminLevel.User },
-//     { id: 5, username: 'borsuczyna', level: 0, ping: 51, status: 'playing', adminLevel: AdminLevel.Admin, emblemas: ['admin-administrator', 'admin-moderator', 'premium'] },
-//     { id: 1, username: 'TheNoobisty', level: 921, ping: 12, status: 'playing', adminLevel: AdminLevel.User },
-//     { id: 2, username: 'revenom', level: 24, ping: 62, status: 'afk', adminLevel: AdminLevel.User },
-//     { id: 3, username: 'xorian', level: 200, ping: 11, adminLevel: AdminLevel.Admin, status: 'playing' },
-//     { id: 4, username: 'IQ', level: 12, ping: 51, status: 'playing', adminLevel: AdminLevel.User },
-//     { id: 5, username: 'borsuczyna', level: 0, ping: 51, status: 'playing', adminLevel: AdminLevel.Admin, emblemas: ['admin-administrator', 'admin-moderator', 'premium'] },
-//     { id: 1, username: 'TheNoobisty', level: 921, ping: 12, status: 'playing', adminLevel: AdminLevel.User },
-//     { id: 2, username: 'revenom', level: 24, ping: 62, status: 'afk', adminLevel: AdminLevel.User },
-//     { id: 3, username: 'xorian', level: 200, ping: 11, adminLevel: AdminLevel.Admin, status: 'playing' },
-//     { id: 4, username: 'IQ', level: 12, ping: 51, status: 'playing', adminLevel: AdminLevel.User },
-//     { id: 5, username: 'borsuczyna', level: 0, ping: 51, status: 'playing', adminLevel: AdminLevel.Admin, emblemas: ['admin-administrator', 'admin-moderator', 'premium'] },
-// ];
-
-const placeholderServerInfo = {
-    name: 'directMTA',
-    playerCount: 142,
-    maxPlayers: 200
-};
-
 export default function ScoreboardInterface() {
     const [players, setPlayers] = useState<ScoreboardPlayerItem[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
+    const [hiding, setHiding] = useState(false);
+    const [firstRender, setFirstRender] = useState(true);
 
     const filteredPlayers = players.filter(player =>
         (
@@ -79,13 +47,24 @@ export default function ScoreboardInterface() {
         setSelectedCategoryIndex((selectedCategoryIndex + 1) % playerCategories.length);
     };
 
-    useRageEvent('setScoreboardPlayers', (players: ScoreboardPlayerItem[]) => {
+    useRageEvent('setScoreboardData', (players: ScoreboardPlayerItem[]) => {
         setPlayers(players);
     });
 
+    useRageEvent('playScoreboardHideAnimation', () => {
+        setHiding(true);
+    });
+
+    useEffect(() => {
+        if (firstRender) {
+            setFirstRender(false);
+            return;
+        }
+    }, [firstRender]);
+
     return (
         <div className={styles.container}>
-            <div className={styles.scoreboard}>
+            <div className={`${styles.scoreboard} ${(hiding || firstRender) ? styles.hiding : ''}`}>
                 <div className={styles.header}>
                     <div className={styles.logoContainer}>
                         <Logo glow={4} className={styles.logo} />
@@ -104,7 +83,7 @@ export default function ScoreboardInterface() {
                     />
 
                     <div className={styles.serverStats}>
-                        <span className={styles.playerCount}>{placeholderServerInfo.playerCount}</span>
+                        <span className={styles.playerCount}>{filteredPlayers.length}</span>
                         <div className={styles.onlineIndicator} />
                     </div>
                 </div>
