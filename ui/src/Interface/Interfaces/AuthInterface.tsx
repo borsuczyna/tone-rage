@@ -25,23 +25,13 @@ export default function AuthInterface() {
 
     // Start login music when interface becomes visible
     useEffect(() => {
-        if (isInterfaceVisible('AuthInterface')) {
-            loginMusicManager.startMusic();
-        } else {
-            loginMusicManager.stopMusic();
-        }
-
-        return () => {
-            loginMusicManager.stopMusic();
-        };
-    }, [isInterfaceVisible]);
+        loginMusicManager.startMusic();
+    }, []); // Empty dependency array - only run once on mount/unmount
 
     // Load saved credentials from client storage on component mount
     useEffect(() => {
-        if (isInterfaceVisible('AuthInterface')) {
-            triggerEvent('credentials:load');
-        }
-    }, [isInterfaceVisible]);
+        triggerEvent('credentials:load');
+    }, []); // Only run once on mount
 
     // Handle credentials loaded from client storage
     useRageEvent('credentials:loaded', (credentials: { username: string; password: string; rememberMe: boolean } | null) => {

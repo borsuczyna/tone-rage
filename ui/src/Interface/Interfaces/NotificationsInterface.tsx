@@ -4,22 +4,28 @@ import styles from './styles/NotificationsInterface.module.css';
 import Notification from './Components/Notifications/Notification';
 import { useRageEvent } from 'src/Hooks/RageEventProvider';
 import type { NotificationData } from '@shared/Models/NotificationData';
+import AudioService from 'src/Services/AudioService';
+import { useEffect } from 'react';
+
+// Preload notification sounds for better performance
+const notificationSounds = [
+    '/sounds/notifications/error.mp3',
+    '/sounds/notifications/info.mp3',
+    '/sounds/notifications/success.mp3',
+    '/sounds/notifications/warning.mp3'
+];
 
 const playNotificationSound = (type: string) => {
     const soundMap: Record<string, string> = {
-        'error': 'sounds/notifications/error.mp3',
-        'info': 'sounds/notifications/info.mp3',
-        'success': 'sounds/notifications/success.mp3',
-        'warning': 'sounds/notifications/warning.mp3'
+        'error': '/sounds/notifications/error.mp3',
+        'info': '/sounds/notifications/info.mp3',
+        'success': '/sounds/notifications/success.mp3',
+        'warning': '/sounds/notifications/warning.mp3'
     };
 
     const soundPath = soundMap[type];
     if (soundPath) {
-        const audio = new Audio(soundPath);
-        audio.volume = 0.5;
-        audio.play().catch((error) => {
-            console.error('Failed to play notification sound:', error);
-        });
+        AudioService.playSound(soundPath, { volume: 0.5 });
     }
 };
 
@@ -27,6 +33,18 @@ export default function NotificationsInterface() {
     const { notifications } = useNotifications();
     const { isInterfaceVisible } = useInterfaceVisibility();
     const top = isInterfaceVisible('HudInterface') ? '14rem' : '1rem';
+
+    // Preload notification sounds when component mounts
+    useEffect(() => {
+        AudioService.preloadSounds(notificationSounds);
+        
+        // Cleanup on unmount
+        return () => {
+            notificationSounds.forEach(sound => {
+                AudioService.unloadSound(sound);
+            });
+        };
+    }, []);
 
     useRageEvent('addNotification', (data: NotificationData) => {
         addNotification(data.title, data.message, data.type, data.icon, data.iconFillOpacity);
