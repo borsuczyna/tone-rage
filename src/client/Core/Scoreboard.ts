@@ -59,11 +59,12 @@ export default class Scoreboard {
     
         for (let player of players) {
             const id = player.id;
+            const userId = ElementDataService.get(player, 'userId');
             const username = player.name;
             const level = ElementDataService.get(player, 'level') || 0;
             const ping = player.ping;
             const adminLevel = ElementDataService.get(player, 'adminLevel') || 0;
-            const status = ElementDataService.get(player, 'status') || 'playing';
+            const status = userId == null ? 'logging-in' : (ElementDataService.get(player, 'status') || 'playing');
             const emblemas = this.getPlayerEmblems(player, adminLevel);
 
             result.push({

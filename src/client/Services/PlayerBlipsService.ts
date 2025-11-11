@@ -4,7 +4,7 @@ export default class PlayerBlipsService {
     private static blips: Map<number, BlipMp> = new Map();
     
     public static init() {
-        TimerService.setTimer(this.updateBlipPositions.bind(this), 100);
+        TimerService.setTimer(this.updateBlipPositions.bind(this), 100, 0);
         mp.events.add('playerQuit', this.onPlayerQuit.bind(this));
     }
 

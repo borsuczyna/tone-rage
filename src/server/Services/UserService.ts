@@ -83,6 +83,8 @@ export default class UserService {
 			return { user: null, error: 'auth.login.failed' };
 		}
 
+        await Database.Execute('UPDATE users SET lastLogin = NOW() WHERE uid = ?', [user.uid]);
+
 		return { user };
 	}
 

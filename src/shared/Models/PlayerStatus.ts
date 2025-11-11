@@ -1,14 +1,16 @@
 import translate from "../Translation/Translation";
 import { AdminLevel, adminLevelColors } from "./AdminLevel";
 
-export type PlayerStatus = 'playing' | 'afk';
+export type PlayerStatus = 'playing' | 'afk' | 'logging-in';
 
 export function getStatusText(adminLevel: AdminLevel, status: PlayerStatus): string {
     if (adminLevel) {
         return translate('scoreboard.status.adminService');
     }
 
-    if (status === 'afk') {
+    if (status === 'logging-in') {
+        return translate('scoreboard.status.loggingIn');
+    } else if (status === 'afk') {
         return translate('scoreboard.status.afk');
     }
     
@@ -21,6 +23,8 @@ export function getStatusColor(adminLevel?: AdminLevel, status?: PlayerStatus): 
     }
     
     switch (status) {
+        case 'logging-in':
+            return '#6b7280';
         case 'afk':
             return '#f59e0b';
         default:
