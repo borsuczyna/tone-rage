@@ -123,7 +123,23 @@ export default function HandlingEditorInterface() {
 	useEffect(() => {
 		// Request initial data
 		triggerEvent('handlingEditor:getData', null);
+
+		// Handle ESC key to close
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if (e.key === 'Escape') {
+				handleClose();
+			}
+		};
+
+		window.addEventListener('keydown', handleKeyDown);
+		return () => window.removeEventListener('keydown', handleKeyDown);
 	}, []);
+
+	const handleClose = () => {
+		if (typeof mp !== 'undefined') {
+			mp.trigger('handlingEditor:close');
+		}
+	};
 
 	const toggleCategory = (category: string) => {
 		setExpandedCategories((prev) => {
@@ -174,9 +190,14 @@ export default function HandlingEditorInterface() {
 		<div className={styles.container}>
 			<div className={styles.panel}>
 				<div className={styles.header}>
-					<div className={styles.titleWrapper}>
-						<Icons.Settings size="1.5rem" />
-						<h1>Vehicle Handling Editor</h1>
+					<div className={styles.headerTop}>
+						<div className={styles.titleWrapper}>
+							<Icons.Settings size="1.5rem" />
+							<h1>Vehicle Handling Editor</h1>
+						</div>
+						<button className={styles.closeButton} onClick={handleClose}>
+							<Icons.X size="1.5rem" />
+						</button>
 					</div>
 					<p className={styles.subtitle}>Adjust vehicle handling properties in real-time</p>
 				</div>

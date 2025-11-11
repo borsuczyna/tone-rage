@@ -4,6 +4,8 @@ import InterfaceService from './InterfaceService';
  * HandlingEditorService - Manages the handling editor interface for the current player's vehicle
  */
 export default class HandlingEditorService {
+	private static visible: boolean = false;
+
 	/**
 	 * Initialize the service
 	 */
@@ -16,6 +18,9 @@ export default class HandlingEditorService {
 
 		// Register event to apply handling changes
 		mp.events.add('handlingEditor:applyChanges', this.applyHandlingChanges.bind(this));
+
+		// Register event to close the interface
+		mp.events.add('handlingEditor:close', this.closeHandlingEditor.bind(this));
 
 		mp.console.logInfo('HandlingEditorService initialized');
 	}
@@ -40,19 +45,32 @@ export default class HandlingEditorService {
 			return;
 		}
 
-		// Toggle interface visibility
-		InterfaceService.toggleInterfaceVisibility('HandlingEditorInterface');
+		this.setVisible(!this.visible, vehicle);
+	}
 
-		// If opening, send initial data
-		const currentlyVisible = InterfaceService.isCursorVisible();
-		if (!currentlyVisible) {
-			// Interface is being opened, show cursor
+	/**
+	 * Set the visibility of the handling editor
+	 */
+	private static setVisible(visible: boolean, vehicle?: VehicleMp) {
+		this.visible = visible;
+
+		if (visible) {
+			InterfaceService.setInterfaceVisible('HandlingEditorInterface', true);
 			InterfaceService.setCursorVisible(true, true);
-			this.sendVehicleHandlingData(vehicle);
+			if (vehicle) {
+				this.sendVehicleHandlingData(vehicle);
+			}
 		} else {
-			// Interface is being closed, hide cursor
+			InterfaceService.setInterfaceVisible('HandlingEditorInterface', false);
 			InterfaceService.setCursorVisible(false, false);
 		}
+	}
+
+	/**
+	 * Close the handling editor
+	 */
+	private static closeHandlingEditor() {
+		this.setVisible(false);
 	}
 
 	/**
