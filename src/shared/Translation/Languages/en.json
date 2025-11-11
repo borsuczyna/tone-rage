@@ -87,5 +87,23 @@
     "hud.job.work": "Work",
     "hud.job.workingTime": "Working time:",
     "hud.job.earnedMoney": "Earned money:",
-    "hud.job.averageEarnings": "Average earnings:"
+    "hud.job.averageEarnings": "Average earnings:",
+
+    "admin.level.user": "User",
+    "admin.level.moderator": "Moderator",
+    "admin.level.admin": "Admin",
+
+    "scoreboard.searchPlaceholder": "Search players...",
+    "scoreboard.player": "Player",
+    "scoreboard.level": "Level",
+    "scoreboard.ping": "Ping",
+    "scoreboard.playtime": "Playtime",
+    "scoreboard.noPlayersFound": "No players found",
+    "scoreboard.status.adminService": "Admin Service",
+    "scoreboard.status.afk": "AFK",
+    "scoreboard.status.playing": "Playing",
+    "scoreboard.search": "Search",
+
+    "scoreboard.categories.all": "All",
+    "scoreboard.categories.admins": "Admins"
 }

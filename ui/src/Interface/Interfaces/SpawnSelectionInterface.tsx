@@ -66,11 +66,11 @@ export default function SpawnSelectionInterface() {
                                 onClick={() => toggleCategory(index)}
                             >
                                 <div className={styles.categoryHeader}>
-                                    <Icons.MapPin size={18} />
+                                    <Icons.MapPin size='1.3rem' />
                                     <span>{category.name}</span>
                                 </div>
                                 <Icons.ChevronDown 
-                                    size={18} 
+                                    size='1.3rem' 
                                     className={`${styles.chevron} ${expandedCategories.has(index) ? styles.expanded : ''}`}
                                 />
                             </button>
@@ -83,10 +83,10 @@ export default function SpawnSelectionInterface() {
                                             className={`${styles.locationButton} ${selectedSpawn?.[0] === index && selectedSpawn?.[1] === locationIndex ? styles.selected : ''}`}
                                             onClick={() => handleSpawnSelect(index, locationIndex)}
                                         >
-                                            <Icons.MapPin size={16} />
+                                            <Icons.MapPin size='1rem' />
                                             <span>{location.name}</span>
                                             {selectedSpawn?.[0] === index && selectedSpawn?.[1] === locationIndex && (
-                                                <Icons.Check size={16} className={styles.checkIcon} />
+                                                <Icons.Check size='1rem' className={styles.checkIcon} />
                                             )}
                                         </button>
                                     ))}
@@ -104,7 +104,7 @@ export default function SpawnSelectionInterface() {
                         loading={isLoading}
                         style={{ width: '100%' }}
                     >
-                        <Icons.Check size={16} />
+                        <Icons.Check size='1rem' />
                         {translate('spawn.confirm')}
                     </Button>
                 </div>

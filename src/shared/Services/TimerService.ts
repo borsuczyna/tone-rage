@@ -18,10 +18,14 @@ export class Timer {
 		this.timer = setInterval(() => this.call(), this.delay);
 	}
 
-	private stop() {
+	public stop() {
 		clearInterval(this.timer);
 		TimerService.killTimer(this);
 	}
+
+    public kill() {
+		clearInterval(this.timer);
+    }
 
 	private call() {
 		this.callback();
@@ -47,5 +51,7 @@ export default class TimerService {
 		if (index > -1) {
 			this.timers.splice(index, 1);
 		}
+
+        timer.kill();
 	}
 }

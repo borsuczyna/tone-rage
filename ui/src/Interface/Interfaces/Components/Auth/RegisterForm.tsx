@@ -32,43 +32,47 @@ export default function RegisterForm({
             </div>
             
             <InputField
-                icon={<Icons.User size={20} />}
+                icon={<Icons.User size='1.3rem' />}
                 label={translate('auth.register.username')}
                 type="text"
                 placeholder={translate('auth.register.username.placeholder')}
                 value={registerData.username}
                 onChange={(value) => setRegisterData(prev => ({ ...prev, username: value }))}
                 disabled={isLoading}
+                groupStyle={{ marginBottom: '1.5rem' }}
             />
             
             <InputField
-                icon={<Icons.Mail size={20} />}
+                icon={<Icons.Mail size='1.3rem' />}
                 label={translate('auth.register.email')}
                 type="email"
                 placeholder={translate('auth.register.email.placeholder')}
                 value={registerData.email}
                 onChange={(value) => setRegisterData(prev => ({ ...prev, email: value }))}
                 disabled={isLoading}
+                groupStyle={{ marginBottom: '1.5rem' }}
             />
             
             <InputField
-                icon={<Icons.Lock size={20} />}
+                icon={<Icons.Lock size='1.3rem' />}
                 label={translate('auth.register.password')}
                 type="password"
                 placeholder={translate('auth.register.password.placeholder')}
                 value={registerData.password}
                 onChange={(value) => setRegisterData(prev => ({ ...prev, password: value }))}
                 disabled={isLoading}
+                groupStyle={{ marginBottom: '1.5rem' }}
             />
             
             <InputField
-                icon={<Icons.Lock size={20} />}
+                icon={<Icons.Lock size='1.3rem' />}
                 label={translate('auth.register.confirmPassword')}
                 type="password"
                 placeholder={translate('auth.register.confirmPassword.placeholder')}
                 value={registerData.confirmPassword}
                 onChange={(value) => setRegisterData(prev => ({ ...prev, confirmPassword: value }))}
                 disabled={isLoading}
+                groupStyle={{ marginBottom: '1.5rem' }}
             />
             
             <Switch
@@ -81,7 +85,7 @@ export default function RegisterForm({
             />
             
             <Button variant="primary" onClick={onRegister} style={{ width: '100%' }} loading={isLoading} disabled={isLoading}>
-                <Icons.UserPlus size={16} />
+                <Icons.UserPlus size='1rem' />
                 {translate('auth.register.button')}
             </Button>
             

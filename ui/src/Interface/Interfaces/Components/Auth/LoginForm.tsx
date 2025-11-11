@@ -30,23 +30,25 @@ export default function LoginForm({
             </div>
             
             <InputField
-                icon={<Icons.User size={20} />}
+                icon={<Icons.User size='1.3rem' />}
                 label={translate('auth.login.username')}
                 type="text"
                 placeholder={translate('auth.login.username.placeholder')}
                 value={loginData.username}
                 onChange={(value) => setLoginData(prev => ({ ...prev, username: value }))}
                 disabled={isLoading}
+                groupStyle={{ marginBottom: '1.5rem' }}
             />
             
             <InputField
-                icon={<Icons.Lock size={20} />}
+                icon={<Icons.Lock size='1.3rem' />}
                 label={translate('auth.login.password')}
                 type="password"
                 placeholder={translate('auth.login.password.placeholder')}
                 value={loginData.password}
                 onChange={(value) => setLoginData(prev => ({ ...prev, password: value }))}
                 disabled={isLoading}
+                groupStyle={{ marginBottom: '1.5rem' }}
             />
             
             <Switch
@@ -59,7 +61,7 @@ export default function LoginForm({
             />
             
             <Button variant="primary" onClick={onLogin} style={{width: '100%'}} loading={isLoading} disabled={isLoading}>
-                <Icons.LogIn size={16} />
+                <Icons.LogIn size='1rem' />
                 {translate('auth.login.button')}
             </Button>
             

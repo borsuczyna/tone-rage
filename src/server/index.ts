@@ -9,6 +9,7 @@ import VehicleService from './Services/VehicleService';
 import PlayersBlipsService from './Services/PlayersBlipsService';
 import Tests from './Tests/Tests';
 import SpawnService from './Services/SpawnService';
+import UserService from './Services/UserService';
 // import EventServiceTest from './Tests/EventServiceTest';
 // import ElementDataServiceTest from './Tests/ElementDataServiceTest';
 // import FetchServiceTest from './Tests/FetchServiceTest';
@@ -24,6 +25,7 @@ import SpawnService from './Services/SpawnService';
 	await AuthService.init();
     await SpawnService.init();
 	await PlayersBlipsService.init();
+    await UserService.init();
 
 	// Debug
 	Tests.getPositionCommandTest();

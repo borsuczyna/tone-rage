@@ -36,7 +36,7 @@ export default function Button({
                     tabIndex={-1}
                     style={style}
                 >
-                    {loading ? <Icons.Loader2 size={16} className={styles.spin} /> : children}
+                    {loading ? <Icons.Loader2 size='1rem' className={styles.spin} /> : children}
                 </button>
             )}
             
@@ -48,7 +48,7 @@ export default function Button({
                 disabled={isDisabled}
             >
                 {loading ? (
-                    <Icons.Loader2 size={16} className={styles.spin} />
+                    <Icons.Loader2 size='1rem' className={styles.spin} />
                 ) : (
                     children
                 )}

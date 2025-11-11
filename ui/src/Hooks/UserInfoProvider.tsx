@@ -1,6 +1,7 @@
 import { createContext, useContext, useState } from 'react';
 import { useRageEvent } from './RageEventProvider';
 import type { ReactNode } from 'react';
+import SharedConfig from '@shared/SharedConfig';
 
 interface UserInfo {
     health: number;
@@ -35,7 +36,7 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
         health: 0,
         exp: 0,
         money: 0,
-        avatar: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg",
+        avatar: SharedConfig.DefaultAvatar,
         username: "",
         level: 0,
     });
