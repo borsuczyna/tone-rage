@@ -105,5 +105,21 @@
     "scoreboard.search": "Search",
 
     "scoreboard.categories.all": "All",
-    "scoreboard.categories.admins": "Admins"
+    "scoreboard.categories.admins": "Admins",
+
+    "atm.title": "Tone Bank",
+    "atm.balance": "Balance",
+    "atm.tab.withdraw": "withdraw",
+    "atm.tab.deposit": "deposit",
+    "atm.tab.logs": "logs",
+    "atm.amount.withdraw": "Withdrawal Amount",
+    "atm.amount.deposit": "Deposit Amount",
+    "atm.button.cancel": "Cancel",
+    "atm.button.withdraw": "Withdraw",
+    "atm.button.deposit": "Deposit",
+    "atm.button.confirm": "Confirm",
+    "atm.logs.title": "Transaction History",
+    "atm.logs.balance": "Balance",
+    "atm.transaction.deposit": "ATM Deposit",
+    "atm.transaction.withdraw": "ATM Withdrawal"
 }

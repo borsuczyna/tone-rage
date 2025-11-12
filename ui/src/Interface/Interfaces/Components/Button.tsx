@@ -4,7 +4,7 @@ import styles from './Button.module.css';
 
 interface ToneButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     children: ReactNode;
-    variant?: 'primary' | 'secondary' | 'dark' | 'glass' | 'ghost' | 'link';
+    variant?: 'primary' | 'secondary' | 'dark' | 'glass' | 'ghost' | 'link' | 'gray';
     size?: 'small' | 'medium' | 'large';
     glow?: boolean;
     loading?: boolean;

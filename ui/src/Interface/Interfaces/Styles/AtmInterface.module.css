@@ -1,0 +1,353 @@
+/* AtmInterface.module.css */
+@import '../../../styles/tone-variables.css';
+
+.container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: white;
+    z-index: 1000;
+}
+
+.atmMachine {
+    width: 22rem;
+    background: rgba(25, 25, 25, 0.85);
+    border: 1px solid rgba(80, 80, 80, 0.3);
+    border-radius: 1rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    animation: slideIn 0.4s ease-out;
+}
+
+/* Logs Layout - Expanded display area */
+.logsLayout .displayArea {
+    height: auto;
+    min-height: 15rem;
+    max-height: 25rem;
+}
+
+.logsLayout .transactionLogs {
+    height: 100%;
+}
+
+.logsLayout .logsList {
+    max-height: 20rem;
+}
+
+/* Header */
+.header {
+    background: rgba(30, 30, 30, 0.8);
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    border-bottom: 1px solid rgba(80, 80, 80, 0.3);
+}
+
+.bankName {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    font-size: 1rem;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.balance {
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+    font-size: 0.75rem;
+    text-align: left;
+}
+
+/* Tab Navigation */
+.tabNavigation {
+    display: flex;
+    background: rgba(25, 25, 25, 0.6);
+    border-bottom: 1px solid rgba(80, 80, 80, 0.2);
+}
+
+.tab {
+    flex: 1;
+    padding: 0.75rem;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: lowercase;
+    position: relative;
+}
+
+.tab:hover {
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(40, 40, 40, 0.5);
+}
+
+.tab.active {
+    color: white;
+    background: rgba(50, 50, 50, 0.7);
+}
+
+.tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--tone-gradient-primary);
+}
+
+/* Display Area */
+.displayArea {
+    height: 5.5rem;
+    padding: 0.75rem 1rem;
+    background: rgba(15, 15, 15, 0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.amountInput {
+    text-align: center;
+    width: 100%;
+}
+
+.inputLabel {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+}
+
+.amountField {
+    width: 70%;
+    max-width: 12rem;
+    margin: 0 auto;
+    background: transparent;
+    border: 1px solid rgba(80, 80, 80, 0.4);
+    border-radius: 0.5rem;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.3s ease;
+    cursor: text;
+}
+
+.amountField:focus {
+    border-color: rgba(0, 191, 255, 0.6);
+    box-shadow: 0 0 0 2px rgba(0, 191, 255, 0.1);
+}
+
+.amountField::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Transaction Logs */
+.transactionLogs {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.logsHeader {
+    margin-bottom: 1rem;
+}
+
+.logsHeader h3 {
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+    text-align: center;
+}
+
+.logsList {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 6rem;
+}
+
+.transactionItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(80, 80, 80, 0.4);
+}
+
+.transactionItem:last-child {
+    border-bottom: none;
+}
+
+.transactionIcon {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.depositIcon {
+    color: #22c55e;
+}
+
+.withdrawIcon {
+    color: #ef4444;
+}
+
+.transactionDetails {
+    flex: 1;
+    min-width: 0;
+}
+
+.transactionAmount {
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: white;
+}
+
+.transactionDate {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.65rem;
+    margin-top: 0.15rem;
+}
+
+.transactionBalance {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.65rem;
+    text-align: right;
+}
+
+/* Keypad */
+.keypad {
+    padding: 0.75rem 1rem;
+    background: rgba(20, 20, 20, 0.6);
+}
+
+.keypadGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.keypadButton {
+    height: 2.75rem;
+    width: 100%;
+    background: rgba(40, 40, 40, 0.8);
+    border: 1px solid rgba(80, 80, 80, 0.4);
+    border-radius: 0.5rem;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.keypadButton:hover {
+    background: rgba(60, 60, 60, 0.9);
+    border-color: rgba(100, 100, 100, 0.6);
+    transform: translateY(-1px);
+}
+
+.keypadButton:active {
+    transform: translateY(0);
+    background: rgba(50, 50, 50, 0.9);
+}
+
+.clearButton, .backspaceButton {
+    background: rgba(60, 40, 40, 0.8);
+    border-color: rgba(120, 80, 80, 0.4);
+}
+
+.clearButton:hover, .backspaceButton:hover {
+    background: rgba(80, 50, 50, 0.9);
+    border-color: rgba(140, 90, 90, 0.6);
+}
+
+.actionBar {
+    padding: 1rem;
+    background: rgba(25, 25, 25, 0.8);
+    display: flex;
+    gap: 0.75rem;
+    border-top: 1px solid rgba(80, 80, 80, 0.3);
+}
+
+.actionBar > * {
+    flex: 1;
+    width: 100%;
+}
+
+.actionBar > * > * {
+    width: 100%;
+    min-width: unset;
+    padding: 0.75rem 0.5rem;
+    font-size: 0.85rem;
+}
+
+/* Custom Scrollbar */
+.logsList::-webkit-scrollbar {
+    width: 4px;
+}
+
+.logsList::-webkit-scrollbar-track {
+    background: rgba(60, 60, 60, 0.2);
+    border-radius: 2px;
+}
+
+.logsList::-webkit-scrollbar-thumb {
+    background: rgba(120, 120, 120, 0.5);
+    border-radius: 2px;
+}
+
+.logsList::-webkit-scrollbar-thumb:hover {
+    background: rgba(140, 140, 140, 0.7);
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .atmMachine {
+        width: 90vw;
+        max-width: 28rem;
+    }
+    
+    .amountDisplay {
+        font-size: 2rem;
+    }
+    
+    .keypadButton {
+        font-size: 1rem;
+    }
+}

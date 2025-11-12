@@ -5,6 +5,11 @@ export class ChunkAssemblerHandler {
     private static chunkAssembler: ChunkAssembler = new ChunkAssembler();
 
     public static init() {
+        if (typeof mp === 'undefined') {
+            console.warn('mp is undefined, cannot initialize ChunkAssemblerHandler');
+            return;
+        }
+
         mp.events.add('event:chunk', this.onChunkReceived.bind(this));
         console.log('ChunkAssemblerHandler initialized');
     }
@@ -27,6 +32,11 @@ export class CustomEventHandler {
     private static eventHandlers: EventHandler[] = [];
 
     public static registerEventHandler(eventName: string, callback: (data: any) => void) {
+        if (typeof mp === 'undefined') {
+            console.warn('mp is undefined, cannot register event handler');
+            return;
+        }
+        
         this.eventHandlers.push({ eventName, callback });
         mp.events.add(eventName, callback);
     }

@@ -4,6 +4,8 @@ export enum MoneyLogType {
     Unknown = 0,
     Salary = 1,
     Purchase = 2,
+    ATMDeposit = 3,
+    ATMWithdraw = 4,
 }
 
 export class MoneyLogEntity extends DatabaseEntity {
@@ -26,5 +28,13 @@ export class MoneyLogEntity extends DatabaseEntity {
         log.type = type;
         log.description = description;
         return log;
+    }
+
+    public static createAtmDeposit(userId: number, amount: number, amountBefore: number): MoneyLogEntity {
+        return MoneyLogEntity.create(userId, amount, amountBefore, MoneyLogType.ATMDeposit, 'ATM Deposit');
+    }
+
+    public static createAtmWithdraw(userId: number, amount: number, amountBefore: number): MoneyLogEntity {
+        return MoneyLogEntity.create(userId, -amount, amountBefore, MoneyLogType.ATMWithdraw, 'ATM Withdrawal');
     }
 }
