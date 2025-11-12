@@ -9,6 +9,16 @@ export default class VehicleService {
 	private static vehicles: PrivateVehicle[] = [];
 	private static logger: Logger = Logger.getLogger(VehicleService, true);
 
+    public static async init() {
+		try {
+			await this.reloadVehiclesFromDatabase();
+			TimerService.setTimer(this.saveVehicles.bind(this), Config.SaveInterval.Vehicles, 0); // Save every 60 seconds
+			this.logger.info('VehicleService initialized successfully');
+		} catch (error) {
+			this.logger.error(`Failed to initialize VehicleService: ${error}`);
+		}
+	}
+
 	private static destroyAllVehicles() {
 		for (let vehicle of this.vehicles) {
 			vehicle.destroy();
@@ -89,16 +99,6 @@ export default class VehicleService {
 			this.logger.info(`Loaded ${vehicles.length} vehicles from database`);
 		} catch (error) {
 			this.logger.error(`Failed to reload vehicles from database: ${error}`);
-		}
-	}
-
-	public static async init() {
-		try {
-			await this.reloadVehiclesFromDatabase();
-			TimerService.setTimer(this.saveVehicles.bind(this), Config.SaveInterval.Vehicles, 0); // Save every 60 seconds
-			this.logger.info('VehicleService initialized successfully');
-		} catch (error) {
-			this.logger.error(`Failed to initialize VehicleService: ${error}`);
 		}
 	}
 }

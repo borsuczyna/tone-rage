@@ -7,6 +7,8 @@ import ElementDataService from './ElementDataService';
 import { ShareMode } from '@shared/Models/ElementDataModels';
 import { SpawnLocation } from '@shared/SpawnsData';
 import Logger from '@shared/Logger';
+import TimerService from '@shared/Services/TimerService';
+import { Config } from '@/Config';
 
 interface CreateUserResult {
 	userId: number | null;
@@ -23,6 +25,7 @@ export default class UserService {
 
     public static init() {
         mp.events.add('playerQuit', this.onPlayerQuit.bind(this));
+        TimerService.setTimer(this.savePlayers.bind(this), Config.SaveInterval.Users, 0); // Save every 60 seconds
     }
     
 	public static async createUser(username: string, email: string, password: string): Promise<CreateUserResult> {
@@ -182,5 +185,37 @@ export default class UserService {
             }
         }
         return null;
+    }
+
+    /**
+     * @internal Direct database access - bypasses business logic
+     */
+    public static async takeMoneyFromUserIdInternal(userId: number, amount: number): Promise<boolean> {
+        const result = await Database.Execute('UPDATE users SET money = money - ? WHERE uid = ? AND money >= ?', [amount, userId, amount]);
+        return result !== null && result.affectedRows > 0;
+    }
+
+    /**
+     * @internal Direct database access - bypasses business logic
+     */
+    public static async giveMoneyToUserIdInternal(userId: number, amount: number): Promise<boolean> {
+        const result = await Database.Execute('UPDATE users SET money = money + ? WHERE uid = ?', [amount, userId]);
+        return result !== null && result.affectedRows > 0;
+    }
+
+    /**
+     * @internal Direct database access - bypasses business logic
+     */
+    public static async takeBankMoneyFromUserIdInternal(userId: number, amount: number): Promise<boolean> {
+        const result = await Database.Execute('UPDATE users SET bankMoney = bankMoney - ? WHERE uid = ? AND bankMoney >= ?', [amount, userId, amount]);
+        return result !== null && result.affectedRows > 0;
+    }
+
+    /**
+     * @internal Direct database access - bypasses business logic
+     */
+    public static async giveBankMoneyToUserIdInternal(userId: number, amount: number): Promise<boolean> {
+        const result = await Database.Execute('UPDATE users SET bankMoney = bankMoney + ? WHERE uid = ?', [amount, userId]);
+        return result !== null && result.affectedRows > 0;
     }
 }
