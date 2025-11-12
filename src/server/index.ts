@@ -9,6 +9,7 @@ import VehicleService from './Services/VehicleService';
 import Tests from './Tests/Tests';
 import SpawnService from './Services/SpawnService';
 import UserService from './Services/UserService';
+import MoneyServiceTest from './Tests/MoneyServiceTest';
 // import EventServiceTest from './Tests/EventServiceTest';
 // import ElementDataServiceTest from './Tests/ElementDataServiceTest';
 // import FetchServiceTest from './Tests/FetchServiceTest';
@@ -28,6 +29,7 @@ import UserService from './Services/UserService';
 	// Debug
 	Tests.getPositionCommandTest();
     Tests.createVehicleCommandTest();
+    MoneyServiceTest.init();
 	// EventServiceTest.init();
 	// ElementDataServiceTest.init();
 	// FetchServiceTest.init();

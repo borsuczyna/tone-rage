@@ -23,6 +23,12 @@ export default function Notification({ data }: { data: NotificationData }) {
     const icon = data.icon ? data.icon : defaultIcons[data.type];
     const iconFillOpacity = data.iconFillOpacity !== undefined ? data.iconFillOpacity : 0.1;
     const IconJSX = (Icons as any)[icon.charAt(0).toUpperCase() + icon.slice(1).replace(/-([a-z])/g, (g: string) => g[1].toUpperCase())] || Icons['Bell'];
+    const message = data.message.split('\n').map((line, index) => (
+        <span key={index}>
+            {line}
+            {index < data.message.split('\n').length - 1 && <br />}
+        </span>
+    ));
 
     return (
         <div className={styles.notificationWrapper}>
@@ -31,7 +37,7 @@ export default function Notification({ data }: { data: NotificationData }) {
                     <IconJSX className={styles.title} fill="currentColor" fillOpacity={iconFillOpacity} size="1rem"  />
                     <span className={styles.title}>{data.title}</span>
                 </div>
-                <span className={styles.message}>{data.message}</span>
+                <span className={styles.message}>{message}</span>
                 <span className={styles.rightBar}></span>
             </div>
         </div>
