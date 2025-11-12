@@ -1,0 +1,59 @@
+import Database from "@/Database/Database";
+import { MoneyLogEntity, MoneyLogType } from "@/Database/Entities/MoneyLogEntity";
+import ElementDataService from "./ElementDataService";
+import { ShareMode } from "@shared/Models/ElementDataModels";
+import EventService from "./EventService";
+
+export default class MoneyService {
+    public static async getPlayerMoneyLogs(player: PlayerMp | number, limit: number = 50, skip: number = 0): Promise<MoneyLogEntity[] | null> {
+        const userId = typeof player === 'number' ? player : ElementDataService.get(player, 'userId');
+        if (!userId) return null;
+
+        const logs = await Database.Select<MoneyLogEntity>(MoneyLogEntity, 'SELECT * FROM moneyLogs WHERE userId = ? ORDER BY createdAt DESC LIMIT ? OFFSET ?', [userId, limit, skip]);
+        return logs;
+    }
+
+    public static async addMoneyLog(player: PlayerMp | number, amount: number, amountBefore: number, type: MoneyLogType, description: string): Promise<boolean> {
+        const userId = typeof player === 'number' ? player : ElementDataService.get(player, 'userId');
+        if (!userId) return false;
+
+        const log = MoneyLogEntity.create(userId, amount, amountBefore, type, description);
+        const insertId = await Database.InsertEntity<MoneyLogEntity>('moneyLogs', log);
+
+        return !!insertId;
+    }
+
+    public static getPlayerMoney(player: PlayerMp): number {
+        return parseInt(ElementDataService.get(player, 'money') || '0');
+    }
+
+    public static async takePlayerMoney(player: PlayerMp, amount: number, type: MoneyLogType, description: string): Promise<boolean> {
+        const currentMoney: number = this.getPlayerMoney(player);
+        if (currentMoney < amount) {
+            return false;
+        }
+
+        const success = await this.addMoneyLog(player, -amount, currentMoney, type, description);
+        if (!success) {
+            return false;
+        }
+        
+        const newAmount = currentMoney - amount;
+        ElementDataService.set(player, 'money', newAmount, ShareMode.SpecificClient);
+        EventService.triggerClientEvent(player, 'money:update', newAmount);
+        return true;
+    }
+
+    public static async givePlayerMoney(player: PlayerMp, amount: number, type: MoneyLogType, description: string): Promise<boolean> {
+        const currentMoney: number = this.getPlayerMoney(player);
+        const success = await this.addMoneyLog(player, amount, currentMoney, type, description);
+        if (!success) {
+            return false;
+        }
+        
+        const newAmount = currentMoney + amount;
+        ElementDataService.set(player, 'money', newAmount, ShareMode.SpecificClient);
+        EventService.triggerClientEvent(player, 'money:update', newAmount);
+        return true;
+    }
+}

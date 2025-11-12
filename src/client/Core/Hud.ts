@@ -1,4 +1,5 @@
 import ElementDataService from '@/Services/ElementDataService';
+import EventService from '@/Services/EventService';
 import InterfaceService from '@/Services/InterfaceService';
 import TimerService, { Timer } from '@shared/Services/TimerService';
 
@@ -7,6 +8,7 @@ export default class Hud {
 
     public static async init() {
         this.setVisible(false);
+        EventService.registerEventHandler('money:update', this.update.bind(this));
     }
 
     public static setVisible(visible: boolean) {
