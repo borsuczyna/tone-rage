@@ -82,7 +82,7 @@ export default function AuthInterface() {
                 triggerEvent('auth:loginSuccess');
 
             } else {
-                addNotification(translate('default.error'), translate(response?.message || 'auth.login.failed'), NotificationType.Error);
+                addNotification(translate('default.error'), translate(response?.message || 'auth.login.failed' as any), NotificationType.Error);
                 setIsLoading(false);
             }
         } catch (error: Error | any) {
@@ -132,7 +132,7 @@ export default function AuthInterface() {
                 setLoginData({ ...loginData, username: registerData.username, password: registerData.password });
                 await handleLogin();
             } else {
-                addNotification(translate('default.error'), translate(response?.message || 'auth.register.failed'), NotificationType.Error);
+                addNotification(translate('default.error'), translate(response?.message || 'auth.register.failed' as any), NotificationType.Error);
             }
         } catch (error: Error | any) {
             addNotification(translate('default.error'), translate(error.message || 'auth.register.failed'), NotificationType.Error);

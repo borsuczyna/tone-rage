@@ -44,7 +44,7 @@ export default function SpawnSelectionInterface() {
         const response = await fetchServerData<SpawnResponse>('spawn:select', selectedSpawn);
 
         if (!response.success) {
-            addNotification(translate('spawn.notificationTitle'), translate(response.message || 'spawn.invalidLocation'), 'error');
+            addNotification(translate('spawn.notificationTitle'), translate(response.message || 'spawn.invalidLocation' as any), 'error');
             setIsDisappearing(false);
             setIsLoading(false);
         }

@@ -183,9 +183,6 @@ export default class HandlingEditorService {
                 }
 			});
 
-			const engineAcceleration = data.initialDriveForce || 0;
-            mp.gui.chat.push(`New Engine Drive Force: ${engineAcceleration}`);
-
             NotificationService.addNotification(NotificationType.Success, 'Handling Editor', 'Handling changes applied successfully.');
 		} catch (error) {
 			mp.console.logError(`Error applying handling changes: ${error}`);

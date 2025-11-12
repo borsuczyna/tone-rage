@@ -12,6 +12,7 @@ import Scoreboard from './Core/Scoreboard';
 import KeyboardService from './Services/KeyboardService';
 import PlayerBlipsService from './Services/PlayerBlipsService';
 import HandlingEditorService from './Services/HandlingEditorService';
+import AtmInterfaceTest from './Tests/ATMInterfaceTest';
 // import EventServiceTest from './Tests/EventServiceTest';
 // import ElementDataServiceTest from './Tests/ElementDataServiceTest';
 // import InterfaceServiceTest from './Tests/InterfaceServiceTest';
@@ -36,6 +37,7 @@ import HandlingEditorService from './Services/HandlingEditorService';
     await Scoreboard.init();
 
 	// Debug
+    await AtmInterfaceTest.init();
 	// EventServiceTest.init();
 	// ElementDataServiceTest.init();
 	// InterfaceServiceTest.init();

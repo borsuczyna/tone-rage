@@ -63,6 +63,7 @@
     "updates.initial.description": "Welcome to our racing server! Experience thrilling races, competitive gameplay, and a vibrant community. Get ready to hit the tracks and show off your skills!",
 
     "default.error": "Error",
+    "default.success": "Success",
     "auth.login.failed": "Login failed. Please check your credentials and try again.",
     "auth.login.missingFields": "Please fill in all required fields.",
     "auth.login.success": "Login successful. Welcome back!",
@@ -76,6 +77,7 @@
     "auth.register.emailTaken": "Email is already registered. Please use a different email.",
     "auth.register.invalidEmail": "Invalid email address. Please enter a valid email.",
     "auth.register.weakPassword": "Password is too weak. Please choose a stronger password.",
+    "auth.register.usernameLength": "Username must be between 3 and 20 characters long.",
     "fetch.timeout": "Connection timed out. Please try again.",
     
     "spawn.title": "Select Spawn Location",
@@ -102,6 +104,7 @@
     "scoreboard.status.adminService": "Admin Service",
     "scoreboard.status.afk": "AFK",
     "scoreboard.status.playing": "Playing",
+    "scoreboard.status.loggingIn": "Logging In",
     "scoreboard.search": "Search",
 
     "scoreboard.categories.all": "All",
@@ -109,9 +112,9 @@
 
     "atm.title": "Tone Bank",
     "atm.balance": "Balance",
-    "atm.tab.withdraw": "withdraw",
-    "atm.tab.deposit": "deposit",
-    "atm.tab.logs": "logs",
+    "atm.tab.withdraw": "Withdraw",
+    "atm.tab.deposit": "Deposit",
+    "atm.tab.logs": "Logs",
     "atm.amount.withdraw": "Withdrawal Amount",
     "atm.amount.deposit": "Deposit Amount",
     "atm.button.cancel": "Cancel",
