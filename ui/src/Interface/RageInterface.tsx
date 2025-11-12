@@ -6,7 +6,7 @@ import SpawnSelectionInterface from "./Interfaces/SpawnSelectionInterface";
 import HudInterface from "./Interfaces/HudInterface";
 import ScoreboardInterface from "./Interfaces/ScoreboardInterface";
 import HandlingEditorInterface from "./Interfaces/HandlingEditorInterface";
-import BankingInterface from "./Interfaces/BankingInterface";
+import ATMBankingInterface from "./Interfaces/ATMBankingInterface";
 
 function Interfaces() {
     const { visibleInterfaces } = useInterfaceVisibility();
@@ -23,7 +23,7 @@ function Interfaces() {
             {isInterfaceVisible("SpawnSelectionInterface") && <SpawnSelectionInterface key="SpawnSelectionInterface" />}
             {isInterfaceVisible("ScoreboardInterface") && <ScoreboardInterface key="ScoreboardInterface" />}
             {isInterfaceVisible("HandlingEditorInterface") && <HandlingEditorInterface key="HandlingEditorInterface" />}
-            {isInterfaceVisible("BankingInterface") && <BankingInterface key="BankingInterface" />}
+            {isInterfaceVisible("BankingInterface") && <ATMBankingInterface key="BankingInterface" />}
         </>
     )
 }
