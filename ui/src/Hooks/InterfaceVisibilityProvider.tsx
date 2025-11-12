@@ -19,6 +19,7 @@ export const InterfaceVisibilityProvider = ({ children }: { children: React.Reac
         // 'NotificationsInterface': true,
         // 'AuthInterface': true,  // Set to true for development/testing
         // 'SpawnSelectionInterface': true  // Set to true for development/testing
+        'BankingInterface': true,
     });
 
     const setInterfaceVisible = (name: string, visible: boolean) => {

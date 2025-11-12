@@ -5,6 +5,10 @@ export class ChunkAssemblerHandler {
     private static chunkAssembler: ChunkAssembler = new ChunkAssembler();
 
     public static init() {
+        if (typeof mp === 'undefined' || !mp?.events) {
+            console.warn('ChunkAssemblerHandler: mp.events is not available (running in browser)');
+            return;
+        }
         mp.events.add('event:chunk', this.onChunkReceived.bind(this));
         console.log('ChunkAssemblerHandler initialized');
     }
@@ -28,14 +32,18 @@ export class CustomEventHandler {
 
     public static registerEventHandler(eventName: string, callback: (data: any) => void) {
         this.eventHandlers.push({ eventName, callback });
-        mp.events.add(eventName, callback);
+        if (typeof mp !== 'undefined' && mp?.events) {
+            mp.events.add(eventName, callback);
+        }
     }
 
     public static removeEventHandler(eventName: string, callback: (data: any) => void) {
         this.eventHandlers = this.eventHandlers.filter(
             (handler) => handler.eventName !== eventName || handler.callback !== callback
         );
-        mp.events.remove(eventName, callback);
+        if (typeof mp !== 'undefined' && mp?.events) {
+            mp.events.remove(eventName, callback);
+        }
     }
 
     public static triggerEvent(eventName: string, data: any) {
