@@ -12,7 +12,7 @@ import Scoreboard from './Core/Scoreboard';
 import KeyboardService from './Services/KeyboardService';
 import PlayerBlipsService from './Services/PlayerBlipsService';
 import HandlingEditorService from './Services/HandlingEditorService';
-import AtmInterfaceTest from './Tests/ATMInterfaceTest';
+import AtmInterfaceTest from './Tests/AtmInterfaceTest';
 // import EventServiceTest from './Tests/EventServiceTest';
 // import ElementDataServiceTest from './Tests/ElementDataServiceTest';
 // import InterfaceServiceTest from './Tests/InterfaceServiceTest';
