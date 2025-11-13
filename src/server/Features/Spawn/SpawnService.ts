@@ -1,7 +1,7 @@
 import Logger from "@shared/Logger";
-import FetchService from "./FetchService";
+import FetchService from "@/Services/FetchService";
 import { spawnData, SpawnResponse } from "@shared/SpawnsData";
-import UserService from "./UserService";
+import UserService from "@/Features/User/UserService";
 
 export default class SpawnService {
     private static logger: Logger = Logger.getLogger(SpawnService);

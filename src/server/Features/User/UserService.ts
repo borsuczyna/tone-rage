@@ -3,7 +3,7 @@ import { UserEntity } from '@/Database/Entities/UserEntity';
 import PasswordHash from '@/Utils/PasswordHash';
 import EmailValidator from '@shared/EmailValidator';
 import PasswordValidator from '@shared/PasswordValidator';
-import ElementDataService from './ElementDataService';
+import ElementDataService from '@/Services/ElementDataService';
 import { ShareMode } from '@shared/Models/ElementDataModels';
 import { SpawnLocation } from '@shared/SpawnsData';
 import Logger from '@shared/Logger';

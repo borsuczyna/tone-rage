@@ -1,6 +1,6 @@
 import { NotificationType } from '@shared/Models/NotificationType';
-import ElementDataService from './ElementDataService';
-import NotificationService from './NotificationService';
+import ElementDataService from '@/Services/ElementDataService';
+import NotificationService from '@/Services/NotificationService';
 
 /**
  * PlayerDataDisplayService - Debug feature to display all element data above players in 3D
