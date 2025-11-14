@@ -10,6 +10,7 @@ import Tests from './Tests/Tests';
 import SpawnService from './Services/SpawnService';
 import UserService from './Services/UserService';
 import MoneyServiceTest from './Tests/MoneyServiceTest';
+import AtmService from './Services/AtmService';
 // import EventServiceTest from './Tests/EventServiceTest';
 // import ElementDataServiceTest from './Tests/ElementDataServiceTest';
 // import FetchServiceTest from './Tests/FetchServiceTest';
@@ -25,6 +26,7 @@ import MoneyServiceTest from './Tests/MoneyServiceTest';
 	await AuthService.init();
     await SpawnService.init();
     await UserService.init();
+	await AtmService.init();
 
 	// Debug
 	Tests.getPositionCommandTest();

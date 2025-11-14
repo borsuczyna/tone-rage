@@ -7,9 +7,10 @@ import styles from '../../Styles/AtmInterface.module.css';
 
 interface WithdrawTabProps {
     onTransaction: (amount: number) => void;
+    disabled?: boolean;
 }
 
-export default function WithdrawTab({ onTransaction }: WithdrawTabProps) {
+export default function WithdrawTab({ onTransaction, disabled = false }: WithdrawTabProps) {
     const [displayAmount, setDisplayAmount] = useState('');
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,7 +115,7 @@ export default function WithdrawTab({ onTransaction }: WithdrawTabProps) {
                 <Button 
                     variant="primary" 
                     onClick={handleConfirm}
-                    disabled={!displayAmount}
+                    disabled={!displayAmount || disabled}
                 >
                     <Icons.Check size="1rem" />
                     {translate('atm.button.withdraw')}
