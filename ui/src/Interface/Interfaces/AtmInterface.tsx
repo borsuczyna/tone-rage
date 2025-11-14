@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useInterfaceVisibility } from 'src/Hooks/InterfaceVisibilityProvider';
 import styles from './Styles/AtmInterface.module.css';
 import type { AtmTransactionData } from '@shared/Models/MoneyLogData';
@@ -21,7 +21,7 @@ export default function AtmInterface() {
     const [transactions, setTransactions] = useState<AtmTransactionData[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
-    const fetchAtmData = async () => {
+    const fetchAtmData = useCallback(async () => {
         try {
             setIsLoading(true);
             const data = await fetchServerData<AtmData>('atm:getData', {});
@@ -32,13 +32,14 @@ export default function AtmInterface() {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
-        if (isInterfaceVisible('AtmInterface')) {
+        const visible = isInterfaceVisible('AtmInterface');
+        if (visible) {
             fetchAtmData();
         }
-    }, [isInterfaceVisible('AtmInterface')]);
+    }, [isInterfaceVisible, fetchAtmData]);
 
     const handleTransaction = async (amount: number) => {
         if (isLoading) return;
