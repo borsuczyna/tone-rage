@@ -18,6 +18,8 @@ export default function LogsTab({ transactions }: LogsTabProps) {
         });
     };
 
+    console.log(transactions);
+
     return (
         <div className={styles.displayArea}>
             <div className={styles.transactionLogs}>

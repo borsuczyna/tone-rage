@@ -1,7 +1,10 @@
 import FetchService from "@/Services/FetchService";
-import MoneyService from "@/Services/MoneyService";
 import EventService from "@/Services/EventService";
+import MoneyService from "@/Features/Money/MoneyService";
 import { AtmTransactionData } from "@shared/Models/MoneyLogData";
+import NotificationService from "@/Services/NotificationService";
+import { NotificationType } from "@shared/Models/NotificationType";
+import translate from "@shared/Translation/Translation";
 
 export default class AtmFeature {
     public static async init() {
@@ -21,13 +24,13 @@ export default class AtmFeature {
         EventService.triggerClientEvent(player, 'atm:toggle');
     }
 
-    private static async onGetAtmData(player: PlayerMp, data: any) {
+    private static async onGetAtmData(player: PlayerMp, _data: any) {
         const bankMoney = MoneyService.getPlayerBankMoney(player);
         const logs = await MoneyService.getPlayerMoneyLogs(player, 50, 0);
         
         // Convert logs to AtmTransactionData format
         const transactions: AtmTransactionData[] = (logs || []).map((log, index) => ({
-            id: log.id || index,
+            id: log.uid || index,
             amount: Math.abs(log.amount),
             type: log.amount > 0 ? 'deposit' : 'withdraw',
             description: log.description,
@@ -49,7 +52,7 @@ export default class AtmFeature {
             const logs = await MoneyService.getPlayerMoneyLogs(player, 50, 0);
             
             const transactions: AtmTransactionData[] = (logs || []).map((log, index) => ({
-                id: log.id || index,
+                id: log.uid || index,
                 amount: Math.abs(log.amount),
                 type: log.amount > 0 ? 'deposit' : 'withdraw',
                 description: log.description,
@@ -62,6 +65,8 @@ export default class AtmFeature {
                 bankMoney,
                 transactions
             };
+        } else {
+            NotificationService.addNotification(player, NotificationType.Error, translate('default.error'), translate('atm.insufficient_funds_withdraw'));
         }
         
         return { success: false };
@@ -75,7 +80,7 @@ export default class AtmFeature {
             const logs = await MoneyService.getPlayerMoneyLogs(player, 50, 0);
             
             const transactions: AtmTransactionData[] = (logs || []).map((log, index) => ({
-                id: log.id || index,
+                id: log.uid || index,
                 amount: Math.abs(log.amount),
                 type: log.amount > 0 ? 'deposit' : 'withdraw',
                 description: log.description,
@@ -88,6 +93,8 @@ export default class AtmFeature {
                 bankMoney,
                 transactions
             };
+        } else {
+            NotificationService.addNotification(player, NotificationType.Error, translate('default.error'), translate('atm.insufficient_funds_deposit'));
         }
         
         return { success: false };

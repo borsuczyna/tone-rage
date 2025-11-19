@@ -10,6 +10,7 @@ import EmblemaElement from './Components/EmblemaElement';
 import InputField from './Components/InputField';
 import translate from '@shared/Translation/Translation';
 import { useRageEvent } from 'src/Hooks/RageEventProvider';
+import { useInterfaceVisibility } from 'src/Hooks/InterfaceVisibilityProvider';
 
 const playerCategories = [
     {
@@ -27,6 +28,13 @@ const playerCategories = [
 ];
 
 export default function ScoreboardInterface() {
+    const { isInterfaceVisible } = useInterfaceVisibility();
+    if (
+        isInterfaceVisible('AtmInterface')
+    ) {
+        return null;
+    }
+    
     const [players, setPlayers] = useState<ScoreboardPlayerItem[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);

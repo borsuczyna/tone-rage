@@ -5,9 +5,10 @@
 		"baseUrl": "./",
 		"paths": {
 			"@shared/*": ["../shared/*"],
+			"@shared-rage/*": ["../shared-rage/*"],
 			"@/*": ["./*"]
 		}
 	},
-	"include": ["./**/*.ts", "../shared/**/*.ts"],
+	"include": ["./**/*.ts", "../shared/**/*.ts", "../shared-rage/**/*.ts"],
 	"exclude": ["../shared/**/*.d.ts"]
 }

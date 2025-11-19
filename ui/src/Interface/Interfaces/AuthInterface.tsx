@@ -157,7 +157,7 @@ export default function AuthInterface() {
                         />
                     )}
 
-                {currentPage === 'register' && (
+                    {currentPage === 'register' && (
                         <RegisterForm
                             registerData={registerData}
                             setRegisterData={setRegisterData}
@@ -168,7 +168,7 @@ export default function AuthInterface() {
                         />
                     )}
 
-                {currentPage === 'rules' && (
+                    {currentPage === 'rules' && (
                         <RulesForm
                             onBackToLogin={() => setCurrentPage('login')}
                             onAcceptAndRegister={() => setCurrentPage('register')}

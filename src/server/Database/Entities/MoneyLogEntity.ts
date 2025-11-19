@@ -20,6 +20,24 @@ export class MoneyLogEntity extends DatabaseEntity {
         super();
     }
 
+    protected convertDatabaseTypes(): void {
+        super.convertDatabaseTypes();
+        
+        // Convert decimal fields from strings to numbers
+        if (typeof this.amount === 'string') {
+            this.amount = parseFloat(this.amount);
+        }
+        if (typeof this.amountBefore === 'string') {
+            this.amountBefore = parseFloat(this.amountBefore);
+        }
+        if (typeof this.userId === 'string') {
+            this.userId = parseInt(this.userId);
+        }
+        if (typeof this.type === 'string') {
+            this.type = parseInt(this.type);
+        }
+    }
+
     public static create(userId: number, amount: number, amountBefore: number, type: MoneyLogType, description: string): MoneyLogEntity {
         const log = new MoneyLogEntity();
         log.userId = userId;

@@ -17,6 +17,8 @@ export default class Scoreboard {
     }
 
     public static setVisible(visible: boolean) {
+        if (this.visible === visible) return;
+        
         this.visible = visible;
 
         if (visible) {

@@ -4,6 +4,7 @@ import Button from '../Button';
 import { formatMoney } from '@shared/MoneyHelper';
 import translate from '@shared/Translation/Translation';
 import styles from '../../Styles/AtmInterface.module.css';
+import { triggerEvent } from 'src/Hooks/Fetch';
 
 interface WithdrawTabProps {
     onTransaction: (amount: number) => void;
@@ -24,8 +25,8 @@ export default function WithdrawTab({ onTransaction, disabled = false }: Withdra
         }
     };
 
-    const handleClear = () => {
-        setDisplayAmount('');
+    const handleClose = () => {
+        triggerEvent('atm:closeInterface');
     };
 
     const handleBackspace = () => {
@@ -59,7 +60,7 @@ export default function WithdrawTab({ onTransaction, disabled = false }: Withdra
                                 handleBackspace();
                             } else if (e.key === 'Delete' || e.key === 'Escape') {
                                 e.preventDefault();
-                                handleClear();
+                                handleClose();
                             } else if (/^[0-9]$/.test(e.key)) {
                                 e.preventDefault();
                                 handleNumberClick(e.key);
@@ -87,7 +88,7 @@ export default function WithdrawTab({ onTransaction, disabled = false }: Withdra
                     ))}
                     <button
                         className={`${styles.keypadButton} ${styles.clearButton}`}
-                        onClick={handleClear}
+                        onClick={handleClose}
                     >
                         <Icons.RotateCcw size="1.2rem" />
                     </button>
@@ -108,7 +109,7 @@ export default function WithdrawTab({ onTransaction, disabled = false }: Withdra
 
             {/* Action Bar */}
             <div className={styles.actionBar}>
-                <Button variant="gray" onClick={handleClear}>
+                <Button variant="gray" onClick={handleClose}>
                     <Icons.X size="1rem" />
                     {translate('atm.button.cancel')}
                 </Button>
@@ -116,6 +117,7 @@ export default function WithdrawTab({ onTransaction, disabled = false }: Withdra
                     variant="primary" 
                     onClick={handleConfirm}
                     disabled={!displayAmount || disabled}
+                    loading={disabled}
                 >
                     <Icons.Check size="1rem" />
                     {translate('atm.button.withdraw')}

@@ -44,3 +44,8 @@ body {
 * {
     font-family: 'Poppins', sans-serif;
 }
+
+/* remove all outlines on tab etc. */
+*:focus {
+    outline: none;
+}

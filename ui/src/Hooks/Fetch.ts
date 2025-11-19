@@ -42,7 +42,6 @@ export function triggerEvent(eventName: string, data?: any) {
 
         // Send in chunks
         const chunks = chunkData(encodedData);
-        console.log(`Triggering event ${eventName} in ${chunks.length} chunks`);
         chunks.forEach((chunk) => {
             mp.trigger('interface:triggerEvent:chunk', eventName, JSON.stringify(chunk));
         });
