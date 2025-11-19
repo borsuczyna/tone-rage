@@ -2,7 +2,7 @@ import EventService from '@/Services/EventService';
 import InterfaceService from '@/Services/InterfaceService';
 import RenderService from '@/Services/RenderService';
 import { spawnData, SpawnLocation } from '@shared/SpawnsData';
-import Hud from './Hud';
+import Hud from '@/Features/Hud/Hud';
 
 export default class SpawnPanel {
     private static selectedSpawn: SpawnLocation | null = null;

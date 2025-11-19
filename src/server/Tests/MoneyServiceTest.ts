@@ -1,5 +1,5 @@
 import { MoneyLogType } from "@/Database/Entities/MoneyLogEntity";
-import MoneyService from "@/Services/MoneyService";
+import MoneyService from "@/Features/Money/MoneyService";
 import NotificationService from "@/Services/NotificationService";
 import { NotificationType } from "@shared/Models/NotificationType";
 

@@ -1,6 +1,6 @@
 import { decodeData, encodeData } from '@shared/DataEncoder';
 import { chunkData, ChunkAssembler, DataChunk } from '@shared/ChunkingUtils';
-import AnticheatService from './AnticheatService';
+import AnticheatService from '@/Features/Anticheat/AnticheatService';
 
 interface EventListener {
 	eventName: string;

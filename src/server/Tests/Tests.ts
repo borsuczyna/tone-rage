@@ -1,4 +1,4 @@
-import UserService from '@/Services/UserService';
+import UserService from '@/Features/User/UserService';
 import Logger from '@shared/Logger';
 
 export default class Tests {

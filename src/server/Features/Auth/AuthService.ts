@@ -1,6 +1,6 @@
 import { AuthLoginData, AuthRegisterData, AuthResponse } from '@shared/Models/AuthData';
-import FetchService from './FetchService';
-import UserService from './UserService';
+import FetchService from '@/Services/FetchService';
+import UserService from '@/Features/User/UserService';
 import Logger from '@shared/Logger';
 
 export default class AuthService {

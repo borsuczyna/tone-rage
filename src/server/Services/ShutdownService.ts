@@ -1,5 +1,5 @@
-import UserService from './UserService';
-import VehicleService from './VehicleService';
+import UserService from '@/Features/User/UserService';
+import VehicleService from '@/Features/Vehicle/VehicleService';
 import Logger from '@shared/Logger';
 
 export default class ShutdownService {

@@ -1,5 +1,5 @@
 import Logger from '@shared/Logger';
-import AnticheatService from './AnticheatService';
+import AnticheatService from '@/Features/Anticheat/AnticheatService';
 import EventService from './EventService';
 
 interface FetchListener {
