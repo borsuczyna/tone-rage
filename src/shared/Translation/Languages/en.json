@@ -126,5 +126,7 @@
     "atm.transaction.deposit": "ATM Deposit",
     "atm.transaction.withdraw": "ATM Withdrawal",
     "atm.insufficient_funds_deposit": "Insufficient funds in your wallet to complete this deposit.",
-    "atm.insufficient_funds_withdraw": "Insufficient funds in your bank account to complete this withdrawal."
+    "atm.insufficient_funds_withdraw": "Insufficient funds in your bank account to complete this withdrawal.",
+
+    "blip.atm": "ATM"
 }

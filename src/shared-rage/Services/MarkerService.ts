@@ -1,19 +1,46 @@
-// import TimerService from '@shared/Services/TimerService';
 import Marker from '../Entities/Marker';
 import MarkerType from '../Models/MarkerType';
 import MarkerEvent from '../Models/MarkerEvent';
 import MarkerHitType from '../Models/MarkerHitType';
+import isClientSide from '../isClientSide';
 
 export default class MarkerService {
     private static markers: Set<Marker> = new Set();
     private static events: Set<MarkerEvent> = new Set();
 
     public static init() {
-        // TimerService.setTimer(this.update.bind(this), 100, 0);
+        mp.events.add('playerEnterColshape', this.onColshapeEnter.bind(this));
+        mp.events.add('playerExitColshape', this.onColshapeExit.bind(this));
     }
 
-    public static createMarker(position: Vector3, color: RGBA, scale: number, type: MarkerType = MarkerType.Cylinder, dimension: number = 0): Marker {
-        const marker = new Marker(position, color, scale, type, dimension);
+    public static onColshapeEnter(player: PlayerMp, colshape: ColshapeMp) {
+        if (isClientSide) {
+            colshape = player as any; // On client side, colshape is the first parameter
+            player = mp.players.local;
+        }
+        
+        const marker = Array.from(MarkerService.markers).find(m => m.colShape === colshape);
+        if (marker) {
+            marker._handleHit(MarkerHitType.Enter, player);
+            this._handleMarkerHit(marker, MarkerHitType.Enter, player);
+        }
+    }
+
+    public static onColshapeExit(player: PlayerMp, colshape: ColshapeMp) {
+        if (isClientSide) {
+            colshape = player as any; // On client side, colshape is the first parameter
+            player = mp.players.local;
+        }
+        
+        const marker = Array.from(MarkerService.markers).find(m => m.colShape === colshape);
+        if (marker) {
+            marker._handleHit(MarkerHitType.Exit, player);
+            this._handleMarkerHit(marker, MarkerHitType.Exit, player);
+        }
+    }
+
+    public static createMarker(position: Vector3, color: RGBA, scale: number, type: MarkerType = MarkerType.Cylinder, dimension: number = 0, hitDistance?: number): Marker {
+        const marker = new Marker(position, color, scale, type, dimension, hitDistance);
         this.markers.add(marker);
         return marker;
     }
@@ -37,7 +64,7 @@ export default class MarkerService {
 
     public static _handleMarkerHit(marker: Marker, hitType: MarkerHitType, player: PlayerMp) {
         for (let event of this.events) {
-            if (event.marker === marker) {
+            if (event.marker === marker || event.marker === null) {
                 event.callback(hitType, player, marker);
             }
         }

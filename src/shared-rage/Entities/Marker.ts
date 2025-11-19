@@ -7,37 +7,29 @@ export default class Marker {
     private colorValue: RGBA;
     private scaleValue: number;
     private typeValue: MarkerType;
-    private colShape: ColshapeMp;
+    public colShape: ColshapeMp;
     private insideMarker: Set<PlayerMp> = new Set();
 
-    constructor(position: Vector3, color: RGBA, scale: number, type: MarkerType = MarkerType.Cylinder, dimension: number = 0) {
+    constructor(position: Vector3, color: RGBA, scale: number, type: MarkerType = MarkerType.Cylinder, dimension: number = 0, hitDistance?: number) {
         const newPosition = this.toTargetPosition(position, type);
+        hitDistance = hitDistance || scale;
 
         const markerMp = mp.markers.new(type, newPosition, scale, {
             color: color,
             dimension: dimension,
         });
 
-        this.colShape = mp.colshapes.newSphere(position.x, position.y, position.z, scale, dimension);
-        mp.events.add('playerEnterColshape', this.onColshapeEnter.bind(this));
-        mp.events.add('playerExitColshape', this.onColshapeExit.bind(this));
-
+        this.colShape = mp.colshapes.newSphere(position.x, position.y, position.z, hitDistance, dimension);
         this.marker = markerMp;
         this.colorValue = color;
         this.scaleValue = scale;
         this.typeValue = type;
     }
 
-    private onColshapeEnter(player: PlayerMp, colshape: ColshapeMp) {
-        if (colshape === this.colShape) {
-            MarkerService._handleMarkerHit(this, MarkerHitType.Enter, player);
+    public _handleHit(hitType: MarkerHitType, player: PlayerMp) {
+        if (hitType === MarkerHitType.Enter) {
             this.insideMarker.add(player);
-        }
-    }
-
-    private onColshapeExit(player: PlayerMp, colshape: ColshapeMp) {
-        if (colshape === this.colShape) {
-            MarkerService._handleMarkerHit(this, MarkerHitType.Exit, player);
+        } else {
             this.insideMarker.delete(player);
         }
     }
