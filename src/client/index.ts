@@ -13,6 +13,7 @@ import KeyboardService from './Services/KeyboardService';
 import PlayerBlipsService from './Services/PlayerBlipsService';
 import AtmFeature from './Features/Atm/AtmFeature';
 import HandlingEditorService from './Features/HandlingEditor/HandlingEditorService';
+import MarkerService from '@shared-rage/Services/MarkerService';
 // import EventServiceTest from './Tests/EventServiceTest';
 // import ElementDataServiceTest from './Tests/ElementDataServiceTest';
 // import InterfaceServiceTest from './Tests/InterfaceServiceTest';
@@ -35,6 +36,7 @@ import HandlingEditorService from './Features/HandlingEditor/HandlingEditorServi
 	await LoginPanel.init();
     await Hud.init();
     await Scoreboard.init();
+    await MarkerService.init();
 
 	// Features
     await AtmFeature.init();

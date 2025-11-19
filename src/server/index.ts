@@ -11,6 +11,8 @@ import SpawnService from './Features/Spawn/SpawnService';
 import UserService from './Features/User/UserService';
 import MoneyServiceTest from './Tests/MoneyServiceTest';
 import AtmFeature from './Features/Atm/AtmFeature';
+import MarkerTest from './Tests/MarkerTest';
+import MarkerService from '@shared-rage/Services/MarkerService';
 // import EventServiceTest from './Tests/EventServiceTest';
 // import ElementDataServiceTest from './Tests/ElementDataServiceTest';
 // import FetchServiceTest from './Tests/FetchServiceTest';
@@ -26,6 +28,7 @@ import AtmFeature from './Features/Atm/AtmFeature';
 	await AuthService.init();
     await SpawnService.init();
     await UserService.init();
+    await MarkerService.init();
 	
 	// Features
 	await AtmFeature.init();
@@ -34,6 +37,7 @@ import AtmFeature from './Features/Atm/AtmFeature';
 	Tests.getPositionCommandTest();
     Tests.createVehicleCommandTest();
     MoneyServiceTest.init();
+    MarkerTest.init();
 	// EventServiceTest.init();
 	// ElementDataServiceTest.init();
 	// FetchServiceTest.init();
