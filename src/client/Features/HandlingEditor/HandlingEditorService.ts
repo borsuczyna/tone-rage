@@ -18,11 +18,9 @@ export default class HandlingEditorService {
 		mp.events.add('playerCommand', this.onCommand.bind(this));
 
 		// Register event to receive handling data requests
-		// mp.events.add('handlingEditor:getData', this.getVehicleHandlingData.bind(this));
         EventService.registerEventHandler('handlingEditor:getData', this.getVehicleHandlingData.bind(this));
 
 		// Register event to apply handling changes
-		// mp.events.add('handlingEditor:applyChanges', this.applyHandlingChanges.bind(this));
         EventService.registerEventHandler('handlingEditor:applyChanges', this.applyHandlingChanges.bind(this));
 
 		// Register event to close the interface
