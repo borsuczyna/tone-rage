@@ -1,6 +1,6 @@
 import EventService from '@/Services/EventService';
 import InterfaceService from '@/Services/InterfaceService';
-import SpawnPanel from './SpawnPanel';
+import SpawnPanel from '@/Features/Spawn/SpawnPanel';
 import TimerService from '@shared/Services/TimerService';
 
 export default class LoginPanel {

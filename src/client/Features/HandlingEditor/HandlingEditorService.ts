@@ -1,7 +1,7 @@
 import HandlingData from '@shared/Models/HandlingData';
-import EventService from './EventService';
-import InterfaceService from './InterfaceService';
-import NotificationService from './NotificationService';
+import EventService from '@/Services/EventService';
+import InterfaceService from '@/Services/InterfaceService';
+import NotificationService from '@/Services/NotificationService';
 import { NotificationType } from '@shared/Models/NotificationType';
 
 /**

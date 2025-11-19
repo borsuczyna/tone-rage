@@ -29,11 +29,31 @@ pnpm run build
 
 ```
 src/
-├── client/     # Client-side scripts
-├── server/     # Server-side logic, database, services
-├── shared/     # Shared utilities and models
-ui/             # React-based user interface
+├── client/
+│   ├── Features/      # Feature modules (HUD, Auth, Spawn, Scoreboard, etc.)
+│   ├── Services/      # Infrastructure services (Events, Interface, Keyboard, etc.)
+│   └── Tests/         # Client-side tests
+├── server/
+│   ├── Features/      # Business logic modules (Auth, User, Vehicle, Money, etc.)
+│   ├── Services/      # Infrastructure services (Events, Fetch, ElementData, etc.)
+│   ├── Database/      # Database configuration and entities
+│   ├── Utils/         # Server utilities
+│   └── Tests/         # Server-side tests
+├── shared/            # Shared code between client and server
+│   ├── Models/        # Data models and types
+│   ├── Services/      # Shared services
+│   └── Translation/   # Localization
+ui/                    # React-based user interface
 ```
+
+### Architecture
+
+The project follows a clear separation of concerns:
+
+- **Services**: Infrastructure-level code (event handling, data fetching, element data management)
+- **Features**: Business logic organized by domain (authentication, spawning, vehicles, money)
+- **Shared**: Code that is used by both client and server
+- **UI**: React-based interface components (kept separate from game logic)
 
 ## 🛠️ Available Scripts
 
