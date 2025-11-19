@@ -22,11 +22,11 @@ export default class MarkerService {
         this.markers.delete(marker);
     }
 
-    public static registerEventHandler(marker: Marker | null, callback: (hitType: MarkerHitType, entity: EntityMp, marker?: Marker) => void) {
+    public static registerEventHandler(marker: Marker | null, callback: (hitType: MarkerHitType, player: PlayerMp, marker?: Marker) => void) {
         this.events.add({ marker, callback });
     }
 
-    public static unregisterEventHandler(marker: Marker | null, callback: (hitType: MarkerHitType, entity: EntityMp, marker?: Marker) => void) {
+    public static unregisterEventHandler(marker: Marker | null, callback: (hitType: MarkerHitType, player: PlayerMp, marker?: Marker) => void) {
         for (let event of this.events) {
             if (event.marker === marker && event.callback === callback) {
                 this.events.delete(event);
@@ -35,10 +35,10 @@ export default class MarkerService {
         }
     }
 
-    public static _handleMarkerHit(marker: Marker, hitType: MarkerHitType, entity: EntityMp) {
+    public static _handleMarkerHit(marker: Marker, hitType: MarkerHitType, player: PlayerMp) {
         for (let event of this.events) {
             if (event.marker === marker) {
-                event.callback(hitType, entity, marker);
+                event.callback(hitType, player, marker);
             }
         }
     }

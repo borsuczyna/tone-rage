@@ -1,4 +1,3 @@
-import Logger from '@shared/Logger';
 import MarkerType from '../Models/MarkerType';
 import MarkerService from '../Services/MarkerService';
 import MarkerHitType from '../Models/MarkerHitType';
@@ -9,9 +8,7 @@ export default class Marker {
     private scaleValue: number;
     private typeValue: MarkerType;
     private colShape: ColshapeMp;
-    private insideMarker: Set<EntityMp> = new Set();
-
-    private logger: Logger = Logger.getLogger(Marker, false);
+    private insideMarker: Set<PlayerMp> = new Set();
 
     constructor(position: Vector3, color: RGBA, scale: number, type: MarkerType = MarkerType.Cylinder, dimension: number = 0) {
         const newPosition = this.toTargetPosition(position, type);
@@ -31,19 +28,17 @@ export default class Marker {
         this.typeValue = type;
     }
 
-    private onColshapeEnter(entity: EntityMp, colshape: ColshapeMp) {
+    private onColshapeEnter(player: PlayerMp, colshape: ColshapeMp) {
         if (colshape === this.colShape) {
-            MarkerService._handleMarkerHit(this, MarkerHitType.Enter, entity);
-            this.insideMarker.add(entity);
-            this.logger.debug(`Entity ${entity.id} entered marker at ${this.position.x}, ${this.position.y}, ${this.position.z}`);
+            MarkerService._handleMarkerHit(this, MarkerHitType.Enter, player);
+            this.insideMarker.add(player);
         }
     }
 
-    private onColshapeExit(entity: EntityMp, colshape: ColshapeMp) {
+    private onColshapeExit(player: PlayerMp, colshape: ColshapeMp) {
         if (colshape === this.colShape) {
-            MarkerService._handleMarkerHit(this, MarkerHitType.Exit, entity);
-            this.insideMarker.delete(entity);
-            this.logger.debug(`Entity ${entity.id} exited marker at ${this.position.x}, ${this.position.y}, ${this.position.z}`);
+            MarkerService._handleMarkerHit(this, MarkerHitType.Exit, player);
+            this.insideMarker.delete(player);
         }
     }
 
@@ -92,11 +87,11 @@ export default class Marker {
         MarkerService._destroyInternal(this);
     }
 
-    public registerEventHandler(callback: (hitType: MarkerHitType, entity: EntityMp, marker?: Marker) => void) {
+    public registerEventHandler(callback: (hitType: MarkerHitType, player: PlayerMp, marker?: Marker) => void) {
         MarkerService.registerEventHandler(this, callback);
     }
 
-    public unregisterEventHandler(callback: (hitType: MarkerHitType, entity: EntityMp, marker?: Marker) => void) {
+    public unregisterEventHandler(callback: (hitType: MarkerHitType, player: PlayerMp, marker?: Marker) => void) {
         MarkerService.unregisterEventHandler(this, callback);
     }
 

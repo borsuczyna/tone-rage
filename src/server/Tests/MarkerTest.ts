@@ -11,11 +11,11 @@ export default class MarkerTest {
         cylinder.registerEventHandler(this.onCylinderHit.bind(this));
     }
 
-    private static onCylinderHit(hitType: MarkerHitType, entity: EntityMp) {
+    private static onCylinderHit(hitType: MarkerHitType, player: PlayerMp) {
         if (hitType === MarkerHitType.Enter) {
-            console.log(`Entity ${entity.id} entered cylinder marker.`);
+            console.log(`Player ${player.id} entered cylinder marker.`);
         } else if (hitType === MarkerHitType.Exit) {
-            console.log(`Entity ${entity.id} exited cylinder marker.`);
+            console.log(`Player ${player.id} exited cylinder marker.`);
         }
     }
 }
