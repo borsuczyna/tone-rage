@@ -10,6 +10,7 @@ import Tests from './Tests/Tests';
 import SpawnService from './Features/Spawn/SpawnService';
 import UserService from './Features/User/UserService';
 import MoneyServiceTest from './Tests/MoneyServiceTest';
+import AtmFeature from './Features/Atm/AtmFeature';
 // import EventServiceTest from './Tests/EventServiceTest';
 // import ElementDataServiceTest from './Tests/ElementDataServiceTest';
 // import FetchServiceTest from './Tests/FetchServiceTest';
@@ -25,6 +26,9 @@ import MoneyServiceTest from './Tests/MoneyServiceTest';
 	await AuthService.init();
     await SpawnService.init();
     await UserService.init();
+	
+	// Features
+	await AtmFeature.init();
 
 	// Debug
 	Tests.getPositionCommandTest();

@@ -11,8 +11,8 @@ import Hud from './Features/Hud/Hud';
 import Scoreboard from './Features/Scoreboard/Scoreboard';
 import KeyboardService from './Services/KeyboardService';
 import PlayerBlipsService from './Services/PlayerBlipsService';
+import AtmFeature from './Features/Atm/AtmFeature';
 import HandlingEditorService from './Features/HandlingEditor/HandlingEditorService';
-import AtmInterfaceTest from './Tests/AtmInterfaceTest';
 // import EventServiceTest from './Tests/EventServiceTest';
 // import ElementDataServiceTest from './Tests/ElementDataServiceTest';
 // import InterfaceServiceTest from './Tests/InterfaceServiceTest';
@@ -36,8 +36,8 @@ import AtmInterfaceTest from './Tests/AtmInterfaceTest';
     await Hud.init();
     await Scoreboard.init();
 
-	// Debug
-    await AtmInterfaceTest.init();
+	// Features
+    await AtmFeature.init();
 	// EventServiceTest.init();
 	// ElementDataServiceTest.init();
 	// InterfaceServiceTest.init();

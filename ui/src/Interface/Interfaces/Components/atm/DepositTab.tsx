@@ -7,9 +7,10 @@ import styles from '../../Styles/AtmInterface.module.css';
 
 interface DepositTabProps {
     onTransaction: (amount: number) => void;
+    disabled?: boolean;
 }
 
-export default function DepositTab({ onTransaction }: DepositTabProps) {
+export default function DepositTab({ onTransaction, disabled = false }: DepositTabProps) {
     const [displayAmount, setDisplayAmount] = useState('');
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,7 +115,7 @@ export default function DepositTab({ onTransaction }: DepositTabProps) {
                 <Button 
                     variant="primary" 
                     onClick={handleConfirm}
-                    disabled={!displayAmount}
+                    disabled={!displayAmount || disabled}
                 >
                     <Icons.Check size="1rem" />
                     {translate('atm.button.deposit')}
