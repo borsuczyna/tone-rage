@@ -8,6 +8,7 @@ export default class Marker {
     private colorValue: RGBA;
     private scaleValue: number;
     private typeValue: MarkerType;
+    private colShape: ColshapeMp;
     private insideMarker: Set<EntityMp> = new Set();
 
     private logger: Logger = Logger.getLogger(Marker, false);
@@ -20,10 +21,30 @@ export default class Marker {
             dimension: dimension,
         });
 
+        this.colShape = mp.colshapes.newSphere(position.x, position.y, position.z, scale, dimension);
+        mp.events.add('playerEnterColshape', this.onColshapeEnter.bind(this));
+        mp.events.add('playerExitColshape', this.onColshapeExit.bind(this));
+
         this.marker = markerMp;
         this.colorValue = color;
         this.scaleValue = scale;
         this.typeValue = type;
+    }
+
+    private onColshapeEnter(entity: EntityMp, colshape: ColshapeMp) {
+        if (colshape === this.colShape) {
+            MarkerService._handleMarkerHit(this, MarkerHitType.Enter, entity);
+            this.insideMarker.add(entity);
+            this.logger.debug(`Entity ${entity.id} entered marker at ${this.position.x}, ${this.position.y}, ${this.position.z}`);
+        }
+    }
+
+    private onColshapeExit(entity: EntityMp, colshape: ColshapeMp) {
+        if (colshape === this.colShape) {
+            MarkerService._handleMarkerHit(this, MarkerHitType.Exit, entity);
+            this.insideMarker.delete(entity);
+            this.logger.debug(`Entity ${entity.id} exited marker at ${this.position.x}, ${this.position.y}, ${this.position.z}`);
+        }
     }
 
     get position(): Vector3 {
@@ -64,51 +85,6 @@ export default class Marker {
 
     set dimension(value: number) {
         this.marker.dimension = value;
-    }
-
-    public update() {
-        const playersPool = mp.players as any;
-        const playersList = ('streamed' in playersPool && Array.isArray(playersPool.streamed) 
-            ? playersPool.streamed 
-            : mp.players.toArray()) as PlayerMp[];
-
-        this.updateForEntities(playersList);
-    }
-
-    private updateForEntities(entities: EntityMp[]) {
-        const filteredEntities = entities.filter(e => e.dimension === this.dimension);
-        const markerPos = this.fromTargetPosition(this.marker.position, this.type);
-        const markerScale = this.marker.scale;
-
-        const entitiesDistanceToMarker = Object.fromEntries(
-            filteredEntities.map(entity => {
-                const position = entity.position;
-                const distance = position.subtract(markerPos).length();
-                return [entity.id, { entity, distance }];
-            })
-        );
-
-        // Check for entities entering the marker
-        const entitiesOutsideMarker = filteredEntities.filter(e => !this.insideMarker.has(e));
-        for (let entity of entitiesOutsideMarker) {
-            const { distance } = entitiesDistanceToMarker[entity.id];
-            if (distance <= markerScale) {
-                this.insideMarker.add(entity);
-                this.logger.debug(`Entity ${entity.id} entered marker at ${markerPos.x}, ${markerPos.y}, ${markerPos.z}`);
-                MarkerService._handleMarkerHit(this, MarkerHitType.Enter, entity);
-            }
-        }
-
-        // Check for entities exiting the marker
-        const entitiesInsideMarker = Array.from(this.insideMarker);
-        for (let entity of entitiesInsideMarker) {
-            const { distance } = entitiesDistanceToMarker[entity.id] || { distance: Infinity };
-            if (distance > markerScale) {
-                this.insideMarker.delete(entity);
-                this.logger.debug(`Entity ${entity.id} exited marker at ${markerPos.x}, ${markerPos.y}, ${markerPos.z}`);
-                MarkerService._handleMarkerHit(this, MarkerHitType.Exit, entity);    
-            }
-        }
     }
 
     public destroy() {

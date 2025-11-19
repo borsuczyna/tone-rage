@@ -1,4 +1,4 @@
-import TimerService from '@shared/Services/TimerService';
+// import TimerService from '@shared/Services/TimerService';
 import Marker from '../Entities/Marker';
 import MarkerType from '../Models/MarkerType';
 import MarkerEvent from '../Models/MarkerEvent';
@@ -9,7 +9,7 @@ export default class MarkerService {
     private static events: Set<MarkerEvent> = new Set();
 
     public static init() {
-        TimerService.setTimer(this.update.bind(this), 100, 0);
+        // TimerService.setTimer(this.update.bind(this), 100, 0);
     }
 
     public static createMarker(position: Vector3, color: RGBA, scale: number, type: MarkerType = MarkerType.Cylinder, dimension: number = 0): Marker {
@@ -20,12 +20,6 @@ export default class MarkerService {
 
     public static _destroyInternal(marker: Marker) {
         this.markers.delete(marker);
-    }
-
-    private static update() {
-        for (let marker of this.markers) {
-            marker.update();
-        }
     }
 
     public static registerEventHandler(marker: Marker | null, callback: (hitType: MarkerHitType, entity: EntityMp, marker?: Marker) => void) {
