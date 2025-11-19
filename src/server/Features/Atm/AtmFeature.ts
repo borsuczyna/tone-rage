@@ -1,9 +1,9 @@
-import FetchService from "./FetchService";
-import MoneyService from "./MoneyService";
-import EventService from "./EventService";
+import FetchService from "@/Services/FetchService";
+import MoneyService from "@/Services/MoneyService";
+import EventService from "@/Services/EventService";
 import { AtmTransactionData } from "@shared/Models/MoneyLogData";
 
-export default class AtmService {
+export default class AtmFeature {
     public static async init() {
         // Register the command to open ATM interface
         mp.events.addCommand('atm', this.onAtmCommand.bind(this));

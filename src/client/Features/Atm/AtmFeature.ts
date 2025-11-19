@@ -1,7 +1,7 @@
 import InterfaceService from "@/Services/InterfaceService";
 import EventService from "@/Services/EventService";
 
-export default class AtmInterfaceTest {
+export default class AtmFeature {
     private static isVisible: boolean = false;
 
     public static init() {
