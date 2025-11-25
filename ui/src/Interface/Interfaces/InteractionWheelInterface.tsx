@@ -1,39 +1,37 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useInterfaceVisibility, setInterfaceVisible } from 'src/Hooks/InterfaceVisibilityProvider';
 import { useRageEvent } from 'src/Hooks/RageEventProvider';
+import { fetchClientData, triggerEvent } from 'src/Hooks/Fetch';
 import styles from './Styles/InteractionWheelInterface.module.css';
 import * as Icons from 'lucide-react';
+import type { InteractionWheelConfig, InteractionWheelData, InteractionWheelResponse } from '@shared/Models/InteractionWheel';
 
 // Type for lucide-react icons
 type LucideIconName = keyof typeof Icons;
 
-export interface WheelInteraction {
-    id: string;
-    icon: LucideIconName;
-    label: string;
-    color?: string;
-}
-
-// Default interactions for testing - can be replaced from game
-const defaultInteractions: WheelInteraction[] = [
-    { id: 'engine', icon: 'Power', label: 'Stop Engine', color: '#ef4444' },
-    { id: 'headlights', icon: 'Lightbulb', label: 'Headlights', color: '#3b82f6' },
-    { id: 'wipers', icon: 'Droplets', label: 'Windshield Wipers', color: '#6366f1' },
-    { id: 'right_signal', icon: 'ArrowRight', label: 'Right Turn Signal', color: '#f59e0b' },
-    { id: 'hazard', icon: 'TriangleAlert', label: 'Hazard Lights', color: '#ef4444' },
-    { id: 'spoiler', icon: 'Car', label: 'Spoiler', color: '#8b5cf6' },
-    { id: 'roof', icon: 'Home', label: 'Roof', color: '#10b981' },
-    { id: 'left_signal', icon: 'ArrowLeft', label: 'Left Turn Signal', color: '#f59e0b' },
-    { id: 'window', icon: 'Square', label: 'Window', color: '#3b82f6' },
-];
-
 export default function InteractionWheelInterface() {
     const { isInterfaceVisible } = useInterfaceVisibility();
-    const [interactions] = useState<WheelInteraction[]>(defaultInteractions);
+    const [interactions, setInteractions] = useState<InteractionWheelData[]>([]);
+    const [config, setConfig] = useState<InteractionWheelConfig>({ title: 'SELECT', subtitle: 'ACTION' });
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
     const [centerPos, setCenterPos] = useState({ x: 0, y: 0 });
     const [hiding, setHiding] = useState(false);
+
+    // Listen for show event from client
+    useRageEvent('interactionWheel:show', (data: { 
+        interactions: InteractionWheelData[]; 
+        title?: string; 
+        subtitle?: string;
+    }) => {
+        setInteractions(data.interactions);
+        setConfig({
+            title: data.title || 'SELECT',
+            subtitle: data.subtitle || 'ACTION'
+        });
+        setHiding(false);
+        setHoveredIndex(null);
+    });
 
     // Listen for hide animation event
     useRageEvent('interactionWheel:hide', () => {
@@ -46,10 +44,22 @@ export default function InteractionWheelInterface() {
             const timeout = setTimeout(() => {
                 setInterfaceVisible('InteractionWheelInterface', false);
                 setHiding(false);
+                setInteractions([]);
             }, 1000);
             return () => clearTimeout(timeout);
         }
     }, [hiding]);
+
+    // On first render, fetch the interactions from the client
+    useEffect(() => {
+        const fetchInteractions = async () => {
+            const data = await fetchClientData<InteractionWheelResponse>('interactionWheel:getInteractions', null);
+            setInteractions(data.interactions);
+            setConfig(data.config);
+        };
+
+        fetchInteractions();
+    }, [setInteractions]);
 
     // Calculate center position on mount and resize
     useEffect(() => {
@@ -59,6 +69,7 @@ export default function InteractionWheelInterface() {
                 y: window.innerHeight / 2
             });
         };
+
         updateCenter();
         window.addEventListener('resize', updateCenter);
         return () => window.removeEventListener('resize', updateCenter);
@@ -66,6 +77,8 @@ export default function InteractionWheelInterface() {
 
     // Calculate which segment is being hovered based on mouse angle from center
     const calculateHoveredSegment = useCallback((mouseX: number, mouseY: number) => {
+        if (interactions.length === 0) return null;
+
         const dx = mouseX - centerPos.x;
         const dy = mouseY - centerPos.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
@@ -102,11 +115,27 @@ export default function InteractionWheelInterface() {
 
     // Handle click to select action
     const handleClick = useCallback(() => {
-        if (hoveredIndex !== null) {
+        if (hoveredIndex !== null && interactions[hoveredIndex] && !hiding) {
             const selectedAction = interactions[hoveredIndex];
             console.log('Selected action:', selectedAction);
+            
+            // Trigger event to client with selected action id
+            triggerEvent('interactionWheel:onSelect', { id: selectedAction.id });
         }
-    }, [hoveredIndex, interactions]);
+    }, [hoveredIndex, interactions, hiding]);
+
+    // Handle escape key to close wheel
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape' && !hiding) {
+                triggerEvent('interactionWheel:onClose', {});
+                setHiding(true);
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [hiding]);
 
     // Add click listener
     useEffect(() => {
@@ -116,6 +145,8 @@ export default function InteractionWheelInterface() {
 
     // Calculate segment positions
     const segmentData = useMemo(() => {
+        if (interactions.length === 0) return [];
+
         const segmentAngle = 360 / interactions.length;
         const innerRadius = 70;
         const outerRadius = 165;
@@ -231,7 +262,7 @@ export default function InteractionWheelInterface() {
 
                     {/* Icons */}
                     {segmentData.map((segment, index) => {
-                        const IconComponent = Icons[segment.icon] as React.ComponentType<{ size?: number; strokeWidth?: number }>;
+                        const IconComponent = Icons[segment.icon as LucideIconName] as React.ComponentType<{ size?: number; strokeWidth?: number }>;
                         if (!IconComponent) return null;
 
                         const isHovered = hoveredIndex === index;
@@ -272,8 +303,8 @@ export default function InteractionWheelInterface() {
                         <div className={styles.actionLabel}>{hoveredInteraction.label}</div>
                     ) : (
                         <>
-                            <div className={styles.categoryLabel}>CAR</div>
-                            <div className={styles.categorySubLabel}>CONTROLS</div>
+                            <div className={styles.categoryLabel}>{config.title}</div>
+                            <div className={styles.categorySubLabel}>{config.subtitle}</div>
                         </>
                     )}
                 </div>
@@ -290,4 +321,3 @@ export default function InteractionWheelInterface() {
         </div>
     );
 }
-
