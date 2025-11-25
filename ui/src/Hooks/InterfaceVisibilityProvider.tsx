@@ -22,6 +22,7 @@ export const InterfaceVisibilityProvider = ({ children }: { children: React.Reac
         // 'AtmInterface': true  // Set to true for development/testing
         // 'LoadingInterface': true  // Set to true for development/testing
         // 'InteractionWheelInterface': true  // Set to true for development/testing
+        // 'MapTestInterface': true  // Set to true for development/testing
     });
 
     const setInterfaceVisible = (name: string, visible: boolean) => {
