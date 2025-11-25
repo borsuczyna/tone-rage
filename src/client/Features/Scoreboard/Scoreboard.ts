@@ -1,19 +1,22 @@
 import ElementDataService from "@/Services/ElementDataService";
 import InterfaceService from "@/Services/InterfaceService";
 import KeyboardService, { KeyState } from "@/Services/KeyboardService";
+import FetchService from "@/Services/FetchService";
 import { AdminLevel, getAdminEmblem } from "@shared/Models/AdminLevel";
 import { Emblema } from "@shared/Models/Emblema";
 import { ScoreboardPlayerItem } from "@shared/Models/ScoreboardData";
 import TimerService, { Timer } from "@shared/Services/TimerService";
 
 export default class Scoreboard {
-    private static updateTimer: Timer | null = null;
     private static hideTimer: Timer | null = null;
     private static visible: boolean = false;
     
     public static async init() {
         this.setVisible(false);
         KeyboardService.registerKeyHandler('Tab', this.onTabKey.bind(this));
+        
+        // Register fetch listener for scoreboard data
+        FetchService.registerFetchListener('scoreboard:getData', this.getScoreboardData.bind(this));
     }
 
     public static setVisible(visible: boolean) {
@@ -23,17 +26,12 @@ export default class Scoreboard {
 
         if (visible) {
             InterfaceService.setInterfaceVisible('ScoreboardInterface', true);
-            this.updateTimer = TimerService.setTimer(this.update.bind(this), 1000, 0);
-            this.update();  
 
             if (this.hideTimer) {
                 TimerService.killTimer(this.hideTimer);
                 this.hideTimer = null;
             }
-        } else if (this.updateTimer) {
-            TimerService.killTimer(this.updateTimer);
-            this.updateTimer = null;
-            
+        } else {
             InterfaceService.callInterfaceEvent('playScoreboardHideAnimation', null);
             this.hideTimer = TimerService.setTimer(this.finalizeHide.bind(this), 500, 1);
         }
@@ -81,11 +79,6 @@ export default class Scoreboard {
         }
 
         return result;
-    }
-
-    private static update() {
-        const players = this.getScoreboardData();
-        InterfaceService.callInterfaceEvent('setScoreboardData', players);
     }
 
     private static onTabKey(state: KeyState) {

@@ -11,6 +11,7 @@ import InputField from './Components/InputField';
 import translate from '@shared/Translation/Translation';
 import { useRageEvent } from 'src/Hooks/RageEventProvider';
 import { useInterfaceVisibility } from 'src/Hooks/InterfaceVisibilityProvider';
+import { fetchClientData } from 'src/Hooks/Fetch';
 
 const playerCategories = [
     {
@@ -55,9 +56,37 @@ export default function ScoreboardInterface() {
         setSelectedCategoryIndex((selectedCategoryIndex + 1) % playerCategories.length);
     };
 
-    useRageEvent('setScoreboardData', (players: ScoreboardPlayerItem[]) => {
-        setPlayers(players);
-    });
+    // Fetch scoreboard data function
+    const fetchScoreboardData = async () => {
+        try {
+            const data = await fetchClientData<ScoreboardPlayerItem[]>('scoreboard:getData', null);
+            setPlayers(data);
+        } catch (error) {
+            console.error('Failed to fetch scoreboard data:', error);
+        }
+    };
+
+    // Fetch data on component mount and when interface becomes visible
+    useEffect(() => {
+        if (isInterfaceVisible('ScoreboardInterface')) {
+            fetchScoreboardData();
+        }
+    }, [isInterfaceVisible('ScoreboardInterface')]);
+
+    // Set up interval to fetch data every second when visible
+    useEffect(() => {
+        let interval: number;
+        
+        if (isInterfaceVisible('ScoreboardInterface')) {
+            interval = setInterval(fetchScoreboardData, 1000);
+        }
+
+        return () => {
+            if (interval) {
+                clearInterval(interval);
+            }
+        };
+    }, [isInterfaceVisible('ScoreboardInterface')]);
 
     useRageEvent('playScoreboardHideAnimation', () => {
         setHiding(true);
