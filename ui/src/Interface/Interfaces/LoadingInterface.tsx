@@ -9,6 +9,7 @@ export default function LoadingInterface() {
     const [isFadingOut, setIsFadingOut] = useState(false);
     const [isHidden, setIsHidden] = useState(false);
     const timeoutRef = useRef<number | null>(null);
+    const isVisible = isInterfaceVisible('LoadingInterface');
 
     // Handle fade out event
     useRageEvent('fadeOut', () => {
@@ -19,6 +20,17 @@ export default function LoadingInterface() {
         }, 1000) as unknown as number;
     });
 
+    useEffect(() => {
+        if (isVisible) {
+            setIsFadingOut(false);
+            setIsHidden(false);
+            if (timeoutRef.current !== null) {
+                clearTimeout(timeoutRef.current);
+                timeoutRef.current = null;
+            }
+        }
+    }, [isVisible]);
+
     // Cleanup timeout on unmount
     useEffect(() => {
         return () => {
@@ -28,7 +40,7 @@ export default function LoadingInterface() {
         };
     }, []);
 
-    if (!isInterfaceVisible('LoadingInterface') || isHidden) return null;
+    if (!isVisible || isHidden) return null;
 
     return (
         <div className={`${styles.container} ${isFadingOut ? styles.fadingOut : ''}`}>
