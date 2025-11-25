@@ -15,6 +15,7 @@ import AtmFeature from './Features/Atm/AtmFeature';
 import HandlingEditorService from './Features/HandlingEditor/HandlingEditorService';
 import MarkerService from '@shared-rage/Services/MarkerService';
 import InteractionWheelFeature from './Features/InteractionWheel/InteractionWheelFeature';
+import VehicleInteractionWheel from './Features/InteractionWheel/VehicleInteractionWheel';
 // import EventServiceTest from './Tests/EventServiceTest';
 // import ElementDataServiceTest from './Tests/ElementDataServiceTest';
 // import InterfaceServiceTest from './Tests/InterfaceServiceTest';
@@ -42,6 +43,7 @@ import InteractionWheelFeature from './Features/InteractionWheel/InteractionWhee
 	// Features
     await AtmFeature.init();
     await InteractionWheelFeature.init();
+    await VehicleInteractionWheel.init();
 	// EventServiceTest.init();
 	// ElementDataServiceTest.init();
 	// InterfaceServiceTest.init();

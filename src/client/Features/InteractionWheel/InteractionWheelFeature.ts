@@ -1,7 +1,7 @@
 import InterfaceService from "@/Services/InterfaceService";
 import EventService from "@/Services/EventService";
 import FetchService from "@/Services/FetchService";
-import { InteractionWheelConfig, InteractionWheelData, InteractionWheelResponse } from "@shared/Models/InteractionWheel";
+import { InteractionWheelConfig, InteractionWheelResponse } from "@shared/Models/InteractionWheel";
 
 export interface InteractionWheelItem {
     name: string;

@@ -128,5 +128,23 @@
     "atm.insufficient_funds_deposit": "Insufficient funds in your wallet to complete this deposit.",
     "atm.insufficient_funds_withdraw": "Insufficient funds in your bank account to complete this withdrawal.",
 
-    "blip.atm": "ATM"
+    "blip.atm": "ATM",
+
+    "interaction_wheel.vehicle.open-trunk": "Open Trunk",
+    "interaction_wheel.vehicle.close-trunk": "Close Trunk",
+    "interaction_wheel.vehicle.open-hood": "Open Hood",
+    "interaction_wheel.vehicle.close-hood": "Close Hood",
+    "interaction_wheel.vehicle.unlock-doors": "Unlock Doors",
+    "interaction_wheel.vehicle.lock-doors": "Lock Doors",
+    "vehicle.doors.unlocked": "Vehicle doors unlocked.",
+    "vehicle.doors.locked": "Vehicle doors locked.",
+    "vehicle.doors.title": "Vehicle Doors",
+    "vehicle.trunk.unlocked": "Vehicle trunk opened.",
+    "vehicle.trunk.locked": "Vehicle trunk closed.",
+    "vehicle.trunk.title": "Vehicle Trunk",
+    "vehicle.hood.unlocked": "Vehicle hood opened.",
+    "vehicle.hood.locked": "Vehicle hood closed.",
+    "vehicle.hood.title": "Vehicle Hood",
+    "interaction_wheel.vehicle.title": "Vehicle",
+    "interaction_wheel.vehicle.subtitle": "Interactions"
 }

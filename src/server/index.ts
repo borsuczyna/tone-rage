@@ -13,6 +13,7 @@ import MoneyServiceTest from './Tests/MoneyServiceTest';
 import AtmFeature from './Features/Atm/AtmFeature';
 import MarkerTest from './Tests/MarkerTest';
 import MarkerService from '@shared-rage/Services/MarkerService';
+import VehicleInteractionWheel from './Features/InteractionWheel/VehicleInteractionWheel';
 // import EventServiceTest from './Tests/EventServiceTest';
 // import ElementDataServiceTest from './Tests/ElementDataServiceTest';
 // import FetchServiceTest from './Tests/FetchServiceTest';
@@ -32,6 +33,7 @@ import MarkerService from '@shared-rage/Services/MarkerService';
 	
 	// Features
 	await AtmFeature.init();
+    await VehicleInteractionWheel.init();
 
 	// Debug
 	Tests.getPositionCommandTest();
