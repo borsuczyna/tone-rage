@@ -8,6 +8,7 @@ import ScoreboardInterface from "./Interfaces/ScoreboardInterface";
 import HandlingEditorInterface from "./Interfaces/HandlingEditorInterface";
 import AtmInterface from "./Interfaces/AtmInterface";
 import LoadingInterface from "./Interfaces/LoadingInterface";
+import InteractionWheelInterface from "./Interfaces/InteractionWheelInterface";
 
 function Interfaces() {
     const { visibleInterfaces } = useInterfaceVisibility();
@@ -26,6 +27,7 @@ function Interfaces() {
             {isInterfaceVisible("ScoreboardInterface") && <ScoreboardInterface key="ScoreboardInterface" />}
             {isInterfaceVisible("HandlingEditorInterface") && <HandlingEditorInterface key="HandlingEditorInterface" />}
             {isInterfaceVisible("AtmInterface") && <AtmInterface key="AtmInterface" />}
+            {isInterfaceVisible("InteractionWheelInterface") && <InteractionWheelInterface key="InteractionWheelInterface" />}
         </>
     )
 }
