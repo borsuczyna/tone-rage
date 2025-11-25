@@ -115,7 +115,10 @@ export default function Map({
 		e.preventDefault();
 	};
 
-	// Calculate blip positions
+	// Calculate blip positions on screen
+	// Coordinate system: (0,0) represents the center of the map image
+	// Positive X goes right, positive Y goes down
+	// Position is scaled by zoom and offset by the current map position
 	const getBlipScreenPosition = (blipPos: Position) => {
 		return {
 			x: position.x + blipPos.x * zoom,
