@@ -7,7 +7,6 @@ import HudInterface from "./Interfaces/HudInterface";
 import ScoreboardInterface from "./Interfaces/ScoreboardInterface";
 import HandlingEditorInterface from "./Interfaces/HandlingEditorInterface";
 import AtmInterface from "./Interfaces/AtmInterface";
-import LoadingInterface from "./Interfaces/LoadingInterface";
 import InteractionWheelInterface from "./Interfaces/InteractionWheelInterface";
 
 function Interfaces() {
@@ -19,7 +18,6 @@ function Interfaces() {
     return (
         <>
             {/* Define here all the interface elements */}
-            {isInterfaceVisible("LoadingInterface") && <LoadingInterface key="LoadingInterface" />}
             {isInterfaceVisible("HudInterface") && <HudInterface key="HudInterface" />}
             {isInterfaceVisible("NotificationsInterface") && <NotificationsInterface key="NotificationsInterface" />}
             {isInterfaceVisible("AuthInterface") && <AuthInterface key="AuthInterface" />}
