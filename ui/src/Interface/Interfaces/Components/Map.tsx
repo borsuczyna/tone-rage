@@ -10,6 +10,7 @@ interface Blip {
 	position: Position;
 	icon: string;
 	label: string;
+	id?: string | number;
 }
 
 interface Borders {
@@ -27,17 +28,25 @@ interface MapProps {
 	defaultPosition?: Position;
 	borders?: Borders;
 	blips?: Blip[];
+	mapSize?: number;
+	blipSize?: number;
+	zoomSensitivity?: number;
 }
 
 const DEFAULT_IMAGE = '/images/gta5-map-grayscale.svg';
-const MAP_SIZE = 6000; // GTA 5 map coordinate system size
+const DEFAULT_MAP_SIZE = 6000; // GTA 5 map coordinate system size
+const DEFAULT_BLIP_SIZE = 32; // Base size for blip icons in pixels
+const DEFAULT_ZOOM_SENSITIVITY = 1000; // Higher = slower zoom
 
 export default function Map({
 	image = null,
 	defaultZoom = 1,
 	defaultPosition = { x: 0, y: 0 },
 	borders = {},
-	blips = []
+	blips = [],
+	mapSize = DEFAULT_MAP_SIZE,
+	blipSize = DEFAULT_BLIP_SIZE,
+	zoomSensitivity = DEFAULT_ZOOM_SENSITIVITY
 }: MapProps) {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const imageRef = useRef<HTMLImageElement>(null);
@@ -75,13 +84,13 @@ export default function Map({
 	const clampPosition = useCallback(
 		(pos: Position, currentZoom: number): Position => {
 			const maxSize = Math.max(containerSize.width, containerSize.height);
-			const mapSize = maxSize * currentZoom;
-			const mapX = (pos.x / MAP_SIZE) * mapSize;
-			const mapY = (pos.y / MAP_SIZE) * mapSize;
-			const mapLeft = containerSize.width / 2 - mapSize / 2 - mapX;
-			const mapTop = containerSize.height / 2 - mapSize / 2 + mapY;
-			const mapRight = mapLeft + mapSize;
-			const mapBottom = mapTop + mapSize;
+			const mapPixelSize = maxSize * currentZoom;
+			const mapX = (pos.x / mapSize) * mapPixelSize;
+			const mapY = (pos.y / mapSize) * mapPixelSize;
+			const mapLeft = containerSize.width / 2 - mapPixelSize / 2 - mapX;
+			const mapTop = containerSize.height / 2 - mapPixelSize / 2 + mapY;
+			const mapRight = mapLeft + mapPixelSize;
+			const mapBottom = mapTop + mapPixelSize;
 
 			let newX = pos.x;
 			let newY = pos.y;
@@ -97,24 +106,24 @@ export default function Map({
 			};
 
 			if (mapRight + bounds.x < containerSize.width) {
-				newX += ((mapRight + bounds.x - containerSize.width) * MAP_SIZE) / mapSize;
+				newX += ((mapRight + bounds.x - containerSize.width) * mapSize) / mapPixelSize;
 			}
 
 			if (mapLeft - bounds.x > 0) {
-				newX += ((mapLeft - bounds.x) * MAP_SIZE) / mapSize;
+				newX += ((mapLeft - bounds.x) * mapSize) / mapPixelSize;
 			}
 
 			if (mapBottom + bounds.y < containerSize.height) {
-				newY -= ((mapBottom + bounds.y - containerSize.height) * MAP_SIZE) / mapSize;
+				newY -= ((mapBottom + bounds.y - containerSize.height) * mapSize) / mapPixelSize;
 			}
 
 			if (mapTop - bounds.y > 0) {
-				newY -= ((mapTop - bounds.y) * MAP_SIZE) / mapSize;
+				newY -= ((mapTop - bounds.y) * mapSize) / mapPixelSize;
 			}
 
 			return { x: newX, y: newY };
 		},
-		[containerSize, minX, maxX, minY, maxY]
+		[containerSize, minX, maxX, minY, maxY, mapSize]
 	);
 
 	// Handle mouse wheel for zooming
@@ -124,14 +133,14 @@ export default function Map({
 
 			if (!containerRef.current) return;
 
-			const delta = -e.deltaY / 1000;
+			const delta = -e.deltaY / zoomSensitivity;
 			const rect = containerRef.current.getBoundingClientRect();
 			const cursorX = e.clientX - rect.left;
 			const cursorY = e.clientY - rect.top;
 			const cursorXPercent = cursorX / rect.width - 0.5;
 			const cursorYPercent = -cursorY / rect.height + 0.5;
-			const cursorXMap = cursorXPercent * MAP_SIZE;
-			const cursorYMap = cursorYPercent * MAP_SIZE;
+			const cursorXMap = cursorXPercent * mapSize;
+			const cursorYMap = cursorYPercent * mapSize;
 			const cursorXMapOld = cursorXMap / zoom;
 			const cursorYMapOld = cursorYMap / zoom;
 
@@ -147,13 +156,14 @@ export default function Map({
 			setZoom(newZoom);
 			setPosition(clampPosition(newPos, newZoom));
 		},
-		[zoom, position, minZoom, maxZoom, clampPosition]
+		[zoom, position, minZoom, maxZoom, clampPosition, mapSize, zoomSensitivity]
 	);
 
 	// Handle mouse down for dragging
 	const handleMouseDown = useCallback(
 		(e: React.MouseEvent) => {
-			if (e.button !== 0) return; // Only left mouse button
+			// Only handle left mouse button (button 0)
+			if (e.button !== 0) return;
 			setIsDragging(true);
 			setDragStart({ x: e.clientX, y: e.clientY });
 			e.preventDefault();
@@ -169,8 +179,8 @@ export default function Map({
 			const rect = imageRef.current.getBoundingClientRect();
 			const deltaX = e.clientX - dragStart.x;
 			const deltaY = e.clientY - dragStart.y;
-			const deltaXMap = (deltaX * MAP_SIZE) / rect.width;
-			const deltaYMap = (deltaY * MAP_SIZE) / rect.height;
+			const deltaXMap = (deltaX * mapSize) / rect.width;
+			const deltaYMap = (deltaY * mapSize) / rect.height;
 
 			const newPos = {
 				x: position.x - deltaXMap,
@@ -180,7 +190,7 @@ export default function Map({
 			setPosition(clampPosition(newPos, zoom));
 			setDragStart({ x: e.clientX, y: e.clientY });
 		},
-		[isDragging, dragStart, position, zoom, clampPosition]
+		[isDragging, dragStart, position, zoom, clampPosition, mapSize]
 	);
 
 	// Handle mouse up to stop dragging
@@ -206,13 +216,13 @@ export default function Map({
 
 	// Calculate map transform
 	const maxSize = Math.max(containerSize.width, containerSize.height);
-	const mapSize = maxSize * zoom;
-	const mapX = (position.x / MAP_SIZE) * mapSize;
-	const mapY = (position.y / MAP_SIZE) * mapSize;
-	const mapLeft = containerSize.width / 2 - mapSize / 2 - mapX;
-	const mapTop = containerSize.height / 2 - mapSize / 2 + mapY;
-	const mapCenterX = mapLeft + mapSize / 2;
-	const mapCenterY = mapTop + mapSize / 2;
+	const mapPixelSize = maxSize * zoom;
+	const mapX = (position.x / mapSize) * mapPixelSize;
+	const mapY = (position.y / mapSize) * mapPixelSize;
+	const mapLeft = containerSize.width / 2 - mapPixelSize / 2 - mapX;
+	const mapTop = containerSize.height / 2 - mapPixelSize / 2 + mapY;
+	const mapCenterX = mapLeft + mapPixelSize / 2;
+	const mapCenterY = mapTop + mapPixelSize / 2;
 
 	return (
 		<div ref={containerRef} className={styles.mapContainer} onMouseDown={handleMouseDown}>
@@ -222,8 +232,8 @@ export default function Map({
 				alt="Map"
 				className={styles.mapImage}
 				style={{
-					width: `${mapSize}px`,
-					height: `${mapSize}px`,
+					width: `${mapPixelSize}px`,
+					height: `${mapPixelSize}px`,
 					left: `${mapLeft}px`,
 					top: `${mapTop}px`
 				}}
@@ -232,19 +242,20 @@ export default function Map({
 
 			{/* Render blips */}
 			{blips.map((blip, index) => {
-				const blipX = mapCenterX + (blip.position.x / MAP_SIZE) * mapSize;
-				const blipY = mapCenterY - (blip.position.y / MAP_SIZE) * mapSize;
-				const blipSize = 32 * zoom;
+				const blipX = mapCenterX + (blip.position.x / mapSize) * mapPixelSize;
+				const blipY = mapCenterY - (blip.position.y / mapSize) * mapPixelSize;
+				const blipPixelSize = blipSize * zoom;
+				const blipKey = blip.id ?? `${blip.position.x}-${blip.position.y}-${index}`;
 
 				return (
 					<div
-						key={index}
+						key={blipKey}
 						className={styles.blip}
 						style={{
 							left: `${blipX}px`,
 							top: `${blipY}px`,
-							width: `${blipSize}px`,
-							height: `${blipSize}px`
+							width: `${blipPixelSize}px`,
+							height: `${blipPixelSize}px`
 						}}
 					>
 						<img src={blip.icon} alt={blip.label} className={styles.blipIcon} draggable={false} />

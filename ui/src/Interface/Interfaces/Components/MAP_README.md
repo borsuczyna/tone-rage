@@ -59,11 +59,13 @@ function MyMapInterface() {
         // Optional: Add blips (markers) on the map
         blips={[
           {
+            id: 'atm-1',
             position: { x: 500, y: 800 },
             icon: '/images/blips/money.svg',
             label: 'ATM #1'
           },
           {
+            id: 'safehouse',
             position: { x: -700, y: 1200 },
             icon: '/images/blips/house.svg',
             label: 'Safehouse'
@@ -104,12 +106,13 @@ function MyMapInterface() {
   - `maxY`: Maximum Y coordinate boundary
 
 ### `blips` (optional)
-- **Type**: `Array<{ position: { x: number, y: number }, icon: string, label: string }>`
+- **Type**: `Array<{ position: { x: number, y: number }, icon: string, label: string, id?: string | number }>`
 - **Default**: `[]`
 - **Description**: Array of markers to display on the map.
   - `position`: Game coordinates where the blip should appear
   - `icon`: Path to the blip icon image (SVG or PNG recommended)
   - `label`: Text label shown on hover
+  - `id` (optional): Unique identifier for the blip (recommended for better performance)
 
 ## Coordinate System
 

@@ -17,10 +17,10 @@ export default function MapDemoInterface() {
 						maxY: 3000
 					}}
 					blips={[
-						{ position: { x: 500, y: 800 }, icon: '/images/blips/money.svg', label: 'ATM #1' },
-						{ position: { x: -700, y: 1200 }, icon: '/images/blips/house.svg', label: 'Safehouse' },
-						{ position: { x: 1000, y: -500 }, icon: '/images/blips/money.svg', label: 'ATM #2' },
-						{ position: { x: -500, y: -800 }, icon: '/images/blips/house.svg', label: 'Apartment' }
+						{ id: 'atm-1', position: { x: 500, y: 800 }, icon: '/images/blips/money.svg', label: 'ATM #1' },
+						{ id: 'safehouse', position: { x: -700, y: 1200 }, icon: '/images/blips/house.svg', label: 'Safehouse' },
+						{ id: 'atm-2', position: { x: 1000, y: -500 }, icon: '/images/blips/money.svg', label: 'ATM #2' },
+						{ id: 'apartment', position: { x: -500, y: -800 }, icon: '/images/blips/house.svg', label: 'Apartment' }
 					]}
 				/>
 			</div>
