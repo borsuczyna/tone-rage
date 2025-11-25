@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useInterfaceVisibility } from 'src/Hooks/InterfaceVisibilityProvider';
 import { useRageEvent } from 'src/Hooks/RageEventProvider';
 import styles from './Styles/LoadingInterface.module.css';
@@ -8,15 +8,25 @@ export default function LoadingInterface() {
     const { isInterfaceVisible } = useInterfaceVisibility();
     const [isFadingOut, setIsFadingOut] = useState(false);
     const [isHidden, setIsHidden] = useState(false);
+    const timeoutRef = useRef<number | null>(null);
 
     // Handle fade out event
     useRageEvent('fadeOut', () => {
         setIsFadingOut(true);
         // Hide interface after 1 second
-        setTimeout(() => {
+        timeoutRef.current = setTimeout(() => {
             setIsHidden(true);
-        }, 1000);
+        }, 1000) as unknown as number;
     });
+
+    // Cleanup timeout on unmount
+    useEffect(() => {
+        return () => {
+            if (timeoutRef.current !== null) {
+                clearTimeout(timeoutRef.current);
+            }
+        };
+    }, []);
 
     if (!isInterfaceVisible('LoadingInterface') || isHidden) return null;
 
