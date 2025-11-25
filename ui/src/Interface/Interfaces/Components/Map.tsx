@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
+import * as Icons from 'lucide-react';
 import styles from './Map.module.css';
 
 interface Position {
@@ -8,7 +9,8 @@ interface Position {
 
 interface Blip {
 	position: Position;
-	icon: string;
+	icon: string; // lucide-react icon name (e.g., 'MapPin', 'Home', 'DollarSign')
+	color?: string; // hex color for the icon (e.g., '#ff0000', '#00ff00')
 	label: string;
 	id?: string | number;
 }
@@ -33,7 +35,7 @@ interface MapProps {
 	zoomSensitivity?: number;
 }
 
-const DEFAULT_IMAGE = '/images/gta5-map-grayscale.svg';
+const DEFAULT_IMAGE = '/images/map-grayscale.png';
 const DEFAULT_MAP_SIZE = 6000; // GTA 5 map coordinate system size
 const DEFAULT_BLIP_SIZE = 32; // Base size for blip icons in pixels
 const DEFAULT_ZOOM_SENSITIVITY = 1000; // Higher = slower zoom
@@ -247,6 +249,9 @@ export default function Map({
 				const blipPixelSize = blipSize * zoom;
 				const blipKey = blip.id ?? `${blip.position.x}-${blip.position.y}-${index}`;
 
+				// Get the Icon component from lucide-react
+				const IconComponent = (Icons as any)[blip.icon] || Icons.MapPin;
+
 				return (
 					<div
 						key={blipKey}
@@ -255,10 +260,17 @@ export default function Map({
 							left: `${blipX}px`,
 							top: `${blipY}px`,
 							width: `${blipPixelSize}px`,
-							height: `${blipPixelSize}px`
+							height: `${blipPixelSize}px`,
+							backgroundColor: blip.color || '#ffffff',
+							borderRadius: '50%'
 						}}
 					>
-						<img src={blip.icon} alt={blip.label} className={styles.blipIcon} draggable={false} />
+						<IconComponent 
+							size={blipPixelSize * 0.6}
+							color='#ffffff'
+							className={styles.blipIcon}
+							title={blip.label}
+						/>
 						{blip.label && <div className={styles.blipLabel}>{blip.label}</div>}
 					</div>
 				);
