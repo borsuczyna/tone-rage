@@ -1,0 +1,228 @@
+@import '../../../styles/tone-variables.css';
+
+.container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 10, 15, 0.98);
+    z-index: 9999;
+    animation: fadeIn 0.5s ease-in;
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Fade out animation */
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+.fadingOut {
+    animation: fadeOut 1s ease-out forwards;
+}
+
+/* Flashing lights container */
+.lights {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.light {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0;
+}
+
+/* Purple light */
+.lightPurple {
+    width: 400px;
+    height: 400px;
+    background: var(--tone-purple);
+    top: 20%;
+    left: 15%;
+    animation: flashPurple 2.5s ease-in-out infinite;
+}
+
+@keyframes flashPurple {
+    0%, 100% { 
+        opacity: 0;
+        transform: scale(1);
+    }
+    25% { 
+        opacity: 0.4;
+        transform: scale(1.2);
+    }
+    50% { 
+        opacity: 0;
+        transform: scale(1);
+    }
+}
+
+/* Pink light */
+.lightPink {
+    width: 350px;
+    height: 350px;
+    background: var(--tone-pink);
+    top: 60%;
+    right: 20%;
+    animation: flashPink 2.8s ease-in-out infinite;
+    animation-delay: 0.5s;
+}
+
+@keyframes flashPink {
+    0%, 100% { 
+        opacity: 0;
+        transform: scale(1);
+    }
+    30% { 
+        opacity: 0.35;
+        transform: scale(1.15);
+    }
+    60% { 
+        opacity: 0;
+        transform: scale(1);
+    }
+}
+
+/* Cyan light */
+.lightCyan {
+    width: 380px;
+    height: 380px;
+    background: var(--tone-cyan);
+    bottom: 15%;
+    left: 25%;
+    animation: flashCyan 3s ease-in-out infinite;
+    animation-delay: 1s;
+}
+
+@keyframes flashCyan {
+    0%, 100% { 
+        opacity: 0;
+        transform: scale(1);
+    }
+    35% { 
+        opacity: 0.45;
+        transform: scale(1.25);
+    }
+    70% { 
+        opacity: 0;
+        transform: scale(1);
+    }
+}
+
+/* Blue light */
+.lightBlue {
+    width: 420px;
+    height: 420px;
+    background: var(--tone-cyan-dark);
+    top: 40%;
+    right: 10%;
+    animation: flashBlue 2.3s ease-in-out infinite;
+    animation-delay: 1.5s;
+}
+
+@keyframes flashBlue {
+    0%, 100% { 
+        opacity: 0;
+        transform: scale(1);
+    }
+    20% { 
+        opacity: 0.38;
+        transform: scale(1.18);
+    }
+    40% { 
+        opacity: 0;
+        transform: scale(1);
+    }
+}
+
+/* Logo container */
+.logoContainer {
+    position: relative;
+    z-index: 10;
+    margin-bottom: 3rem;
+}
+
+.logo {
+    width: 8rem;
+    height: auto;
+    filter: drop-shadow(0 0 20px var(--tone-cyan-alpha-50));
+    animation: logoGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes logoGlow {
+    from {
+        filter: drop-shadow(0 0 15px var(--tone-cyan-alpha-40));
+    }
+    to {
+        filter: drop-shadow(0 0 25px var(--tone-purple-alpha-60));
+    }
+}
+
+/* Loading bar container */
+.loadingBarContainer {
+    position: relative;
+    z-index: 10;
+    width: 20rem;
+}
+
+.loadingBar {
+    width: 100%;
+    height: 0.25rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0.125rem;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.loadingBarFill {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--tone-cyan), var(--tone-purple), var(--tone-pink), var(--tone-cyan));
+    background-size: 200% 100%;
+    border-radius: 0.125rem;
+    animation: loadingProgress 2s ease-out forwards, loadingShimmer 1.5s linear infinite;
+    box-shadow: 0 0 10px var(--tone-cyan-alpha-70);
+}
+
+@keyframes loadingProgress {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes loadingShimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
