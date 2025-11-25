@@ -1,0 +1,37 @@
+import Map from './Components/Map';
+import styles from './Styles/MapDemoInterface.module.css';
+
+export default function MapDemoInterface() {
+	return (
+		<div className={styles.container}>
+			<div className={styles.mapWrapper}>
+				<Map
+					defaultZoom={1}
+					defaultPosition={{ x: 0, y: 0 }}
+					borders={{
+						minZoom: 0.5,
+						maxZoom: 5,
+						minX: -3000,
+						maxX: 3000,
+						minY: -3000,
+						maxY: 3000
+					}}
+					blips={[
+						{ id: 'atm-1', position: { x: 500, y: 800 }, icon: 'DollarSign', color: '#00ff00', label: 'ATM #1' },
+						{ id: 'safehouse', position: { x: -700, y: 1200 }, icon: 'Home', color: '#0066ff', label: 'Safehouse' },
+						{ id: 'atm-2', position: { x: 1000, y: -500 }, icon: 'DollarSign', color: '#00ff00', label: 'ATM #2' },
+						{ id: 'apartment', position: { x: -500, y: -800 }, icon: 'Building', color: '#ff6600', label: 'Apartment' }
+					]}
+				/>
+			</div>
+			<div className={styles.instructions}>
+				<h3>Map Controls:</h3>
+				<ul>
+					<li>🖱️ Mouse Wheel: Zoom in/out</li>
+					<li>🖱️ Left Click + Drag: Pan the map</li>
+					<li>🎯 Hover over blips: Show labels</li>
+				</ul>
+			</div>
+		</div>
+	);
+}

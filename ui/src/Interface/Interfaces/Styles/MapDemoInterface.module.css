@@ -1,0 +1,53 @@
+.container {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+	padding: 2rem;
+	box-sizing: border-box;
+}
+
+.mapWrapper {
+	flex: 1;
+	border: 2px solid rgba(255, 255, 255, 0.1);
+	border-radius: 8px;
+	overflow: hidden;
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+	margin-bottom: 1rem;
+}
+
+.instructions {
+	background: rgba(255, 255, 255, 0.05);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 8px;
+	padding: 1rem 1.5rem;
+	color: white;
+}
+
+.instructions h3 {
+	margin: 0 0 0.5rem 0;
+	font-size: 1rem;
+	color: #64ffda;
+}
+
+.instructions ul {
+	margin: 0;
+	padding-left: 1.5rem;
+	list-style-type: none;
+}
+
+.instructions li {
+	margin: 0.3rem 0;
+	font-size: 0.9rem;
+	opacity: 0.9;
+}
+
+.instructions li::before {
+	content: '→ ';
+	margin-right: 0.5rem;
+	color: #64ffda;
+}
