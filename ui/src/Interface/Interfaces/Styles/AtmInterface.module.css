@@ -1,11 +1,12 @@
-/* AtmInterface.module.css */
+/* AtmInterface.module.css - Banking Dashboard Style */
 @import '../../../styles/tone-variables.css';
 
 .container {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -14,195 +15,203 @@
     z-index: 1000;
 }
 
-.atmMachine {
-    width: 22rem;
-    background: rgba(25, 25, 25, 0.85);
-    border: 1px solid rgba(80, 80, 80, 0.3);
+.bankingApp {
+    width: 55rem;
+    height: 35rem;
+    background: rgba(25, 25, 25, 0.95);
     border-radius: 1rem;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    display: flex;
     overflow: hidden;
-    animation: slideIn 0.4s ease-out;
-    transform-origin: center center;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+    animation: slideIn 0.3s ease-out;
 }
 
-/* Logs Layout - Expanded display area */
-.logsLayout .displayArea {
-    height: auto;
-    min-height: 15rem;
-    max-height: 25rem;
-}
-
-.logsLayout .transactionLogs {
-    height: 100%;
-}
-
-.logsLayout .logsList {
-    max-height: 20rem;
-}
-
-/* Header */
-.header {
-    background: rgba(30, 30, 30, 0.8);
-    padding: 0.75rem 1rem;
+/* Sidebar */
+.sidebar {
+    width: 14rem;
+    background: rgba(20, 20, 20, 0.98);
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
-    border-bottom: 1px solid rgba(80, 80, 80, 0.3);
+    border-right: 1px solid rgba(60, 60, 60, 0.3);
 }
 
-.bankName {
-    display: flex;
-    align-items: center;
-    font-weight: 600;
-    font-size: 1rem;
-    color: white;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.balance {
-    color: rgba(255, 255, 255, 0.7);
-    font-weight: 500;
-    font-size: 0.75rem;
-    text-align: left;
-}
-
-/* Tab Navigation */
-.tabNavigation {
-    display: flex;
-    background: rgba(25, 25, 25, 0.6);
-    border-bottom: 1px solid rgba(80, 80, 80, 0.2);
-}
-
-.tab {
-    flex: 1;
-    padding: 0.75rem;
-    background: none;
-    border: none;
-    color: rgba(255, 255, 255, 0.6);
-    font-weight: 500;
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: lowercase;
-    position: relative;
-}
-
-.tab:hover {
-    color: rgba(255, 255, 255, 0.8);
-    background: rgba(40, 40, 40, 0.5);
-}
-
-.tab.active {
-    color: white;
-    background: rgba(50, 50, 50, 0.7);
-}
-
-.tab.active::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--tone-gradient-primary);
-}
-
-/* Display Area */
-.displayArea {
-    height: 5.5rem;
-    padding: 0.75rem 1rem;
-    background: rgba(15, 15, 15, 0.8);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.amountInput {
-    text-align: center;
-    width: 100%;
-}
-
-.inputLabel {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.8rem;
-    margin-bottom: 0.25rem;
-    font-weight: 500;
-}
-
-.amountField {
-    width: 70%;
-    max-width: 12rem;
-    margin: 0 auto;
-    background: transparent;
-    border: 1px solid rgba(80, 80, 80, 0.4);
-    border-radius: 0.5rem;
-    color: white;
-    font-size: 1.2rem;
-    font-weight: 600;
-    padding: 0.75rem 1rem;
-    text-align: center;
-    outline: none;
-    transition: border-color 0.3s ease;
-    cursor: text;
-}
-
-.amountField:focus {
-    border-color: rgba(0, 191, 255, 0.6);
-    box-shadow: 0 0 0 2px rgba(0, 191, 255, 0.1);
-}
-
-.amountField::placeholder {
-    color: rgba(255, 255, 255, 0.3);
-}
-
-/* Transaction Logs */
-.transactionLogs {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.logsHeader {
-    margin-bottom: 1rem;
-}
-
-.logsHeader h3 {
-    color: white;
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 0;
-    text-align: center;
-}
-
-.logsList {
-    flex: 1;
-    overflow-y: auto;
-    max-height: 6rem;
-}
-
-.transactionItem {
+.sidebarHeader {
+    padding: 1rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid rgba(80, 80, 80, 0.4);
+    font-weight: 600;
+    font-size: 1rem;
+    border-bottom: 1px solid rgba(60, 60, 60, 0.3);
 }
 
-.transactionItem:last-child {
-    border-bottom: none;
+.bankIcon {
+    color: #22c55e;
 }
 
-.transactionIcon {
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 50%;
+.closeBtn {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    padding: 0.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
+}
+
+.closeBtn:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.userProfile {
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-bottom: 1px solid rgba(60, 60, 60, 0.3);
+}
+
+.userAvatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.userInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.userName {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: white;
+}
+
+.accountId {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.navigation {
+    flex: 1;
+    padding: 0.5rem 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.navItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    border-left: 3px solid transparent;
+}
+
+.navItem:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.navItem.activeNav {
+    color: #22c55e;
+    background: rgba(34, 197, 94, 0.1);
+    border-left-color: #22c55e;
+}
+
+.sidebarFooter {
+    padding: 1rem;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.4);
+    border-top: 1px solid rgba(60, 60, 60, 0.3);
+}
+
+/* Main Content */
+.mainContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.contentHeader {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(60, 60, 60, 0.3);
+}
+
+.contentHeader h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: white;
+}
+
+.contentBody {
+    flex: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+}
+
+/* Dashboard Content */
+.dashboardContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Balance Cards */
+.balanceCards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.balanceCard {
+    background: rgba(40, 40, 40, 0.6);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    border: 1px solid rgba(60, 60, 60, 0.3);
+}
+
+.balanceCard.primaryCard {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    border: none;
+}
+
+.cardHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 0.5rem;
+}
+
+.primaryCard .cardHeader {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.cardAmount {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
 }
 
 .depositIcon {
@@ -213,50 +222,307 @@
     color: #ef4444;
 }
 
-.transactionDetails {
-    flex: 1;
-    min-width: 0;
+/* Bank Card and Info */
+.cardAndInfo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
 }
 
-.transactionAmount {
+.bankCardSection {
+    display: flex;
+    align-items: center;
+}
+
+.bankCard {
+    width: 100%;
+    max-width: 18rem;
+    aspect-ratio: 1.6 / 1;
+    background: linear-gradient(135deg, #374151, #1f2937);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid rgba(80, 80, 80, 0.3);
+}
+
+.bankCardChip {
+    color: #fbbf24;
+}
+
+.bankCardNumber {
+    font-size: 1.1rem;
     font-weight: 600;
-    font-size: 0.8rem;
+    letter-spacing: 2px;
     color: white;
 }
 
-.transactionDate {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.65rem;
-    margin-top: 0.15rem;
+.bankCardBottom {
+    display: flex;
+    justify-content: space-between;
 }
 
-.transactionBalance {
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 0.65rem;
-    text-align: right;
+.cardHolderSection,
+.validThruSection {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.cardLabel {
+    font-size: 0.6rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+}
+
+.cardValue {
+    font-size: 0.8rem;
+    color: white;
+    font-weight: 500;
+}
+
+.accountInfoSection {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+.infoRow {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+}
+
+.infoLabel {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.infoValue {
+    color: white;
+    font-weight: 500;
+}
+
+.statusActive {
+    color: #22c55e;
+}
+
+/* Recent Activity */
+.recentActivity {
+    background: rgba(35, 35, 35, 0.6);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    border: 1px solid rgba(60, 60, 60, 0.3);
+}
+
+.activityHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.activityHeader h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+}
+
+.viewAllBtn {
+    background: none;
+    border: none;
+    color: #22c55e;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.viewAllBtn:hover {
+    color: #16a34a;
+}
+
+.activityList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.activityItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(60, 60, 60, 0.3);
+}
+
+.activityItem:last-child {
+    border-bottom: none;
+}
+
+.activityIcon {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.depositBg {
+    background: rgba(34, 197, 94, 0.2);
+    color: #22c55e;
+}
+
+.withdrawBg {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+.activityDetails {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.activityType {
+    font-weight: 500;
+    font-size: 0.85rem;
+    color: white;
+}
+
+.activityDate {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.activityAmount {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.depositAmount {
+    color: #22c55e;
+}
+
+.withdrawAmount {
+    color: #ef4444;
+}
+
+.noTransactions {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 1rem;
+    font-size: 0.9rem;
+}
+
+/* Account Info Tab */
+.accountInfoTab h2 {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.25rem;
+    color: white;
+}
+
+.accountDetails {
+    background: rgba(35, 35, 35, 0.6);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    border: 1px solid rgba(60, 60, 60, 0.3);
+}
+
+.detailRow {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(60, 60, 60, 0.3);
+}
+
+.detailRow:last-child {
+    border-bottom: none;
+}
+
+.detailLabel {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+}
+
+.detailValue {
+    color: white;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+/* Deposit/Withdraw Tab Styles */
+.displayArea {
+    background: rgba(35, 35, 35, 0.6);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(60, 60, 60, 0.3);
+}
+
+.amountInput {
+    text-align: center;
+}
+
+.inputLabel {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+}
+
+.amountField {
+    width: 80%;
+    max-width: 15rem;
+    margin: 0 auto;
+    background: rgba(25, 25, 25, 0.8);
+    border: 1px solid rgba(80, 80, 80, 0.4);
+    border-radius: 0.5rem;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+    padding: 1rem;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.amountField:focus {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+}
+
+.amountField::placeholder {
+    color: rgba(255, 255, 255, 0.3);
 }
 
 /* Keypad */
 .keypad {
-    padding: 0.75rem 1rem;
-    background: rgba(20, 20, 20, 0.6);
+    padding: 1rem;
+    background: rgba(30, 30, 30, 0.6);
+    border-radius: 0.75rem;
+    border: 1px solid rgba(60, 60, 60, 0.3);
+    margin-bottom: 1rem;
 }
 
 .keypadGrid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 0.5rem;
-    width: 100%;
+    max-width: 20rem;
+    margin: 0 auto;
 }
 
 .keypadButton {
-    height: 2.75rem;
-    width: 100%;
-    background: rgba(40, 40, 40, 0.8);
+    height: 3rem;
+    background: rgba(50, 50, 50, 0.8);
     border: 1px solid rgba(80, 80, 80, 0.4);
     border-radius: 0.5rem;
     color: white;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -266,70 +532,137 @@
 }
 
 .keypadButton:hover {
-    background: rgba(60, 60, 60, 0.9);
+    background: rgba(70, 70, 70, 0.9);
     border-color: rgba(100, 100, 100, 0.6);
     transform: translateY(-1px);
 }
 
 .keypadButton:active {
     transform: translateY(0);
-    background: rgba(50, 50, 50, 0.9);
+    background: rgba(60, 60, 60, 0.9);
 }
 
-.clearButton, .backspaceButton {
-    background: rgba(60, 40, 40, 0.8);
+.clearButton,
+.backspaceButton {
+    background: rgba(80, 50, 50, 0.8);
     border-color: rgba(120, 80, 80, 0.4);
 }
 
-.clearButton:hover, .backspaceButton:hover {
-    background: rgba(80, 50, 50, 0.9);
+.clearButton:hover,
+.backspaceButton:hover {
+    background: rgba(100, 60, 60, 0.9);
     border-color: rgba(140, 90, 90, 0.6);
 }
 
+/* Action Bar */
 .actionBar {
-    padding: 1rem;
-    background: rgba(25, 25, 25, 0.8);
     display: flex;
-    gap: 0.75rem;
-    border-top: 1px solid rgba(80, 80, 80, 0.3);
+    gap: 1rem;
+    justify-content: center;
 }
 
 .actionBar > * {
     flex: 1;
-    width: 100%;
+    max-width: 10rem;
 }
 
 .actionBar > * > * {
     width: 100%;
-    min-width: unset;
-    padding: 0.75rem 0.5rem;
-    font-size: 0.85rem;
 }
 
-/* Custom Scrollbar */
-.logsList::-webkit-scrollbar {
-    width: 4px;
+/* Transaction Logs */
+.transactionLogs {
+    width: 100%;
 }
 
-.logsList::-webkit-scrollbar-track {
+.logsHeader {
+    margin-bottom: 1rem;
+}
+
+.logsHeader h3 {
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.logsList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: 20rem;
+    overflow-y: auto;
+}
+
+.transactionItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: rgba(35, 35, 35, 0.6);
+    border-radius: 0.5rem;
+    border: 1px solid rgba(60, 60, 60, 0.3);
+}
+
+.transactionIcon {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.transactionDetails {
+    flex: 1;
+}
+
+.transactionAmount {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: white;
+}
+
+.transactionDate {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.75rem;
+    margin-top: 0.15rem;
+}
+
+.transactionBalance {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.75rem;
+    text-align: right;
+}
+
+/* Scrollbar */
+.logsList::-webkit-scrollbar,
+.contentBody::-webkit-scrollbar {
+    width: 6px;
+}
+
+.logsList::-webkit-scrollbar-track,
+.contentBody::-webkit-scrollbar-track {
     background: rgba(60, 60, 60, 0.2);
-    border-radius: 2px;
+    border-radius: 3px;
 }
 
-.logsList::-webkit-scrollbar-thumb {
-    background: rgba(120, 120, 120, 0.5);
-    border-radius: 2px;
+.logsList::-webkit-scrollbar-thumb,
+.contentBody::-webkit-scrollbar-thumb {
+    background: rgba(100, 100, 100, 0.5);
+    border-radius: 3px;
 }
 
-.logsList::-webkit-scrollbar-thumb:hover {
-    background: rgba(140, 140, 140, 0.7);
+.logsList::-webkit-scrollbar-thumb:hover,
+.contentBody::-webkit-scrollbar-thumb:hover {
+    background: rgba(120, 120, 120, 0.7);
 }
 
 /* Animations */
 @keyframes slideIn {
     from {
         opacity: 0;
-        transform: scale(0.9);
+        transform: scale(0.95);
     }
     to {
         opacity: 1;
@@ -337,18 +670,43 @@
     }
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .atmMachine {
-        width: 90vw;
-        max-width: 28rem;
+/* Responsive */
+@media (max-width: 900px) {
+    .bankingApp {
+        width: 95vw;
+        height: 90vh;
+        flex-direction: column;
     }
-    
-    .amountDisplay {
-        font-size: 2rem;
+
+    .sidebar {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        border-right: none;
+        border-bottom: 1px solid rgba(60, 60, 60, 0.3);
     }
-    
-    .keypadButton {
-        font-size: 1rem;
+
+    .navigation {
+        flex-direction: row;
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .navItem {
+        border-left: none;
+        border-bottom: 3px solid transparent;
+    }
+
+    .navItem.activeNav {
+        border-left-color: transparent;
+        border-bottom-color: #22c55e;
+    }
+
+    .balanceCards {
+        grid-template-columns: 1fr;
+    }
+
+    .cardAndInfo {
+        grid-template-columns: 1fr;
     }
 }
