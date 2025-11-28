@@ -46,7 +46,7 @@
 }
 
 .bankIcon {
-    color: #22c55e;
+    color: var(--tone-cyan);
 }
 
 .closeBtn {
@@ -80,7 +80,7 @@
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 50%;
-    background: linear-gradient(135deg, #22c55e, #16a34a);
+    background: var(--tone-gradient-primary);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -131,9 +131,9 @@
 }
 
 .navItem.activeNav {
-    color: #22c55e;
-    background: rgba(34, 197, 94, 0.1);
-    border-left-color: #22c55e;
+    color: var(--tone-cyan);
+    background: var(--tone-cyan-alpha-10);
+    border-left-color: var(--tone-cyan);
 }
 
 .sidebarFooter {
@@ -191,7 +191,7 @@
 }
 
 .balanceCard.primaryCard {
-    background: linear-gradient(135deg, #22c55e, #16a34a);
+    background: var(--tone-gradient-primary);
     border: none;
 }
 
@@ -215,11 +215,11 @@
 }
 
 .depositIcon {
-    color: #22c55e;
+    color: var(--tone-cyan);
 }
 
 .withdrawIcon {
-    color: #ef4444;
+    color: var(--tone-pink);
 }
 
 /* Bank Card and Info */
@@ -238,17 +238,17 @@
     width: 100%;
     max-width: 18rem;
     aspect-ratio: 1.6 / 1;
-    background: linear-gradient(135deg, #374151, #1f2937);
+    background: linear-gradient(135deg, rgba(0, 191, 255, 0.3), rgba(138, 43, 226, 0.3), rgba(255, 20, 147, 0.2));
     border-radius: 0.75rem;
     padding: 1.25rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border: 1px solid rgba(80, 80, 80, 0.3);
+    border: 1px solid rgba(0, 191, 255, 0.3);
 }
 
 .bankCardChip {
-    color: #fbbf24;
+    color: var(--tone-cyan);
 }
 
 .bankCardNumber {
@@ -305,7 +305,7 @@
 }
 
 .statusActive {
-    color: #22c55e;
+    color: var(--tone-cyan);
 }
 
 /* Recent Activity */
@@ -333,14 +333,14 @@
 .viewAllBtn {
     background: none;
     border: none;
-    color: #22c55e;
+    color: var(--tone-cyan);
     font-size: 0.8rem;
     cursor: pointer;
     transition: color 0.2s ease;
 }
 
 .viewAllBtn:hover {
-    color: #16a34a;
+    color: var(--tone-purple);
 }
 
 .activityList {
@@ -371,13 +371,13 @@
 }
 
 .depositBg {
-    background: rgba(34, 197, 94, 0.2);
-    color: #22c55e;
+    background: var(--tone-cyan-alpha-20);
+    color: var(--tone-cyan);
 }
 
 .withdrawBg {
-    background: rgba(239, 68, 68, 0.2);
-    color: #ef4444;
+    background: var(--tone-pink-alpha-20);
+    color: var(--tone-pink);
 }
 
 .activityDetails {
@@ -404,11 +404,11 @@
 }
 
 .depositAmount {
-    color: #22c55e;
+    color: var(--tone-cyan);
 }
 
 .withdrawAmount {
-    color: #ef4444;
+    color: var(--tone-pink);
 }
 
 .noTransactions {
@@ -491,8 +491,8 @@
 }
 
 .amountField:focus {
-    border-color: #22c55e;
-    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+    border-color: var(--tone-cyan);
+    box-shadow: 0 0 0 2px var(--tone-cyan-alpha-20);
 }
 
 .amountField::placeholder {
@@ -699,7 +699,7 @@
 
     .navItem.activeNav {
         border-left-color: transparent;
-        border-bottom-color: #22c55e;
+        border-bottom-color: var(--tone-cyan);
     }
 
     .balanceCards {
