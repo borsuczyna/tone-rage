@@ -16,7 +16,7 @@ import HandlingEditorService from './Features/HandlingEditor/HandlingEditorServi
 import MarkerService from '@shared-rage/Services/MarkerService';
 import InteractionWheelFeature from './Features/InteractionWheel/InteractionWheelFeature';
 import VehicleInteractionWheel from './Features/InteractionWheel/VehicleInteractionWheel';
-import MaterialLineService from './Services/MaterialLineService';
+import DrawingService from './Services/MaterialLineService';
 // import EventServiceTest from './Tests/EventServiceTest';
 // import ElementDataServiceTest from './Tests/ElementDataServiceTest';
 // import InterfaceServiceTest from './Tests/InterfaceServiceTest';
@@ -40,7 +40,7 @@ import MaterialLineService from './Services/MaterialLineService';
     await Hud.init();
     await Scoreboard.init();
     await MarkerService.init();
-    await MaterialLineService.init();
+    await DrawingService.init();
 
 	// Features
     await AtmFeature.init();

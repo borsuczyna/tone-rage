@@ -1,5 +1,5 @@
 import { CustomEventHandler } from "src/Hooks/RageEventProvider";
-import { defaultTextureDictionary, type TextureRequest } from "@shared/Models/TextureData";
+import { defaultTextureDictionary, type TextureRequest, type TextureUnloadRequest } from "@shared/Models/TextureData";
 import { triggerEvent } from "src/Hooks/Fetch";
 
 export default class TextureService {
@@ -66,9 +66,20 @@ export default class TextureService {
 
     public static init() {
         CustomEventHandler.registerEventHandler('textureService:requestTextureData', this.onTextureDataRequest.bind(this));
+        CustomEventHandler.registerEventHandler('textureService:unloadTextureData', this.onTextureDataUnloadRequest.bind(this));
     }
 
     private static async onTextureDataRequest(data: TextureRequest) {
         await this.sendTextureData(data);
+    }
+
+    private static async onTextureDataUnloadRequest(data: TextureUnloadRequest) {
+        await fetch('http://game-textures/remove', {
+            method: 'POST',
+            headers: {
+                'texture-dict': data.dictionary,
+                'texture-name': data.name
+            }
+        });
     }
 }

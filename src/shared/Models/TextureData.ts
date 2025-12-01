@@ -5,6 +5,7 @@ export interface TextureData {
     key: string;
     width: number;
     height: number;
+    lastUsed?: number;
 }
 
 export interface TextureRequest {
@@ -12,6 +13,11 @@ export interface TextureRequest {
     key: string;
     width: number;
     height: number;
+}
+
+export interface TextureUnloadRequest {
+    dictionary: string;
+    name: string;
 }
 
 export const defaultTextureDictionary = 'tone_textures';

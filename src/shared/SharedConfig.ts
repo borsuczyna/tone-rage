@@ -4,6 +4,9 @@ const SharedConfig = {
     MoneyCurrencyCode: "USD",
     MoneyCurrencySymbol: "$",
     MoneyMultiplier: 1, // For future use with different currencies 
+    MaterialLineDebug: true,
+    MaterialLineTextureMaxAgeMs: 60 * 1000, // 1 minute
+    MaterialLineTextureCleanupIntervalMs: 30 * 1000, // 30 seconds
 };
 
 export default SharedConfig;

@@ -1,27 +1,22 @@
 // import KeyboardService, { KeyState } from "./KeyboardService";
 
-import { TextureData, TextureRequest } from "@shared/Models/TextureData";
+import { TextureData, TextureRequest, TextureUnloadRequest } from "@shared/Models/TextureData";
 import InterfaceService from "./InterfaceService";
 import EventService from "./EventService";
 import Logger from "@shared/Logger";
+import SharedConfig from "@shared/SharedConfig";
+import TimerService from "@shared/Services/TimerService";
 
-export default class MaterialLineService {
-    private static logger: Logger = Logger.getLogger(MaterialLineService);
+export default class DrawingService {
+    private static logger: Logger = Logger.getLogger(DrawingService);
     private static textureDictionary: Map<string, TextureData> = new Map();
     private static textureLoadQueue: Set<string> = new Set();
-    // private static imageList: Array<{
-    //     position: Vector3,
-    //     forward: Vector3,
-    //     width: number,
-    //     height: number,
-    //     textureDict: string,
-    //     textureName: string
-    // }> = [];
+    private static _debug = SharedConfig.MaterialLineDebug;
 
     public static init() {
         mp.events.add('render', this.render.bind(this));
         EventService.registerEventHandler('textureService:onTextureDataReady', this.onTextureDataReady.bind(this));
-        // KeyboardService.registerKeyHandler('J', this.addImage.bind(this));
+        TimerService.setTimer(this.cleanupUnusedTextures.bind(this), SharedConfig.MaterialLineTextureCleanupIntervalMs, 0);
     }
 
     private static getTextureKey(image: string, textureWidth: number, textureHeight: number): string {
@@ -30,7 +25,13 @@ export default class MaterialLineService {
 
     public static isTextureLoaded(image: string, textureWidth: number = 1024, textureHeight: number = 1024): boolean {
         const key = this.getTextureKey(image, textureWidth, textureHeight);
-        return this.textureDictionary.has(key);
+        const loaded = this.textureDictionary.has(key);
+
+        if (loaded) {
+            this.markTextureUsed(image, textureWidth, textureHeight);
+        }
+
+        return loaded;
     }
 
     public static loadTexture(image: string, textureWidth: number = 1024, textureHeight: number = 1024) {
@@ -48,15 +49,57 @@ export default class MaterialLineService {
 
         this.textureLoadQueue.add(key);
 
-        mp.gui.chat.push(`Requested texture load: ${key}`);
+        if (this._debug) {
+            this.logger.info(`Requested texture load: ${key}`);
+        }
+    }
+
+    public static unloadTexture(textureData: TextureData) {
+        const key = this.getTextureKey(textureData.url, textureData.width, textureData.height);
+        if (!this.textureDictionary.has(key)) {
+            return;
+        }
+
+        InterfaceService.callInterfaceEvent('textureService:unloadTextureData', {
+            dictionary: textureData.dictionary,
+            name: textureData.name
+        } as TextureUnloadRequest);
+
+        this.textureLoadQueue.delete(key);
+        this.textureDictionary.delete(key);
+
+        if (this._debug) {
+            this.logger.info(`Unloading texture: ${key}`);
+        }
     }
 
     private static onTextureDataReady(data: TextureData) {
         const key = this.getTextureKey(data.url, data.width, data.height);
+        data.lastUsed = Date.now();
         this.textureDictionary.set(key, data);
         this.textureLoadQueue.delete(key);
 
-        mp.gui.chat.push(`Texture loaded and ready: ${key}`);
+        if (this._debug) {
+            this.logger.info(`Texture loaded and ready: ${key}`);
+        }
+    }
+
+    private static markTextureUsed(image: string, textureWidth: number = 1024, textureHeight: number = 1024) {
+        const key = this.getTextureKey(image, textureWidth, textureHeight);
+        const textureData = this.textureDictionary.get(key);
+        if (textureData) {
+            textureData.lastUsed = Date.now();
+        }
+    }
+
+    private static cleanupUnusedTextures(maxAgeMs: number = SharedConfig.MaterialLineTextureMaxAgeMs) {
+        const now = Date.now();
+        for (const [key, textureData] of this.textureDictionary.entries()) {
+            if (textureData.lastUsed && (now - textureData.lastUsed) > maxAgeMs) {
+                this.unloadTexture(textureData);
+                this.textureDictionary.delete(key);
+            }
+        }
     }
 
     public static drawQuad3D(bottomLeft: Vector3, bottomRight: Vector3, topRight: Vector3, topLeft: Vector3, image: string, textureWidth: number = 1024, textureHeight: number = 1024) {
@@ -92,185 +135,167 @@ export default class MaterialLineService {
             1, 0, 1
         );
 
-        mp.gui.chat.push(`Drawing plane with texture: crtxd_${textureData.dictionary} / ${textureData.name}`);
+        if (this._debug)
+            DrawingService.highlightPolyEdges(bottomLeft, bottomRight, topLeft, topRight);
+    }
+
+    public static drawPlane3D(start: Vector3, end: Vector3, faceTowards: Vector3, width: number, image: string, doubleSided = false, textureWidth = 1024, textureHeight = 1024) {
+        const { bottomLeft, bottomRight, topRight, topLeft } = DrawingService.getQuad(start, end, width, faceTowards);
+
+        DrawingService.drawQuad3D(
+            bottomLeft, bottomRight, topRight, topLeft,
+            image, textureWidth, textureHeight
+        );
+
+        if (doubleSided) {
+            DrawingService.drawQuad3D(
+                bottomRight, bottomLeft, topLeft, topRight,
+                image, textureWidth, textureHeight
+            );
+        }
+    }
+
+    public static drawLine3D(start: Vector3, end: Vector3, color: [number, number, number, number] = [255, 0, 0, 255]) {
+        mp.game.graphics.drawLine(
+            start.x, start.y, start.z,
+            end.x, end.y, end.z,
+            color[0], color[1], color[2], color[3]
+        );
     }
 
     private static render() {
-        // const pos = mp.players.local.position;
-        // const a = new mp.Vector3(pos.x - 1, pos.y, pos.z - 1);
-        // const b = new mp.Vector3(pos.x + 1, pos.y, pos.z - 1);
-        // const c = new mp.Vector3(pos.x + 1, pos.y, pos.z + 1);
-        // const d = new mp.Vector3(pos.x - 1, pos.y, pos.z + 1);
-        const heading = mp.players.local.getHeading() * Math.PI / 180;
-        const forward = new mp.Vector3(Math.cos(heading), Math.sin(heading), 0);
-        const { bottomLeft, bottomRight, topRight, topLeft } = MaterialLineService.getQuadPoints(
-            mp.players.local.position,
-            forward,
-            2,
-            2
+        const ppos = mp.players.local.position;
+      
+        const time = Date.now() / 1000;
+        let a = new mp.Vector3(ppos.x, ppos.y - 1, ppos.z - 1);
+        let b = new mp.Vector3(ppos.x, ppos.y - 1, ppos.z + 1);
+        let rot = Math.sin(time) * Math.PI;
+        let c = new mp.Vector3(
+            ppos.x + Math.cos(rot),
+            ppos.y - 1 + Math.sin(rot),
+            ppos.z + Math.sin(rot)
+        );
+        const width = Math.sin(time) + 2;
+
+        DrawingService.drawPlane3D(a, b, c, width, 'https://i1.sndcdn.com/artworks-zkZZmAZ468yGcABD-6Juq9g-t500x500.jpg', true, 1024, 1024);
+
+        // draw debug lines
+        DrawingService.drawLine3D(new mp.Vector3(ppos.x, ppos.y - 1, ppos.z), c, [0, 255, 0, 255]);
+        DrawingService.drawLine3D(a, b, [255, 0, 0, 255]);
+
+        a = new mp.Vector3(ppos.x, ppos.y - 1, ppos.z - 0);
+        b = new mp.Vector3(ppos.x, ppos.y + 1, ppos.z - 0);
+        c = new mp.Vector3(
+            ppos.x,
+            ppos.y,
+            ppos.z + 1
         );
 
-        MaterialLineService.drawQuad3D(bottomLeft, bottomRight, topRight, topLeft, 'https://i1.sndcdn.com/artworks-zkZZmAZ468yGcABD-6Juq9g-t500x500.jpg', 1024, 1024);
+        DrawingService.drawPlane3D(a, b, c, width, 'https://i1.sndcdn.com/artworks-zkZZmAZ468yGcABD-6Juq9g-t500x500.jpg', true, 1024, 1024);
+
+        // draw debug lines
+        DrawingService.drawLine3D(new mp.Vector3(ppos.x, ppos.y, ppos.z - 1), c, [0, 255, 0, 255]);
+        DrawingService.drawLine3D(a, b, [255, 0, 0, 255]);
     }
 
-    // private static addImage(state: KeyState) {
-    //     if (state !== KeyState.Down) {
-    //         return;
-    //     }
+    public static getQuad(start: Vector3, end: Vector3, width: number, faceTowards: Vector3) {
+        const center = new mp.Vector3(
+            (start.x + end.x) * 0.5,
+            (start.y + end.y) * 0.5,
+            (start.z + end.z) * 0.5
+        );
 
-    //     const pos = mp.players.local.position;
-    //     const heading = mp.players.local.getHeading() * Math.PI / 180;
-    //     const forward = new mp.Vector3(Math.cos(heading), Math.sin(heading), 0);
+        const heightVec = new mp.Vector3(
+            end.x - start.x,
+            end.y - start.y,
+            end.z - start.z
+        );
+        const height = Math.sqrt(heightVec.x**2 + heightVec.y**2 + heightVec.z**2);
 
-    //     this.imageList.push({
-    //         position: pos,
-    //         forward: forward,
-    //         width: 1,
-    //         height: 1,
-    //         textureDict: 'crtxd_dict',
-    //         textureName: 'name'
-    //     });
+        let h = this.norm(heightVec);
 
-    //     mp.gui.chat.push(`Added image at position: ${pos.x.toFixed(2)}, ${pos.y.toFixed(2)}, ${pos.z.toFixed(2)}`);
-    // }
+        let f = new mp.Vector3(
+            faceTowards.x - center.x,
+            faceTowards.y - center.y,
+            faceTowards.z - center.z
+        );
+        f = this.norm(f);
 
-    public static getQuadPoints(position: Vector3, forwardDir: Vector3, width: number, height: number) {
-        // norm
-        const len = Math.sqrt(forwardDir.x * forwardDir.x + forwardDir.y * forwardDir.y);
-        const forward = new mp.Vector3(forwardDir.x / len, forwardDir.y / len, 0);
+        let r = this.cross(h, f);
+        if (Math.abs(r.x) < 0.0001 && Math.abs(r.y) < 0.0001 && Math.abs(r.z) < 0.0001) {
+            r = this.cross(h, new mp.Vector3(1,0,0));
+        }
+        r = this.norm(r);
+        f = this.norm(this.cross(r, h));
 
-        // perp
-        const right = new mp.Vector3(-forward.y, forward.x, 0);
+        const halfW = width * 0.5;
 
-        // center stays = position
-        const center = new mp.Vector3(position.x, position.y, position.z);
-
-        // bottom
-        const halfW = width / 2;
         const bottomLeft = new mp.Vector3(
-            center.x - right.x * halfW,
-            center.y - right.y * halfW,
-            center.z - height / 2
+            center.x - r.x*halfW - h.x*(height/2),
+            center.y - r.y*halfW - h.y*(height/2),
+            center.z - r.z*halfW - h.z*(height/2)
         );
 
         const bottomRight = new mp.Vector3(
-            center.x + right.x * halfW,
-            center.y + right.y * halfW,
-            center.z - height / 2
+            center.x + r.x*halfW - h.x*(height/2),
+            center.y + r.y*halfW - h.y*(height/2),
+            center.z + r.z*halfW - h.z*(height/2)
         );
 
-        // top
-        const topLeft = new mp.Vector3(bottomLeft.x, bottomLeft.y, bottomLeft.z + height);
-        const topRight = new mp.Vector3(bottomRight.x, bottomRight.y, bottomRight.z + height);
+        const topLeft = new mp.Vector3(
+            bottomLeft.x + h.x*height,
+            bottomLeft.y + h.y*height,
+            bottomLeft.z + h.z*height
+        );
 
-        return { bottomLeft, bottomRight, topLeft, topRight };
+        const topRight = new mp.Vector3(
+            bottomRight.x + h.x*height,
+            bottomRight.y + h.y*height,
+            bottomRight.z + h.z*height
+        );
+
+        return { bottomLeft, bottomRight, topRight, topLeft };
     }
 
-    // public static drawPolyQuad(position: Vector3, forwardDir: Vector3, width: number, height: number, textureDict: string, textureName: string) {
-    //     const length = Math.sqrt(forwardDir.x * forwardDir.x + forwardDir.y * forwardDir.y);
-    //     const forward = new mp.Vector3(
-    //         forwardDir.x / length,
-    //         forwardDir.y / length,
-    //         0
-    //     );
+    public static highlightPolyEdges(bottomLeft: Vector3, bottomRight: Vector3, topLeft: Vector3, topRight: Vector3) {
+        const r = 255, g = 0, b = 0, a = 255;
 
-    //     const right = new mp.Vector3(
-    //         -forward.y,
-    //         forward.x,
-    //         0
-    //     );
+        mp.game.graphics.drawLine(
+            bottomLeft.x, bottomLeft.y, bottomLeft.z,
+            bottomRight.x, bottomRight.y, bottomRight.z,
+            r, g, b, a
+        );
 
-    //     const center = new mp.Vector3(
-    //         position.x + forward.x * 2,
-    //         position.y + forward.y * 2,
-    //         position.z
-    //     );
+        mp.game.graphics.drawLine(
+            bottomRight.x, bottomRight.y, bottomRight.z,
+            topRight.x, topRight.y, topRight.z,
+            r, g, b, a
+        );
 
-    //     const bottomLeft = new mp.Vector3(
-    //         center.x + right.x * (-width / 2),
-    //         center.y + right.y * (-width / 2),
-    //         center.z
-    //     );
+        mp.game.graphics.drawLine(
+            topRight.x, topRight.y, topRight.z,
+            topLeft.x, topLeft.y, topLeft.z,
+            r, g, b, a
+        );
 
-    //     const bottomRight = new mp.Vector3(
-    //         center.x + right.x * (width / 2),
-    //         center.y + right.y * (width / 2),
-    //         center.z
-    //     );
+        mp.game.graphics.drawLine(
+            topLeft.x, topLeft.y, topLeft.z,
+            bottomLeft.x, bottomLeft.y, bottomLeft.z,
+            r, g, b, a
+        );
+    }
 
-    //     const topLeft = new mp.Vector3(bottomLeft.x, bottomLeft.y, bottomLeft.z + height);
-    //     const topRight = new mp.Vector3(bottomRight.x, bottomRight.y, bottomRight.z + height);
+    private static norm(v: Vector3) {
+        const l = Math.sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
+        if (l === 0) return new mp.Vector3(0,0,0);
+        return new mp.Vector3(v.x/l, v.y/l, v.z/l);
+    }
 
-    //     if (!mp.game.graphics.hasStreamedTextureDictLoaded(textureDict)) {
-    //         mp.game.graphics.requestStreamedTextureDict(textureDict, true);
-    //         return { bottomLeft, bottomRight, topLeft, topRight };
-    //     }
-
-    //     mp.game.graphics.drawSpritePoly(
-    //         bottomLeft.x, bottomLeft.y, bottomLeft.z,
-    //         bottomRight.x, bottomRight.y, bottomRight.z,
-    //         topLeft.x, topLeft.y, topLeft.z,
-    //         255, 255, 255, 255,
-    //         textureDict, textureName,
-    //         0, 1, 1, 1, 1, 1,
-    //         0, 0, 1
-    //     );
-
-    //     mp.game.graphics.drawSpritePoly(
-    //         topLeft.x, topLeft.y, topLeft.z,
-    //         bottomRight.x, bottomRight.y, bottomRight.z,
-    //         topRight.x, topRight.y, topRight.z,
-    //         255, 255, 255, 255,
-    //         textureDict, textureName,
-    //         0, 0, 1, 1, 1, 1,
-    //         1, 0, 1
-    //     );
-
-    //     return { bottomLeft, bottomRight, topLeft, topRight };
-    // }
-
-    // public static highlightPolyEdges(bottomLeft: Vector3, bottomRight: Vector3, topLeft: Vector3, topRight: Vector3) {
-    //     const r = 255, g = 0, b = 0, a = 255;
-
-    //     mp.game.graphics.drawLine(
-    //         bottomLeft.x, bottomLeft.y, bottomLeft.z,
-    //         bottomRight.x, bottomRight.y, bottomRight.z,
-    //         r, g, b, a
-    //     );
-
-    //     mp.game.graphics.drawLine(
-    //         bottomRight.x, bottomRight.y, bottomRight.z,
-    //         topRight.x, topRight.y, topRight.z,
-    //         r, g, b, a
-    //     );
-
-    //     mp.game.graphics.drawLine(
-    //         topRight.x, topRight.y, topRight.z,
-    //         topLeft.x, topLeft.y, topLeft.z,
-    //         r, g, b, a
-    //     );
-
-    //     mp.game.graphics.drawLine(
-    //         topLeft.x, topLeft.y, topLeft.z,
-    //         bottomLeft.x, bottomLeft.y, bottomLeft.z,
-    //         r, g, b, a
-    //     );
-    // }
-
-    // public static render() {
-    //     this.imageList.forEach(g => {
-    //         const corners = this.drawPolyQuad(
-    //             g.position,
-    //             g.forward,
-    //             g.width,
-    //             g.height,
-    //             g.textureDict,
-    //             g.textureName
-    //         );
-
-    //         if (corners) {
-    //             this.highlightPolyEdges(corners.bottomLeft, corners.bottomRight, corners.topLeft, corners.topRight);
-    //         }
-    //     });
-    // }
+    private static cross(a: Vector3, b: Vector3) {
+        return new mp.Vector3(
+            a.y*b.z - a.z*b.y,
+            a.z*b.x - a.x*b.z,
+            a.x*b.y - a.y*b.x
+        );
+    }
 }
