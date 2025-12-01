@@ -1,4 +1,5 @@
 import TimerService from '@shared/Services/TimerService';
+import translate from '@shared/Translation/Translation';
 
 interface PresenceData {
 	details?: string;
@@ -40,9 +41,9 @@ export default class DiscordRPCService {
 
 		const details = mp.players.local.isInAnyVehicle(false)
 			? mp.players.local.vehicle
-				? `Driving ${mp.game.vehicle.getDisplayNameFromVehicleModel(mp.players.local.vehicle.model)} at ${streetName}`
-				: `Driving at ${streetName}`
-			: `Walking at ${streetName}`;
+				? `${translate('discord.rpc.driving')} ${mp.game.vehicle.getDisplayNameFromVehicleModel(mp.players.local.vehicle.model)} ${translate('discord.rpc.at')} ${streetName}`
+				: `${translate('discord.rpc.driving')} ${translate('discord.rpc.at')} ${streetName}`
+			: `${translate('discord.rpc.walking')} ${translate('discord.rpc.at')} ${streetName}`;
 
 		this.updatePresence({ details });
 	}

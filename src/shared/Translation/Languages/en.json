@@ -146,5 +146,9 @@
     "vehicle.hood.locked": "Vehicle hood closed.",
     "vehicle.hood.title": "Vehicle Hood",
     "interaction_wheel.vehicle.title": "Vehicle",
-    "interaction_wheel.vehicle.subtitle": "Interactions"
+    "interaction_wheel.vehicle.subtitle": "Interactions",
+
+    "discord.rpc.driving": "Driving",
+    "discord.rpc.at": "at",
+    "discord.rpc.walking": "Walking"
 }
