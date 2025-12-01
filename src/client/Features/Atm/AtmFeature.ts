@@ -17,7 +17,6 @@ export default class AtmFeature {
     private static atmBlips: Set<BlipMp> = new Set();
 
     public static init() {
-        EventService.registerEventHandler('atm:toggle', this.toggleAtm.bind(this));
         EventService.registerEventHandler('atm:closeInterface', this.closeAtm.bind(this));
         MarkerService.registerEventHandler(null, this.onAtmMarkerHit.bind(this));
         
@@ -65,10 +64,6 @@ export default class AtmFeature {
         } else if (hitType === MarkerHitType.Exit) {
             this.setVisible(false);
         }
-    }
-
-    private static toggleAtm() {
-        this.setVisible(!this.isVisible);
     }
 
     private static setVisible(visible: boolean) {

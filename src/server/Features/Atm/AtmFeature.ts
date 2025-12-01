@@ -1,5 +1,4 @@
 import FetchService from "@/Services/FetchService";
-import EventService from "@/Services/EventService";
 import MoneyService from "@/Features/Money/MoneyService";
 import { AtmTransactionData } from "@shared/Models/MoneyLogData";
 import NotificationService from "@/Services/NotificationService";
@@ -8,20 +7,12 @@ import translate from "@shared/Translation/Translation";
 
 export default class AtmFeature {
     public static async init() {
-        // Register the command to open ATM interface
-        mp.events.addCommand('atm', this.onAtmCommand.bind(this));
-        
         // Register fetch listener for getting ATM data
         FetchService.registerFetchListener('atm:getData', this.onGetAtmData.bind(this));
         
         // Register fetch listeners for transactions
         FetchService.registerFetchListener('atm:withdraw', this.onWithdraw.bind(this));
         FetchService.registerFetchListener('atm:deposit', this.onDeposit.bind(this));
-    }
-
-    private static onAtmCommand(player: PlayerMp) {
-        // Toggle the ATM interface visibility
-        EventService.triggerClientEvent(player, 'atm:toggle');
     }
 
     private static async onGetAtmData(player: PlayerMp, _data: any) {
