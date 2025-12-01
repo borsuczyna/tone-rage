@@ -102,7 +102,7 @@ export default class DrawingService {
         }
     }
 
-    public static drawQuad3D(bottomLeft: Vector3, bottomRight: Vector3, topRight: Vector3, topLeft: Vector3, image: string, textureWidth: number = 1024, textureHeight: number = 1024) {
+    public static drawQuad3D(bottomLeft: Vector3, bottomRight: Vector3, topRight: Vector3, topLeft: Vector3, image: string, colors: [number, number, number, number] = [255, 255, 255, 255], textureWidth: number = 1024, textureHeight: number = 1024, uv: [number, number, number, number] = [0, 0, 1, 1]) {
         if (!this.isTextureLoaded(image, textureWidth, textureHeight)) {
             this.loadTexture(image, textureWidth, textureHeight);
             return;
@@ -119,39 +119,48 @@ export default class DrawingService {
             bottomLeft.x, bottomLeft.y, bottomLeft.z,
             bottomRight.x, bottomRight.y, bottomRight.z,
             topLeft.x, topLeft.y, topLeft.z,
-            255, 255, 255, 255,
+            colors[0], colors[1], colors[2], colors[3],
             `crtxd_${textureData.dictionary}`, textureData.name,
-            0, 1, 1, 1, 1, 1,
-            0, 0, 1
+            uv[0], uv[1], 1,  // bottomLeft UV
+            uv[2], uv[1], 1,  // bottomRight UV  
+            uv[0], uv[3], 1   // topLeft UV
         );
 
         mp.game.graphics.drawSpritePoly(
             topLeft.x, topLeft.y, topLeft.z,
             bottomRight.x, bottomRight.y, bottomRight.z,
             topRight.x, topRight.y, topRight.z,
-            255, 255, 255, 255,
+            colors[0], colors[1], colors[2], colors[3],
             `crtxd_${textureData.dictionary}`, textureData.name,
-            0, 0, 1, 1, 1, 1,
-            1, 0, 1
+            uv[0], uv[3], 1,  // topLeft UV
+            uv[2], uv[1], 1,  // bottomRight UV
+            uv[2], uv[3], 1   // topRight UV
         );
 
         if (this._debug)
             DrawingService.highlightPolyEdges(bottomLeft, bottomRight, topLeft, topRight);
     }
 
-    public static drawPlane3D(start: Vector3, end: Vector3, faceTowards: Vector3, width: number, image: string, doubleSided = false, textureWidth = 1024, textureHeight = 1024) {
+    public static drawPlane3D(start: Vector3, end: Vector3, faceTowards: Vector3, width: number, image: string, colors: [number, number, number, number] = [255, 255, 255, 255], doubleSided = false, textureWidth = 1024, textureHeight = 1024, uv: [number, number, number, number] = [0, 0, 1, 1]) {
         const { bottomLeft, bottomRight, topRight, topLeft } = DrawingService.getQuad(start, end, width, faceTowards);
 
         DrawingService.drawQuad3D(
             bottomLeft, bottomRight, topRight, topLeft,
-            image, textureWidth, textureHeight
+            image, colors, textureWidth, textureHeight, [uv[2], uv[1], uv[0], uv[3]]
         );
 
         if (doubleSided) {
             DrawingService.drawQuad3D(
                 bottomRight, bottomLeft, topLeft, topRight,
-                image, textureWidth, textureHeight
+                image, colors, textureWidth, textureHeight, uv
             );
+        }
+
+        if (this._debug) {
+            const startTop = new mp.Vector3(start.x, start.y, start.z + 1.5);
+            const endTop = new mp.Vector3(end.x, end.y, end.z + 1.5);
+            DrawingService.drawLine3D(start, startTop, [0, 255, 0, 255]);
+            DrawingService.drawLine3D(end, endTop, [0, 0, 255, 255]);
         }
     }
 
@@ -164,6 +173,8 @@ export default class DrawingService {
     }
 
     private static render() {
+        return; // disable debug drawing for now
+
         const ppos = mp.players.local.position;
       
         const time = Date.now() / 1000;
@@ -175,9 +186,9 @@ export default class DrawingService {
             ppos.y - 1 + Math.sin(rot),
             ppos.z + Math.sin(rot)
         );
-        const width = Math.sin(time) + 2;
+        const width = 2;
 
-        DrawingService.drawPlane3D(a, b, c, width, 'https://i1.sndcdn.com/artworks-zkZZmAZ468yGcABD-6Juq9g-t500x500.jpg', true, 1024, 1024);
+        DrawingService.drawPlane3D(a, b, c, width, '/markers/texture.png', [255, 255, 255, 255], true, 1024, 1024, [0, 0, 0.5, 1]);
 
         // draw debug lines
         DrawingService.drawLine3D(new mp.Vector3(ppos.x, ppos.y - 1, ppos.z), c, [0, 255, 0, 255]);
@@ -191,7 +202,16 @@ export default class DrawingService {
             ppos.z + 1
         );
 
-        DrawingService.drawPlane3D(a, b, c, width, 'https://i1.sndcdn.com/artworks-zkZZmAZ468yGcABD-6Juq9g-t500x500.jpg', true, 1024, 1024);
+        DrawingService.drawPlane3D(a, b, c, width, '/markers/debug.png', [255, 255, 255, 255], true, 1024, 1024, [0, 0, 1, 1]);
+        
+        a = new mp.Vector3(ppos.x + 3, ppos.y - 1, ppos.z - 0);
+        b = new mp.Vector3(ppos.x + 3, ppos.y + 1, ppos.z - 0);
+        c = new mp.Vector3(
+            ppos.x + 3,
+            ppos.y,
+            ppos.z + 1
+        );
+        DrawingService.drawPlane3D(a, b, c, width, '/markers/debug.png', [255, 255, 255, 255], true, 1024, 1024, [0, Math.abs(Math.sin(Date.now() / 1000)) * 0.5, 1, 1]);
 
         // draw debug lines
         DrawingService.drawLine3D(new mp.Vector3(ppos.x, ppos.y, ppos.z - 1), c, [0, 255, 0, 255]);
