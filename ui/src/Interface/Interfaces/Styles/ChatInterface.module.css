@@ -1,0 +1,389 @@
+.main {
+    position: fixed;
+    top: 3rem;
+    left: 3rem;
+    width: var(--chat-width, 45rem);
+    /* height: 20rem; */
+    /* background-color: red; */
+}
+
+.chatContainer {
+    display: flex;
+    flex-direction: column;
+    gap: calc(1rem * var(--chat-zoom, 1));
+    overflow-y: auto;
+    max-height: var(--chat-height, 17rem);
+    font-size: calc(1rem * var(--chat-zoom, 1));
+}
+
+.chatContainer::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+.chatContainer::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 0.25rem;
+}
+
+.chatContainer::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 0.25rem;
+}
+
+.chatContainer::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.chatMessage {
+    display: flex;
+    align-items: flex-start;
+    gap: calc(0.5rem * var(--chat-zoom, 1));
+}
+
+.messageContent {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+    flex-shrink: 1;
+}
+
+.messageContainer {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.1rem;
+    width: fit-content;
+}
+
+.avatar {
+    width: calc(3rem * var(--chat-zoom, 1));
+    height: calc(3rem * var(--chat-zoom, 1));
+    border-radius: 50%;
+    border: 0.1rem solid #1e1e1e45;
+    margin-top: calc(0.6rem * var(--chat-zoom, 1));
+    margin-bottom: auto;
+    opacity: var(--show-avatars, 1);
+    transition: opacity 0.3s ease;
+}
+
+/* When avatars are hidden, adjust the layout */
+.main[style*="--show-avatars: 0"] .avatar {
+    width: 0;
+    height: 0;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    border: none;
+}
+
+.main[style*="--show-avatars: 0"] .chatMessage {
+    gap: 0;
+}
+
+.main[style*="--show-avatars: 0"] .inputContainer {
+    margin-left: 0;
+}
+
+.username {
+    font-weight: 600;
+    font-size: calc(1.2rem * var(--chat-zoom, 1));
+}
+
+.usernameContainer {
+    display: flex;
+    align-items: center;
+    gap: calc(0.5rem * var(--chat-zoom, 1));
+    flex-wrap: wrap;
+}
+
+.emblemas {
+    display: flex;
+    align-items: center;
+    gap: calc(0.25rem * var(--chat-zoom, 1));
+}
+
+.emblemas svg {
+    width: calc(1rem * var(--chat-zoom, 1)) !important;
+    height: calc(1rem * var(--chat-zoom, 1)) !important;
+}
+
+.message {
+    font-size: calc(1rem * var(--chat-zoom, 1));
+    line-height: calc(1.4rem * var(--chat-zoom, 1));
+    max-width: 35rem;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    background: rgba(34, 34, 34, 0.7);
+    padding: calc(0.5rem * var(--chat-zoom, 1));
+    border-radius: calc(0.5rem * var(--chat-zoom, 1));
+}
+
+.firstMessage.messageWithNext {
+    border-radius: 0.5rem 0.5rem 0.5rem 0;
+}
+
+.messageWithNext {
+    border-radius: 0.5rem 0.5rem 0.5rem 0.5rem;
+}
+
+.messageWithPrevious {
+    border-radius: 0 0.5rem 0.5rem 0.5rem;
+}
+
+.messageWithNext.messageWithPrevious {
+    border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.inputContainer {
+    display: flex;
+    align-items: center;
+    margin-left: calc(var(--show-avatars, 1) * 3.5rem * var(--chat-zoom, 1));
+    margin-top: calc(0.5rem * var(--chat-zoom, 1));
+    gap: calc(0.5rem * var(--chat-zoom, 1));
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.inputContainer.hidden {
+    opacity: 0;
+}
+
+.inputContainer.fadeIn {
+    animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+.inputContainer.fadeOut {
+    animation: fadeOut 0.3s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-1rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-1rem);
+    }
+}
+
+.emojiButton {
+    background: rgba(34, 34, 34, 0.7);
+    border: 0.1rem solid #47474784;
+    cursor: pointer;
+    font-size: calc(1.5rem * var(--chat-zoom, 1));
+    width: calc(2.5rem * var(--chat-zoom, 1));
+    height: calc(2.5rem * var(--chat-zoom, 1));
+    border-radius: calc(0.5rem * var(--chat-zoom, 1));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+.emojiButton svg {
+    color: #ffffffcc;
+    transition: color 0.3s ease;
+}
+
+.emojiButton:hover {
+    background: rgba(44, 44, 44, 0.9);
+}
+
+.emojiButton:hover svg {
+    color: #ffffff;
+}
+
+.settingsButton {
+    background: rgba(34, 34, 34, 0.7);
+    border: 0.1rem solid #47474784;
+    cursor: pointer;
+    font-size: calc(1.5rem * var(--chat-zoom, 1));
+    width: calc(2.5rem * var(--chat-zoom, 1));
+    height: calc(2.5rem * var(--chat-zoom, 1));
+    border-radius: calc(0.5rem * var(--chat-zoom, 1));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+.settingsButton svg {
+    color: #ffffffcc;
+    transition: color 0.3s ease;
+}
+
+.settingsButton:hover {
+    background: rgba(44, 44, 44, 0.9);
+}
+
+.settingsButton:hover svg {
+    color: #ffffff;
+}
+
+.chatInput {
+    flex: 1;
+    background: rgba(34, 34, 34, 0.7);
+    border: 0.1rem solid #47474784;
+    padding: calc(0.5rem * var(--chat-zoom, 1));
+    font-size: calc(1rem * var(--chat-zoom, 1));
+    border-radius: calc(0.5rem * var(--chat-zoom, 1));
+    height: calc(1.5rem * var(--chat-zoom, 1));
+    color: #ffffff;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+/* Settings Modal */
+.settingsModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(
+        circle at center,
+        rgba(0, 0, 0, 0.4) 0%,
+        rgba(0, 0, 0, 0.7) 50%,
+        rgba(0, 0, 0, 0.85) 100%
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(5px);
+}
+
+.settingsContent {
+    width: 24rem;
+    max-width: 90vw;
+    background: rgba(25, 25, 25, 0.95);
+    border: 1px solid rgba(80, 80, 80, 0.3);
+    border-radius: 0.75rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(20px);
+    outline: none;
+    overflow: hidden;
+    animation: scaleIn 0.3s ease-out;
+}
+
+.settingsHeader {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(80, 80, 80, 0.3);
+    background: rgba(30, 30, 30, 0.8);
+}
+
+.settingsTitle {
+    color: #ffffff;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem 0;
+}
+
+.settingsSubtitle {
+    color: rgba(180, 180, 180, 0.8);
+    margin: 0;
+    font-size: 0.8rem;
+}
+
+.settingsBody {
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.settingGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.settingLabel {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.settingSlider {
+    width: 100%;
+    height: 0.25rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.25rem;
+    outline: none;
+    appearance: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.settingSlider::-webkit-slider-thumb {
+    appearance: none;
+    width: 1rem;
+    height: 1rem;
+    background: #ffffff;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.settingSlider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.settingSlider::-moz-range-thumb {
+    width: 1rem;
+    height: 1rem;
+    background: #ffffff;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.settingSlider::-moz-range-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.settingSlider:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.settingSlider:focus {
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+.settingsFooter {
+    padding: 0.75rem 1.5rem 1rem 1.5rem;
+    background: rgba(25, 25, 25, 0.8);
+    border-top: 1px solid rgba(80, 80, 80, 0.3);
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

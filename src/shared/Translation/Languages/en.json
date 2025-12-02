@@ -152,5 +152,7 @@
 
     "discord.rpc.driving": "Driving",
     "discord.rpc.at": "at",
-    "discord.rpc.walking": "Walking"
+    "discord.rpc.walking": "Walking",
+
+    "chat.input.placeholder": "Type here..."
 }

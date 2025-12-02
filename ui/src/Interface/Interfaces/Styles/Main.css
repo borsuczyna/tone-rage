@@ -1,3 +1,5 @@
+@import url('Twemoji.css');
+
 /* Poppins Font Family – Full Local Import */
 @font-face { font-family: 'Poppins'; src: url('/fonts/Poppins-Thin.ttf') format('truetype'); font-weight: 100; font-style: normal; }
 @font-face { font-family: 'Poppins'; src: url('/fonts/Poppins-ThinItalic.ttf') format('truetype'); font-weight: 100; font-style: italic; }
@@ -48,4 +50,22 @@ body {
 /* remove all outlines on tab etc. */
 *:focus {
     outline: none;
+}
+
+.twemoji {
+    margin-inline: 0.05rem;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    display: inline-block;
+}
+
+.rich-text {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.1rem;
 }

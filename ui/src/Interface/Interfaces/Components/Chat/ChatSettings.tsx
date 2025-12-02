@@ -1,0 +1,104 @@
+import styles from '../../Styles/ChatInterface.module.css';
+import Switch from '../Switch';
+import Button from '../Button';
+import type { ChatSettings } from './types';
+
+interface ChatSettingsProps {
+    open: boolean;
+    settings: ChatSettings;
+    onSettingsChange: (settings: ChatSettings) => void;
+    onClose: () => void;
+}
+
+export default function ChatSettings({
+    open,
+    settings,
+    onSettingsChange,
+    onClose
+}: ChatSettingsProps) {
+    if (!open) return null;
+
+    const updateSettings = (newSettings: Partial<ChatSettings>) => {
+        const updatedSettings = { ...settings, ...newSettings };
+        onSettingsChange(updatedSettings);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Escape') {
+            onClose();
+        }
+    };
+
+    return (
+        <div className={styles.settingsModal} onClick={onClose}>
+            <div className={styles.settingsContent} onClick={(e) => e.stopPropagation()} onKeyDown={handleKeyDown} tabIndex={0}>
+                <div className={styles.settingsHeader}>
+                    <h3 className={styles.settingsTitle}>Chat Settings</h3>
+                    <p className={styles.settingsSubtitle}>Customize your chat experience</p>
+                </div>
+                
+                <div className={styles.settingsBody}>
+                    <div className={styles.settingGroup}>
+                        <label className={styles.settingLabel}>Chat Width</label>
+                        <input
+                            type="range"
+                            min="30"
+                            max="80"
+                            step="1"
+                            value={settings.width}
+                            onChange={(e) => updateSettings({ width: Number(e.target.value) })}
+                            className={styles.settingSlider}
+                        />
+                    </div>
+                    
+                    <div className={styles.settingGroup}>
+                        <label className={styles.settingLabel}>Chat Height</label>
+                        <input
+                            type="range"
+                            min="10"
+                            max="40"
+                            step="1"
+                            value={settings.height}
+                            onChange={(e) => updateSettings({ height: Number(e.target.value) })}
+                            className={styles.settingSlider}
+                        />
+                    </div>
+                    
+                    <div className={styles.settingGroup}>
+                        <label className={styles.settingLabel}>Content Zoom</label>
+                        <input
+                            type="range"
+                            min="0.5"
+                            max="2"
+                            step="0.1"
+                            value={settings.zoom}
+                            onChange={(e) => updateSettings({ zoom: Number(e.target.value) })}
+                            className={styles.settingSlider}
+                        />
+                    </div>
+                    
+                    <div className={styles.settingGroup}>
+                        <Switch
+                            id="showAvatars"
+                            label="Show player avatars"
+                            checked={settings.showAvatars}
+                            onChange={(checked) => updateSettings({ showAvatars: checked })}
+                            size="medium"
+                        />
+                    </div>
+                </div>
+                
+                <div className={styles.settingsFooter}>
+                    <Button 
+                        variant="primary" 
+                        size="medium"
+                        onClick={onClose}
+                        style={{ width: '100%' }}
+                    >
+                        Done
+                    </Button>
+                </div>
+            </div>
+        </div>
+    );
+}
