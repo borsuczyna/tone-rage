@@ -2,6 +2,7 @@ import { CustomEventHandler } from "src/Hooks/RageEventProvider";
 import { defaultTextureDictionary, type MarkerTextureRequest, type TextureData, type TextureRequest, type TextureUnloadRequest } from "@shared/Models/TextureData";
 import { triggerEvent } from "src/Hooks/Fetch";
 import SharedConfig from "@shared/SharedConfig";
+import { generateGuid } from "@shared/Hash";
 
 export default class TextureService {
     private static async waitForImageToLoad(htmlImageElement: HTMLImageElement): Promise<void> {
@@ -9,13 +10,6 @@ export default class TextureService {
             htmlImageElement.onload = () => resolve();
             htmlImageElement.onerror = (caughtError) => reject(caughtError);
         })
-    }
-
-    private static generateGuid(): string {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
     }
 
     public static async createMarkerTexture(icon: string, upperText: string, lowerText: string): Promise<CanvasRenderingContext2D | null> {
@@ -81,7 +75,7 @@ export default class TextureService {
 
             canvasContext.drawImage(sourceImage, 0, 0, textureWidth, textureHeight);
             const canvasImageData = canvasContext.getImageData(0, 0, textureWidth, textureHeight);
-            const textureName = this.generateGuid();
+            const textureName = generateGuid();
 
             await fetch('http://game-textures/put', {
                 method: 'POST',
@@ -124,7 +118,7 @@ export default class TextureService {
 
         const textureWidth = context.canvas.width;
         const textureHeight = context.canvas.height;
-        const textureName = this.generateGuid();
+        const textureName = generateGuid();
 
         console.log('Uploading marker texture:', textureName, textureWidth, textureHeight);
 

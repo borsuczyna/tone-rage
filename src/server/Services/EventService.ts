@@ -63,6 +63,19 @@ export default class EventService {
         });
 	}
 
+    /**
+     * Trigger an event on all clients with support for large data
+     */
+    public static triggerAllClients(eventName: string, ...args: any[]) {
+        const encodedData = encodeData(args);
+
+        // Send in chunks
+        const chunks = chunkData(encodedData);
+        chunks.forEach((chunk) => {
+            mp.players.call('event:receive:chunk', [eventName, chunk]);
+        });
+    }
+
 	private static onChunkReceived(client: PlayerMp, hash: string, eventName: string, chunkDataJson: string) {
 		// Get or create chunk assembler for this client
 		if (!this.chunkAssemblers.has(client.id)) {
