@@ -16,7 +16,7 @@ import HandlingEditorService from './Features/HandlingEditor/HandlingEditorServi
 import MarkerService from '@shared-rage/Services/MarkerService';
 import InteractionWheelFeature from './Features/InteractionWheel/InteractionWheelFeature';
 import VehicleInteractionWheel from './Features/InteractionWheel/VehicleInteractionWheel';
-import DrawingService from './Services/MaterialLineService';
+import DrawingService from './Services/DrawingService';
 // import EventServiceTest from './Tests/EventServiceTest';
 // import ElementDataServiceTest from './Tests/ElementDataServiceTest';
 // import InterfaceServiceTest from './Tests/InterfaceServiceTest';

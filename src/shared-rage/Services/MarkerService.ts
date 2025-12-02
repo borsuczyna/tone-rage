@@ -3,6 +3,7 @@ import MarkerType from '../Models/MarkerType';
 import MarkerEvent from '../Models/MarkerEvent';
 import MarkerHitType from '../Models/MarkerHitType';
 import isClientSide from '../isClientSide';
+import DrawingService from '../../client/Services/DrawingService';
 
 export default class MarkerService {
     private static markers: Set<Marker> = new Set();
@@ -11,6 +12,7 @@ export default class MarkerService {
     public static init() {
         mp.events.add('playerEnterColshape', this.onColshapeEnter.bind(this));
         mp.events.add('playerExitColshape', this.onColshapeExit.bind(this));
+        mp.events.add('render', this.render.bind(this));
     }
 
     public static onColshapeEnter(player: PlayerMp, colshape: ColshapeMp) {
@@ -68,5 +70,96 @@ export default class MarkerService {
                 event.callback(hitType, player, marker);
             }
         }
+    }
+
+    public static render() {
+        if (!isClientSide) {
+            return;
+        }
+        
+        const position = mp.players.local.position;
+        const markersInRange = Array.from(this.markers).filter(marker => {
+            const dist = this.distanceToMarker(position, marker);
+            return dist <= (marker.renderDistance || 50);
+        });
+
+        for (let marker of markersInRange) {
+            this.renderMarker(marker);
+        }
+    }
+
+    private static renderMarkerRing(marker: Marker, sides: number = 12) {
+        const step = (2 * Math.PI) / sides;
+        const halfStep = step / 2;
+        const uvStep = 1 / sides;
+        const position = new mp.Vector3(marker.position.x, marker.position.y, marker.position.z - 0.6);
+        const uvAdd = new Date().getTime() / 13000 % 1;
+        let lastPoint: Vector3 | null = null;
+
+        for (let angle = 0; angle <= 2 * Math.PI; angle += step) {
+            const uv = (angle / (2 * Math.PI)) + uvAdd;
+            const point = new mp.Vector3(
+                position.x + marker.scale / 2 * Math.cos(angle),
+                position.y + marker.scale / 2 * Math.sin(angle),
+                position.z,
+            );
+
+            if (lastPoint) {
+                const faceTowards = new mp.Vector3(
+                    position.x + marker.scale / 2 * Math.cos(angle - halfStep),
+                    position.y + marker.scale / 2 * Math.sin(angle - halfStep),
+                    position.z,
+                );
+
+                DrawingService.drawPlane3D(
+                    lastPoint,
+                    point,
+                    faceTowards,
+                    0.5,
+                    '/markers/glow.png',
+                    marker.getLighterColor(0.5),
+                    true,
+                    256, 256,
+                    [0, uv, 1, uv + uvStep]
+                );
+
+                DrawingService.drawPlane3D(
+                    lastPoint,
+                    point,
+                    faceTowards,
+                    0.5,
+                    '/markers/texture.png',
+                    marker.color,
+                    true,
+                    256, 256,
+                    [0, uv, 1, uv + uvStep]
+                );
+            }
+
+            lastPoint = point;
+        }
+    }
+
+    private static renderMarker(marker: Marker) {
+        const alpha = Math.floor(155 + 100 * (Math.sin(Date.now() / 500) + 1) / 2);
+        const start = new mp.Vector3(marker.position.x + marker.scale / 2, marker.position.y, marker.position.z - 1);
+        const end = new mp.Vector3(marker.position.x - marker.scale / 2, marker.position.y, marker.position.z - 1);
+
+        DrawingService.drawPlane3D(
+            start,
+            end,
+            marker.position,
+            marker.scale,
+            '/markers/ground.png',
+            [marker.color[0], marker.color[1], marker.color[2], alpha],
+        );
+
+        this.renderMarkerRing(marker, 10);
+    }
+
+    private static distanceToMarker(position: Vector3, marker: Marker): number {
+        const markerPos = marker.position;
+        const length = position.subtract(markerPos).length();
+        return length;
     }
 }

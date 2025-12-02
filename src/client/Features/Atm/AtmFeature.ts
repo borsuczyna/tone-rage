@@ -11,7 +11,6 @@ import ElementDataService from "@/Services/ElementDataService";
 import translate from "@shared/Translation/Translation";
 
 export default class AtmFeature {
-    private static isVisible: boolean = false;
     private static atmMarkers: Set<Marker> = new Set();
     private static atmObjects: Set<ObjectMp> = new Set();
     private static atmBlips: Set<BlipMp> = new Set();
@@ -28,7 +27,6 @@ export default class AtmFeature {
         for (const { position, heading, dimension } of AtmPositions) {
             const validPosition = new mp.Vector3(position.x, position.y, position.z - 1); // Adjust Z to place on ground
             const markerPosition = getPointFromDistanceRotation(position, 1, heading - 90);
-            markerPosition.z -= .6;
 
             const object = mp.objects.new(mp.game.joaat('prop_atm_01'), validPosition, {
                 rotation: new mp.Vector3(0, 0, heading),
@@ -46,7 +44,7 @@ export default class AtmFeature {
 
             object.setCollision(true, true);
 
-            const marker = MarkerService.createMarker(markerPosition, [255, 0, 89, 140], 1, MarkerType.Cylinder, dimension, 1.5);
+            const marker = MarkerService.createMarker(markerPosition, [255, 55, 155, 255], 1, MarkerType.Cylinder, dimension, 1.5);
             
             this.atmMarkers.add(marker);
             this.atmObjects.add(object);
@@ -75,7 +73,6 @@ export default class AtmFeature {
             return;
         }
 
-        this.isVisible = visible;
         InterfaceService.setInterfaceVisible('AtmInterface', visible);
         InterfaceService.setCursorVisible(visible, false);
         
@@ -85,7 +82,6 @@ export default class AtmFeature {
     }
 
     private static closeAtm() {
-        this.isVisible = false;
         InterfaceService.setInterfaceVisible('AtmInterface', false);
         InterfaceService.setCursorVisible(false, false);
     }
