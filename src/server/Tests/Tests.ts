@@ -41,4 +41,21 @@ export default class Tests {
             player.notify(`Weapon ${weapon} given!`);
         });
     }
+
+    public static async createTimeCommandTest() {
+        mp.events.addCommand('time', (player: PlayerMp, fullText: string) => {
+            const [hoursStr, minutesStr] = fullText.trim().split(' ');
+            const hours = parseInt(hoursStr, 10);
+            const minutes = parseInt(minutesStr, 10);
+
+            if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+                player.notify('Invalid time format. Use: /time <hours> <minutes>');
+                return;
+            }
+
+            mp.world.time.set(hours, minutes, 0);
+            Tests.logger.info(`Set game time to ${hours}:${minutes} by player: ${player.name}`);
+            player.notify(`Game time set to ${hours}:${minutes}`);
+        });
+    }
 }

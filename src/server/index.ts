@@ -38,6 +38,7 @@ import VehicleInteractionWheel from './Features/InteractionWheel/VehicleInteract
 	// Debug
 	Tests.getPositionCommandTest();
     Tests.createVehicleCommandTest();
+    Tests.createTimeCommandTest();
     MoneyServiceTest.init();
     MarkerTest.init();
 	// EventServiceTest.init();
