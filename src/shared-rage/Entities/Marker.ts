@@ -5,7 +5,7 @@ import SharedConfig from "@shared/SharedConfig";
 
 export default class Marker {
     // marker: MarkerMp;
-    public position: Vector3;
+    private positionValue: Vector3 = new mp.Vector3(0, 0, 0);
     private colorValue: RGBA = [255, 255, 255, 255];
     private colorLighterCache: Map<number, RGBA> = new Map();
     public scale: number;
@@ -13,6 +13,9 @@ export default class Marker {
     public dimension: number;
     public renderDistance: number = SharedConfig.MarkerRenderDistance;
     public colShape: ColshapeMp;
+    public icon: string = 'cart';
+    public upperText: string = 'Marker';
+    public lowerText: string = '';
     private insideMarker: Set<PlayerMp> = new Set();
 
     constructor(position: Vector3, color: RGBA, scale: number, type: MarkerType = MarkerType.Cylinder, dimension: number = 0, hitDistance?: number) {
@@ -41,6 +44,15 @@ export default class Marker {
     public set color(value: RGBA) {
         this.colorValue = value;
         this.colorLighterCache.clear();
+    }
+
+    public get position(): Vector3 {
+        return this.positionValue;
+    }
+
+    public set position(value: Vector3) {
+        this.positionValue = value;
+        this.colShape.position = new mp.Vector3(value.x, value.y, value.z);
     }
 
     public getLighterColor(factor: number): RGBA {

@@ -5,14 +5,22 @@ import MarkerHitType from '../Models/MarkerHitType';
 import isClientSide from '../isClientSide';
 import DrawingService from '../../client/Services/DrawingService';
 
+type DrawPlane3DParams = Parameters<typeof DrawingService.drawPlane3D>;
+
 export default class MarkerService {
     private static markers: Set<Marker> = new Set();
     private static events: Set<MarkerEvent> = new Set();
+    private static gameplayCamera: CameraMp | null = null;
+    private static renderQueue: DrawPlane3DParams[] = [];
 
     public static init() {
         mp.events.add('playerEnterColshape', this.onColshapeEnter.bind(this));
         mp.events.add('playerExitColshape', this.onColshapeExit.bind(this));
         mp.events.add('render', this.render.bind(this));
+
+        if (isClientSide) {
+            this.gameplayCamera = mp.cameras.new('gameplay');
+        }
     }
 
     public static onColshapeEnter(player: PlayerMp, colshape: ColshapeMp) {
@@ -111,19 +119,7 @@ export default class MarkerService {
                     position.z,
                 );
 
-                DrawingService.drawPlane3D(
-                    lastPoint,
-                    point,
-                    faceTowards,
-                    0.5,
-                    '/markers/glow.png',
-                    marker.getLighterColor(0.5),
-                    true,
-                    256, 256,
-                    [0, uv, 1, uv + uvStep]
-                );
-
-                DrawingService.drawPlane3D(
+                this.renderQueue.push([
                     lastPoint,
                     point,
                     faceTowards,
@@ -133,11 +129,58 @@ export default class MarkerService {
                     true,
                     256, 256,
                     [0, uv, 1, uv + uvStep]
-                );
+                ]);
             }
 
             lastPoint = point;
         }
+    }
+
+    private static renderMarkerDisplayText(marker: Marker) {
+        const markerTexture = DrawingService.getMarkerTexture(`/markers/icons/${marker.icon}.png`, marker.upperText, marker.lowerText);
+        if (!markerTexture) {
+            return;
+        }
+
+        const floatHeight = Math.sin(Date.now() / 500) * 0.15;
+        const startPoint = new mp.Vector3(marker.position.x, marker.position.y, marker.position.z + 0.5 + floatHeight);
+        const endPoint = new mp.Vector3(marker.position.x, marker.position.y, marker.position.z - 0.5 + floatHeight);
+        const camPos = this.gameplayCamera ? this.gameplayCamera.getCoord() : mp.players.local.position;
+
+        this.renderQueue.push([
+            startPoint,
+            endPoint,
+            camPos,
+            1.0,
+            markerTexture,
+            [255, 255, 255, 255],
+            true
+        ]);
+    }
+
+    private static flushRenderQueue() {
+        // sort by distance to camera
+        const camPos = this.gameplayCamera ? this.gameplayCamera.getCoord() : mp.players.local.position;
+        
+        const sortedQueue = [];
+        for (let params of this.renderQueue) {
+            const midPoint = new mp.Vector3(
+                (params[0].x + params[1].x) / 2,
+                (params[0].y + params[1].y) / 2,
+                (params[0].z + params[1].z) / 2,
+            );
+            const dist = camPos.subtract(midPoint).length();
+            sortedQueue.push({ dist, params });
+        }
+
+        sortedQueue.sort((a, b) => b.dist - a.dist);
+
+        // draw all
+        for (let { params } of sortedQueue) {
+            DrawingService.drawPlane3D(...params);
+        }
+
+        this.renderQueue = [];
     }
 
     private static renderMarker(marker: Marker) {
@@ -145,16 +188,18 @@ export default class MarkerService {
         const start = new mp.Vector3(marker.position.x + marker.scale / 2, marker.position.y, marker.position.z - 1);
         const end = new mp.Vector3(marker.position.x - marker.scale / 2, marker.position.y, marker.position.z - 1);
 
-        DrawingService.drawPlane3D(
+        this.renderQueue.push([
             start,
             end,
             marker.position,
             marker.scale,
             '/markers/ground.png',
             [marker.color[0], marker.color[1], marker.color[2], alpha],
-        );
+        ]);
 
         this.renderMarkerRing(marker, 10);
+        this.renderMarkerDisplayText(marker);
+        this.flushRenderQueue();
     }
 
     private static distanceToMarker(position: Vector3, marker: Marker): number {

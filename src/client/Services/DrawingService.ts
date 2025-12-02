@@ -1,6 +1,6 @@
 // import KeyboardService, { KeyState } from "./KeyboardService";
 
-import { TextureData, TextureRequest, TextureUnloadRequest } from "@shared/Models/TextureData";
+import { MarkerTextureRequest, TextureData, TextureRequest, TextureUnloadRequest } from "@shared/Models/TextureData";
 import InterfaceService from "./InterfaceService";
 import EventService from "./EventService";
 import Logger from "@shared/Logger";
@@ -23,7 +23,11 @@ export default class DrawingService {
         return `${image}_${textureWidth}x${textureHeight}`;
     }
 
-    public static isTextureLoaded(image: string, textureWidth: number = 1024, textureHeight: number = 1024): boolean {
+    public static isTextureLoaded(image: string | TextureData, textureWidth: number = 1024, textureHeight: number = 1024): boolean {
+        if (typeof image !== 'string') {
+            return this.textureDictionary.has(image.key);
+        }
+
         const key = this.getTextureKey(image, textureWidth, textureHeight);
         const loaded = this.textureDictionary.has(key);
 
@@ -34,7 +38,7 @@ export default class DrawingService {
         return loaded;
     }
 
-    public static loadTexture(image: string, textureWidth: number = 1024, textureHeight: number = 1024) {
+    private static loadTexture(image: string, textureWidth: number = 1024, textureHeight: number = 1024) {
         const key = this.getTextureKey(image, textureWidth, textureHeight);
         if (this.textureLoadQueue.has(key)) {
             return;
@@ -48,13 +52,31 @@ export default class DrawingService {
         } as TextureRequest);
 
         this.textureLoadQueue.add(key);
-
-        if (this._debug) {
-            this.logger.info(`Requested texture load: ${key}`);
-        }
+        this.logger.info(`Requested texture load: ${key}`);
     }
 
-    public static unloadTexture(textureData: TextureData) {
+    private static getMarkerTextureKey(icon: string, upperText: string, lowerText: string): string {
+        return `marker_${icon}_${upperText}_${lowerText}`;
+    }
+
+    private static loadMarkerTexture(icon: string, upperText: string, lowerText: string) {
+        const key = this.getMarkerTextureKey(icon, upperText, lowerText);
+        if (this.textureLoadQueue.has(key)) {
+            return;
+        }
+
+        InterfaceService.callInterfaceEvent('textureService:requestMarkerTexture', {
+            icon: icon,
+            upperText: upperText,
+            lowerText: lowerText,
+            key: key
+        } as MarkerTextureRequest);
+
+        this.textureLoadQueue.add(key);
+        this.logger.info(`Requested marker texture load: ${key}`);
+    }
+
+    private static unloadTexture(textureData: TextureData) {
         const key = this.getTextureKey(textureData.url, textureData.width, textureData.height);
         if (!this.textureDictionary.has(key)) {
             return;
@@ -68,20 +90,42 @@ export default class DrawingService {
         this.textureLoadQueue.delete(key);
         this.textureDictionary.delete(key);
 
-        if (this._debug) {
-            this.logger.info(`Unloading texture: ${key}`);
+        this.logger.info(`Unloading texture: ${key}`);
+    }
+
+    public static getTexture(image: string, textureWidth: number = 1024, textureHeight: number = 1024): TextureData | null {
+        if (!this.isTextureLoaded(image, textureWidth, textureHeight)) {
+            this.loadTexture(image, textureWidth, textureHeight);
+            return null;
         }
+        
+        const key = this.getTextureKey(image, textureWidth, textureHeight);
+        const textureData = this.textureDictionary.get(key) || null;
+        return textureData;
+    }
+
+    public static getTextureByKey(key: string): TextureData | null {
+        const textureData = this.textureDictionary.get(key) || null;
+        return textureData;
+    }
+
+    public static getMarkerTexture(icon: string, upperText: string, lowerText: string): TextureData | null {
+        const key = this.getMarkerTextureKey(icon, upperText, lowerText);
+        const textureData = this.textureDictionary.get(key) || null;
+        if (!textureData) {
+            this.loadMarkerTexture(icon, upperText, lowerText);
+            return null;
+        }
+
+        return textureData;
     }
 
     private static onTextureDataReady(data: TextureData) {
-        const key = this.getTextureKey(data.url, data.width, data.height);
         data.lastUsed = Date.now();
-        this.textureDictionary.set(key, data);
-        this.textureLoadQueue.delete(key);
+        this.textureLoadQueue.delete(data.key);
+        this.textureDictionary.set(data.key, data);
 
-        if (this._debug) {
-            this.logger.info(`Texture loaded and ready: ${key}`);
-        }
+        this.logger.info(`Texture loaded and ready: ${data.key}`);
     }
 
     private static markTextureUsed(image: string, textureWidth: number = 1024, textureHeight: number = 1024) {
@@ -102,13 +146,13 @@ export default class DrawingService {
         }
     }
 
-    public static drawQuad3D(bottomLeft: Vector3, bottomRight: Vector3, topRight: Vector3, topLeft: Vector3, image: string, colors: [number, number, number, number] = [255, 255, 255, 255], textureWidth: number = 1024, textureHeight: number = 1024, uv: [number, number, number, number] = [0, 0, 1, 1]) {
-        if (!this.isTextureLoaded(image, textureWidth, textureHeight)) {
+    public static drawQuad3D(bottomLeft: Vector3, bottomRight: Vector3, topRight: Vector3, topLeft: Vector3, image: string | TextureData, colors: [number, number, number, number] = [255, 255, 255, 255], textureWidth: number = 1024, textureHeight: number = 1024, uv: [number, number, number, number] = [0, 0, 1, 1]) {
+        if (typeof image === 'string' && !this.isTextureLoaded(image, textureWidth, textureHeight)) {
             this.loadTexture(image, textureWidth, textureHeight);
             return;
         }
 
-        const key = this.getTextureKey(image, textureWidth, textureHeight);
+        const key = typeof image === 'string' ? this.getTextureKey(image, textureWidth, textureHeight) : image.key;
         const textureData = this.textureDictionary.get(key);
         if (!textureData) {
             this.logger.error(`Texture data not found for key: ${key} but was expected to be loaded.`);
@@ -141,7 +185,7 @@ export default class DrawingService {
             DrawingService.highlightPolyEdges(bottomLeft, bottomRight, topLeft, topRight);
     }
 
-    public static drawPlane3D(start: Vector3, end: Vector3, faceTowards: Vector3, width: number, image: string, colors: [number, number, number, number] = [255, 255, 255, 255], doubleSided = false, textureWidth = 1024, textureHeight = 1024, uv: [number, number, number, number] = [0, 0, 1, 1]) {
+    public static drawPlane3D(start: Vector3, end: Vector3, faceTowards: Vector3, width: number, image: string | TextureData, colors: [number, number, number, number] = [255, 255, 255, 255], doubleSided = false, textureWidth = 1024, textureHeight = 1024, uv: [number, number, number, number] = [0, 0, 1, 1]) {
         const { bottomLeft, bottomRight, topRight, topLeft } = DrawingService.getQuad(start, end, width, faceTowards);
 
         DrawingService.drawQuad3D(

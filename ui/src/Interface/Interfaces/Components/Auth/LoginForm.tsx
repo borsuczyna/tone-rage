@@ -28,7 +28,7 @@ export default function LoginForm({
                 <h1>{translate('auth.login.welcome')}</h1>
                 <p>{translate('auth.login.subtitle')}</p>
             </div>
-            
+
             <InputField
                 icon={<Icons.User size='1.3rem' />}
                 label={translate('auth.login.username')}

@@ -8,6 +8,7 @@ const SharedConfig = {
     MaterialLineTextureMaxAgeMs: 60 * 1000, // 1 minute
     MaterialLineTextureCleanupIntervalMs: 30 * 1000, // 30 seconds
     MarkerRenderDistance: 100.0,
+    MarkerTextureSize: 512,
 };
 
 export default SharedConfig;

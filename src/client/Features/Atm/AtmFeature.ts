@@ -45,7 +45,10 @@ export default class AtmFeature {
             object.setCollision(true, true);
 
             const marker = MarkerService.createMarker(markerPosition, [255, 55, 155, 255], 1, MarkerType.Cylinder, dimension, 1.5);
-            
+            marker.icon = 'card';
+            marker.upperText = translate('atm.marker.upperText');
+            marker.lowerText = translate('atm.marker.lowerText');
+
             this.atmMarkers.add(marker);
             this.atmObjects.add(object);
             this.atmBlips.add(blip);

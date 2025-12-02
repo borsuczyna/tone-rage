@@ -15,6 +15,13 @@ export interface TextureRequest {
     height: number;
 }
 
+export interface MarkerTextureRequest {
+    icon: string;
+    upperText: string;
+    lowerText: string;
+    key: string;
+}
+
 export interface TextureUnloadRequest {
     dictionary: string;
     name: string;

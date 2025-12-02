@@ -20,5 +20,5 @@ export const Languages: Record<LanguageCode, LanguageData> = {
 
 export default function translate(key: TranslationKey, lang: LanguageCode = ServerLanguage): string {
 	const translation = Languages[lang]?.data[key];
-	return translation || key;
+	return translation ?? key;
 }

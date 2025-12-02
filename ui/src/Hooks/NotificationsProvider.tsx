@@ -55,7 +55,6 @@ export function NotificationsProvider({ children }: NotificationsProviderProps) 
         icon?: string,
         iconFillOpacity?: number
     ) => {
-        console.log('Adding notification:', { title, message, type, icon, iconFillOpacity });
         const newNotification: NotificationData = {
             title,
             message,
