@@ -4,14 +4,22 @@ import MarkerEvent from '../Models/MarkerEvent';
 import MarkerHitType from '../Models/MarkerHitType';
 import isClientSide from '../isClientSide';
 import DrawingService from '../../client/Services/DrawingService';
+import TimerService from '@shared/Services/TimerService';
 
 type DrawPlane3DParams = Parameters<typeof DrawingService.drawPlane3D>;
+
+// type DrawPlane3DParamsCache should be DrawPlane3DParams + lastUsed timestamp
+interface DrawPlane3DParamsCache {
+    params: DrawPlane3DParams[];
+    lastUsed: number;
+}
 
 export default class MarkerService {
     private static markers: Set<Marker> = new Set();
     private static events: Set<MarkerEvent> = new Set();
     private static gameplayCamera: CameraMp | null = null;
     private static renderQueue: DrawPlane3DParams[] = [];
+    private static ringCache: Map<string, DrawPlane3DParamsCache> = new Map();
 
     public static init() {
         mp.events.add('playerEnterColshape', this.onColshapeEnter.bind(this));
@@ -20,6 +28,7 @@ export default class MarkerService {
 
         if (isClientSide) {
             this.gameplayCamera = mp.cameras.new('gameplay');
+            TimerService.setTimer(this.flushOldRingCache.bind(this), 1000);
         }
     }
 
@@ -96,11 +105,42 @@ export default class MarkerService {
         }
     }
 
+    private static getRingCacheKey(marker: Marker, sides: number): string {
+        return `${marker.position.x},${marker.position.y},${marker.position.z},${marker.scale},${marker.color.join(',')},${sides}`;
+    }
+
+    private static getRingFromCache(marker: Marker, sides: number): DrawPlane3DParams[] | null {
+        const key = this.getRingCacheKey(marker, sides);
+        const cached = this.ringCache.get(key);
+        if (cached) {
+            cached.lastUsed = Date.now();
+            return cached.params;
+        }
+
+        return null;
+    }
+
+    private static flushOldRingCache() {
+        const now = Date.now();
+        for (let [key, cached] of this.ringCache) {
+            if (now - cached.lastUsed > 1000) {
+                this.ringCache.delete(key);
+            }
+        }
+    }
+
     private static renderMarkerRing(marker: Marker, sides: number = 12) {
+        const ringData: DrawPlane3DParams[] = this.getRingFromCache(marker, sides) || [];
+
+        if (ringData.length > 0) {
+            this.renderQueue.push(...ringData);
+            return;
+        }
+        
+        const position = new mp.Vector3(marker.position.x, marker.position.y, marker.position.z - 0.6);
         const step = (2 * Math.PI) / sides;
         const halfStep = step / 2;
         const uvStep = 1 / sides;
-        const position = new mp.Vector3(marker.position.x, marker.position.y, marker.position.z - 0.6);
         const uvAdd = new Date().getTime() / 13000 % 1;
         let lastPoint: Vector3 | null = null;
 
@@ -119,7 +159,7 @@ export default class MarkerService {
                     position.z,
                 );
 
-                this.renderQueue.push([
+                ringData.push([
                     lastPoint,
                     point,
                     faceTowards,
@@ -134,6 +174,9 @@ export default class MarkerService {
 
             lastPoint = point;
         }
+
+        this.ringCache.set(this.getRingCacheKey(marker, sides), { params: ringData, lastUsed: Date.now() });
+        this.renderQueue.push(...ringData);
     }
 
     private static renderMarkerDisplayText(marker: Marker) {
