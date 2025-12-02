@@ -31,6 +31,7 @@ export default class Hud {
         const money = ElementDataService.get(mp.players.local, 'money') || 0;
         const level = ElementDataService.get(mp.players.local, 'level') || 0;
         const exp = ElementDataService.get(mp.players.local, 'exp') || 0;
+        const avatar = ElementDataService.get(mp.players.local, 'avatar') || '';
 
         InterfaceService.callInterfaceEvent('updateUserInfo', {
             userInfo: {
@@ -39,6 +40,7 @@ export default class Hud {
                 money,
                 level,
                 exp,
+                avatar,
             },
         });
     }

@@ -51,6 +51,7 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
     // Listen for user info updates from RageMP
     useRageEvent('updateUserInfo', (data: UserInfoUpdate) => {
         if (data.userInfo) {
+            data.userInfo.avatar = data.userInfo.avatar || SharedConfig.DefaultAvatar;
             setUserInfo(prev => ({ ...prev, ...data.userInfo }));
         }
         if (data.workInfo) {

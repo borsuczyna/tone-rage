@@ -98,6 +98,8 @@ export default class UserService {
         ElementDataService.set(client, 'level', user.level, ShareMode.SpecificClient);
         ElementDataService.set(client, 'exp', user.exp, ShareMode.SpecificClient);
         ElementDataService.set(client, 'adminLevel', user.adminLevel, ShareMode.Everywhere);
+        ElementDataService.set(client, 'avatar', user.avatar, ShareMode.Everywhere);
+        client.name = user.username;
 	}
 
     private static buildSaveQuery(client: PlayerMp): { query: string; params: any[] } | null {
