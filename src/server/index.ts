@@ -15,9 +15,7 @@ import MarkerTest from './Tests/MarkerTest';
 import MarkerService from '@shared-rage/Services/MarkerService';
 import VehicleInteractionWheel from './Features/InteractionWheel/VehicleInteractionWheel';
 import MarkerServerService from './Services/MarkerServerService';
-// import EventServiceTest from './Tests/EventServiceTest';
-// import ElementDataServiceTest from './Tests/ElementDataServiceTest';
-// import FetchServiceTest from './Tests/FetchServiceTest';
+import Chat from './Features/Chat/Chat';
 
 (async () => {
 	await Database.init();
@@ -32,6 +30,7 @@ import MarkerServerService from './Services/MarkerServerService';
     await UserService.init();
     await MarkerService.init();
     await MarkerServerService.init();
+    await Chat.init();
 	
 	// Features
 	await AtmFeature.init();

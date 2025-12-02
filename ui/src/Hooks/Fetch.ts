@@ -2,6 +2,7 @@ import { generateHash } from "@shared/Hash";
 import translate from "@shared/Translation/Translation";
 import { CustomEventHandler } from "./RageEventProvider";
 import { chunkData } from "@shared/ChunkingUtils";
+import { encodeData } from "@shared/DataEncoder";
 
 interface FetchResolver {
     resolve: (data: any) => void;
@@ -38,7 +39,7 @@ export async function fetchServerData<T>(eventName: string, data: any): Promise<
 
 export function triggerEvent(eventName: string, data?: any) {
     if (typeof mp !== "undefined" && mp?.trigger) {
-        const encodedData = JSON.stringify(data);
+        const encodedData = encodeData([data]);
 
         // Send in chunks
         const chunks = chunkData(encodedData);

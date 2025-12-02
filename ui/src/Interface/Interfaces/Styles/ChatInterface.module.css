@@ -1,9 +1,9 @@
 .main {
     position: fixed;
-    top: 3rem;
-    left: 3rem;
+    top: 1rem;
+    left: 1rem;
     width: var(--chat-width, 45rem);
-    /* height: 20rem; */
+    height: var(--chat-height, 17rem);
     /* background-color: red; */
 }
 
@@ -88,6 +88,7 @@
 .username {
     font-weight: 600;
     font-size: calc(1.2rem * var(--chat-zoom, 1));
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7);
 }
 
 .usernameContainer {
@@ -263,7 +264,6 @@
     align-items: center;
     justify-content: center;
     z-index: 10000;
-    backdrop-filter: blur(5px);
 }
 
 .settingsContent {

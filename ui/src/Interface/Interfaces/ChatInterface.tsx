@@ -1,103 +1,57 @@
 import { useState } from 'react';
-import ChatMessage, { type ChatMessageData } from './Components/Chat/ChatMessage';
+import ChatMessage from './Components/Chat/ChatMessage';
 import styles from './Styles/ChatInterface.module.css';
 import { useRef, useEffect } from 'react';
 import ChatInput from './Components/Chat/ChatInput';
 import type { ChatSettings } from './Components/Chat/types';
+import { useRageEvent } from 'src/Hooks/RageEventProvider';
+import { triggerEvent } from 'src/Hooks/Fetch';
+import type { ChatMessageData } from '@shared/Models/Chat';
 
 export default function ChatInterface() {
     const [inputOpen, setInputOpen] = useState<boolean>(false);
+    const [inputValue, setInputValue] = useState<string>('');
     const [chatSettings, setChatSettings] = useState<ChatSettings>({
         width: 45,
         height: 17,
-        zoom: 1,
+        zoom: 1.1,
         showAvatars: true
     });
-    const [messages] = useState<ChatMessageData[]>([
-        { 
-            username: 'System',
-            messages: ["Welcome to the chat!"] 
-        },
-        { 
-            username: 'User', 
-            messages: ["This is a sample message."]
-        },
-        { 
-            avatar: 'https://cdn.discordapp.com/avatars/1250137230920388640/0cd4baa90fef2f0a2b700c30c757f39c.gif?size=1024', 
-            username: 'borsuczyna',
-            emblemas: ['premium', 'admin-administrator'],
-            messages: [
-                "Feel free to add more messages.", 
-                [
-                    {
-                        type: 'text',
-                        text: 'This is a rich text message with ',
-                    },
-                    {
-                        type: 'text',
-                        text: 'bold',
-                        bold: true
-                    },
-                    {
-                        type: 'text',
-                        text: ', italic, and ',
-                        italic: true
-                    },
-                    {
-                        type: 'text',
-                        text: 'underline',
-                        underline: true
-                    },
-                    {
-                        type: 'emoji',
-                        emoji: '🚞'
-                    },
-                    {
-                        type: 'emoji',
-                        emoji: '😄'
-                    },
-                    {
-                        type: 'emoji',
-                        emoji: '🔥'
-                    },
-                    {
-                        type: 'emoji',
-                        emoji: '🚞'
-                    },
-                    {
-                        type: 'emoji',
-                        emoji: '😄'
-                    },
-                    {
-                        type: 'emoji',
-                        emoji: '🔥'
-                    },
-                    {
-                        type: 'emoji',
-                        emoji: '🚞'
-                    },
-                    {
-                        type: 'emoji',
-                        emoji: '😄'
-                    },
-                    {
-                        type: 'emoji',
-                        emoji: '🔥'
-                    },
-                    {
-                        type: 'text',
-                        text: ' emojis!',
-                    }
-                ],
-                "Feel free to add more messages.", 
-                "Lorem ipsum dolor sit amet cwetetur adipiscing elit gsed do eiusmod tempor incididunt ut labore et dolore magna aliqua gsed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis"
-            ] 
-        },
-        { 
-            username: 'AnotherUser', 
-            messages: ["Here's another message.", "And one more for good measure."]
-        }
-    ]);
+    const [messages, setMessages] = useState<ChatMessageData[]>([]);
+
+    useRageEvent('chat:openChatInput', (message: string) => {
+        setInputOpen(true);
+        setInputValue(message);
+    });
+
+    useRageEvent('chat:receiveMessage', (message: ChatMessageData) => {
+        setMessages(prevMessages => {
+            const lastMessage = prevMessages[prevMessages.length - 1];
+            if (lastMessage && lastMessage.messages.length < 5 && lastMessage.username === message.username && lastMessage.avatar === message.avatar &&
+                JSON.stringify(lastMessage.emblemas) === JSON.stringify(message.emblemas)) {
+                const updatedLastMessage: ChatMessageData = {
+                    ...lastMessage,
+                    messages: [...lastMessage.messages, ...message.messages]
+                };
+                return [...prevMessages.slice(0, -1), updatedLastMessage];
+            } else {
+                return [...prevMessages, message];
+            }
+        });
+    });
+
+    const handleSendMessage = (message: string) => {
+        triggerEvent('chat:sendMessage', message);
+        setInputValue('');
+        setInputOpen(false);
+    };
+
+    const handleCloseInput = () => {
+        triggerEvent('chat:closeChatInput');
+        setInputOpen(false);
+        setInputValue('');
+    };
+
 
     const chatContainerRef = useRef<HTMLDivElement>(null);
     const isAtBottomRef = useRef<boolean>(true);
@@ -136,7 +90,6 @@ export default function ChatInterface() {
             } as React.CSSProperties}
         >
             <div
-                onClick={() => setInputOpen(!inputOpen)}
                 className={styles.chatContainer}
                 ref={chatContainerRef}
                 onScroll={checkIfAtBottom}
@@ -145,7 +98,14 @@ export default function ChatInterface() {
                     <ChatMessage key={index} message={msg} />
                 ))}
             </div>
-            <ChatInput open={inputOpen} onSettingsChange={setChatSettings} />
+            <ChatInput 
+                open={inputOpen} 
+                value={inputValue} 
+                onChange={setInputValue} 
+                onSettingsChange={setChatSettings}
+                onSend={handleSendMessage}
+                onClose={handleCloseInput}
+            />
         </div>
     )
 }

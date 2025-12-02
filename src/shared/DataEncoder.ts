@@ -75,9 +75,14 @@ export function encodeData(data: any): string {
 	return bytesToHex(bytes);
 }
 
+export function fixBrokenUnicode(str: string) {
+	// remove lone high/low surrogates
+	return str.replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, "");
+}
+
 // Decode data
 export function decodeData<T>(encodedData: string): T {
 	const bytes = hexToBytes(encodedData);
 	const json = utf8Decode(bytes);
-	return JSON.parse(json) as T;
+	return JSON.parse(fixBrokenUnicode(json)) as T;
 }

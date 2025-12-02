@@ -8,6 +8,7 @@ export default class InterfaceService {
 	private static cursorVisible: boolean = false;
 	private static cursorToggleControls: boolean = false;
 	private static chunkAssembler: ChunkAssembler = new ChunkAssembler();
+    private static visibleInterfaces: Set<string> = new Set<string>();
 
 	public static init() {
 		this.browser = mp.browsers.new('package://ui/index.html');
@@ -48,7 +49,17 @@ export default class InterfaceService {
 		}
 
 		this.browser.call('setInterfaceVisible', name, visible);
+
+        if (visible) {
+            this.visibleInterfaces.add(name);
+        } else {
+            this.visibleInterfaces.delete(name);
+        }
 	}
+
+    public static isInterfaceVisible(name: string): boolean {
+        return this.visibleInterfaces.has(name);
+    }
 
 	public static toggleInterfaceVisibility(name: string) {
 		if (!this.browser) {

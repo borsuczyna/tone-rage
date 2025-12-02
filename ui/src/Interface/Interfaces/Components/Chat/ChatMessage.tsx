@@ -2,15 +2,7 @@ import SharedConfig from '@shared/SharedConfig';
 import styles from '../../Styles/ChatInterface.module.css';
 import RichText from '../RichText/RichText';
 import EmblemaElement from '../EmblemaElement';
-import type { RichTextData } from '@shared/Models/RichTextModels';
-import type { Emblema } from '@shared/Models/Emblema';
-
-export interface ChatMessageData {
-    avatar?: string;
-    username: string;
-    messages: RichTextData[];
-    emblemas?: Emblema[]; // Use same type as scoreboard
-}
+import type { ChatMessageData } from '@shared/Models/Chat';
 
 export default function ChatMessage({ message }: { message: ChatMessageData }) {
     const avatar = message.avatar || SharedConfig.DefaultAvatar;

@@ -5,19 +5,27 @@ import EmojiPicker from '../EmojiPicker';
 import ChatSettings from './ChatSettings';
 import type { ChatSettings as ChatSettingsType } from './types';
 import { useState, useRef, useEffect } from 'react';
+import SharedConfig from '@shared/SharedConfig';
 
 interface ChatInputProps {
     open: boolean;
+    value: string;
+    onChange: (value: string) => void;
     onSettingsChange?: (settings: ChatSettingsType) => void;
+    onSend?: (message: string) => void;
+    onClose?: () => void;
 }
 
 export default function ChatInput({
     open,
-    onSettingsChange
+    value,
+    onChange,
+    onSettingsChange,
+    onSend,
+    onClose
 }: ChatInputProps) {
     const [emojiPickerOpen, setEmojiPickerOpen] = useState<boolean>(false);
     const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
-    const [inputValue, setInputValue] = useState<string>('');
     const [cursorPosition, setCursorPosition] = useState<number>(0);
     const [isVisible, setIsVisible] = useState<boolean>(open);
     const [animationState, setAnimationState] = useState<'fadeIn' | 'fadeOut' | 'visible' | 'hidden'>(open ? 'visible' : 'hidden');
@@ -30,8 +38,8 @@ export default function ChatInput({
     const inputRef = useRef<HTMLInputElement>(null);
 
     const onEmojiSelect = (emoji: string, event?: MouseEvent) => {
-        const newValue = inputValue.slice(0, cursorPosition) + emoji + inputValue.slice(cursorPosition);
-        setInputValue(newValue);
+        const newValue = value.slice(0, cursorPosition) + emoji + value.slice(cursorPosition);
+        onChange(newValue);
 
         // Don't close picker if shift key is held down
         if (!event || !event.shiftKey) {
@@ -50,12 +58,22 @@ export default function ChatInput({
     }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValue(e.target.value);
+        onChange(e.target.value);
     }
 
     const handleSelectionChange = () => {
         if (inputRef.current) {
             setCursorPosition(inputRef.current.selectionStart || 0);
+        }
+    }
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            onSend?.(value);
+        } else if (e.key === 'Escape') {
+            e.preventDefault();
+            onClose?.();
         }
     }
 
@@ -117,11 +135,13 @@ export default function ChatInput({
                     ref={inputRef}
                     className={styles.chatInput} 
                     placeholder={translate('chat.input.placeholder')}
-                    value={inputValue}
+                    value={value}
                     onChange={handleInputChange}
                     onSelect={handleSelectionChange}
                     onClick={handleSelectionChange}
                     onKeyUp={handleSelectionChange}
+                    onKeyDown={handleKeyDown}
+                    maxLength={SharedConfig.MaxChatMessageLength}
                 />
                 <div className={styles.emojiButton} onClick={() => setEmojiPickerOpen(!emojiPickerOpen)}>
                     <Smile size={'1.5rem'} />

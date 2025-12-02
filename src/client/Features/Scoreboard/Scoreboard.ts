@@ -2,10 +2,9 @@ import ElementDataService from "@/Services/ElementDataService";
 import InterfaceService from "@/Services/InterfaceService";
 import KeyboardService, { KeyState } from "@/Services/KeyboardService";
 import FetchService from "@/Services/FetchService";
-import { AdminLevel, getAdminEmblem } from "@shared/Models/AdminLevel";
-import { Emblema } from "@shared/Models/Emblema";
 import { ScoreboardPlayerItem } from "@shared/Models/ScoreboardData";
 import TimerService, { Timer } from "@shared/Services/TimerService";
+import EmblemaService from "@shared-rage/Services/EmblemaService";
 
 export default class Scoreboard {
     private static hideTimer: Timer | null = null;
@@ -42,17 +41,6 @@ export default class Scoreboard {
         this.hideTimer = null;
     }
 
-    private static getPlayerEmblems(_player: PlayerMp, adminLevel: AdminLevel): Emblema[] {
-        const emblemas: Emblema[] = [];
-        
-        const adminEmblem = getAdminEmblem(adminLevel);
-        if (adminEmblem) {
-            emblemas.push(adminEmblem);
-        }
-
-        return emblemas;
-    }
-
     private static getScoreboardData(): ScoreboardPlayerItem[] {
         let result: ScoreboardPlayerItem[] = [];
         let players = mp.players.toArray();
@@ -65,7 +53,7 @@ export default class Scoreboard {
             const ping = player.ping;
             const adminLevel = ElementDataService.get(player, 'adminLevel') || 0;
             const status = userId == null ? 'logging-in' : (ElementDataService.get(player, 'status') || 'playing');
-            const emblemas = this.getPlayerEmblems(player, adminLevel);
+            const emblemas = EmblemaService.getPlayerEmblems(player, adminLevel);
 
             result.push({
                 id,

@@ -154,5 +154,7 @@
     "discord.rpc.at": "at",
     "discord.rpc.walking": "Walking",
 
-    "chat.input.placeholder": "Type here..."
+    "chat.input.placeholder": "Type here...",
+    "chat.messageTimeout": "You are sending messages too quickly. Please wait a moment before sending another message.",
+    "chat.messageTooLong": "Your message exceeds the maximum allowed length."
 }

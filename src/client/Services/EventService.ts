@@ -70,10 +70,10 @@ export default class EventService {
         const completeData = this.chunkAssembler.addChunk(chunk);
 
         if (completeData != null) {
-            const data = JSON.parse(completeData || 'null');
+            const data = decodeData<any[]>(completeData);
 
             const listeners = this.listeners.filter((listener) => listener.eventName === eventName);
-            listeners.forEach((listener) => listener.callback(data));
+            listeners.forEach((listener) => listener.callback(...data));
         }
     }
 
@@ -81,7 +81,6 @@ export default class EventService {
 		const completeData = this.chunkAssembler.addChunk(chunk);
 
 		if (completeData != null) {
-			// All chunks received, process the event
 			const decodedData = decodeData<any[]>(completeData);
 
 			const listeners = this.listeners.filter((listener) => listener.eventName === eventName);

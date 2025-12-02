@@ -3,6 +3,7 @@ import InterfaceService from '@/Services/InterfaceService';
 import RenderService from '@/Services/RenderService';
 import { spawnData, SpawnLocation } from '@shared/SpawnsData';
 import Hud from '@/Features/Hud/Hud';
+import Chat from '../Chat/Chat';
 
 export default class SpawnPanel {
     private static selectedSpawn: SpawnLocation | null = null;
@@ -46,6 +47,7 @@ export default class SpawnPanel {
     private static handleSpawnSelect() {
         this.setVisible(false);
         Hud.setVisible(true);
+        Chat.setVisible(true);
     }
 
     private static renderLoop() {
