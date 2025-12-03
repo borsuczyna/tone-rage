@@ -7,6 +7,7 @@ import type { ChatSettings } from './Components/Chat/types';
 import { useRageEvent } from 'src/Hooks/RageEventProvider';
 import { triggerEvent } from 'src/Hooks/Fetch';
 import type { ChatMessageData } from '@shared/Models/Chat';
+import type { CommandSnippet } from '@shared/Models/CommandSnippet';
 
 export default function ChatInterface() {
     const [inputOpen, setInputOpen] = useState<boolean>(false);
@@ -18,6 +19,7 @@ export default function ChatInterface() {
         showAvatars: true
     });
     const [messages, setMessages] = useState<ChatMessageData[]>([]);
+    const [commandSnippets, setCommandSnippets] = useState<CommandSnippet[]>([]);
 
     useRageEvent('chat:openChatInput', (message: string) => {
         setInputOpen(true);
@@ -38,6 +40,10 @@ export default function ChatInterface() {
                 return [...prevMessages, message];
             }
         });
+    });
+
+    useRageEvent('chat:setCommandSnippets', (snippets: CommandSnippet[]) => {
+        setCommandSnippets(snippets);
     });
 
     const handleSendMessage = (message: string) => {
@@ -105,6 +111,7 @@ export default function ChatInterface() {
                 onSettingsChange={setChatSettings}
                 onSend={handleSendMessage}
                 onClose={handleCloseInput}
+                commandSnippets={commandSnippets}
             />
         </div>
     )
