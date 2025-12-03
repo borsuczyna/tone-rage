@@ -387,3 +387,131 @@
         transform: scale(1);
     }
 }
+
+/* Command Snippets Autocomplete */
+.commandSnippets {
+    position: absolute;
+    bottom: calc(100% + 0.5rem);
+    left: 0;
+    background: rgba(25, 25, 25, 0.95);
+    border: 1px solid rgba(80, 80, 80, 0.5);
+    border-radius: calc(0.5rem * var(--chat-zoom, 1));
+    padding: calc(0.5rem * var(--chat-zoom, 1));
+    max-height: 20rem;
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    animation: slideUp 0.2s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(0.5rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.commandSnippets::-webkit-scrollbar {
+    width: 0.4rem;
+}
+
+.commandSnippets::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 0.2rem;
+}
+
+.commandSnippets::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 0.2rem;
+}
+
+.commandSnippets::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.commandSnippet {
+    padding: calc(0.75rem * var(--chat-zoom, 1));
+    border-radius: calc(0.4rem * var(--chat-zoom, 1));
+    margin-bottom: calc(0.5rem * var(--chat-zoom, 1));
+    background: rgba(34, 34, 34, 0.6);
+    transition: background 0.2s ease;
+}
+
+.commandSnippet:last-child {
+    margin-bottom: 0;
+}
+
+.commandSnippet:hover {
+    background: rgba(44, 44, 44, 0.8);
+}
+
+.commandName {
+    font-weight: 600;
+    font-size: calc(1.1rem * var(--chat-zoom, 1));
+    color: #ffffff;
+    margin-bottom: calc(0.4rem * var(--chat-zoom, 1));
+}
+
+.commandParams {
+    display: flex;
+    gap: calc(0.4rem * var(--chat-zoom, 1));
+    flex-wrap: wrap;
+    margin-bottom: calc(0.4rem * var(--chat-zoom, 1));
+}
+
+.commandParam {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(0.3rem * var(--chat-zoom, 1));
+    padding: calc(0.3rem * var(--chat-zoom, 1)) calc(0.6rem * var(--chat-zoom, 1));
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid;
+    border-radius: calc(0.3rem * var(--chat-zoom, 1));
+    font-size: calc(0.85rem * var(--chat-zoom, 1));
+    transition: all 0.2s ease;
+}
+
+.commandParam.invalidParam {
+    background: rgba(244, 67, 54, 0.15);
+    border-color: #f44336 !important;
+    animation: shake 0.3s ease;
+}
+
+.commandParam.currentParam {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-3px);
+    }
+    75% {
+        transform: translateX(3px);
+    }
+}
+
+.paramName {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+}
+
+.paramType {
+    font-size: calc(0.75rem * var(--chat-zoom, 1));
+    opacity: 0.8;
+    font-weight: 400;
+}
+
+.commandDescription {
+    font-size: calc(0.8rem * var(--chat-zoom, 1));
+    color: rgba(200, 200, 200, 0.8);
+    line-height: 1.3;
+}

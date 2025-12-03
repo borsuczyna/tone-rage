@@ -5,6 +5,7 @@ import KeyboardService from "@/Services/KeyboardService";
 import EmblemaService from "@shared-rage/Services/EmblemaService";
 import { Emblema } from "@shared/Models/Emblema";
 import { parseRichText } from "@shared/Models/RichTextModels";
+import CommandSnippetService from "@/Services/CommandSnippetService";
 
 export default class Chat {
     public static visible: boolean = false;
@@ -16,6 +17,61 @@ export default class Chat {
         EventService.registerEventHandler('chat:sendMessage', this.onChatMessageSend.bind(this));
         EventService.registerEventHandler('chat:closeChatInput', this.onChatInputClose.bind(this));
         EventService.registerEventHandler('chat:receiveMessage', this.onChatMessageReceive.bind(this));
+        
+        // Register example command snippets
+        this.registerDefaultCommands();
+    }
+
+    private static registerDefaultCommands() {
+        CommandSnippetService.registerSnippets([
+            {
+                command: 'pm',
+                description: 'Send a private message to a player',
+                parameters: [
+                    { name: 'player', type: 'player' },
+                    { name: 'id', type: 'number' },
+                    { name: 'message', type: 'rest' }
+                ]
+            },
+            {
+                command: 'me',
+                description: 'Describe an action',
+                parameters: [
+                    { name: 'action', type: 'rest' }
+                ]
+            },
+            {
+                command: 'do',
+                description: 'Describe a situation',
+                parameters: [
+                    { name: 'description', type: 'rest' }
+                ]
+            },
+            {
+                command: 'b',
+                description: 'Out of character chat',
+                parameters: [
+                    { name: 'message', type: 'rest' }
+                ]
+            },
+            {
+                command: 'help',
+                description: 'Get help with commands',
+                parameters: []
+            },
+            {
+                command: 'give',
+                description: 'Give an item to a player',
+                parameters: [
+                    { name: 'player_id', type: 'number' },
+                    { name: 'item', type: 'string' },
+                    { name: 'amount', type: 'number' }
+                ]
+            }
+        ]);
+
+        // Send snippets to UI
+        InterfaceService.callInterfaceEvent('chat:setCommandSnippets', CommandSnippetService.getSnippets());
     }
     
     public static setVisible(visible: boolean) {
