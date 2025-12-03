@@ -5,6 +5,7 @@ import FetchService from "@/Services/FetchService";
 import { ScoreboardPlayerItem } from "@shared/Models/ScoreboardData";
 import TimerService, { Timer } from "@shared/Services/TimerService";
 import EmblemaService from "@shared-rage/Services/EmblemaService";
+import Chat from "../Chat/Chat";
 
 export default class Scoreboard {
     private static hideTimer: Timer | null = null;
@@ -24,6 +25,13 @@ export default class Scoreboard {
         this.visible = visible;
 
         if (visible) {
+            if (
+                InterfaceService.isInterfaceVisible('AtmInterface') ||
+                Chat.chatInputOpen
+            ) {
+                return;
+            }
+
             InterfaceService.setInterfaceVisible('ScoreboardInterface', true);
 
             if (this.hideTimer) {

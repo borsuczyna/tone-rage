@@ -16,6 +16,7 @@ import MarkerService from '@shared-rage/Services/MarkerService';
 import VehicleInteractionWheel from './Features/InteractionWheel/VehicleInteractionWheel';
 import MarkerServerService from './Services/MarkerServerService';
 import Chat from './Features/Chat/Chat';
+import CommandService from './Services/CommandService';
 
 (async () => {
 	await Database.init();
@@ -31,6 +32,7 @@ import Chat from './Features/Chat/Chat';
     await MarkerService.init();
     await MarkerServerService.init();
     await Chat.init();
+    await CommandService.init();
 	
 	// Features
 	await AtmFeature.init();

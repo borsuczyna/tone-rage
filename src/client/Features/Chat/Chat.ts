@@ -1,3 +1,4 @@
+import CommandService from "@/Services/CommandService";
 import ElementDataService from "@/Services/ElementDataService";
 import EventService from "@/Services/EventService";
 import InterfaceService from "@/Services/InterfaceService";
@@ -21,26 +22,24 @@ export default class Chat {
     public static setVisible(visible: boolean) {
         mp.gui.chat.show(false);
 
-        if (visible) {
-            if (
-                InterfaceService.isInterfaceVisible('ScoreboardInterface') ||
-                InterfaceService.isInterfaceVisible('InteractionWheelInterface') ||
-                InterfaceService.isInterfaceVisible('AtmInterface')
-            ) {
-                return;
-            }
-        }
-
         this.visible = visible;
         InterfaceService.setInterfaceVisible('ChatInterface', visible);
     }
 
     private static openChatInput() {
-        if (this.chatInputOpen || !this.visible) return;
+        if (
+            this.chatInputOpen ||
+            !this.visible ||
+            InterfaceService.isInterfaceVisible('ScoreboardInterface') ||
+            InterfaceService.isInterfaceVisible('InteractionWheelInterface') ||
+            InterfaceService.isInterfaceVisible('AtmInterface')
+        ) {
+            return;
+        }
 
         InterfaceService.setCursorVisible(true, true);
         this.chatInputOpen = true;
-        InterfaceService.callInterfaceEvent('chat:openChatInput', '');
+        InterfaceService.callInterfaceEvent('chat:openChatInput', ['', CommandService.getCommandSnippets()]);
     }
 
     private static onChatInputClose() {
@@ -51,18 +50,30 @@ export default class Chat {
     private static onChatMessageSend(message: string) {
         InterfaceService.setCursorVisible(false, false);
         this.chatInputOpen = false;
+
+        const trimmedMessage = message.trim();
+        if (trimmedMessage[0] === '/') {
+            CommandService.executeCommand(trimmedMessage);
+            return;
+        }
+
         EventService.triggerServerEvent('chat:sendMessage', message);
     }
 
-    private static onChatMessageReceive(ownerId: number | string, message: string) {
+    private static onChatMessageReceive(ownerId: number | string, message: string, emblemas: Emblema[] = [], overrideName?: string) {
         const owner = typeof ownerId === 'number' ? mp.players.at(ownerId) : ownerId;
         const avatar = typeof owner === 'string' ? '' : (ElementDataService.get(owner, 'avatar') || '');
-        const username = typeof owner === 'string' ? owner : owner.name;
-        let emblemas: Emblema[] = [];
+        let username = typeof owner === 'string' ? owner : owner.name;
+        emblemas = emblemas || [];
 
         if (typeof owner !== 'string') {
             const adminLevel = ElementDataService.get(owner, 'adminLevel') || 0;
-            emblemas = EmblemaService.getPlayerEmblems(owner, adminLevel);
+            const newEmblemas = EmblemaService.getPlayerEmblems(owner, adminLevel);
+            emblemas = emblemas.concat(newEmblemas);
+        }
+
+        if (overrideName) {
+            username = overrideName;
         }
       
         InterfaceService.callInterfaceEvent('chat:receiveMessage', {
@@ -71,5 +82,9 @@ export default class Chat {
             messages: [parseRichText(message)],
             emblemas: emblemas
         });
+    }
+
+    public static outputChatMessage(owner: PlayerMp | string, message: string, emblemas: Emblema[] = [], overrideName?: string) {
+        this.onChatMessageReceive(typeof owner === 'string' ? owner : owner.id, message, emblemas, overrideName);
     }
 }

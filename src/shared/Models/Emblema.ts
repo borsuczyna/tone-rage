@@ -1,7 +1,9 @@
 export type Emblema = 
     'premium' |
     'admin-moderator' |
-    'admin-administrator';
+    'admin-administrator' |
+    'dm-forward' |
+    'dm-reply';
 
 export const emblemasData: { [key in Emblema]: { icon: string; color: string } } = {
     'premium': {
@@ -16,4 +18,12 @@ export const emblemasData: { [key in Emblema]: { icon: string; color: string } }
         icon: 'Shield',
         color: '#FF4500', // Orange Red
     },
+    'dm-forward': {
+        icon: 'Forward',
+        color: '#00C851', // Orange
+    },
+    'dm-reply': {
+        icon: 'Reply',
+        color: '#e38800', // Orange
+    }
 };

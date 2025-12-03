@@ -6,44 +6,32 @@ import ChatInput from './Components/Chat/ChatInput';
 import type { ChatSettings } from './Components/Chat/types';
 import { useRageEvent } from 'src/Hooks/RageEventProvider';
 import { triggerEvent } from 'src/Hooks/Fetch';
-import type { ChatMessageData } from '@shared/Models/Chat';
+import { useChat } from 'src/Hooks/ChatProvider';
+import { type CommandSnippet } from '@shared/Models/CommandSnippets';
 
 export default function ChatInterface() {
     const [inputOpen, setInputOpen] = useState<boolean>(false);
     const [inputValue, setInputValue] = useState<string>('');
+    const [commandSnippets, setCommandSnippets] = useState<CommandSnippet[]>([]);
+    const { messages } = useChat();
+
     const [chatSettings, setChatSettings] = useState<ChatSettings>({
         width: 45,
         height: 17,
         zoom: 1.1,
         showAvatars: true
     });
-    const [messages, setMessages] = useState<ChatMessageData[]>([]);
 
-    useRageEvent('chat:openChatInput', (message: string) => {
+    useRageEvent('chat:openChatInput', ([message, commandSnippets]: [string, CommandSnippet[]]) => {
         setInputOpen(true);
         setInputValue(message);
-    });
-
-    useRageEvent('chat:receiveMessage', (message: ChatMessageData) => {
-        setMessages(prevMessages => {
-            const lastMessage = prevMessages[prevMessages.length - 1];
-            if (lastMessage && lastMessage.messages.length < 5 && lastMessage.username === message.username && lastMessage.avatar === message.avatar &&
-                JSON.stringify(lastMessage.emblemas) === JSON.stringify(message.emblemas)) {
-                const updatedLastMessage: ChatMessageData = {
-                    ...lastMessage,
-                    messages: [...lastMessage.messages, ...message.messages]
-                };
-                return [...prevMessages.slice(0, -1), updatedLastMessage];
-            } else {
-                return [...prevMessages, message];
-            }
-        });
+        setCommandSnippets(commandSnippets);
     });
 
     const handleSendMessage = (message: string) => {
-        triggerEvent('chat:sendMessage', message);
         setInputValue('');
         setInputOpen(false);
+        triggerEvent('chat:sendMessage', message);
     };
 
     const handleCloseInput = () => {
@@ -51,7 +39,6 @@ export default function ChatInterface() {
         setInputOpen(false);
         setInputValue('');
     };
-
 
     const chatContainerRef = useRef<HTMLDivElement>(null);
     const isAtBottomRef = useRef<boolean>(true);
@@ -75,7 +62,9 @@ export default function ChatInterface() {
 
     useEffect(() => {
         if (isAtBottomRef.current) {
-            scrollToBottom();
+            setTimeout(() => {
+                scrollToBottom();
+            }, 0);
         }
     }, [messages]);
 
@@ -98,13 +87,16 @@ export default function ChatInterface() {
                     <ChatMessage key={index} message={msg} />
                 ))}
             </div>
+
             <ChatInput 
                 open={inputOpen} 
                 value={inputValue} 
                 onChange={setInputValue} 
-                onSettingsChange={setChatSettings}
+                settings={chatSettings}
+                setSettings={setChatSettings}
                 onSend={handleSendMessage}
                 onClose={handleCloseInput}
+                commandSnippets={commandSnippets}
             />
         </div>
     )

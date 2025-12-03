@@ -19,6 +19,7 @@ import VehicleInteractionWheel from './Features/InteractionWheel/VehicleInteract
 import DrawingService from './Services/DrawingService';
 import MarkerClientService from './Services/MarkerClientService';
 import Chat from './Features/Chat/Chat';
+import CommandService from './Services/CommandService';
 // import EventServiceTest from './Tests/EventServiceTest';
 // import ElementDataServiceTest from './Tests/ElementDataServiceTest';
 // import InterfaceServiceTest from './Tests/InterfaceServiceTest';
@@ -45,6 +46,7 @@ import Chat from './Features/Chat/Chat';
     await MarkerClientService.init();
     await DrawingService.init();
     await Chat.init();
+    await CommandService.init();
 
 	// Features
     await AtmFeature.init();

@@ -2,6 +2,7 @@ import ElementDataService from "@/Services/ElementDataService";
 import EventService from "@/Services/EventService";
 import NotificationService from "@/Services/NotificationService";
 import Logger from "@shared/Logger";
+import { Emblema } from "@shared/Models/Emblema";
 import { NotificationType } from "@shared/Models/NotificationType";
 import SharedConfig from "@shared/SharedConfig";
 import translate from "@shared/Translation/Translation";
@@ -25,7 +26,8 @@ export default class Chat {
     }
 
     private static onChatMessageSend(client: PlayerMp, message: string) {
-        if (!message.trim()) {
+        message = message.trim();
+        if (message.length === 0) {
             return;
         }
         
@@ -52,8 +54,8 @@ export default class Chat {
         }
     }
 
-    public static outputChatMessage(player: PlayerMp, owner: PlayerMp | string, message: string) {
-        EventService.triggerClientEvent(player, 'chat:receiveMessage', typeof owner === 'string' ? owner : owner.id, message);
+    public static outputChatMessage(player: PlayerMp, owner: PlayerMp | string, message: string, emblemas: Emblema[] = [], overrideName?: string) {
+        EventService.triggerClientEvent(player, 'chat:receiveMessage', typeof owner === 'string' ? owner : owner.id, message, emblemas, overrideName);
     }
 
     private static getPlayersInRange(position: Vector3, range: number): PlayerMp[] {

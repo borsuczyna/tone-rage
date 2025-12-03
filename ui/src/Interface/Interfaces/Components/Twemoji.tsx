@@ -11,7 +11,7 @@ export default function Twemoji({ emoji, size = '1.2em' }: TwemojiProps) {
 }
 
 export function getTwemojiHtml(emoji: string, size: string | number = '1.2em'): string {
-    return `<span class="e-${toCodePoint(emoji)} twemoji" style="width: ${size}; height: ${size};"></span>`;
+    return `<span class="e-${grabTheRightIcon(emoji)} twemoji" style="width: ${size}; height: ${size};"></span>`;
 }
 
 export function grabTheRightIcon(rawText: string) {

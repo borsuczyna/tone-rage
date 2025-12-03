@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 import { getTwemojiHtml } from '../Twemoji';
 import type { RichTextData } from '@shared/Models/RichTextModels';
+import csx from 'src/Utils/MergeClass';
 
 export function richTextToHtml(elements: RichTextData): string {
     const elementsArray = Array.isArray(elements) ? elements : [elements];
@@ -22,6 +23,5 @@ export function richTextToHtml(elements: RichTextData): string {
 }
 
 export default function RichText({ elements, className, style }: { elements: RichTextData, className?: string, style?: CSSProperties }) {
-    const fullClassName = `${className ? className : ''} rich-text`.trim();
-    return <span className={fullClassName} style={style} dangerouslySetInnerHTML={{ __html: richTextToHtml(elements) }}></span>;
+    return <span className={csx(className, 'rich-text')} style={style} dangerouslySetInnerHTML={{ __html: richTextToHtml(elements) }}></span>;
 }

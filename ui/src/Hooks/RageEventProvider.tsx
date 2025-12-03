@@ -45,6 +45,12 @@ export class CustomEventHandler {
         this.eventHandlers = this.eventHandlers.filter(
             (handler) => handler.eventName !== eventName || handler.callback !== callback
         );
+
+        if (typeof mp === 'undefined') {
+            console.warn('mp is undefined, cannot remove event handler');
+            return;
+        }
+        
         mp.events.remove(eventName, callback);
     }
 

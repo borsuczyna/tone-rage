@@ -6,12 +6,16 @@ import ChatSettings from './ChatSettings';
 import type { ChatSettings as ChatSettingsType } from './types';
 import { useState, useRef, useEffect } from 'react';
 import SharedConfig from '@shared/SharedConfig';
+import type { CommandSnippet } from '@shared/Models/CommandSnippets';
+import CommandSnippets from './CommandSnippets';
 
 interface ChatInputProps {
     open: boolean;
     value: string;
     onChange: (value: string) => void;
-    onSettingsChange?: (settings: ChatSettingsType) => void;
+    commandSnippets: CommandSnippet[];
+    settings: ChatSettingsType;
+    setSettings: (settings: ChatSettingsType) => void;
     onSend?: (message: string) => void;
     onClose?: () => void;
 }
@@ -20,7 +24,9 @@ export default function ChatInput({
     open,
     value,
     onChange,
-    onSettingsChange,
+    commandSnippets,
+    settings,
+    setSettings,
     onSend,
     onClose
 }: ChatInputProps) {
@@ -29,12 +35,7 @@ export default function ChatInput({
     const [cursorPosition, setCursorPosition] = useState<number>(0);
     const [isVisible, setIsVisible] = useState<boolean>(open);
     const [animationState, setAnimationState] = useState<'fadeIn' | 'fadeOut' | 'visible' | 'hidden'>(open ? 'visible' : 'hidden');
-    const [settings, setSettings] = useState<ChatSettingsType>({
-        width: 45,
-        height: 17,
-        zoom: 1,
-        showAvatars: true
-    });
+    const [selectedSnippetIndex, setSelectedSnippetIndex] = useState<number>(0);
     const inputRef = useRef<HTMLInputElement>(null);
 
     const onEmojiSelect = (emoji: string, event?: MouseEvent) => {
@@ -59,7 +60,24 @@ export default function ChatInput({
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         onChange(e.target.value);
+        setSelectedSnippetIndex(0); // Reset selection when typing
     }
+
+    // Helper function to get filtered command snippets
+    const getFilteredSnippets = () => {
+        if (value[0] !== '/') return [];
+        
+        const commandParams = value.split(' ');
+        const commandName = commandParams[0].slice(1).toLowerCase();
+        let matchedSnippets = commandSnippets.filter(snippet => snippet.command.slice(1).toLowerCase().startsWith(commandName));
+        
+        if (commandParams.length > 1) {
+            const exactMatch = commandSnippets.find(snippet => snippet.command.slice(1).toLowerCase() === commandName);
+            matchedSnippets = exactMatch ? [exactMatch] : [];
+        }
+        
+        return matchedSnippets;
+    };
 
     const handleSelectionChange = () => {
         if (inputRef.current) {
@@ -68,13 +86,40 @@ export default function ChatInput({
     }
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        const filteredSnippets = getFilteredSnippets();
+        
         if (e.key === 'Enter') {
             e.preventDefault();
             onSend?.(value);
         } else if (e.key === 'Escape') {
             e.preventDefault();
             onClose?.();
+        } else if (e.key === 'ArrowUp' && filteredSnippets.length > 0) {
+            e.preventDefault();
+            setSelectedSnippetIndex(prev => 
+                prev <= 0 ? filteredSnippets.length - 1 : prev - 1
+            );
+        } else if (e.key === 'ArrowDown' && filteredSnippets.length > 0) {
+            e.preventDefault();
+            setSelectedSnippetIndex(prev => 
+                prev >= filteredSnippets.length - 1 ? 0 : prev + 1
+            );
+        } else if (e.key === 'Tab' && filteredSnippets.length > 0) {
+            e.preventDefault();
+            const selectedSnippet = filteredSnippets[selectedSnippetIndex];
+            if (selectedSnippet) {
+                setCommand(selectedSnippet.command);
+            }
         }
+    }
+
+    const handleBlur = () => {
+        // Refocus the input when it loses focus
+        setTimeout(() => {
+            if (inputRef.current && open) {
+                inputRef.current.focus();
+            }
+        }, 0);
     }
 
     useEffect(() => {
@@ -102,10 +147,17 @@ export default function ChatInput({
         }
     }, [open]);
 
+    // Reset selected index when filtered snippets change
+    useEffect(() => {
+        const filteredSnippets = getFilteredSnippets();
+        if (selectedSnippetIndex >= filteredSnippets.length) {
+            setSelectedSnippetIndex(0);
+        }
+    }, [value, commandSnippets]);
+
     const updateSettings = (newSettings: Partial<ChatSettingsType>) => {
         const updatedSettings = { ...settings, ...newSettings };
         setSettings(updatedSettings);
-        onSettingsChange?.(updatedSettings);
     };
     
     const getClassName = () => {
@@ -121,6 +173,18 @@ export default function ChatInput({
             default:
                 return `${baseClass} ${styles.hidden}`;
         }
+    };
+
+    const setCommand = (command: string) => {
+        onChange(command + ' ');
+        setTimeout(() => {
+            if (inputRef.current) {
+                const pos = command.length + 1;
+                inputRef.current.setSelectionRange(pos, pos);
+                inputRef.current.focus();
+                setCursorPosition(pos);
+            }
+        }, 0);
     };
 
     // Don't render if not visible
@@ -141,11 +205,12 @@ export default function ChatInput({
                     onClick={handleSelectionChange}
                     onKeyUp={handleSelectionChange}
                     onKeyDown={handleKeyDown}
+                    onBlur={handleBlur}
                     maxLength={SharedConfig.MaxChatMessageLength}
                 />
                 <div className={styles.emojiButton} onClick={() => setEmojiPickerOpen(!emojiPickerOpen)}>
                     <Smile size={'1.5rem'} />
-                    {emojiPickerOpen && <EmojiPicker anchor='bottom' style={{ transform: 'translateX(-3rem)' }} onClose={() => setEmojiPickerOpen(false)} onEmojiSelect={onEmojiSelect} />}
+                    {emojiPickerOpen && <EmojiPicker anchor='bottom' style={{ transform: 'translate(-3rem, 3rem)' }} onClose={() => setEmojiPickerOpen(false)} onEmojiSelect={onEmojiSelect} />}
                 </div>
                 <div className={styles.settingsButton} onClick={() => setSettingsOpen(true)}>
                     <Settings size={'1.5rem'} />
@@ -157,6 +222,14 @@ export default function ChatInput({
                 settings={settings}
                 onSettingsChange={updateSettings}
                 onClose={() => setSettingsOpen(false)}
+            />
+
+            <CommandSnippets
+                commandSnippets={commandSnippets}
+                value={value}
+                setCommand={setCommand}
+                selectedIndex={selectedSnippetIndex}
+                onSelect={setSelectedSnippetIndex}
             />
         </>
     );

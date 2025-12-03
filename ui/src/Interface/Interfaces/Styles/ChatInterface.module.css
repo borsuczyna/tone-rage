@@ -12,6 +12,7 @@
     flex-direction: column;
     gap: calc(1rem * var(--chat-zoom, 1));
     overflow-y: auto;
+    height: 100%;
     max-height: var(--chat-height, 17rem);
     font-size: calc(1rem * var(--chat-zoom, 1));
 }
@@ -158,6 +159,126 @@
     animation: fadeOut 0.3s ease-in-out forwards;
 }
 
+.commandSnippets {
+    margin-left: calc(var(--show-avatars, 1) * 3.5rem * var(--chat-zoom, 1));
+    margin-top: calc(0.6rem * var(--chat-zoom, 1));
+    padding: calc(0.45rem * var(--chat-zoom, 1));
+    border-radius: calc(0.5rem * var(--chat-zoom, 1));
+    background: rgba(25, 25, 25, 0.6);
+    max-width: calc(45rem * var(--chat-zoom, 1));
+    font-size: calc(1rem * var(--chat-zoom, 1));
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(80, 80, 80, 0.2);
+    animation: fadeIn 0.3s ease-in-out forwards;
+    display: flex;
+    flex-direction: column;
+    gap: calc(0.3rem * var(--chat-zoom, 1));
+    max-height: calc(15rem * var(--chat-zoom, 1));
+    overflow-y: auto;
+}
+
+.commandSnippets::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+.commandSnippets::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 0.25rem;
+}
+
+.commandSnippets::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 0.25rem;
+}
+
+.commandSnippets::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.commandSnippetItem {
+    display: flex;
+    flex-direction: column;
+    padding: calc(0.45rem * var(--chat-zoom, 1));
+    background: rgba(40, 40, 40, 0.8);
+    border-radius: calc(0.4rem * var(--chat-zoom, 1));
+    border: 1px solid rgba(60, 60, 60, 0.3);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.commandSnippetItem:hover {
+    background: rgba(50, 50, 50, 0.8);
+    border-color: rgba(80, 80, 80, 0.5);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.commandSnippetItemSelected {
+    background: rgba(80, 80, 80, 0.6) !important;
+    border-color: rgba(120, 120, 120, 0.8) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+}
+
+.commandSnippetHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.commandSnippetCommand {
+    display: flex;
+    align-items: center;
+    gap: calc(0.3rem * var(--chat-zoom, 1));
+    flex-wrap: wrap;
+}
+
+.commandSnippetCommandText {
+    color: #dedede;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    font-size: calc(0.9rem * var(--chat-zoom, 1));
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.commandSnippetParam {
+    background: rgba(100, 149, 237, 0.2);
+    color: #6495ED;
+    padding: calc(0.1rem * var(--chat-zoom, 1)) calc(0.2rem * var(--chat-zoom, 1));
+    border-radius: calc(0.3rem * var(--chat-zoom, 1));
+    font-size: calc(0.8rem * var(--chat-zoom, 1));
+    font-weight: 500;
+    border: 1px solid rgba(100, 149, 237, 0.3);
+    font-family: 'Courier New', monospace;
+    white-space: nowrap;
+}
+
+.commandSnippetParamActive {
+    background: rgba(100, 149, 237, 0.4);
+    border-color: rgba(100, 149, 237, 0.6);
+    box-shadow: 0 0 8px rgba(100, 149, 237, 0.5);
+}
+
+.commandSnippetParamValid {
+    background: rgba(60, 179, 113, 0.2);
+    color: #3CB371;
+    border-color: rgba(60, 179, 113, 0.6);
+    box-shadow: 0 0 8px rgba(60, 179, 113, 0.5);
+}
+
+.commandSnippetParamInvalid {
+    background: rgba(255, 99, 71, 0.2);
+    color: #FF6347;
+    border-color: rgba(255, 99, 71, 0.6);
+    box-shadow: 0 0 8px rgba(255, 99, 71, 0.5);
+}
+
+.commandSnippetDescription {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: calc(0.75rem * var(--chat-zoom, 1));
+    line-height: calc(1.3rem * var(--chat-zoom, 1));
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -244,6 +365,8 @@
     height: calc(1.5rem * var(--chat-zoom, 1));
     color: #ffffff;
     outline: none;
+    margin-top: auto;
+    margin-bottom: 0;
     transition: border-color 0.3s ease;
 }
 
@@ -272,8 +395,7 @@
     background: rgba(25, 25, 25, 0.95);
     border: 1px solid rgba(80, 80, 80, 0.3);
     border-radius: 0.75rem;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(20px);
+    box-shadow: 0 1.25rem 2.5rem rgba(0, 0, 0, 0.5);
     outline: none;
     overflow: hidden;
     animation: scaleIn 0.3s ease-out;
