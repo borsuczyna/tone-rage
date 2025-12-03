@@ -1,18 +1,10 @@
 import { CommandData, type CommandSnippet } from '@shared/Models/CommandSnippets';
 import EventService from './EventService';
-import Chat from '@/Features/Chat/Chat';
 
 export default class CommandService {
     private static commands: Map<string, CommandData> = new Map();
 
     public static async init() {
-        this.registerCommandHandler({
-            command: '/help',
-            description: 'Show available commands'
-        }, (/* player: PlayerMp */) => {
-            Chat.outputChatMessage('Command system', 'Help command executed on client.');
-        });
-
         EventService.registerEventHandler('commandService:initializeCommands', this.registerCommandsFromServer.bind(this));
     }
 
