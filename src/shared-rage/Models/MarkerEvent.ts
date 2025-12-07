@@ -1,7 +1,7 @@
-import Marker from "../Entities/Marker";
-import MarkerHitType from "./MarkerHitType";
+import Marker from '../Entities/Marker';
+import MarkerHitType from './MarkerHitType';
 
 export default interface MarkerEvent {
-    marker: Marker | null;
-    callback: (hitType: MarkerHitType, player: PlayerMp, marker?: Marker) => void;
+	marker: Marker | null;
+	callback: (hitType: MarkerHitType, player: PlayerMp, marker?: Marker) => void;
 }

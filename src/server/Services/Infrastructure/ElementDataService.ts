@@ -102,7 +102,7 @@ export default class ElementDataService {
 					if (ignoreClient !== null && player.id === ignoreClient.id) {
 						return;
 					}
-					
+
 					EventService.triggerClientEvent(player, 'elementData:sync', elementId, entry.key, entry.value);
 				});
 				break;

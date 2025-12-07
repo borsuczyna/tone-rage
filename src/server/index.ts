@@ -1,22 +1,22 @@
 import Database from './Database/Database';
-import AnticheatService from './Features/Anticheat/AnticheatService';
-import AuthService from './Features/Auth/AuthService';
-import EventService from './Services/EventService';
-import ElementDataService from './Services/ElementDataService';
-import FetchService from './Services/FetchService';
-import ShutdownService from './Services/ShutdownService';
-import VehicleService from './Features/Vehicle/VehicleService';
+import AnticheatService from './Services/Security/AnticheatService';
+import AuthService from './Services/Core/AuthService';
+import EventService from './Services/Infrastructure/EventService';
+import ElementDataService from './Services/Infrastructure/ElementDataService';
+import FetchService from './Services/Infrastructure/FetchService';
+import ShutdownService from './Services/Infrastructure/ShutdownService';
+import VehicleService from './Services/Core/VehicleService';
 import Tests from './Tests/Tests';
-import SpawnService from './Features/Spawn/SpawnService';
-import UserService from './Features/User/UserService';
+import SpawnService from './Services/Core/SpawnService';
+import UserService from './Services/Core/UserService';
 import MoneyServiceTest from './Tests/MoneyServiceTest';
 import AtmFeature from './Features/Atm/AtmFeature';
 import MarkerTest from './Tests/MarkerTest';
 import MarkerService from '@shared-rage/Services/MarkerService';
 import VehicleInteractionWheel from './Features/InteractionWheel/VehicleInteractionWheel';
-import MarkerServerService from './Services/MarkerServerService';
+import MarkerServerService from './Services/Infrastructure/MarkerServerService';
 import Chat from './Features/Chat/Chat';
-import CommandService from './Services/CommandService';
+import CommandService from './Services/Infrastructure/CommandService';
 
 (async () => {
 	await Database.init();
@@ -27,23 +27,23 @@ import CommandService from './Services/CommandService';
 	await ShutdownService.init();
 	await FetchService.init();
 	await AuthService.init();
-    await SpawnService.init();
-    await UserService.init();
-    await MarkerService.init();
-    await MarkerServerService.init();
-    await Chat.init();
-    await CommandService.init();
-	
+	await SpawnService.init();
+	await UserService.init();
+	await MarkerService.init();
+	await MarkerServerService.init();
+	await Chat.init();
+	await CommandService.init();
+
 	// Features
 	await AtmFeature.init();
-    await VehicleInteractionWheel.init();
+	await VehicleInteractionWheel.init();
 
 	// Debug
 	Tests.getPositionCommandTest();
-    Tests.createVehicleCommandTest();
-    Tests.createTimeCommandTest();
-    MoneyServiceTest.init();
-    MarkerTest.init();
+	Tests.createVehicleCommandTest();
+	Tests.createTimeCommandTest();
+	MoneyServiceTest.init();
+	MarkerTest.init();
 	// EventServiceTest.init();
 	// ElementDataServiceTest.init();
 	// FetchServiceTest.init();

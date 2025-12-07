@@ -43,7 +43,9 @@ export default class Database {
 	public static async Select<T extends DatabaseEntity>(entityClass: new () => T, query: string, params: any[] = []): Promise<T[]> {
 		try {
 			const [rows] = await this.connection.execute<mysql.RowDataPacket[]>(query, params);
-			return rows.map((row) => (entityClass as any).fromDatabaseRow ? (entityClass as any).fromDatabaseRow(row) : Object.assign(new entityClass(), row));
+			return rows.map((row) =>
+				(entityClass as any).fromDatabaseRow ? (entityClass as any).fromDatabaseRow(row) : Object.assign(new entityClass(), row)
+			);
 		} catch (error) {
 			this.logger.error(`Select query failed: ${error}`);
 			return [];

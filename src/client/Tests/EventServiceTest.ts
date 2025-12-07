@@ -1,4 +1,4 @@
-import EventService from '../Services/EventService';
+import EventService from '../Services/Infrastructure/EventService';
 
 export default class EventServiceTest {
 	public static init() {

@@ -1,4 +1,4 @@
-import InterfaceService from '../Services/InterfaceService';
+import InterfaceService from '../Services/Infrastructure/InterfaceService';
 
 export default class InterfaceServiceTest {
 	public static init() {

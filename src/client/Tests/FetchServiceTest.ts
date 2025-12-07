@@ -1,4 +1,4 @@
-import FetchService from '../Services/FetchService';
+import FetchService from '../Services/Infrastructure/FetchService';
 
 export default class FetchServiceTest {
 	public static init() {

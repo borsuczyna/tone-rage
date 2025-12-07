@@ -23,9 +23,9 @@ export class Timer {
 		TimerService.killTimer(this);
 	}
 
-    public kill() {
+	public kill() {
 		clearInterval(this.timer);
-    }
+	}
 
 	private call() {
 		this.callback();
@@ -52,6 +52,6 @@ export default class TimerService {
 			this.timers.splice(index, 1);
 		}
 
-        timer.kill();
+		timer.kill();
 	}
 }

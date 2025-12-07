@@ -1,6 +1,6 @@
 enum MarkerType {
-    Cylinder,
-    Box,
+	Cylinder,
+	Box
 }
 
 export default MarkerType;

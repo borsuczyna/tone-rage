@@ -1,7 +1,7 @@
 import HandlingData from '@shared/Models/HandlingData';
-import EventService from '@/Services/EventService';
-import InterfaceService from '@/Services/InterfaceService';
-import NotificationService from '@/Services/NotificationService';
+import EventService from '@/Services/Infrastructure/EventService';
+import InterfaceService from '@/Services/Infrastructure/InterfaceService';
+import NotificationService from '@/Services/Infrastructure/NotificationService';
 import { NotificationType } from '@shared/Models/NotificationType';
 
 /**
@@ -18,10 +18,10 @@ export default class HandlingEditorService {
 		mp.events.add('playerCommand', this.onCommand.bind(this));
 
 		// Register event to receive handling data requests
-        EventService.registerEventHandler('handlingEditor:getData', this.getVehicleHandlingData.bind(this));
+		EventService.registerEventHandler('handlingEditor:getData', this.getVehicleHandlingData.bind(this));
 
 		// Register event to apply handling changes
-        EventService.registerEventHandler('handlingEditor:applyChanges', this.applyHandlingChanges.bind(this));
+		EventService.registerEventHandler('handlingEditor:applyChanges', this.applyHandlingChanges.bind(this));
 
 		// Register event to close the interface
 		mp.events.add('handlingEditor:close', this.closeHandlingEditor.bind(this));
@@ -45,7 +45,7 @@ export default class HandlingEditorService {
 		const vehicle = mp.players.local.vehicle;
 
 		if (!vehicle) {
-            NotificationService.addNotification(NotificationType.Warning, 'Handling Editor', 'You must be in a vehicle to use the handling editor.');
+			NotificationService.addNotification(NotificationType.Warning, 'Handling Editor', 'You must be in a vehicle to use the handling editor.');
 			return;
 		}
 
@@ -92,8 +92,8 @@ export default class HandlingEditorService {
 	 */
 	private static sendVehicleHandlingData(vehicle: VehicleMp) {
 		try {
-            const mass = vehicle.getHandling('fMass');
-            NotificationService.addNotification(NotificationType.Info, 'Handling Editor', `Vehicle Mass: ${mass}`);
+			const mass = vehicle.getHandling('fMass');
+			NotificationService.addNotification(NotificationType.Info, 'Handling Editor', `Vehicle Mass: ${mass}`);
 			const handlingData = {
 				// Physical Attributes
 				mass: vehicle.getHandling('fMass'),
@@ -164,7 +164,7 @@ export default class HandlingEditorService {
 		const vehicle = mp.players.local.vehicle;
 
 		if (!vehicle) {
-            NotificationService.addNotification(NotificationType.Warning, 'Handling Editor', 'You must be in a vehicle to apply handling changes.');
+			NotificationService.addNotification(NotificationType.Warning, 'Handling Editor', 'You must be in a vehicle to apply handling changes.');
 			return;
 		}
 
@@ -177,14 +177,14 @@ export default class HandlingEditorService {
 				if (fieldName) {
 					vehicle.setHandling(fieldName, value);
 				} else {
-                    NotificationService.addNotification(NotificationType.Warning, 'Handling Editor', `Unknown handling field for key: ${key}`);
-                }
+					NotificationService.addNotification(NotificationType.Warning, 'Handling Editor', `Unknown handling field for key: ${key}`);
+				}
 			});
 
-            NotificationService.addNotification(NotificationType.Success, 'Handling Editor', 'Handling changes applied successfully.');
+			NotificationService.addNotification(NotificationType.Success, 'Handling Editor', 'Handling changes applied successfully.');
 		} catch (error) {
 			mp.console.logError(`Error applying handling changes: ${error}`);
-            NotificationService.addNotification(NotificationType.Error, 'Handling Editor', 'Error applying handling changes.');
+			NotificationService.addNotification(NotificationType.Error, 'Handling Editor', 'Error applying handling changes.');
 		}
 	}
 

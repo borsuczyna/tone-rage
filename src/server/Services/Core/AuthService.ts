@@ -1,26 +1,26 @@
 import { AuthLoginData, AuthRegisterData, AuthResponse } from '@shared/Models/AuthData';
-import FetchService from '@/Services/FetchService';
-import UserService from '@/Features/User/UserService';
+import FetchService from '@/Services/Infrastructure/FetchService';
+import UserService from '@/Services/Core/UserService';
 import Logger from '@shared/Logger';
 
 export default class AuthService {
 	private static logger: Logger = Logger.getLogger(AuthService);
 
 	public static async init() {
-        mp.events.add('playerJoin', this.handlePlayerJoin.bind(this));
+		mp.events.add('playerJoin', this.handlePlayerJoin.bind(this));
 		FetchService.registerFetchListener('auth:login', this.handleLogin.bind(this));
 		FetchService.registerFetchListener('auth:register', this.handleRegister.bind(this));
 
-        // gdy gracz zdechnie to go odrodz
-        mp.events.add('playerDeath', (player: PlayerMp) => {
-            const pos = player.position;
-            player.spawn(new mp.Vector3(pos.x, pos.y, pos.z + 1));
-        });
+		// gdy gracz zdechnie to go odrodz
+		mp.events.add('playerDeath', (player: PlayerMp) => {
+			const pos = player.position;
+			player.spawn(new mp.Vector3(pos.x, pos.y, pos.z + 1));
+		});
 	}
 
-    private static handlePlayerJoin(client: PlayerMp) {
-        client.alpha = 0;
-    }
+	private static handlePlayerJoin(client: PlayerMp) {
+		client.alpha = 0;
+	}
 
 	private static async handleLogin(client: PlayerMp, data: AuthLoginData): Promise<AuthResponse> {
 		this.logger.info(`Login attempt for username: ${data.username}`);
@@ -34,18 +34,18 @@ export default class AuthService {
 			};
 		}
 
-        const userId = result.user.uid;
-        const player = UserService.getActivePlayerByUserId(userId);
-        if (player) {
+		const userId = result.user.uid;
+		const player = UserService.getActivePlayerByUserId(userId);
+		if (player) {
 			this.logger.warn(`Login failed for username: ${data.username}, reason: already logged in`);
-            return {
-                success: false,
-                message: 'auth.login.alreadyLoggedIn'
-            };
+			return {
+				success: false,
+				message: 'auth.login.alreadyLoggedIn'
+			};
 		}
 
 		this.logger.info(`Login successful for username: ${data.username}`);
-        await UserService.assignUserData(client, result.user);
+		await UserService.assignUserData(client, result.user);
 
 		return {
 			success: true,

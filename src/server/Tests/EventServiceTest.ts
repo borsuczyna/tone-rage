@@ -1,4 +1,4 @@
-import EventService from '../Services/EventService';
+import EventService from '../Services/Infrastructure/EventService';
 import Logger from '@shared/Logger';
 
 export default class EventServiceTest {
