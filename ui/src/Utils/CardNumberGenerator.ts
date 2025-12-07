@@ -2,6 +2,9 @@
  * Generate a deterministic card number from user ID
  * Format: 4 groups of 4 digits (XXXX-XXXX-XXXX-XXXX)
  * The card number is unique for each user ID
+ * 
+ * Note: This is for display purposes only and not cryptographically secure.
+ * Card numbers are generated client-side for visual representation.
  */
 export function generateCardNumber(userId: number): string {
     // Use a simple hash function to generate deterministic numbers from user ID

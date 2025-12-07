@@ -20,14 +20,19 @@ export default function TransactionsTab({ transactions }: TransactionsTabProps) 
         });
     };
 
-    // Calculate income vs expenses
-    const income = transactions
-        .filter(t => t.type === 'deposit')
-        .reduce((sum, t) => sum + t.amount, 0);
-    
-    const expenses = transactions
-        .filter(t => t.type === 'withdraw')
-        .reduce((sum, t) => sum + t.amount, 0);
+    // Calculate income vs expenses in a single pass
+    const { income, expenses } = transactions.reduce(
+        (acc, t) => {
+            if (t.type === 'deposit') {
+                acc.income += t.amount;
+            } else if (t.type === 'withdraw') {
+                acc.expenses += t.amount;
+            }
+            // Note: Other transaction types (like 'transfer') are not categorized in the chart
+            return acc;
+        },
+        { income: 0, expenses: 0 }
+    );
 
     // Chart configuration
     const chartOptions: ApexOptions = {
