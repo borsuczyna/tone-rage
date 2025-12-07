@@ -1,4 +1,3 @@
-import * as Icons from 'lucide-react';
 import type { AtmTransactionData } from '@shared/Models/MoneyLogData';
 import { formatMoney } from '@shared/MoneyHelper';
 import translate from '@shared/Translation/Translation';
@@ -13,8 +12,8 @@ interface TransactionsTabProps {
 export default function TransactionsTab({ transactions }: TransactionsTabProps) {
     const formatDate = (date: Date) => {
         return date.toLocaleString('en-US', {
-            month: 'short',
             day: '2-digit',
+            month: 'short',
             hour: '2-digit',
             minute: '2-digit'
         });
@@ -28,42 +27,38 @@ export default function TransactionsTab({ transactions }: TransactionsTabProps) 
             } else if (t.type === 'withdraw') {
                 acc.expenses += t.amount;
             }
-            // Note: Other transaction types (like 'transfer') are not categorized in the chart
             return acc;
         },
         { income: 0, expenses: 0 }
     );
 
-    // Chart configuration
+    const totalEarned = income - expenses;
+
+    // Chart configuration for Wasabi design
     const chartOptions: ApexOptions = {
         chart: {
             type: 'donut',
             background: 'transparent',
             fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif',
         },
-        colors: ['#22c55e', '#ef4444'],
-        labels: [translate('atm.chart.income'), translate('atm.chart.expenses')],
+        colors: ['#10b981', '#3b82f6', '#ef4444'],
+        labels: ['Category 1', 'Category 2', 'Category 3'],
         legend: {
-            position: 'bottom',
-            labels: {
-                colors: ['#ffffff', '#ffffff']
-            }
+            show: false
         },
         plotOptions: {
             pie: {
                 donut: {
-                    size: '65%',
+                    size: '75%',
                     labels: {
                         show: true,
                         total: {
                             show: true,
-                            label: translate('atm.chart.total'),
+                            label: transactions.length.toString(),
                             color: '#ffffff',
-                            formatter: () => formatMoney(income + expenses)
-                        },
-                        value: {
-                            color: '#ffffff',
-                            formatter: (val) => formatMoney(Number(val))
+                            fontSize: '2rem',
+                            fontWeight: 700,
+                            formatter: () => translate('atm.transactions.label')
                         }
                     }
                 }
@@ -72,73 +67,109 @@ export default function TransactionsTab({ transactions }: TransactionsTabProps) 
         dataLabels: {
             enabled: false
         },
+        stroke: {
+            width: 0
+        },
         tooltip: {
-            theme: 'dark',
-            y: {
-                formatter: (val) => formatMoney(val)
-            }
+            enabled: false
         }
     };
 
-    const chartSeries = [income, expenses];
+    const chartSeries = [income, expenses / 2, expenses / 2];
 
     return (
         <div className={styles.transactionsContainer}>
             <div className={styles.transactionsLeft}>
-                <div className={styles.transactionsHeader}>
-                    <h3>{translate('atm.transactions.title')}</h3>
-                    <span className={styles.transactionsCount}>
-                        {transactions.length} {translate('atm.transactions.total')}
-                    </span>
+                {/* Search and Filter */}
+                <div className={styles.transactionsSearch}>
+                    <input 
+                        type="text" 
+                        placeholder={translate('atm.transactions.search')}
+                        className={styles.searchInput}
+                    />
+                    <select className={styles.filterDropdown}>
+                        <option>{translate('atm.transactions.personal')}</option>
+                    </select>
                 </div>
-                <div className={styles.transactionsListScroll}>
-                    {transactions.length === 0 ? (
-                        <div className={styles.noTransactions}>
-                            {translate('atm.dashboard.noTransactions')}
+
+                {/* Transactions Table */}
+                <div className={styles.transactionsMain}>
+                    <div className={styles.transactionsTable}>
+                        <div className={styles.transactionsTableHeader}>
+                            <div>{translate('atm.transactions.action')}</div>
+                            <div>{translate('atm.transactions.date')}</div>
+                            <div>{translate('atm.transactions.amount')}</div>
                         </div>
-                    ) : (
-                        transactions.map((transaction) => (
-                            <div key={transaction.id} className={styles.transactionItem}>
-                                <div className={styles.transactionIcon}>
-                                    {transaction.type === 'deposit' ? (
-                                        <Icons.ArrowDown size="1rem" className={styles.depositIcon} />
-                                    ) : (
-                                        <Icons.ArrowUp size="1rem" className={styles.withdrawIcon} />
-                                    )}
-                                </div>
-                                <div className={styles.transactionDetails}>
-                                    <div className={styles.transactionAmount}>
-                                        {transaction.type === 'deposit' ? '+' : '-'}
-                                        {formatMoney(transaction.amount)}
+                        {transactions.length === 0 ? (
+                            <div className={styles.noTransactions}>
+                                {translate('atm.dashboard.noTransactions')}
+                            </div>
+                        ) : (
+                            transactions.map((transaction) => (
+                                <div key={transaction.id} className={styles.transactionsTableRow}>
+                                    <div>
+                                        {transaction.description || (transaction.type === 'deposit' ? 'Bank Account Deposit' : 'Bank Account Withdraw')}
                                     </div>
-                                    <div className={styles.transactionDate}>
+                                    <div style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
                                         {formatDate(transaction.date)}
                                     </div>
+                                    <div style={{ color: transaction.type === 'deposit' ? '#10b981' : '#ef4444', fontWeight: 600 }}>
+                                        {transaction.type === 'deposit' ? '+' : '-'} {formatMoney(transaction.amount)}
+                                    </div>
                                 </div>
-                                <div className={styles.transactionBalance}>
-                                    {translate('atm.logs.balance')}: {formatMoney(transaction.balanceAfter)}
-                                </div>
-                            </div>
-                        ))
-                    )}
+                            ))
+                        )}
+                    </div>
                 </div>
             </div>
 
-            {/* Chart */}
+            {/* Chart and Stats */}
             <div className={styles.transactionsRight}>
-                <div className={styles.chartContainer}>
-                    <h3>{translate('atm.chart.title')}</h3>
+                <div className={styles.transactionsRightCard}>
+                    <h3>{translate('atm.transactions.bankTransactions')}</h3>
+                    <p>{translate('atm.transactions.checkAccount')}</p>
+                    
                     {income === 0 && expenses === 0 ? (
                         <div className={styles.noChartData}>
                             {translate('atm.chart.noData')}
                         </div>
                     ) : (
-                        <Chart
-                            options={chartOptions}
-                            series={chartSeries}
-                            type="donut"
-                            height={280}
-                        />
+                        <>
+                            <div className={styles.chartContainer}>
+                                <Chart
+                                    options={chartOptions}
+                                    series={chartSeries}
+                                    type="donut"
+                                    height={250}
+                                />
+                            </div>
+                            
+                            <div className={styles.chartStats}>
+                                <div className={styles.chartStat}>
+                                    <div className={styles.chartStatLabel}>
+                                        <div className={styles.chartStatIndicator} style={{ background: '#10b981' }} />
+                                        {translate('atm.chart.moneyReceived')}
+                                    </div>
+                                    <div className={styles.chartStatValue}>+ {formatMoney(income)}</div>
+                                </div>
+                                <div className={styles.chartStat}>
+                                    <div className={styles.chartStatLabel}>
+                                        <div className={styles.chartStatIndicator} style={{ background: '#ef4444' }} />
+                                        {translate('atm.chart.moneySent')}
+                                    </div>
+                                    <div className={styles.chartStatValue}>- {formatMoney(expenses)}</div>
+                                </div>
+                                <div className={styles.chartStat}>
+                                    <div className={styles.chartStatLabel}>
+                                        <div className={styles.chartStatIndicator} style={{ background: '#10b981' }} />
+                                        {translate('atm.chart.totalEarned')}
+                                    </div>
+                                    <div className={styles.chartStatValue} style={{ color: totalEarned >= 0 ? '#10b981' : '#ef4444' }}>
+                                        {totalEarned >= 0 ? '+' : ''} {formatMoney(totalEarned)}
+                                    </div>
+                                </div>
+                            </div>
+                        </>
                     )}
                 </div>
             </div>

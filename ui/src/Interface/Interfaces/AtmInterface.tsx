@@ -6,10 +6,10 @@ import type { AtmTransactionData } from '@shared/Models/MoneyLogData';
 import { formatMoney } from '@shared/MoneyHelper';
 import translate from '@shared/Translation/Translation';
 import { DashboardTab, TransactionsTab, DepositModal, WithdrawModal, TransferModal } from './Components/atm';
-import { fetchServerData, triggerEvent } from 'src/Hooks/Fetch';
+import { fetchServerData } from 'src/Hooks/Fetch';
 import * as Icons from 'lucide-react';
 
-type AtmTab = 'dashboard' | 'transactions';
+
 
 interface AtmData {
     bankMoney: number;
@@ -18,10 +18,12 @@ interface AtmData {
     transactions: AtmTransactionData[];
 }
 
+type SidebarTab = 'dashboard' | 'transactions' | 'accounts' | 'society' | 'savings' | 'loans';
+
 export default function AtmInterface() {
     const { isInterfaceVisible } = useInterfaceVisibility();
     const { userInfo } = useUserInfo();
-    const [activeTab, setActiveTab] = useState<AtmTab>('dashboard');
+    const [activeTab, setActiveTab] = useState<SidebarTab>('dashboard');
     const [bankBalance, setBankBalance] = useState(0);
     const [walletMoney, setWalletMoney] = useState(0);
     const [userId, setUserId] = useState(0);
@@ -119,10 +121,6 @@ export default function AtmInterface() {
         }
     };
 
-    const handleClose = () => {
-        triggerEvent('atm:closeInterface');
-    };
-
     if (!isInterfaceVisible('AtmInterface')) return null;
 
     return (
@@ -131,61 +129,93 @@ export default function AtmInterface() {
                 <div className={styles.atmMachine}>
                     {/* Header */}
                     <div className={styles.header}>
-                        <div className={styles.headerLeft}>
+                        <div className={styles.headerBranding}>
+                            <span className={styles.brandName}>WASABI</span>
+                            <span className={styles.brandSuffix}>BANKING</span>
+                        </div>
+                        <div className={styles.headerCenter}>
+                            <div className={styles.userAvatar}>
+                                <Icons.User size="1.5rem" />
+                            </div>
                             <div className={styles.welcomeText}>
-                                <span className={styles.welcome}>{translate('atm.header.welcome')}</span>
-                                <span className={styles.username}>{userInfo.username}</span>
+                                <span>{translate('atm.header.welcome')}, {userInfo.username}</span>
                             </div>
                         </div>
                         <div className={styles.headerRight}>
-                            <div className={styles.balanceInfo}>
-                                <div className={styles.balanceItem}>
-                                    <Icons.Wallet size="1rem" />
-                                    <span>{formatMoney(walletMoney)}</span>
-                                </div>
-                                <div className={styles.balanceItem}>
-                                    <Icons.CreditCard size="1rem" />
-                                    <span>{formatMoney(bankBalance)}</span>
-                                </div>
+                            <div className={styles.walletBadge}>
+                                <span className={styles.walletLabel}>{translate('atm.header.wallet')}</span>
+                                <span className={styles.walletAmount}>{formatMoney(walletMoney)}</span>
                             </div>
-                            <button className={styles.closeButton} onClick={handleClose}>
-                                <Icons.X size="1.5rem" />
-                            </button>
                         </div>
                     </div>
 
-                    {/* Tab Navigation */}
-                    <div className={styles.tabNavigation}>
-                        <button 
-                            className={`${styles.tab} ${activeTab === 'dashboard' ? styles.active : ''}`}
-                            onClick={() => setActiveTab('dashboard')}
-                        >
-                            <Icons.LayoutDashboard size="1rem" />
-                            {translate('atm.tab.dashboard')}
-                        </button>
-                        <button 
-                            className={`${styles.tab} ${activeTab === 'transactions' ? styles.active : ''}`}
-                            onClick={() => setActiveTab('transactions')}
-                        >
-                            <Icons.Receipt size="1rem" />
-                            {translate('atm.tab.transactions')}
-                        </button>
-                    </div>
+                    <div className={styles.mainLayout}>
+                        {/* Sidebar Navigation */}
+                        <div className={styles.sidebar}>
+                            <button 
+                                className={`${styles.sidebarItem} ${activeTab === 'dashboard' ? styles.active : ''}`}
+                                onClick={() => setActiveTab('dashboard')}
+                            >
+                                <Icons.LayoutDashboard size="1.2rem" />
+                                <span>{translate('atm.sidebar.dashboard')}</span>
+                            </button>
+                            <button 
+                                className={`${styles.sidebarItem} ${activeTab === 'transactions' ? styles.active : ''}`}
+                                onClick={() => setActiveTab('transactions')}
+                            >
+                                <Icons.Receipt size="1.2rem" />
+                                <span>{translate('atm.sidebar.transactions')}</span>
+                            </button>
+                            <button 
+                                className={`${styles.sidebarItem} ${activeTab === 'accounts' ? styles.active : ''}`}
+                                onClick={() => setActiveTab('accounts')}
+                            >
+                                <Icons.Users size="1.2rem" />
+                                <span>{translate('atm.sidebar.accounts')}</span>
+                            </button>
+                            <button 
+                                className={`${styles.sidebarItem} ${activeTab === 'society' ? styles.active : ''}`}
+                                onClick={() => setActiveTab('society')}
+                            >
+                                <Icons.Building2 size="1.2rem" />
+                                <span>{translate('atm.sidebar.society')}</span>
+                            </button>
+                            <button 
+                                className={`${styles.sidebarItem} ${activeTab === 'savings' ? styles.active : ''}`}
+                                onClick={() => setActiveTab('savings')}
+                            >
+                                <Icons.PiggyBank size="1.2rem" />
+                                <span>{translate('atm.sidebar.savings')}</span>
+                            </button>
+                            <button 
+                                className={`${styles.sidebarItem} ${activeTab === 'loans' ? styles.active : ''}`}
+                                onClick={() => setActiveTab('loans')}
+                            >
+                                <Icons.Landmark size="1.2rem" />
+                                <span>{translate('atm.sidebar.loans')}</span>
+                            </button>
+                        </div>
 
-                    {/* Main Content */}
-                    <div className={styles.content}>
-                        {activeTab === 'dashboard' ? (
-                            <DashboardTab 
-                                bankBalance={bankBalance}
-                                recentTransactions={transactions}
-                                userId={userId}
-                                onDepositClick={() => setIsDepositModalOpen(true)}
-                                onWithdrawClick={() => setIsWithdrawModalOpen(true)}
-                                onTransferClick={() => setIsTransferModalOpen(true)}
-                            />
-                        ) : (
-                            <TransactionsTab transactions={transactions} />
-                        )}
+                        {/* Main Content */}
+                        <div className={styles.content}>
+                            {activeTab === 'dashboard' ? (
+                                <DashboardTab 
+                                    bankBalance={bankBalance}
+                                    recentTransactions={transactions}
+                                    userId={userId}
+                                    onDepositClick={() => setIsDepositModalOpen(true)}
+                                    onWithdrawClick={() => setIsWithdrawModalOpen(true)}
+                                    onTransferClick={() => setIsTransferModalOpen(true)}
+                                />
+                            ) : activeTab === 'transactions' ? (
+                                <TransactionsTab transactions={transactions} />
+                            ) : (
+                                <div className={styles.comingSoon}>
+                                    <Icons.Construction size="3rem" />
+                                    <p>{translate('atm.comingSoon')}</p>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
