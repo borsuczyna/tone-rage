@@ -1,0 +1,80 @@
+@import '../../../styles/tone-variables.css';
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.modalContent {
+    background: rgba(25, 25, 25, 0.95);
+    border: 1px solid rgba(80, 80, 80, 0.4);
+    border-radius: 1rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    width: 90%;
+    max-width: 28rem;
+    animation: slideUp 0.3s ease-out;
+}
+
+.modalHeader {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(80, 80, 80, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modalHeader h2 {
+    margin: 0;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.closeButton {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.closeButton:hover {
+    color: white;
+}
+
+.modalBody {
+    padding: 1.5rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

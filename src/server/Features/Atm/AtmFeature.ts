@@ -4,6 +4,7 @@ import { AtmTransactionData } from '@shared/Models/MoneyLogData';
 import NotificationService from '@/Services/Infrastructure/NotificationService';
 import { NotificationType } from '@shared/Models/NotificationType';
 import translate from '@shared/Translation/Translation';
+import ElementDataService from '@/Services/Infrastructure/ElementDataService';
 
 export default class AtmFeature {
 	public static async init() {
@@ -13,10 +14,13 @@ export default class AtmFeature {
 		// Register fetch listeners for transactions
 		FetchService.registerFetchListener('atm:withdraw', this.onWithdraw.bind(this));
 		FetchService.registerFetchListener('atm:deposit', this.onDeposit.bind(this));
+		FetchService.registerFetchListener('atm:transfer', this.onTransfer.bind(this));
 	}
 
 	private static async onGetAtmData(player: PlayerMp, _data: any) {
 		const bankMoney = MoneyService.getPlayerBankMoney(player);
+		const walletMoney = MoneyService.getPlayerMoney(player);
+		const userId = ElementDataService.get(player, 'userId');
 		const logs = await MoneyService.getPlayerMoneyLogs(player, 50, 0);
 
 		// Convert logs to AtmTransactionData format
@@ -31,6 +35,8 @@ export default class AtmFeature {
 
 		return {
 			bankMoney,
+			walletMoney,
+			userId,
 			transactions
 		};
 	}
@@ -40,6 +46,7 @@ export default class AtmFeature {
 
 		if (success) {
 			const bankMoney = MoneyService.getPlayerBankMoney(player);
+			const walletMoney = MoneyService.getPlayerMoney(player);
 			const logs = await MoneyService.getPlayerMoneyLogs(player, 50, 0);
 
 			const transactions: AtmTransactionData[] = (logs || []).map((log, index) => ({
@@ -54,6 +61,7 @@ export default class AtmFeature {
 			return {
 				success: true,
 				bankMoney,
+				walletMoney,
 				transactions
 			};
 		} else {
@@ -73,6 +81,7 @@ export default class AtmFeature {
 
 		if (success) {
 			const bankMoney = MoneyService.getPlayerBankMoney(player);
+			const walletMoney = MoneyService.getPlayerMoney(player);
 			const logs = await MoneyService.getPlayerMoneyLogs(player, 50, 0);
 
 			const transactions: AtmTransactionData[] = (logs || []).map((log, index) => ({
@@ -87,6 +96,7 @@ export default class AtmFeature {
 			return {
 				success: true,
 				bankMoney,
+				walletMoney,
 				transactions
 			};
 		} else {
@@ -97,6 +107,19 @@ export default class AtmFeature {
 				translate('atm.insufficient_funds_deposit')
 			);
 		}
+
+		return { success: false };
+	}
+
+	private static async onTransfer(player: PlayerMp, data: { targetUserId: number; amount: number }) {
+		// For now, just return not implemented
+		// This would require additional MoneyService methods for bank-to-bank transfers
+		NotificationService.addNotification(
+			player,
+			NotificationType.Error,
+			translate('default.error'),
+			translate('atm.transfer_not_implemented')
+		);
 
 		return { success: false };
 	}
