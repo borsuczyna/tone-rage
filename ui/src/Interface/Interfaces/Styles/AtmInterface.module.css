@@ -3,40 +3,58 @@
 
 .container {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     color: white;
     z-index: 1000;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(15, 15, 15, 0.95), rgba(25, 25, 25, 0.95));
+}
+
+.container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(40, 40, 40, 0.3) 0%, rgba(0, 0, 0, 0.8) 100%);
+    pointer-events: none;
 }
 
 .atmMachine {
     width: 56rem;
     max-width: 90vw;
     max-height: 90vh;
-    background: rgba(25, 25, 25, 0.95);
-    border: 1px solid rgba(80, 80, 80, 0.4);
+    background: rgba(45, 45, 45, 0.15);
+    border: 1px solid rgba(80, 80, 80, 0.3);
     border-radius: 1rem;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(20px);
     overflow: hidden;
-    animation: slideIn 0.4s ease-out;
+    animation: scaleUp 0.3s ease-out;
     transform-origin: center center;
     display: flex;
     flex-direction: column;
+    position: relative;
+    z-index: 1;
 }
 
 /* Header */
 .header {
-    background: rgba(30, 30, 30, 0.9);
-    padding: 1rem 1.5rem;
+    background: rgba(30, 30, 30, 0.5);
+    padding: 1.25rem 1.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid rgba(80, 80, 80, 0.4);
+    border-bottom: 1px solid rgba(80, 80, 80, 0.3);
+    backdrop-filter: blur(10px);
 }
 
 .headerLeft {
@@ -104,20 +122,21 @@
 /* Tab Navigation */
 .tabNavigation {
     display: flex;
-    background: rgba(25, 25, 25, 0.7);
-    border-bottom: 1px solid rgba(80, 80, 80, 0.3);
+    background: rgba(30, 30, 35, 0.5);
+    border-bottom: 1px solid rgba(80, 80, 80, 0.25);
+    backdrop-filter: blur(10px);
 }
 
 .tab {
     flex: 1;
-    padding: 1rem;
+    padding: 1rem 1.5rem;
     background: none;
     border: none;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(200, 200, 200, 0.7);
     font-weight: 500;
     font-size: 0.9rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     position: relative;
     display: flex;
     align-items: center;
@@ -126,13 +145,13 @@
 }
 
 .tab:hover {
-    color: rgba(255, 255, 255, 0.8);
-    background: rgba(40, 40, 40, 0.5);
+    color: rgba(220, 220, 220, 0.9);
+    background: rgba(40, 40, 45, 0.5);
 }
 
 .tab.active {
-    color: white;
-    background: rgba(50, 50, 50, 0.7);
+    color: rgba(255, 255, 255, 1);
+    background: rgba(45, 45, 50, 0.6);
 }
 
 .tab.active::after {
@@ -142,7 +161,7 @@
     left: 0;
     right: 0;
     height: 2px;
-    background: var(--tone-gradient-primary);
+    background: linear-gradient(90deg, transparent, rgba(200, 200, 200, 0.8), transparent);
 }
 
 /* Content Area */
@@ -156,8 +175,8 @@
 .dashboardContainer {
     display: flex;
     gap: 1.5rem;
-    padding: 1.5rem;
-    min-height: 32rem;
+    padding: 2rem;
+    min-height: 34rem;
 }
 
 .dashboardLeft {
@@ -175,10 +194,12 @@
 
 /* Balance Card */
 .balanceCard {
-    background: rgba(30, 30, 30, 0.8);
-    border: 1px solid rgba(80, 80, 80, 0.3);
+    background: rgba(35, 35, 40, 0.6);
+    border: 1px solid rgba(100, 100, 110, 0.25);
     border-radius: 0.75rem;
-    padding: 1.5rem;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .balanceCardHeader {
@@ -187,14 +208,15 @@
     gap: 0.75rem;
     color: rgba(255, 255, 255, 0.7);
     font-size: 0.9rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
+    font-weight: 500;
 }
 
 .balanceAmount {
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: 700;
     color: white;
-    background: var(--tone-gradient-primary);
+    background: linear-gradient(135deg, rgba(200, 200, 200, 1), rgba(160, 160, 160, 0.9));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -209,11 +231,13 @@
 
 /* Recent Transactions */
 .recentTransactions {
-    background: rgba(30, 30, 30, 0.8);
-    border: 1px solid rgba(80, 80, 80, 0.3);
+    background: rgba(35, 35, 40, 0.6);
+    border: 1px solid rgba(100, 100, 110, 0.25);
     border-radius: 0.75rem;
     padding: 1.5rem;
     flex: 1;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .recentTransactions h3 {
@@ -238,10 +262,12 @@
 
 /* Card Info */
 .cardInfo {
-    background: rgba(30, 30, 30, 0.8);
-    border: 1px solid rgba(80, 80, 80, 0.3);
+    background: rgba(35, 35, 40, 0.6);
+    border: 1px solid rgba(100, 100, 110, 0.25);
     border-radius: 0.75rem;
     padding: 1.5rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .cardInfoHeader {
@@ -288,18 +314,20 @@
 .transactionsContainer {
     display: flex;
     gap: 1.5rem;
-    padding: 1.5rem;
-    min-height: 32rem;
+    padding: 2rem;
+    min-height: 34rem;
 }
 
 .transactionsLeft {
     flex: 2;
     display: flex;
     flex-direction: column;
-    background: rgba(30, 30, 30, 0.8);
-    border: 1px solid rgba(80, 80, 80, 0.3);
+    background: rgba(35, 35, 40, 0.6);
+    border: 1px solid rgba(100, 100, 110, 0.25);
     border-radius: 0.75rem;
     padding: 1.5rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .transactionsRight {
@@ -336,10 +364,12 @@
 }
 
 .chartContainer {
-    background: rgba(30, 30, 30, 0.8);
-    border: 1px solid rgba(80, 80, 80, 0.3);
+    background: rgba(35, 35, 40, 0.6);
+    border: 1px solid rgba(100, 100, 110, 0.25);
     border-radius: 0.75rem;
     padding: 1.5rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .chartContainer h3 {
@@ -360,16 +390,17 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.75rem;
-    background: rgba(40, 40, 40, 0.4);
-    border: 1px solid rgba(80, 80, 80, 0.2);
+    padding: 1rem;
+    background: rgba(45, 45, 50, 0.4);
+    border: 1px solid rgba(100, 100, 110, 0.15);
     border-radius: 0.5rem;
     transition: all 0.2s ease;
 }
 
 .transactionItem:hover {
-    background: rgba(50, 50, 50, 0.5);
-    border-color: rgba(100, 100, 100, 0.3);
+    background: rgba(50, 50, 55, 0.6);
+    border-color: rgba(120, 120, 130, 0.25);
+    transform: translateY(-1px);
 }
 
 .transactionIcon {
@@ -454,10 +485,10 @@
 }
 
 /* Animations */
-@keyframes slideIn {
+@keyframes scaleUp {
     from {
         opacity: 0;
-        transform: scale(0.9);
+        transform: scale(0.8);
     }
     to {
         opacity: 1;
