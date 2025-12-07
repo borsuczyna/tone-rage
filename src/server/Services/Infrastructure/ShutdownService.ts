@@ -1,5 +1,5 @@
-import UserService from '@/Features/User/UserService';
-import VehicleService from '@/Features/Vehicle/VehicleService';
+import UserService from '@/Services/Core/UserService';
+import VehicleService from '@/Services/Core/VehicleService';
 import Logger from '@shared/Logger';
 
 export default class ShutdownService {
@@ -7,7 +7,7 @@ export default class ShutdownService {
 
 	public static async shutdown() {
 		await VehicleService.saveVehicles();
-        await UserService.savePlayers();
+		await UserService.savePlayers();
 	}
 
 	public static async onShutdownDetected() {

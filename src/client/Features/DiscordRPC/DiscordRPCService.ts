@@ -41,7 +41,9 @@ export default class DiscordRPCService {
 
 		const details = mp.players.local.isInAnyVehicle(false)
 			? mp.players.local.vehicle
-				? `${translate('discord.rpc.driving')} ${mp.game.vehicle.getDisplayNameFromVehicleModel(mp.players.local.vehicle.model)} ${translate('discord.rpc.at')} ${streetName}`
+				? `${translate('discord.rpc.driving')} ${mp.game.vehicle.getDisplayNameFromVehicleModel(mp.players.local.vehicle.model)} ${translate(
+						'discord.rpc.at'
+				  )} ${streetName}`
 				: `${translate('discord.rpc.driving')} ${translate('discord.rpc.at')} ${streetName}`
 			: `${translate('discord.rpc.walking')} ${translate('discord.rpc.at')} ${streetName}`;
 

@@ -1,4 +1,4 @@
-import NotificationService from '../Services/NotificationService';
+import NotificationService from '../Services/Infrastructure/NotificationService';
 import { NotificationType } from '../../shared/Models/NotificationType';
 
 export default class NotificationServiceTest {

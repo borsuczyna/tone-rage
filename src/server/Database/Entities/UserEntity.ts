@@ -5,14 +5,14 @@ export class UserEntity extends DatabaseEntity {
 	username: string = '';
 	email: string = '';
 	passwordHash: string = '';
-    avatar: string = '';
+	avatar: string = '';
 	createdAt: Date = new Date(Date.now());
 	lastLogin: Date | null = null;
-    money: number = 0;
-    bankMoney: number = 0;
-    level: number = 0;
-    exp: number = 0;
-    adminLevel: number = 0;
+	money: number = 0;
+	bankMoney: number = 0;
+	level: number = 0;
+	exp: number = 0;
+	adminLevel: number = 0;
 
 	constructor() {
 		super();

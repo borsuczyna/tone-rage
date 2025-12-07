@@ -77,7 +77,7 @@ export function encodeData(data: any): string {
 
 export function fixBrokenUnicode(str: string) {
 	// remove lone high/low surrogates
-	return str.replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, "");
+	return str.replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, '');
 }
 
 // Decode data

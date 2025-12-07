@@ -1,4 +1,4 @@
-import ElementDataService from '../Services/ElementDataService';
+import ElementDataService from '../Services/Infrastructure/ElementDataService';
 import { ShareMode } from '@shared/Models/ElementDataModels';
 import Logger from '@shared/Logger';
 

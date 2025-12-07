@@ -1,91 +1,87 @@
-import InterfaceService from "@/Services/InterfaceService";
-import EventService from "@/Services/EventService";
-import Scoreboard from "../Scoreboard/Scoreboard";
-import AtmPositions from "@shared-rage/Data/AtmPositions";
-import { getPointFromDistanceRotation } from "@shared-rage/PositionHelper";
-import MarkerService from "@shared-rage/Services/MarkerService";
-import MarkerType from "@shared-rage/Models/MarkerType";
-import Marker from "@shared-rage/Entities/Marker";
-import MarkerHitType from "@shared-rage/Models/MarkerHitType";
-import ElementDataService from "@/Services/ElementDataService";
-import translate from "@shared/Translation/Translation";
+import InterfaceService from '@/Services/Infrastructure/InterfaceService';
+import EventService from '@/Services/Infrastructure/EventService';
+import Scoreboard from '../Scoreboard/Scoreboard';
+import AtmPositions from '@shared-rage/Data/AtmPositions';
+import { getPointFromDistanceRotation } from '@shared-rage/PositionHelper';
+import MarkerService from '@shared-rage/Services/MarkerService';
+import MarkerType from '@shared-rage/Models/MarkerType';
+import Marker from '@shared-rage/Entities/Marker';
+import MarkerHitType from '@shared-rage/Models/MarkerHitType';
+import ElementDataService from '@/Services/Infrastructure/ElementDataService';
+import translate from '@shared/Translation/Translation';
 
 export default class AtmFeature {
-    private static atmMarkers: Set<Marker> = new Set();
-    private static atmObjects: Set<ObjectMp> = new Set();
-    private static atmBlips: Set<BlipMp> = new Set();
+	private static atmMarkers: Set<Marker> = new Set();
+	private static atmObjects: Set<ObjectMp> = new Set();
+	private static atmBlips: Set<BlipMp> = new Set();
 
-    public static init() {
-        EventService.registerEventHandler('atm:closeInterface', this.closeAtm.bind(this));
-        MarkerService.registerEventHandler(null, this.onAtmMarkerHit.bind(this));
-        
-        // Create ATM objects in the world
-        this.createATMs();
-    }
+	public static init() {
+		EventService.registerEventHandler('atm:closeInterface', this.closeAtm.bind(this));
+		MarkerService.registerEventHandler(null, this.onAtmMarkerHit.bind(this));
 
-    private static createATMs() {
-        for (const { position, heading, dimension } of AtmPositions) {
-            const validPosition = new mp.Vector3(position.x, position.y, position.z - 1); // Adjust Z to place on ground
-            const markerPosition = getPointFromDistanceRotation(position, 1, heading - 90);
+		// Create ATM objects in the world
+		this.createATMs();
+	}
 
-            const object = mp.objects.new(mp.game.joaat('prop_atm_01'), validPosition, {
-                rotation: new mp.Vector3(0, 0, heading),
-                dimension: dimension,
-            });
+	private static createATMs() {
+		for (const { position, heading, dimension } of AtmPositions) {
+			const validPosition = new mp.Vector3(position.x, position.y, position.z - 1); // Adjust Z to place on ground
+			const markerPosition = getPointFromDistanceRotation(position, 1, heading - 90);
 
-            const blip = mp.blips.new(238, validPosition, {
-                name: translate('blip.atm'),
-                scale: 0.8,
-                dimension: dimension,
-                shortRange: true,
-            });
+			const object = mp.objects.new(mp.game.joaat('prop_atm_01'), validPosition, {
+				rotation: new mp.Vector3(0, 0, heading),
+				dimension: dimension
+			});
 
-            this.atmBlips.add(blip);
+			const blip = mp.blips.new(238, validPosition, {
+				name: translate('blip.atm'),
+				scale: 0.8,
+				dimension: dimension,
+				shortRange: true
+			});
 
-            object.setCollision(true, true);
+			this.atmBlips.add(blip);
 
-            const marker = MarkerService.createMarker(markerPosition, [255, 55, 155, 255], 1, MarkerType.Cylinder, dimension, 1.5);
-            marker.icon = 'card';
-            marker.upperText = translate('atm.marker.upperText');
-            marker.lowerText = translate('atm.marker.lowerText');
+			object.setCollision(true, true);
 
-            this.atmMarkers.add(marker);
-            this.atmObjects.add(object);
-            this.atmBlips.add(blip);
-        }
-    }
+			const marker = MarkerService.createMarker(markerPosition, [255, 55, 155, 255], 1, MarkerType.Cylinder, dimension, 1.5);
+			marker.icon = 'card';
+			marker.upperText = translate('atm.marker.upperText');
+			marker.lowerText = translate('atm.marker.lowerText');
 
-    private static onAtmMarkerHit(hitType: MarkerHitType, player: PlayerMp, marker?: Marker) {
-        if (!marker || !this.atmMarkers.has(marker) || player !== mp.players.local) {
-            return;
-        }
+			this.atmMarkers.add(marker);
+			this.atmObjects.add(object);
+			this.atmBlips.add(blip);
+		}
+	}
 
-        if (hitType === MarkerHitType.Enter) {
-            this.setVisible(true);
-        } else if (hitType === MarkerHitType.Exit) {
-            this.setVisible(false);
-        }
-    }
+	private static onAtmMarkerHit(hitType: MarkerHitType, player: PlayerMp, marker?: Marker) {
+		if (!marker || !this.atmMarkers.has(marker) || player !== mp.players.local) {
+			return;
+		}
 
-    private static setVisible(visible: boolean) {
-        if (
-            !ElementDataService.get(mp.players.local, 'userId') ||
-            mp.players.local.vehicle != null ||
-            mp.players.local.isDead()
-        ) {
-            return;
-        }
+		if (hitType === MarkerHitType.Enter) {
+			this.setVisible(true);
+		} else if (hitType === MarkerHitType.Exit) {
+			this.setVisible(false);
+		}
+	}
 
-        InterfaceService.setInterfaceVisible('AtmInterface', visible);
-        InterfaceService.setCursorVisible(visible, false);
-        
-        if (visible) {
-            Scoreboard.setVisible(false);
-        }
-    }
+	private static setVisible(visible: boolean) {
+		if (!ElementDataService.get(mp.players.local, 'userId') || mp.players.local.vehicle != null || mp.players.local.isDead()) {
+			return;
+		}
 
-    private static closeAtm() {
-        InterfaceService.setInterfaceVisible('AtmInterface', false);
-        InterfaceService.setCursorVisible(false, false);
-    }
+		InterfaceService.setInterfaceVisible('AtmInterface', visible);
+		InterfaceService.setCursorVisible(visible, false);
+
+		if (visible) {
+			Scoreboard.setVisible(false);
+		}
+	}
+
+	private static closeAtm() {
+		InterfaceService.setInterfaceVisible('AtmInterface', false);
+		InterfaceService.setCursorVisible(false, false);
+	}
 }

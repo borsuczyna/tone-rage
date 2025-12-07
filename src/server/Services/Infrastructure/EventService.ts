@@ -1,6 +1,6 @@
 import { decodeData, encodeData } from '@shared/DataEncoder';
 import { chunkData, ChunkAssembler, DataChunk } from '@shared/ChunkingUtils';
-import AnticheatService from '@/Features/Anticheat/AnticheatService';
+import AnticheatService from '@/Services/Security/AnticheatService';
 
 interface EventListener {
 	eventName: string;
@@ -56,25 +56,25 @@ export default class EventService {
 	public static triggerClientEvent(client: PlayerMp, eventName: string, ...args: any[]) {
 		const encodedData = encodeData(args);
 
-        // Send in chunks
-        const chunks = chunkData(encodedData);
-        chunks.forEach((chunk) => {
-            client.call('event:receive:chunk', [eventName, chunk]);
-        });
+		// Send in chunks
+		const chunks = chunkData(encodedData);
+		chunks.forEach((chunk) => {
+			client.call('event:receive:chunk', [eventName, chunk]);
+		});
 	}
 
-    /**
-     * Trigger an event on all clients with support for large data
-     */
-    public static triggerAllClients(eventName: string, ...args: any[]) {
-        const encodedData = encodeData(args);
+	/**
+	 * Trigger an event on all clients with support for large data
+	 */
+	public static triggerAllClients(eventName: string, ...args: any[]) {
+		const encodedData = encodeData(args);
 
-        // Send in chunks
-        const chunks = chunkData(encodedData);
-        chunks.forEach((chunk) => {
-            mp.players.call('event:receive:chunk', [eventName, chunk]);
-        });
-    }
+		// Send in chunks
+		const chunks = chunkData(encodedData);
+		chunks.forEach((chunk) => {
+			mp.players.call('event:receive:chunk', [eventName, chunk]);
+		});
+	}
 
 	private static onChunkReceived(client: PlayerMp, hash: string, eventName: string, chunkDataJson: string) {
 		// Get or create chunk assembler for this client

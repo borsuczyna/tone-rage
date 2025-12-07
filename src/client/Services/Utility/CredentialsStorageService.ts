@@ -1,6 +1,6 @@
 import Logger from '@shared/Logger';
-import InterfaceService from '@/Services/InterfaceService';
-import EventService from '@/Services/EventService';
+import InterfaceService from '@/Services/Infrastructure/InterfaceService';
+import EventService from '@/Services/Infrastructure/EventService';
 
 interface SavedCredentials {
 	username: string;

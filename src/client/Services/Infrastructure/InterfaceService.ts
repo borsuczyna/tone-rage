@@ -8,7 +8,7 @@ export default class InterfaceService {
 	private static cursorVisible: boolean = false;
 	private static cursorToggleControls: boolean = false;
 	private static chunkAssembler: ChunkAssembler = new ChunkAssembler();
-    private static visibleInterfaces: Set<string> = new Set<string>();
+	private static visibleInterfaces: Set<string> = new Set<string>();
 
 	public static init() {
 		this.browser = mp.browsers.new('package://ui/index.html');
@@ -36,10 +36,10 @@ export default class InterfaceService {
 		}
 
 		const jsonData = JSON.stringify(data);
-        const chunks = chunkData(jsonData);
-        chunks.forEach((chunk) => {
-            this.browser.call('event:chunk', eventName, JSON.stringify(chunk));
-        });
+		const chunks = chunkData(jsonData);
+		chunks.forEach((chunk) => {
+			this.browser.call('event:chunk', eventName, JSON.stringify(chunk));
+		});
 	}
 
 	public static setInterfaceVisible(name: string, visible: boolean) {
@@ -50,16 +50,16 @@ export default class InterfaceService {
 
 		this.browser.call('setInterfaceVisible', name, visible);
 
-        if (visible) {
-            this.visibleInterfaces.add(name);
-        } else {
-            this.visibleInterfaces.delete(name);
-        }
+		if (visible) {
+			this.visibleInterfaces.add(name);
+		} else {
+			this.visibleInterfaces.delete(name);
+		}
 	}
 
-    public static isInterfaceVisible(name: string): boolean {
-        return this.visibleInterfaces.has(name);
-    }
+	public static isInterfaceVisible(name: string): boolean {
+		return this.visibleInterfaces.has(name);
+	}
 
 	public static toggleInterfaceVisibility(name: string) {
 		if (!this.browser) {
@@ -101,12 +101,12 @@ export default class InterfaceService {
 		if (completeData) {
 			// All chunks received, trigger the original event
 			const data = JSON.parse(completeData);
-            const eventHandler = (mp.events as any).events[eventName];
-            if (eventHandler) {
-                eventHandler.apply(null, [data]);
-            } else {
-                this.logger.warn(`No handler found for event: ${eventName}`);
-            }
+			const eventHandler = (mp.events as any).events[eventName];
+			if (eventHandler) {
+				eventHandler.apply(null, [data]);
+			} else {
+				this.logger.warn(`No handler found for event: ${eventName}`);
+			}
 		}
 	}
 }

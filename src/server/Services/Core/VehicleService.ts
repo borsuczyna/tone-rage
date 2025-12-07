@@ -9,7 +9,7 @@ export default class VehicleService {
 	private static vehicles: PrivateVehicle[] = [];
 	private static logger: Logger = Logger.getLogger(VehicleService, true);
 
-    public static async init() {
+	public static async init() {
 		try {
 			await this.reloadVehiclesFromDatabase();
 			TimerService.setTimer(this.saveVehicles.bind(this), Config.SaveInterval.Vehicles, 0); // Save every 60 seconds
