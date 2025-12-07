@@ -1,42 +1,46 @@
-/* AtmInterface.module.css */
+/* AtmInterface.module.css - WASABI Banking Style */
 @import '../../../styles/tone-variables.css';
 
 .container {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     color: white;
     z-index: 1000;
+    background: rgba(0, 0, 0, 0.8);
 }
 
-.atmMachine {
-    width: 56rem;
-    max-width: 90vw;
-    max-height: 90vh;
-    background: rgba(25, 25, 25, 0.95);
-    border: 1px solid rgba(80, 80, 80, 0.4);
-    border-radius: 1rem;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+.bankingApp {
+    width: 90vw;
+    height: 85vh;
+    max-width: 1400px;
+    background: #1a1a1a;
+    border-radius: 12px;
     overflow: hidden;
-    animation: slideIn 0.4s ease-out;
-    transform-origin: center center;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-areas: 
+        "header header"
+        "sidebar content";
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 250px 1fr;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
 }
 
 /* Header */
 .header {
-    background: rgba(30, 30, 30, 0.9);
+    grid-area: header;
+    background: #262626;
     padding: 1rem 1.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid rgba(80, 80, 80, 0.4);
+    border-bottom: 1px solid #333;
 }
 
 .headerLeft {
@@ -44,22 +48,51 @@
     align-items: center;
 }
 
-.welcomeText {
+.logo {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
+    align-items: flex-start;
 }
 
-.welcome {
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.6);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+.logoText {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--tone-cyan);
+    line-height: 1;
 }
 
-.username {
-    font-size: 1.1rem;
+.logoSubtext {
+    font-size: 0.8rem;
     font-weight: 600;
+    color: var(--tone-cyan);
+    letter-spacing: 0.1em;
+}
+
+.headerCenter {
+    display: flex;
+    align-items: center;
+}
+
+.welcomeSection {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.userAvatar {
+    width: 2rem;
+    height: 2rem;
+    background: var(--tone-cyan);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1a1a1a;
+}
+
+.welcomeText {
+    font-size: 1rem;
+    font-weight: 500;
     color: white;
 }
 
@@ -69,35 +102,759 @@
     gap: 1rem;
 }
 
-.balanceInfo {
+.walletInfo {
+    background: rgba(0, 191, 255, 0.1);
+    border: 1px solid var(--tone-cyan-alpha-30);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
     display: flex;
-    gap: 1.5rem;
+    flex-direction: column;
+    align-items: flex-end;
 }
 
-.balanceItem {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 0.9rem;
-    font-weight: 500;
+.walletLabel {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 0.25rem;
+}
+
+.walletAmount {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--tone-cyan);
 }
 
 .closeButton {
     background: transparent;
     border: none;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.6);
     cursor: pointer;
     padding: 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border-radius: 6px;
     transition: all 0.2s ease;
-    border-radius: 0.5rem;
 }
 
 .closeButton:hover {
+    background: rgba(255, 255, 255, 0.1);
     color: white;
+}
+
+/* Sidebar */
+.sidebar {
+    grid-area: sidebar;
+    background: #1a1a1a;
+    border-right: 1px solid #333;
+}
+
+.sidebarNav {
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.navItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.navItem:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.navItem.active {
+    background: var(--tone-cyan-alpha-10);
+    color: var(--tone-cyan);
+    border-right: 3px solid var(--tone-cyan);
+}
+
+/* Main Content */
+.mainContent {
+    grid-area: content;
+    background: #1a1a1a;
+    overflow-y: auto;
+    padding: 1.5rem;
+}
+
+/* Dashboard Layout */
+.dashboard {
+    display: grid;
+    grid-template-areas: 
+        "account side"
+        "transactions side"
+        "stats side";
+    grid-template-columns: 1fr 320px;
+    grid-template-rows: auto auto 1fr;
+    gap: 1.5rem;
+    height: 100%;
+}
+
+/* Account Section */
+.accountSection {
+    grid-area: account;
+    background: #262626;
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.accountHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.accountTitle {
+    font-size: 1rem;
+    font-weight: 500;
+    color: white;
+    margin: 0;
+}
+
+.chartIcon {
+    color: var(--tone-cyan);
+    padding: 0.5rem;
+    background: var(--tone-cyan-alpha-10);
+    border-radius: 6px;
+}
+
+.accountBalance {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 1.5rem;
+}
+
+.accountActions {
+    display: flex;
+    gap: 1rem;
+}
+
+.actionButton {
+    flex: 1;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 1rem;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.actionButton:hover {
+    background: var(--tone-cyan-alpha-10);
+    border-color: var(--tone-cyan);
+    color: var(--tone-cyan);
+}
+
+/* Side Panel */
+.sidePanel {
+    grid-area: side;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.cardManagement {
+    background: #262626;
+    border-radius: 12px;
+    padding: 1.5rem;
+    flex: 1;
+}
+
+.cardHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--tone-cyan);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.cardSubtext {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+    margin: 0 0 1.5rem 0;
+}
+
+.cardDisplay {
+    background: linear-gradient(135deg, var(--tone-cyan) 0%, var(--tone-purple) 100%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    color: white;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.cardChip {
+    margin-bottom: 2rem;
+    width: fit-content;
+}
+
+.cardNumber {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+}
+
+.cardInfo {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1rem;
+}
+
+.cardName,
+.cardExpiry {
+    display: flex;
+    flex-direction: column;
+}
+
+.cardLabel {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    opacity: 0.8;
+    margin-bottom: 0.25rem;
+}
+
+.cardValue {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.cardActions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+.cardActionBtn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cardActionBtn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.cardInfoSection {
+    margin-top: 1.5rem;
+}
+
+.cardInfoTitle {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: white;
+    margin: 0 0 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cardInfoTitle::before {
+    content: "ℹ";
+    background: var(--tone-cyan);
+    color: #1a1a1a;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+}
+
+.cardInfoDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.cardInfoItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cardInfoLabel {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.8rem;
+}
+
+.cardInfoValue {
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.cardStatusActive {
+    color: var(--tone-cyan) !important;
+}
+
+.accountNumber {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #333;
+}
+
+.accountNumberHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--tone-cyan);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.accountNumberSubtext {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+    margin: 0 0 1rem 0;
+}
+
+.accountNumberDisplay {
+    background: var(--tone-cyan);
+    color: #1a1a1a;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 0.1em;
+}
+
+/* Transactions Section */
+.transactionsSection {
+    grid-area: transactions;
+    background: #262626;
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.transactionsHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.transactionsTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    margin: 0;
+}
+
+.transactionsActions {
+    display: flex;
+    gap: 1rem;
+}
+
+.transactionsLink {
+    background: none;
+    border: none;
+    color: var(--tone-cyan);
+    font-size: 0.8rem;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.transactionsLink:hover {
+    text-decoration: underline;
+}
+
+.transactionsList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.transactionRow {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #1a1a1a;
+    border-radius: 8px;
+    border-left: 3px solid var(--tone-cyan);
+}
+
+.transactionIcon {
+    background: var(--tone-cyan-alpha-20);
+    border-radius: 50%;
+    padding: 0.5rem;
+    color: var(--tone-cyan);
+}
+
+.transactionDetails {
+    flex: 1;
+}
+
+.transactionAction {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: white;
+    margin-bottom: 0.25rem;
+}
+
+.transactionDate {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.transactionAmount {
+    font-weight: 600;
+}
+
+.positive {
+    color: #22c55e;
+}
+
+.negative {
+    color: #ef4444;
+}
+
+.noTransactions {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 2rem;
+    font-style: italic;
+}
+
+/* Transaction Stats */
+.transactionStats {
+    grid-area: stats;
+    background: #262626;
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.statsHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--tone-cyan);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.statsSubtext {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+    margin: 0 0 1.5rem 0;
+}
+
+.statsChart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.chartContainer {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.chartNumber {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+}
+
+.chartLabel {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.pieChart {
+    width: 80px;
+    height: 80px;
+}
+
+.chartSvg {
+    width: 100%;
+    height: 100%;
+}
+
+.statsBreakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.statItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.statItem svg {
+    color: var(--tone-cyan);
+    flex-shrink: 0;
+}
+
+.statLabel {
+    flex: 1;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.statValue {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: white;
+}
+
+.statValue.positive {
+    color: #22c55e;
+}
+
+.statValue.negative {
+    color: #ef4444;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .bankingApp {
+        grid-template-columns: 200px 1fr;
+    }
+    
+    .dashboard {
+        grid-template-columns: 1fr 280px;
+    }
+}
+
+@media (max-width: 968px) {
+    .bankingApp {
+        grid-template-areas: 
+            "header"
+            "content";
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+    }
+    
+    .sidebar {
+        display: none;
+    }
+    
+    .dashboard {
+        grid-template-areas: 
+            "account"
+            "side"
+            "transactions"
+            "stats";
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto 1fr;
+    }
+}
+
+/* Transactions Page Specific Styles */
+.transactionsPage {
+    display: grid;
+    grid-template-areas: 
+        "header header"
+        "table stats";
+    grid-template-columns: 1fr 320px;
+    grid-template-rows: auto 1fr;
+    gap: 1.5rem;
+    height: 100%;
+}
+
+.pageHeader {
+    grid-area: header;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #333;
+}
+
+.pageTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: white;
+    margin: 0;
+}
+
+.pageActions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.searchContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #262626;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+}
+
+.searchInput {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 0.9rem;
+    outline: none;
+    width: 200px;
+}
+
+.searchInput::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.filterSelect {
+    background: #262626;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.transactionsTable {
+    grid-area: table;
+    background: #262626;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.tableHeader {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid #333;
+    margin-bottom: 1rem;
+}
+
+.tableHeaderCell {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.tableBody {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.tableRow {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 1rem;
+    padding: 1rem;
+    background: #1a1a1a;
+    border-radius: 8px;
+    border-left: 3px solid var(--tone-cyan);
+}
+
+.tableCell {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.tableCell:first-child {
+    color: white;
+    font-weight: 500;
+}
+
+.tableCell:nth-child(2) {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+}
+
+.tableCell:last-child {
+    font-weight: 600;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.paginationBtn {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    color: white;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.paginationBtn:hover {
+    background: var(--tone-cyan-alpha-10);
+    border-color: var(--tone-cyan);
+}
+
+.paginationInfo {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.paginationInfo span {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    color: white;
+    font-size: 0.8rem;
+    cursor: pointer;
+    min-width: 2rem;
+    text-align: center;
+}
+
+.activePage {
+    background: var(--tone-cyan) !important;
+    color: #1a1a1a !important;
+    border-color: var(--tone-cyan) !important;
+}
+
+.transactionStatsPage {
+    grid-area: stats;
+    background: #262626;
+    border-radius: 12px;
+    padding: 1.5rem;
     background: rgba(255, 255, 255, 0.1);
 }
 

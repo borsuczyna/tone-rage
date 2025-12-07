@@ -128,25 +128,29 @@ export default function AtmInterface() {
     return (
         <>
             <div className={styles.container}>
-                <div className={styles.atmMachine}>
+                <div className={styles.bankingApp}>
                     {/* Header */}
                     <div className={styles.header}>
                         <div className={styles.headerLeft}>
-                            <div className={styles.welcomeText}>
-                                <span className={styles.welcome}>{translate('atm.header.welcome')}</span>
-                                <span className={styles.username}>{userInfo.username}</span>
+                            <div className={styles.logo}>
+                                <span className={styles.logoText}>TONE</span>
+                                <span className={styles.logoSubtext}>BANKING</span>
+                            </div>
+                        </div>
+                        <div className={styles.headerCenter}>
+                            <div className={styles.welcomeSection}>
+                                <div className={styles.userAvatar}>
+                                    <Icons.User size="1.2rem" />
+                                </div>
+                                <div className={styles.welcomeText}>
+                                    <span className={styles.welcome}>Welcome, {userInfo.username}</span>
+                                </div>
                             </div>
                         </div>
                         <div className={styles.headerRight}>
-                            <div className={styles.balanceInfo}>
-                                <div className={styles.balanceItem}>
-                                    <Icons.Wallet size="1rem" />
-                                    <span>{formatMoney(walletMoney)}</span>
-                                </div>
-                                <div className={styles.balanceItem}>
-                                    <Icons.CreditCard size="1rem" />
-                                    <span>{formatMoney(bankBalance)}</span>
-                                </div>
+                            <div className={styles.walletInfo}>
+                                <span className={styles.walletLabel}>Wallet</span>
+                                <span className={styles.walletAmount}>{formatMoney(walletMoney)}</span>
                             </div>
                             <button className={styles.closeButton} onClick={handleClose}>
                                 <Icons.X size="1.5rem" />
@@ -154,29 +158,48 @@ export default function AtmInterface() {
                         </div>
                     </div>
 
-                    {/* Tab Navigation */}
-                    <div className={styles.tabNavigation}>
-                        <button 
-                            className={`${styles.tab} ${activeTab === 'dashboard' ? styles.active : ''}`}
-                            onClick={() => setActiveTab('dashboard')}
-                        >
-                            <Icons.LayoutDashboard size="1rem" />
-                            {translate('atm.tab.dashboard')}
-                        </button>
-                        <button 
-                            className={`${styles.tab} ${activeTab === 'transactions' ? styles.active : ''}`}
-                            onClick={() => setActiveTab('transactions')}
-                        >
-                            <Icons.Receipt size="1rem" />
-                            {translate('atm.tab.transactions')}
-                        </button>
+                    {/* Sidebar Navigation */}
+                    <div className={styles.sidebar}>
+                        <nav className={styles.sidebarNav}>
+                            <button 
+                                className={`${styles.navItem} ${activeTab === 'dashboard' ? styles.active : ''}`}
+                                onClick={() => setActiveTab('dashboard')}
+                            >
+                                <Icons.LayoutDashboard size="1rem" />
+                                <span>Dashboard</span>
+                            </button>
+                            <button 
+                                className={`${styles.navItem} ${activeTab === 'transactions' ? styles.active : ''}`}
+                                onClick={() => setActiveTab('transactions')}
+                            >
+                                <Icons.Receipt size="1rem" />
+                                <span>Transactions</span>
+                            </button>
+                            <div className={styles.navItem}>
+                                <Icons.Users size="1rem" />
+                                <span>Accounts</span>
+                            </div>
+                            <div className={styles.navItem}>
+                                <Icons.Building2 size="1rem" />
+                                <span>Society</span>
+                            </div>
+                            <div className={styles.navItem}>
+                                <Icons.PiggyBank size="1rem" />
+                                <span>Savings</span>
+                            </div>
+                            <div className={styles.navItem}>
+                                <Icons.CreditCard size="1rem" />
+                                <span>Loans</span>
+                            </div>
+                        </nav>
                     </div>
 
                     {/* Main Content */}
-                    <div className={styles.content}>
+                    <div className={styles.mainContent}>
                         {activeTab === 'dashboard' ? (
                             <DashboardTab 
                                 bankBalance={bankBalance}
+                                walletMoney={walletMoney}
                                 recentTransactions={transactions}
                                 userId={userId}
                                 onDepositClick={() => setIsDepositModalOpen(true)}

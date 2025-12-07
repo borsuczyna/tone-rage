@@ -19,10 +19,10 @@ export const InterfaceVisibilityProvider = ({ children }: { children: React.Reac
         // 'NotificationsInterface': true,
         // 'AuthInterface': true,  // Set to true for development/testing
         // 'SpawnSelectionInterface': true  // Set to true for development/testing
-        // 'AtmInterface': true  // Set to true for development/testing
+        'AtmInterface': true  // Set to true for development/testing
         // 'InteractionWheelInterface': true  // Set to true for development/testing
         // 'MapDemoInterface': true  // Set to true for development/testing
-        'ChatInterface': true  // Set to true for development/testing
+        // 'ChatInterface': true  // Set to true for development/testing
     });
 
     const setInterfaceVisible = (name: string, visible: boolean) => {

@@ -1,10 +1,7 @@
 import * as Icons from 'lucide-react';
 import type { AtmTransactionData } from '@shared/Models/MoneyLogData';
 import { formatMoney } from '@shared/MoneyHelper';
-import translate from '@shared/Translation/Translation';
 import styles from '../../Styles/AtmInterface.module.css';
-import Chart from 'react-apexcharts';
-import type { ApexOptions } from 'apexcharts';
 
 interface TransactionsTabProps {
     transactions: AtmTransactionData[];
@@ -20,126 +17,142 @@ export default function TransactionsTab({ transactions }: TransactionsTabProps) 
         });
     };
 
-    // Calculate income vs expenses in a single pass
-    const { income, expenses } = transactions.reduce(
-        (acc, t) => {
-            if (t.type === 'deposit') {
-                acc.income += t.amount;
-            } else if (t.type === 'withdraw') {
-                acc.expenses += t.amount;
-            }
-            // Note: Other transaction types (like 'transfer') are not categorized in the chart
-            return acc;
-        },
-        { income: 0, expenses: 0 }
-    );
+    // Calculate statistics
+    const totalReceived = transactions
+        .filter(t => t.type === 'deposit')
+        .reduce((sum, t) => sum + t.amount, 0);
+    
+    const totalSent = transactions
+        .filter(t => t.type === 'withdraw')
+        .reduce((sum, t) => sum + t.amount, 0);
 
-    // Chart configuration
-    const chartOptions: ApexOptions = {
-        chart: {
-            type: 'donut',
-            background: 'transparent',
-            fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif',
-        },
-        colors: ['#22c55e', '#ef4444'],
-        labels: [translate('atm.chart.income'), translate('atm.chart.expenses')],
-        legend: {
-            position: 'bottom',
-            labels: {
-                colors: ['#ffffff', '#ffffff']
-            }
-        },
-        plotOptions: {
-            pie: {
-                donut: {
-                    size: '65%',
-                    labels: {
-                        show: true,
-                        total: {
-                            show: true,
-                            label: translate('atm.chart.total'),
-                            color: '#ffffff',
-                            formatter: () => formatMoney(income + expenses)
-                        },
-                        value: {
-                            color: '#ffffff',
-                            formatter: (val) => formatMoney(Number(val))
-                        }
-                    }
-                }
-            }
-        },
-        dataLabels: {
-            enabled: false
-        },
-        tooltip: {
-            theme: 'dark',
-            y: {
-                formatter: (val) => formatMoney(val)
-            }
-        }
-    };
-
-    const chartSeries = [income, expenses];
+    const totalEarned = totalReceived - totalSent;
 
     return (
-        <div className={styles.transactionsContainer}>
-            <div className={styles.transactionsLeft}>
-                <div className={styles.transactionsHeader}>
-                    <h3>{translate('atm.transactions.title')}</h3>
-                    <span className={styles.transactionsCount}>
-                        {transactions.length} {translate('atm.transactions.total')}
-                    </span>
+        <div className={styles.transactionsPage}>
+            {/* Header Section */}
+            <div className={styles.pageHeader}>
+                <h2 className={styles.pageTitle}>Transactions</h2>
+                <div className={styles.pageActions}>
+                    <div className={styles.searchContainer}>
+                        <Icons.Search size="1rem" />
+                        <input 
+                            type="text" 
+                            placeholder="Search transactions..."
+                            className={styles.searchInput}
+                        />
+                    </div>
+                    <select className={styles.filterSelect}>
+                        <option value="personal">Personal</option>
+                        <option value="business">Business</option>
+                    </select>
                 </div>
-                <div className={styles.transactionsListScroll}>
+            </div>
+
+            {/* Transaction Table */}
+            <div className={styles.transactionsTable}>
+                <div className={styles.tableHeader}>
+                    <div className={styles.tableHeaderCell}>Action</div>
+                    <div className={styles.tableHeaderCell}>Date</div>
+                    <div className={styles.tableHeaderCell}>Amount</div>
+                </div>
+
+                <div className={styles.tableBody}>
                     {transactions.length === 0 ? (
                         <div className={styles.noTransactions}>
-                            {translate('atm.dashboard.noTransactions')}
+                            No transactions found
                         </div>
                     ) : (
                         transactions.map((transaction) => (
-                            <div key={transaction.id} className={styles.transactionItem}>
-                                <div className={styles.transactionIcon}>
-                                    {transaction.type === 'deposit' ? (
-                                        <Icons.ArrowDown size="1rem" className={styles.depositIcon} />
-                                    ) : (
-                                        <Icons.ArrowUp size="1rem" className={styles.withdrawIcon} />
-                                    )}
+                            <div key={transaction.id} className={styles.tableRow}>
+                                <div className={styles.tableCell}>
+                                    Bank Account {transaction.type === 'deposit' ? 'Deposit' : 'Withdraw'}
                                 </div>
-                                <div className={styles.transactionDetails}>
-                                    <div className={styles.transactionAmount}>
-                                        {transaction.type === 'deposit' ? '+' : '-'}
-                                        {formatMoney(transaction.amount)}
-                                    </div>
-                                    <div className={styles.transactionDate}>
-                                        {formatDate(transaction.date)}
-                                    </div>
+                                <div className={styles.tableCell}>
+                                    {formatDate(transaction.date)}
                                 </div>
-                                <div className={styles.transactionBalance}>
-                                    {translate('atm.logs.balance')}: {formatMoney(transaction.balanceAfter)}
+                                <div className={styles.tableCell}>
+                                    <span className={transaction.type === 'deposit' ? styles.positive : styles.negative}>
+                                        {transaction.type === 'deposit' ? '+' : '-'} {formatMoney(transaction.amount)}
+                                    </span>
                                 </div>
                             </div>
                         ))
                     )}
                 </div>
+
+                {/* Pagination */}
+                <div className={styles.pagination}>
+                    <button className={styles.paginationBtn}>Previous</button>
+                    <span className={styles.paginationInfo}>
+                        <span className={styles.activePage}>1</span>
+                        <span>2</span>
+                    </span>
+                    <button className={styles.paginationBtn}>Next</button>
+                </div>
             </div>
 
-            {/* Chart */}
-            <div className={styles.transactionsRight}>
-                <div className={styles.chartContainer}>
-                    <h3>{translate('atm.chart.title')}</h3>
-                    {income === 0 && expenses === 0 ? (
-                        <div className={styles.noChartData}>
-                            {translate('atm.chart.noData')}
+            {/* Statistics Panel */}
+            <div className={styles.transactionStatsPage}>
+                <div className={styles.statsHeader}>
+                    <Icons.Building2 size="1rem" />
+                    <span>Bank Transactions</span>
+                </div>
+                <p className={styles.statsSubtext}>Check your account transactions</p>
+                
+                <div className={styles.statsChart}>
+                    <div className={styles.chartContainer}>
+                        <div className={styles.chartNumber}>
+                            {transactions.length}
                         </div>
-                    ) : (
-                        <Chart
-                            options={chartOptions}
-                            series={chartSeries}
-                            type="donut"
-                            height={280}
-                        />
-                    )}
+                        <div className={styles.chartLabel}>Transactions</div>
+                    </div>
+                    
+                    <div className={styles.pieChart}>
+                        <svg viewBox="0 0 100 100" className={styles.chartSvg}>
+                            <circle 
+                                cx="50" 
+                                cy="50" 
+                                r="40" 
+                                fill="none" 
+                                stroke="var(--tone-cyan)" 
+                                strokeWidth="8"
+                                strokeDasharray="60 40"
+                                transform="rotate(-90 50 50)"
+                            />
+                            <circle 
+                                cx="50" 
+                                cy="50" 
+                                r="40" 
+                                fill="none" 
+                                stroke="#ef4444" 
+                                strokeWidth="8"
+                                strokeDasharray="40 60"
+                                strokeDashoffset="-60"
+                                transform="rotate(-90 50 50)"
+                            />
+                        </svg>
+                    </div>
+                </div>
+
+                <div className={styles.statsBreakdown}>
+                    <div className={styles.statItem}>
+                        <Icons.TrendingUp size="1rem" />
+                        <span className={styles.statLabel}>Money Received</span>
+                        <span className={styles.statValue}>+ {formatMoney(totalReceived)}</span>
+                    </div>
+                    <div className={styles.statItem}>
+                        <Icons.TrendingDown size="1rem" />
+                        <span className={styles.statLabel}>Money Sent</span>
+                        <span className={styles.statValue}>- {formatMoney(totalSent)}</span>
+                    </div>
+                    <div className={styles.statItem}>
+                        <Icons.DollarSign size="1rem" />
+                        <span className={styles.statLabel}>Total Earned</span>
+                        <span className={`${styles.statValue} ${totalEarned >= 0 ? styles.positive : styles.negative}`}>
+                            {formatMoney(totalEarned)}
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
