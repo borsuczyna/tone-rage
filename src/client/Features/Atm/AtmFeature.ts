@@ -73,7 +73,7 @@ export default class AtmFeature {
 		}
 
 		InterfaceService.setInterfaceVisible('AtmInterface', visible);
-		InterfaceService.setCursorVisible(visible, false);
+		InterfaceService.setCursorVisible(visible, true);
 
 		if (visible) {
 			Scoreboard.setVisible(false);

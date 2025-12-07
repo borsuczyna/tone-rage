@@ -25,4 +25,6 @@ export interface AtmTransactionData {
 	description: string;
 	date: Date;
 	balanceAfter: number;
+	action?: string; // Human readable action description
+	timestamp?: number; // Unix timestamp
 }
