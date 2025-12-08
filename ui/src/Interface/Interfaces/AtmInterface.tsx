@@ -102,7 +102,7 @@ export default function AtmInterface() {
     };
 
     const handleTransfer = async (targetUser: string, amount: number) => {
-        if (isLoading) return;
+        if (isLoading) return false;
 
         try {
             setIsLoading(true);
@@ -115,12 +115,17 @@ export default function AtmInterface() {
                 setBankBalance(response.bankMoney);
                 setWalletMoney(response.walletMoney);
                 setTransactions(response.logs);
+                return true;
             }
+
+            return false;
         } catch (error) {
             console.error('Failed to transfer:', error);
         } finally {
             setIsLoading(false);
         }
+
+        return false;
     };
 
     if (!isInterfaceVisible('AtmInterface')) return null;

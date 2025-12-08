@@ -9,7 +9,7 @@ import styles from '../../Styles/AtmInterface.module.css';
 interface TransferModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onTransfer: (targetUser: string, amount: number) => Promise<void>;
+    onTransfer: (targetUser: string, amount: number) => Promise<boolean>;
     isLoading?: boolean;
 }
 
@@ -20,10 +20,12 @@ export default function TransferModal({ isOpen, onClose, onTransfer, isLoading =
     const handleTransfer = async () => {
         const parsedAmount = parseInt(amount);
         if (targetUser.trim() !== '' && parsedAmount > 0) {
-            await onTransfer(targetUser, parsedAmount);
-            setTargetUser('');
-            setAmount('');
-            onClose();
+            const success = await onTransfer(targetUser, parsedAmount);
+            if (success) {
+                setTargetUser('');
+                setAmount('');
+                onClose();
+            }
         }
     };
 
