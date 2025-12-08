@@ -17,6 +17,7 @@ import VehicleInteractionWheel from './Features/InteractionWheel/VehicleInteract
 import MarkerServerService from './Services/Infrastructure/MarkerServerService';
 import Chat from './Features/Chat/Chat';
 import CommandService from './Services/Infrastructure/CommandService';
+import RealTime from './Features/Core/RealTime';
 
 (async () => {
 	await Database.init();
@@ -33,6 +34,7 @@ import CommandService from './Services/Infrastructure/CommandService';
 	await MarkerServerService.init();
 	await Chat.init();
 	await CommandService.init();
+	await RealTime.init();
 
 	// Features
 	await AtmFeature.init();

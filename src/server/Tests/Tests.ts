@@ -19,7 +19,7 @@ export default class Tests {
 
     public static async createVehicleCommandTest() {
         CommandService.registerCommandHandler({
-            command: 'x',
+            command: '/x',
             description: 'Spawn a vehicle',
             params: [{ type: 'rest', name: 'model' }]
         },
@@ -40,7 +40,7 @@ export default class Tests {
 
         // weapon command
         CommandService.registerCommandHandler({
-            command: 'w',
+            command: '/w',
             description: 'Give a weapon to the player',
             params: [{ type: 'rest', name: 'weapon' }],
         },
