@@ -54,11 +54,11 @@ export default function DashboardTab({
 
                     {/* Actions Card */}
                     <div className={styles.actionButton} onClick={onDepositClick}>
-                        <Icons.ArrowDown size="2rem" />
+                        <Icons.ArrowUp size="2rem" />
                         <span className={styles.actionButtonLabel}>{translate('atm.action.deposit')}</span>
                     </div>
                     <div className={styles.actionButton} onClick={onWithdrawClick}>
-                        <Icons.ArrowUp size="2rem" />
+                        <Icons.ArrowDown size="2rem" />
                         <span className={styles.actionButtonLabel}>{translate('atm.action.withdraw')}</span>
                     </div>
                     <div className={styles.actionButton} onClick={onTransferClick}>

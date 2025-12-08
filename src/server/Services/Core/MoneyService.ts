@@ -6,6 +6,14 @@ import EventService from '@/Services/Infrastructure/EventService';
 import UserService from '@/Services/Core/UserService';
 import { MoneyLogType } from '@shared/Models/MoneyLogData';
 
+export enum TransferTypeResult {
+    Success = 0,
+    InsufficientFunds = 1,
+    TargetNotFound = 2,
+    TargetNotActive = 3,
+    TargetNotLoggedIn = 4,
+}
+
 export default class MoneyService {
 	public static async getPlayerMoneyLogs(player: PlayerMp | number, limit: number = 50, skip: number = 0): Promise<MoneyLogEntity[] | null> {
 		const userId = typeof player === 'number' ? player : ElementDataService.get(player, 'userId');
@@ -77,7 +85,42 @@ export default class MoneyService {
 		return true;
 	}
 
+    public static async givePlayerBankMoney(player: PlayerMp, amount: number, type: MoneyLogType, description: string): Promise<boolean> {
+        const userId = ElementDataService.get(player, 'userId');
+        if (!userId) return false;
+
+        const currentBankMoney: number = this.getPlayerBankMoney(player);
+        const newAmount = currentBankMoney + amount;
+        ElementDataService.set(player, 'bankMoney', newAmount, ShareMode.Server);
+        EventService.triggerClientEvent(player, 'bankMoney:update', newAmount);
+        await UserService.giveBankMoneyToUserIdInternal(userId, amount);
+        await this.addMoneyLog(player, amount, currentBankMoney, type, description);
+
+        return true;
+    }
+
+    public static async takePlayerBankMoney(player: PlayerMp, amount: number, type: MoneyLogType, description: string): Promise<boolean> {
+        const userId = ElementDataService.get(player, 'userId');
+        if (!userId) return false;
+
+        const currentBankMoney: number = this.getPlayerBankMoney(player);
+        if (currentBankMoney < amount) {
+            return false;
+        }
+
+        const newAmount = currentBankMoney - amount;
+        ElementDataService.set(player, 'bankMoney', newAmount, ShareMode.Server);
+        EventService.triggerClientEvent(player, 'bankMoney:update', newAmount);
+        await UserService.takeBankMoneyFromUserIdInternal(userId, amount);
+        await this.addMoneyLog(player, -amount, currentBankMoney, type, description);
+
+        return true;
+    }
+
 	public static async depositToBank(player: PlayerMp, amount: number): Promise<boolean> {
+        const userId = ElementDataService.get(player, 'userId');
+        if (!userId) return false;
+
 		if (amount <= 0) {
 			return false;
 		}
@@ -95,7 +138,6 @@ export default class MoneyService {
 		EventService.triggerClientEvent(player, 'money:update', currentMoney - amount);
 		EventService.triggerClientEvent(player, 'bankMoney:update', currentBankMoney + amount);
 
-		const userId = ElementDataService.get(player, 'userId');
 		if (userId) {
 			await this.addMoneyLog(player, amount, currentMoney, MoneyLogType.ATMDeposit, 'ATM Deposit');
 			await UserService.takeMoneyFromUserIdInternal(userId, amount);
@@ -106,6 +148,9 @@ export default class MoneyService {
 	}
 
 	public static async withdrawFromBank(player: PlayerMp, amount: number): Promise<boolean> {
+        const userId = ElementDataService.get(player, 'userId');
+        if (!userId) return false;
+        
 		if (amount <= 0) {
 			return false;
 		}
@@ -123,7 +168,6 @@ export default class MoneyService {
 		EventService.triggerClientEvent(player, 'bankMoney:update', currentBankMoney - amount);
 		EventService.triggerClientEvent(player, 'money:update', currentMoney + amount);
 
-		const userId = ElementDataService.get(player, 'userId');
 		if (userId) {
 			await this.addMoneyLog(player, -amount, currentMoney, MoneyLogType.ATMWithdraw, 'ATM Withdrawal');
 			await UserService.giveMoneyToUserIdInternal(userId, amount);
@@ -132,4 +176,65 @@ export default class MoneyService {
 
 		return true;
 	}
+
+    public static async transferMoneyToActiveUser(player: PlayerMp, targetUser: string, amount: number): Promise<TransferTypeResult> {
+        const userId = ElementDataService.get(player, 'userId');
+        if (!userId) return TransferTypeResult.TargetNotFound;
+
+        let user = await UserService.getActivePlayerByUsername(targetUser);
+        if (!user) {
+            const targetUserId = parseInt(targetUser);
+            user = await UserService.getActivePlayerByUserId(targetUserId);
+        }
+
+        if (!user) return TransferTypeResult.TargetNotFound;
+
+        const targetUSerId = ElementDataService.get(user, 'userId');
+        if (!targetUSerId) return TransferTypeResult.TargetNotLoggedIn;
+
+        // Take money from player
+        const success = await this.takePlayerBankMoney(player, amount, MoneyLogType.Transfer, `Transfer to ${user.name} (${targetUSerId})`);
+        if (!success) return TransferTypeResult.InsufficientFunds;
+
+        // Give money to target user
+        await this.givePlayerBankMoney(user, amount, MoneyLogType.Transfer, `Transfer from ${player.name} (${userId})`);
+
+        return TransferTypeResult.Success;
+    }
+
+    public static async transferMoneyToInactiveUser(player: PlayerMp, targetUser: string, amount: number): Promise<TransferTypeResult> {
+        const userId = ElementDataService.get(player, 'userId');
+        if (!userId) return TransferTypeResult.TargetNotFound;
+
+        let targetUserId: number | null = null;
+        let user = await UserService.getUserByUsername(targetUser);
+        if (!user) {
+            targetUserId = parseInt(targetUser);
+            user = await UserService.getUserById(targetUserId);
+        }
+
+        if (!user) return TransferTypeResult.TargetNotFound;
+
+        targetUserId = user.uid;
+
+        // Take money from player
+        const success = await this.takePlayerBankMoney(player, amount, MoneyLogType.Transfer, `Transfer to ${user.username} (${targetUserId})`);
+        if (!success) return TransferTypeResult.InsufficientFunds;
+
+        // Give money to target user
+        await UserService.giveBankMoneyToUserIdInternal(targetUserId, amount);
+        await this.addMoneyLog(targetUserId, amount, 0, MoneyLogType.Transfer, `Transfer from ${player.name} (${userId})`);
+
+        return TransferTypeResult.Success;
+    }
+
+    public static async transferMoneyToUser(player: PlayerMp, targetUser: string, amount: number): Promise<TransferTypeResult> {
+        const activeUser = await this.transferMoneyToActiveUser(player, targetUser, amount);
+        if (activeUser !== TransferTypeResult.TargetNotFound) {
+            return activeUser;
+        }
+
+        const inactiveUser = await this.transferMoneyToInactiveUser(player, targetUser, amount);
+        return inactiveUser;
+    }
 }

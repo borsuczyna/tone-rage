@@ -1,5 +1,5 @@
 import FetchService from '@/Services/Infrastructure/FetchService';
-import MoneyService from '@/Services/Core/MoneyService';
+import MoneyService, { TransferTypeResult } from '@/Services/Core/MoneyService';
 import NotificationService from '@/Services/Infrastructure/NotificationService';
 import { NotificationType } from '@shared/Models/NotificationType';
 import translate from '@shared/Translation/Translation';
@@ -76,16 +76,51 @@ export default class AtmFeature {
 		return { success: false };
 	}
 
-	private static async onTransfer(player: PlayerMp, _data: { targetUserId: number; amount: number }) {
-		// For now, just return not implemented
-		// This would require additional MoneyService methods for bank-to-bank transfers
-		NotificationService.addNotification(
-			player,
-			NotificationType.Error,
-			translate('default.error'),
-			translate('atm.transfer_not_implemented')
-		);
+	private static async onTransfer(player: PlayerMp, _data: { targetUser: string; amount: number }) {
+		const result = await MoneyService.transferMoneyToUser(player, _data.targetUser, _data.amount);
 
-		return { success: false };
-	}
+		if (result == TransferTypeResult.Success) {
+            const atmData = await this.buildAtmData(player);
+            NotificationService.addNotification(
+                player,
+                NotificationType.Success,
+                translate('default.success'),
+                translate('atm.transfer.success')
+            );
+            return {
+                success: true,
+                ...atmData
+            };
+        } else if (result == TransferTypeResult.TargetNotFound) {
+            NotificationService.addNotification(
+                player,
+                NotificationType.Error,
+                translate('default.error'),
+                translate('atm.transfer.target_not_found')
+            );
+        } else if (result == TransferTypeResult.TargetNotLoggedIn) {
+            NotificationService.addNotification(
+                player,
+                NotificationType.Error,
+                translate('default.error'),
+                translate('atm.transfer.target_not_logged_in')
+            );
+        } else if (result == TransferTypeResult.InsufficientFunds) {
+            NotificationService.addNotification(
+                player,
+                NotificationType.Error,
+                translate('default.error'),
+                translate('atm.transfer.insufficient_funds')
+            );
+        } else {
+            NotificationService.addNotification(
+                player,
+                NotificationType.Error,
+                translate('default.error'),
+                translate('atm.transfer.failed')
+            );
+        }
+
+        return { success: false };
+    }
 }

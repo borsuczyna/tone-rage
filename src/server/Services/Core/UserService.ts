@@ -183,6 +183,17 @@ export default class UserService {
 		return null;
 	}
 
+    public static getActivePlayerByUsername(username: string): PlayerMp | null {
+        const players = mp.players.toArray();
+        for (const player of players) {
+            const name = player.name;
+            if (name === username) {
+                return player;
+            }
+        }
+        return null;
+    }
+
 	/**
 	 * @internal Direct database access - bypasses business logic
 	 */

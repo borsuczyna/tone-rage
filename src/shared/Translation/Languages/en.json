@@ -184,6 +184,12 @@
     "atm.transfer_not_implemented": "Transfer feature is not yet implemented.",
     "atm.marker.upperText": "ATM",
     "atm.marker.lowerText": "Tone Banking",
+    "atm.modal.transfer.targetUser.placeholder": "Target username or user id",
+    "atm.transfer.target_not_found": "The target user was not found.",
+    "atm.transfer.target_not_logged_in": "The target user is not logged in.",
+    "atm.transfer.insufficient_funds": "You have insufficient funds to complete this transfer.",
+    "atm.transfer.success": "Transfer completed successfully.",
+    "atm.transfer.failed": "Transfer failed. Please try again.",
 
     "blip.atm": "ATM",
 

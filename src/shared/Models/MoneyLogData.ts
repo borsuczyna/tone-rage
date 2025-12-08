@@ -3,7 +3,8 @@ export const MoneyLogType = {
 	Salary: 1,
 	Purchase: 2,
 	ATMDeposit: 3,
-	ATMWithdraw: 4
+	ATMWithdraw: 4,
+	Transfer: 5
 } as const;
 
 export type MoneyLogType = typeof MoneyLogType[keyof typeof MoneyLogType];

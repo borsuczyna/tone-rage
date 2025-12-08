@@ -9,27 +9,26 @@ import styles from '../../Styles/AtmInterface.module.css';
 interface TransferModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onTransfer: (targetUserId: number, amount: number) => Promise<void>;
+    onTransfer: (targetUser: string, amount: number) => Promise<void>;
     isLoading?: boolean;
 }
 
 export default function TransferModal({ isOpen, onClose, onTransfer, isLoading = false }: TransferModalProps) {
-    const [targetUserId, setTargetUserId] = useState('');
+    const [targetUser, setTargetUser] = useState('');
     const [amount, setAmount] = useState('');
 
     const handleTransfer = async () => {
-        const parsedUserId = parseInt(targetUserId);
         const parsedAmount = parseInt(amount);
-        if (parsedUserId > 0 && parsedAmount > 0) {
-            await onTransfer(parsedUserId, parsedAmount);
-            setTargetUserId('');
+        if (targetUser.trim() !== '' && parsedAmount > 0) {
+            await onTransfer(targetUser, parsedAmount);
+            setTargetUser('');
             setAmount('');
             onClose();
         }
     };
 
     const handleClose = () => {
-        setTargetUserId('');
+        setTargetUser('');
         setAmount('');
         onClose();
     };
@@ -40,10 +39,10 @@ export default function TransferModal({ isOpen, onClose, onTransfer, isLoading =
                 <InputField
                     icon={<Icons.User size="1.3rem" />}
                     label={translate('atm.modal.transfer.targetUser')}
-                    type="number"
-                    placeholder="0"
-                    value={targetUserId}
-                    onChange={setTargetUserId}
+                    type="text"
+                    placeholder={translate('atm.modal.transfer.targetUser.placeholder')}
+                    value={targetUser}
+                    onChange={setTargetUser}
                     disabled={isLoading}
                 />
                 <InputField
@@ -68,7 +67,7 @@ export default function TransferModal({ isOpen, onClose, onTransfer, isLoading =
                     <Button 
                         variant="primary" 
                         onClick={handleTransfer}
-                        disabled={!targetUserId || !amount || isLoading}
+                        disabled={!targetUser || !amount || isLoading}
                         loading={isLoading}
                         fullWidth={true}
                     >

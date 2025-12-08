@@ -101,14 +101,14 @@ export default function AtmInterface() {
         }
     };
 
-    const handleTransfer = async (targetUserId: number, amount: number) => {
+    const handleTransfer = async (targetUser: string, amount: number) => {
         if (isLoading) return;
 
         try {
             setIsLoading(true);
             const response = await fetchServerData<AtmDataResponse>(
                 'atm:transfer',
-                { targetUserId, amount }
+                { targetUser, amount }
             );
 
             if (response.success && response.bankMoney !== undefined && response.walletMoney !== undefined && response.logs) {
