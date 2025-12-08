@@ -20,7 +20,7 @@ export default class MarkerServerService {
 		}
 
 		EventService.triggerClientEvent(player, 'MarkerService:ReceiveMarkers', serialized);
-		this.logger.info(`Sent ${serialized.length} markers to player ${player.name} (${player.id})`);
+		this.logger.debug(`Sent ${serialized.length} markers to player ${player.name} (${player.id})`);
 	}
 
 	private static resyncChangedMarkers() {
@@ -33,6 +33,6 @@ export default class MarkerServerService {
 		}
 
 		EventService.triggerAllClients('MarkerService:ReceiveMarkers', serialized);
-		this.logger.info(`Resynced ${serialized.length} changed markers to all players`);
+		this.logger.debug(`Resynced ${serialized.length} changed markers to all players`);
 	}
 }

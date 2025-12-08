@@ -113,14 +113,11 @@ export default class TextureService {
 
     private static async onMarkerTextureRequest(data: MarkerTextureRequest) {
         const context = await this.createMarkerTexture(data.icon, data.upperText, data.lowerText);
-        console.log('Generated marker texture context:', context);
         if (!context) return;
 
         const textureWidth = context.canvas.width;
         const textureHeight = context.canvas.height;
         const textureName = generateGuid();
-
-        console.log('Uploading marker texture:', textureName, textureWidth, textureHeight);
 
         await fetch('http://game-textures/put', {
             method: 'POST',

@@ -45,7 +45,6 @@ export default function TransferModal({ isOpen, onClose, onTransfer, isLoading =
                     value={targetUserId}
                     onChange={setTargetUserId}
                     disabled={isLoading}
-                    groupStyle={{ marginBottom: '1.5rem' }}
                 />
                 <InputField
                     icon={<Icons.DollarSign size="1.3rem" />}
@@ -55,14 +54,13 @@ export default function TransferModal({ isOpen, onClose, onTransfer, isLoading =
                     value={amount}
                     onChange={setAmount}
                     disabled={isLoading}
-                    groupStyle={{ marginBottom: '1.5rem' }}
                 />
                 <div className={styles.modalActions}>
                     <Button 
                         variant="gray" 
                         onClick={handleClose}
                         disabled={isLoading}
-                        style={{ flex: 1 }}
+                        fullWidth={true}
                     >
                         <Icons.X size="1rem" />
                         {translate('atm.button.cancel')}
@@ -72,7 +70,7 @@ export default function TransferModal({ isOpen, onClose, onTransfer, isLoading =
                         onClick={handleTransfer}
                         disabled={!targetUserId || !amount || isLoading}
                         loading={isLoading}
-                        style={{ flex: 1 }}
+                        fullWidth={true}
                     >
                         <Icons.Check size="1rem" />
                         {translate('atm.button.transfer')}

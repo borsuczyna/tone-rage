@@ -42,6 +42,17 @@ function updateRemSize() {
     document.documentElement.style.fontSize = `${newSize}px`;
 }
 
+export function getRemAsPx(value: string | number): number {
+    const remSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
+    if (typeof value === 'string') {
+        if (value.endsWith('rem')) {
+            value = value.slice(0, -3);
+        }
+        return parseFloat(value) * remSize;
+    }
+    return value * remSize;
+}
+
 window.addEventListener('resize', () => {
     updateRemSize();
 });

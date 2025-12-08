@@ -26,3 +26,12 @@ export interface AtmTransactionData {
 	date: Date;
 	balanceAfter: number;
 }
+
+export interface MoneyLogEntityInterface {
+	uid: number;
+	amount: number;
+	amountBefore: number;
+	type: MoneyLogType;
+	description: string;
+	createdAt: string;
+}

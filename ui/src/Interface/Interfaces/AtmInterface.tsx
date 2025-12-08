@@ -2,20 +2,22 @@ import { useState, useEffect, useCallback } from 'react';
 import { useInterfaceVisibility } from 'src/Hooks/InterfaceVisibilityProvider';
 import { useUserInfo } from 'src/Hooks/UserInfoProvider';
 import styles from './Styles/AtmInterface.module.css';
-import type { AtmTransactionData } from '@shared/Models/MoneyLogData';
+import type { MoneyLogEntityInterface } from '@shared/Models/MoneyLogData';
 import { formatMoney } from '@shared/MoneyHelper';
 import translate from '@shared/Translation/Translation';
 import { DashboardTab, TransactionsTab, DepositModal, WithdrawModal, TransferModal } from './Components/atm';
-import { fetchServerData } from 'src/Hooks/Fetch';
+import { fetchServerData, triggerEvent } from 'src/Hooks/Fetch';
 import * as Icons from 'lucide-react';
-
-
 
 interface AtmData {
     bankMoney: number;
     walletMoney: number;
     userId: number;
-    transactions: AtmTransactionData[];
+    logs: MoneyLogEntityInterface[];
+}
+
+interface AtmDataResponse extends AtmData {
+    success: boolean;
 }
 
 type SidebarTab = 'dashboard' | 'transactions' | 'accounts' | 'society' | 'savings' | 'loans';
@@ -27,7 +29,7 @@ export default function AtmInterface() {
     const [bankBalance, setBankBalance] = useState(0);
     const [walletMoney, setWalletMoney] = useState(0);
     const [userId, setUserId] = useState(0);
-    const [transactions, setTransactions] = useState<AtmTransactionData[]>([]);
+    const [transactions, setTransactions] = useState<MoneyLogEntityInterface[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
     const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
@@ -40,7 +42,7 @@ export default function AtmInterface() {
             setBankBalance(data.bankMoney);
             setWalletMoney(data.walletMoney);
             setUserId(data.userId);
-            setTransactions(data.transactions);
+            setTransactions(data.logs);
         } catch (error) {
             console.error('Failed to fetch ATM data:', error);
         } finally {
@@ -60,15 +62,15 @@ export default function AtmInterface() {
 
         try {
             setIsLoading(true);
-            const response = await fetchServerData<{ success: boolean; bankMoney?: number; walletMoney?: number; transactions?: AtmTransactionData[] }>(
+            const response = await fetchServerData<AtmDataResponse>(
                 'atm:deposit',
                 { amount }
             );
 
-            if (response.success && response.bankMoney !== undefined && response.walletMoney !== undefined && response.transactions) {
+            if (response.success && response.bankMoney !== undefined && response.walletMoney !== undefined && response.logs) {
                 setBankBalance(response.bankMoney);
                 setWalletMoney(response.walletMoney);
-                setTransactions(response.transactions);
+                setTransactions(response.logs);
             }
         } catch (error) {
             console.error('Failed to deposit:', error);
@@ -82,15 +84,15 @@ export default function AtmInterface() {
 
         try {
             setIsLoading(true);
-            const response = await fetchServerData<{ success: boolean; bankMoney?: number; walletMoney?: number; transactions?: AtmTransactionData[] }>(
+            const response = await fetchServerData<AtmDataResponse>(
                 'atm:withdraw',
                 { amount }
             );
 
-            if (response.success && response.bankMoney !== undefined && response.walletMoney !== undefined && response.transactions) {
+            if (response.success && response.bankMoney !== undefined && response.walletMoney !== undefined && response.logs) {
                 setBankBalance(response.bankMoney);
                 setWalletMoney(response.walletMoney);
-                setTransactions(response.transactions);
+                setTransactions(response.logs);
             }
         } catch (error) {
             console.error('Failed to withdraw:', error);
@@ -104,15 +106,15 @@ export default function AtmInterface() {
 
         try {
             setIsLoading(true);
-            const response = await fetchServerData<{ success: boolean; bankMoney?: number; walletMoney?: number; transactions?: AtmTransactionData[] }>(
+            const response = await fetchServerData<AtmDataResponse>(
                 'atm:transfer',
                 { targetUserId, amount }
             );
 
-            if (response.success && response.bankMoney !== undefined && response.walletMoney !== undefined && response.transactions) {
+            if (response.success && response.bankMoney !== undefined && response.walletMoney !== undefined && response.logs) {
                 setBankBalance(response.bankMoney);
                 setWalletMoney(response.walletMoney);
-                setTransactions(response.transactions);
+                setTransactions(response.logs);
             }
         } catch (error) {
             console.error('Failed to transfer:', error);
@@ -130,21 +132,17 @@ export default function AtmInterface() {
                     {/* Header */}
                     <div className={styles.header}>
                         <div className={styles.headerBranding}>
-                            <span className={styles.brandName}>WASABI</span>
-                            <span className={styles.brandSuffix}>BANKING</span>
-                        </div>
-                        <div className={styles.headerCenter}>
-                            <div className={styles.userAvatar}>
-                                <Icons.User size="1.5rem" />
-                            </div>
-                            <div className={styles.welcomeText}>
-                                <span>{translate('atm.header.welcome')}, {userInfo.username}</span>
-                            </div>
+                            <span className={styles.brandName}>Tone</span>
+                            <span className={styles.brandSuffix}>Banking</span>
                         </div>
                         <div className={styles.headerRight}>
                             <div className={styles.walletBadge}>
                                 <span className={styles.walletLabel}>{translate('atm.header.wallet')}</span>
                                 <span className={styles.walletAmount}>{formatMoney(walletMoney)}</span>
+                            </div>
+
+                            <div className={styles.closeButton} onClick={() => {triggerEvent('atm:closeInterface');}}>
+                                <Icons.X size="1.5rem" />
                             </div>
                         </div>
                     </div>
@@ -166,34 +164,6 @@ export default function AtmInterface() {
                                 <Icons.Receipt size="1.2rem" />
                                 <span>{translate('atm.sidebar.transactions')}</span>
                             </button>
-                            <button 
-                                className={`${styles.sidebarItem} ${activeTab === 'accounts' ? styles.active : ''}`}
-                                onClick={() => setActiveTab('accounts')}
-                            >
-                                <Icons.Users size="1.2rem" />
-                                <span>{translate('atm.sidebar.accounts')}</span>
-                            </button>
-                            <button 
-                                className={`${styles.sidebarItem} ${activeTab === 'society' ? styles.active : ''}`}
-                                onClick={() => setActiveTab('society')}
-                            >
-                                <Icons.Building2 size="1.2rem" />
-                                <span>{translate('atm.sidebar.society')}</span>
-                            </button>
-                            <button 
-                                className={`${styles.sidebarItem} ${activeTab === 'savings' ? styles.active : ''}`}
-                                onClick={() => setActiveTab('savings')}
-                            >
-                                <Icons.PiggyBank size="1.2rem" />
-                                <span>{translate('atm.sidebar.savings')}</span>
-                            </button>
-                            <button 
-                                className={`${styles.sidebarItem} ${activeTab === 'loans' ? styles.active : ''}`}
-                                onClick={() => setActiveTab('loans')}
-                            >
-                                <Icons.Landmark size="1.2rem" />
-                                <span>{translate('atm.sidebar.loans')}</span>
-                            </button>
                         </div>
 
                         {/* Main Content */}
@@ -203,9 +173,11 @@ export default function AtmInterface() {
                                     bankBalance={bankBalance}
                                     recentTransactions={transactions}
                                     userId={userId}
+                                    accountName={userInfo.username}
                                     onDepositClick={() => setIsDepositModalOpen(true)}
                                     onWithdrawClick={() => setIsWithdrawModalOpen(true)}
                                     onTransferClick={() => setIsTransferModalOpen(true)}
+                                    setActiveTab={setActiveTab}
                                 />
                             ) : activeTab === 'transactions' ? (
                                 <TransactionsTab transactions={transactions} />

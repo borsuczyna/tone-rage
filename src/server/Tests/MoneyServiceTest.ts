@@ -1,13 +1,12 @@
-import { MoneyLogType } from '@/Database/Entities/MoneyLogEntity';
 import MoneyService from '@/Services/Core/MoneyService';
 import NotificationService from '@/Services/Infrastructure/NotificationService';
+import { MoneyLogType } from '@shared/Models/MoneyLogData';
 import { NotificationType } from '@shared/Models/NotificationType';
 
 export default class MoneyServiceTest {
 	public static init() {
 		mp.events.addCommand('addmoney', this.addMoneyCommand.bind(this));
 		mp.events.addCommand('takemoney', this.takeMoneyCommand.bind(this));
-		mp.events.addCommand('moneylogs', this.moneyLogsCommand.bind(this));
 	}
 
 	private static async addMoneyCommand(player: PlayerMp, _fullText: string, amountStr: string) {
@@ -42,21 +41,6 @@ export default class MoneyServiceTest {
 				'Money Service',
 				`Failed to take money. You may not have enough funds.`
 			);
-		}
-	}
-
-	private static async moneyLogsCommand(player: PlayerMp, _fullText: string) {
-		const logs = await MoneyService.getPlayerMoneyLogs(player, 10, 0);
-		if (logs && logs.length > 0) {
-			let message = 'Recent Money Logs:\n';
-			logs.forEach((log) => {
-				message += `[${log.createdAt.toISOString()}] Type: ${MoneyLogType[log.type]}, Amount: $${log.amount}, Description: ${
-					log.description
-				}\n`;
-			});
-			NotificationService.addNotification(player, NotificationType.Info, 'Money Service', message);
-		} else {
-			NotificationService.addNotification(player, NotificationType.Info, 'Money Service', 'No money logs found.');
 		}
 	}
 }
