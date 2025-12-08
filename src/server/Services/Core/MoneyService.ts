@@ -1,9 +1,10 @@
 import Database from '@/Database/Database';
-import { MoneyLogEntity, MoneyLogType } from '@/Database/Entities/MoneyLogEntity';
+import { MoneyLogEntity } from '@/Database/Entities/MoneyLogEntity';
 import ElementDataService from '@/Services/Infrastructure/ElementDataService';
 import { ShareMode } from '@shared/Models/ElementDataModels';
 import EventService from '@/Services/Infrastructure/EventService';
 import UserService from '@/Services/Core/UserService';
+import { MoneyLogType } from '@shared/Models/MoneyLogData';
 
 export default class MoneyService {
 	public static async getPlayerMoneyLogs(player: PlayerMp | number, limit: number = 50, skip: number = 0): Promise<MoneyLogEntity[] | null> {

@@ -1,12 +1,5 @@
+import { MoneyLogType } from '@shared/Models/MoneyLogData';
 import { DatabaseEntity } from './DatabaseEntity';
-
-export enum MoneyLogType {
-	Unknown = 0,
-	Salary = 1,
-	Purchase = 2,
-	ATMDeposit = 3,
-	ATMWithdraw = 4
-}
 
 export class MoneyLogEntity extends DatabaseEntity {
 	userId: number = 0;
@@ -34,7 +27,7 @@ export class MoneyLogEntity extends DatabaseEntity {
 			this.userId = parseInt(this.userId);
 		}
 		if (typeof this.type === 'string') {
-			this.type = parseInt(this.type);
+			this.type = parseInt(this.type) as MoneyLogType;
 		}
 	}
 

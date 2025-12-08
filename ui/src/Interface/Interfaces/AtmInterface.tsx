@@ -1,32 +1,48 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useInterfaceVisibility } from 'src/Hooks/InterfaceVisibilityProvider';
+import { useUserInfo } from 'src/Hooks/UserInfoProvider';
 import styles from './Styles/AtmInterface.module.css';
-import type { AtmTransactionData } from '@shared/Models/MoneyLogData';
+import type { MoneyLogEntityInterface } from '@shared/Models/MoneyLogData';
 import { formatMoney } from '@shared/MoneyHelper';
 import translate from '@shared/Translation/Translation';
-import { WithdrawTab, DepositTab, LogsTab } from './Components/atm';
-import { fetchServerData } from 'src/Hooks/Fetch';
-
-type AtmTab = 'withdraw' | 'deposit' | 'logs';
+import { DashboardTab, TransactionsTab, DepositModal, WithdrawModal, TransferModal } from './Components/atm';
+import { fetchServerData, triggerEvent } from 'src/Hooks/Fetch';
+import * as Icons from 'lucide-react';
 
 interface AtmData {
     bankMoney: number;
-    transactions: AtmTransactionData[];
+    walletMoney: number;
+    userId: number;
+    logs: MoneyLogEntityInterface[];
 }
+
+interface AtmDataResponse extends AtmData {
+    success: boolean;
+}
+
+type SidebarTab = 'dashboard' | 'transactions' | 'accounts' | 'society' | 'savings' | 'loans';
 
 export default function AtmInterface() {
     const { isInterfaceVisible } = useInterfaceVisibility();
-    const [activeTab, setActiveTab] = useState<AtmTab>('withdraw');
-    const [currentBalance, setCurrentBalance] = useState(0);
-    const [transactions, setTransactions] = useState<AtmTransactionData[]>([]);
+    const { userInfo } = useUserInfo();
+    const [activeTab, setActiveTab] = useState<SidebarTab>('dashboard');
+    const [bankBalance, setBankBalance] = useState(0);
+    const [walletMoney, setWalletMoney] = useState(0);
+    const [userId, setUserId] = useState(0);
+    const [transactions, setTransactions] = useState<MoneyLogEntityInterface[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
+    const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+    const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
 
     const fetchAtmData = useCallback(async () => {
         try {
             setIsLoading(true);
             const data = await fetchServerData<AtmData>('atm:getData', {});
-            setCurrentBalance(data.bankMoney);
-            setTransactions(data.transactions);
+            setBankBalance(data.bankMoney);
+            setWalletMoney(data.walletMoney);
+            setUserId(data.userId);
+            setTransactions(data.logs);
         } catch (error) {
             console.error('Failed to fetch ATM data:', error);
         } finally {
@@ -41,23 +57,67 @@ export default function AtmInterface() {
         }
     }, [isInterfaceVisible, fetchAtmData]);
 
-    const handleTransaction = async (amount: number) => {
+    const handleDeposit = async (amount: number) => {
         if (isLoading) return;
 
         try {
             setIsLoading(true);
-            const endpoint = activeTab === 'withdraw' ? 'atm:withdraw' : 'atm:deposit';
-            const response = await fetchServerData<{ success: boolean; bankMoney?: number; transactions?: AtmTransactionData[] }>(
-                endpoint,
+            const response = await fetchServerData<AtmDataResponse>(
+                'atm:deposit',
                 { amount }
             );
 
-            if (response.success && response.bankMoney !== undefined && response.transactions) {
-                setCurrentBalance(response.bankMoney);
-                setTransactions(response.transactions);
+            if (response.success && response.bankMoney !== undefined && response.walletMoney !== undefined && response.logs) {
+                setBankBalance(response.bankMoney);
+                setWalletMoney(response.walletMoney);
+                setTransactions(response.logs);
             }
         } catch (error) {
-            console.error(`Failed to ${activeTab}:`, error);
+            console.error('Failed to deposit:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleWithdraw = async (amount: number) => {
+        if (isLoading) return;
+
+        try {
+            setIsLoading(true);
+            const response = await fetchServerData<AtmDataResponse>(
+                'atm:withdraw',
+                { amount }
+            );
+
+            if (response.success && response.bankMoney !== undefined && response.walletMoney !== undefined && response.logs) {
+                setBankBalance(response.bankMoney);
+                setWalletMoney(response.walletMoney);
+                setTransactions(response.logs);
+            }
+        } catch (error) {
+            console.error('Failed to withdraw:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleTransfer = async (targetUserId: number, amount: number) => {
+        if (isLoading) return;
+
+        try {
+            setIsLoading(true);
+            const response = await fetchServerData<AtmDataResponse>(
+                'atm:transfer',
+                { targetUserId, amount }
+            );
+
+            if (response.success && response.bankMoney !== undefined && response.walletMoney !== undefined && response.logs) {
+                setBankBalance(response.bankMoney);
+                setWalletMoney(response.walletMoney);
+                setTransactions(response.logs);
+            }
+        } catch (error) {
+            console.error('Failed to transfer:', error);
         } finally {
             setIsLoading(false);
         }
@@ -66,49 +126,91 @@ export default function AtmInterface() {
     if (!isInterfaceVisible('AtmInterface')) return null;
 
     return (
-        <div className={styles.container}>
-            <div className={`${styles.atmMachine} ${activeTab === 'logs' ? styles.logsLayout : ''}`}>
-                {/* Header */}
-                <div className={styles.header}>
-                    <div className={styles.bankName}>
-                        <span>{translate('atm.title')}</span>
+        <>
+            <div className={styles.container}>
+                <div className={styles.atmMachine}>
+                    {/* Header */}
+                    <div className={styles.header}>
+                        <div className={styles.headerBranding}>
+                            <span className={styles.brandName}>Tone</span>
+                            <span className={styles.brandSuffix}>Banking</span>
+                        </div>
+                        <div className={styles.headerRight}>
+                            <div className={styles.walletBadge}>
+                                <span className={styles.walletLabel}>{translate('atm.header.wallet')}</span>
+                                <span className={styles.walletAmount}>{formatMoney(walletMoney)}</span>
+                            </div>
+
+                            <div className={styles.closeButton} onClick={() => {triggerEvent('atm:closeInterface');}}>
+                                <Icons.X size="1.5rem" />
+                            </div>
+                        </div>
                     </div>
-                    <div className={styles.balance}>
-                        <span>{translate('atm.balance')}: {formatMoney(currentBalance)}</span>
+
+                    <div className={styles.mainLayout}>
+                        {/* Sidebar Navigation */}
+                        <div className={styles.sidebar}>
+                            <button 
+                                className={`${styles.sidebarItem} ${activeTab === 'dashboard' ? styles.active : ''}`}
+                                onClick={() => setActiveTab('dashboard')}
+                            >
+                                <Icons.LayoutDashboard size="1.2rem" />
+                                <span>{translate('atm.sidebar.dashboard')}</span>
+                            </button>
+                            <button 
+                                className={`${styles.sidebarItem} ${activeTab === 'transactions' ? styles.active : ''}`}
+                                onClick={() => setActiveTab('transactions')}
+                            >
+                                <Icons.Receipt size="1.2rem" />
+                                <span>{translate('atm.sidebar.transactions')}</span>
+                            </button>
+                        </div>
+
+                        {/* Main Content */}
+                        <div className={styles.content}>
+                            {activeTab === 'dashboard' ? (
+                                <DashboardTab 
+                                    bankBalance={bankBalance}
+                                    recentTransactions={transactions}
+                                    userId={userId}
+                                    accountName={userInfo.username}
+                                    onDepositClick={() => setIsDepositModalOpen(true)}
+                                    onWithdrawClick={() => setIsWithdrawModalOpen(true)}
+                                    onTransferClick={() => setIsTransferModalOpen(true)}
+                                    setActiveTab={setActiveTab}
+                                />
+                            ) : activeTab === 'transactions' ? (
+                                <TransactionsTab transactions={transactions} />
+                            ) : (
+                                <div className={styles.comingSoon}>
+                                    <Icons.Construction size="3rem" />
+                                    <p>{translate('atm.comingSoon')}</p>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
-
-                {/* Tab Navigation */}
-                <div className={styles.tabNavigation}>
-                    <button 
-                        className={`${styles.tab} ${activeTab === 'withdraw' ? styles.active : ''}`}
-                        onClick={() => setActiveTab('withdraw')}
-                    >
-                        {translate('atm.tab.withdraw')}
-                    </button>
-                    <button 
-                        className={`${styles.tab} ${activeTab === 'deposit' ? styles.active : ''}`}
-                        onClick={() => setActiveTab('deposit')}
-                    >
-                        {translate('atm.tab.deposit')}
-                    </button>
-                    <button 
-                        className={`${styles.tab} ${activeTab === 'logs' ? styles.active : ''}`}
-                        onClick={() => setActiveTab('logs')}
-                    >
-                        {translate('atm.tab.logs')}
-                    </button>
-                </div>
-
-                {/* Main Content */}
-                {activeTab === 'logs' ? (
-                    <LogsTab transactions={transactions} />
-                ) : activeTab === 'withdraw' ? (
-                    <WithdrawTab onTransaction={handleTransaction} disabled={isLoading} />
-                ) : (
-                    <DepositTab onTransaction={handleTransaction} disabled={isLoading} />
-                )}
             </div>
-        </div>
+
+            {/* Modals */}
+            <DepositModal 
+                isOpen={isDepositModalOpen}
+                onClose={() => setIsDepositModalOpen(false)}
+                onDeposit={handleDeposit}
+                isLoading={isLoading}
+            />
+            <WithdrawModal 
+                isOpen={isWithdrawModalOpen}
+                onClose={() => setIsWithdrawModalOpen(false)}
+                onWithdraw={handleWithdraw}
+                isLoading={isLoading}
+            />
+            <TransferModal 
+                isOpen={isTransferModalOpen}
+                onClose={() => setIsTransferModalOpen(false)}
+                onTransfer={handleTransfer}
+                isLoading={isLoading}
+            />
+        </>
     );
 }

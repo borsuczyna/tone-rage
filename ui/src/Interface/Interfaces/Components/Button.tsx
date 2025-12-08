@@ -1,6 +1,7 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import * as Icons from "lucide-react";
 import styles from './Button.module.css';
+import csx from 'src/Utils/MergeClass';
 
 interface ToneButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     children: ReactNode;
@@ -8,6 +9,7 @@ interface ToneButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     size?: 'small' | 'medium' | 'large';
     glow?: boolean;
     loading?: boolean;
+    fullWidth?: boolean;
 }
 
 export default function Button({ 
@@ -19,12 +21,18 @@ export default function Button({
     className = '',
     style,
     disabled,
+    fullWidth = false,
     ...buttonProps
 }: ToneButtonProps) {
     const buttonClass = `${styles.toneButton} ${styles[variant]} ${styles[size]} ${className}`;
     const glowClass = `${styles.glowEffect} ${styles[variant]}`;
     const isDisabled = disabled || loading;
-    const wrapperClass = `${styles.buttonWrapper} ${isDisabled ? styles.disabled : ''}`;
+    // const wrapperClass = `${styles.buttonWrapper} ${isDisabled ? styles.disabled : ''}`;
+    const wrapperClass = csx(
+        styles.buttonWrapper,
+        isDisabled ? styles.disabled : '',
+        fullWidth ? styles.fullWidth : ''
+    );
     
     return (
         <div className={wrapperClass} style={style}>

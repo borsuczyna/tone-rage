@@ -1,216 +1,713 @@
-/* AtmInterface.module.css */
+/* AtmInterface.module.css - Wasabi Banking Design */
 @import '../../../styles/tone-variables.css';
 
-.container {
+.atmMachine {
+    background: #1a1a1a;
+    border-radius: 1rem;
+    overflow: hidden;
+    animation: scaleUp 0.3s ease-out;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    width: 75rem;
+    height: 39rem;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    color: white;
-    z-index: 1000;
-}
-
-.atmMachine {
-    width: 22rem;
-    background: rgba(25, 25, 25, 0.85);
-    border: 1px solid rgba(80, 80, 80, 0.3);
-    border-radius: 1rem;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-    overflow: hidden;
-    animation: slideIn 0.4s ease-out;
-    transform-origin: center center;
-}
-
-/* Logs Layout - Expanded display area */
-.logsLayout .displayArea {
-    height: auto;
-    min-height: 15rem;
-    max-height: 25rem;
-}
-
-.logsLayout .transactionLogs {
-    height: 100%;
-}
-
-.logsLayout .logsList {
-    max-height: 20rem;
 }
 
 /* Header */
 .header {
-    background: rgba(30, 30, 30, 0.8);
-    padding: 0.75rem 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-    border-bottom: 1px solid rgba(80, 80, 80, 0.3);
-}
-
-.bankName {
+    background: #242424;
+    padding: 0.8rem 1.3rem;
     display: flex;
     align-items: center;
-    font-weight: 600;
-    font-size: 1rem;
+    justify-content: space-between;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.headerBranding {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ddd;
+}
+
+.brandName {
+    background: linear-gradient(90deg, var(--tone-cyan) 0%, var(--tone-pink) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.brandSuffix {
+    font-weight: 700;
+}
+
+.headerRight {
+    display: flex;
+    gap: 0.5rem;
+    height: 100%;
+}
+
+.closeButton {
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    width: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #333;
+    border: 1px solid #444;
+    border-radius: 0.5rem;
+    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.closeButton:hover {
     color: white;
+    background: #444;
+    border-color: #555;
+}
+
+.walletBadge {
+    background: #333;
+    border: 1px solid #444;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.walletLabel {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.9);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
-.balance {
-    color: rgba(255, 255, 255, 0.7);
-    font-weight: 500;
-    font-size: 0.75rem;
-    text-align: left;
+.walletAmount {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: white;
 }
 
-/* Tab Navigation */
-.tabNavigation {
+/* Main Layout */
+.mainLayout {
     display: flex;
-    background: rgba(25, 25, 25, 0.6);
-    border-bottom: 1px solid rgba(80, 80, 80, 0.2);
+    flex: 1;
+    overflow: hidden;
 }
 
-.tab {
-    flex: 1;
-    padding: 0.75rem;
-    background: none;
+/* Sidebar */
+.sidebar {
+    width: 16rem;
+    background: #1f1f1f;
+    border-right: 1px solid #2a2a2a;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebarItem {
+    padding: 1rem;
+    background: transparent;
     border: none;
     color: rgba(255, 255, 255, 0.6);
-    font-weight: 500;
-    font-size: 0.8rem;
+    font-size: 1rem;
     cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: lowercase;
-    position: relative;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-align: left;
+    border-left: 3px solid transparent;
 }
 
-.tab:hover {
-    color: rgba(255, 255, 255, 0.8);
-    background: rgba(40, 40, 40, 0.5);
+.sidebarItem:hover {
+    background: rgba(185, 16, 114, 0.1);
+    color: rgba(255, 255, 255, 0.9);
 }
 
-.tab.active {
-    color: white;
-    background: rgba(50, 50, 50, 0.7);
+.sidebarItem.active {
+    background: rgba(185, 16, 106, 0.15);
+    color: var(--tone-pink);
+    border-left: 3px solid var(--tone-pink);
 }
 
-.tab.active::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--tone-gradient-primary);
+/* Content Area */
+.content {
+    flex: 1;
+    background: #1a1a1a;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
-/* Display Area */
-.displayArea {
-    height: 5.5rem;
-    padding: 0.75rem 1rem;
-    background: rgba(15, 15, 15, 0.8);
+/* Coming Soon */
+.comingSoon {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 1rem;
+    color: rgba(255, 255, 255, 0.4);
 }
 
-.amountInput {
-    text-align: center;
-    width: 100%;
+/* Dashboard Layout */
+.dashboardContainer {
+    display: flex;
+    gap: 1rem;
+    padding: 1.35rem;
 }
 
-.inputLabel {
+.dashboardLeft {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.dashboardRight {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.firstHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+/* Balance Card */
+.balanceCard {
+    background: #242424;
+    border-radius: 1rem;
+    border: 1px solid #2a2a2a;
+    padding: 1.35rem;
+    flex-grow: 1;
+}
+
+.balanceCardHeader {
     color: rgba(255, 255, 255, 0.7);
-    font-size: 0.8rem;
-    margin-bottom: 0.25rem;
+    font-size: 1rem;
     font-weight: 500;
 }
 
-.amountField {
-    width: 70%;
-    max-width: 12rem;
-    margin: 0 auto;
-    background: transparent;
-    border: 1px solid rgba(80, 80, 80, 0.4);
-    border-radius: 0.5rem;
+.balanceAmount {
+    font-size: 1.5rem;
+    font-weight: 700;
     color: white;
-    font-size: 1.2rem;
-    font-weight: 600;
-    padding: 0.75rem 1rem;
-    text-align: center;
-    outline: none;
-    transition: border-color 0.3s ease;
-    cursor: text;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
-.amountField:focus {
-    border-color: rgba(0, 191, 255, 0.6);
-    box-shadow: 0 0 0 2px rgba(0, 191, 255, 0.1);
+.balanceAmount svg {
+    color: #10b981;
 }
 
-.amountField::placeholder {
-    color: rgba(255, 255, 255, 0.3);
+/* Actions Card */
+.actionsCard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
 }
 
-/* Transaction Logs */
-.transactionLogs {
-    width: 100%;
+.actionButton {
+    background: #242424;
+    border: 1px solid #2a2a2a;
+    border-radius: 0.75rem;
     height: 100%;
+    aspect-ratio: 1 / 1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: #ccc;
+    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.actionButton:hover {
+    background: #2a2a2a;
+    border-color: #444;
+    color: white;
+}
+
+.actionButton svg {
+    font-size: 2rem;
+}
+
+.actionButtonLabel {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* Recent Transactions */
+.recentTransactions {
+    background: #242424;
+    border: 1px solid #2a2a2a;
+    border-radius: 1rem;
+    padding: 1.35rem;
+    flex: 1;
     display: flex;
     flex-direction: column;
 }
 
-.logsHeader {
-    margin-bottom: 1rem;
+.recentTransactionsHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
 }
 
-.logsHeader h3 {
+.recentTransactions h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
     color: white;
+}
+
+.transactionActions {
+    display: flex;
+    gap: 1rem;
+}
+
+.transactionAction {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.transactionAction:hover {
+    color: white;
+}
+
+.transactionsList {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-height: 19rem;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+/* scroll */
+.transactionsList::-webkit-scrollbar {
+    width: 0.3rem;
+}
+
+.transactionsList::-webkit-scrollbar-track {
+    background: #202020;
+}
+
+.transactionsList::-webkit-scrollbar-thumb {
+    background: #333333;
+    border-radius: 3px;
+}
+
+.noTransactions {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.4);
+    padding: 3rem 2rem;
+    font-size: 0.9rem;
+}
+
+/* Card Info */
+.cardInfo {
+    background: #242424;
+    border: 1px solid #2a2a2a;
+    border-radius: 1rem;
+    padding: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+}
+
+.cardInfoHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cardInfoTitle {
     font-size: 1rem;
     font-weight: 600;
-    margin: 0;
+    color: white;
+}
+
+.cardInfoSubtitle {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.cardVisual {
+    background: linear-gradient(135deg, var(--tone-purple) 0%, var(--tone-pink) 100%);
+    border-radius: 1rem;
+    padding: 2rem;
+    width: 15rem;
+    aspect-ratio: 1.886;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+
+.cardVisual::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60%;
+    height: 100%;
+    background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.cardChip {
+    width: 3rem;
+    height: 2.5rem;
+    background: linear-gradient(135deg, #cccccc44, #ffffff55);
+    border-radius: 0.5rem;
+}
+
+.cardNumber {
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: white;
+    letter-spacing: 0.2rem;
+    font-family: 'Courier New', monospace;
     text-align: center;
+}
+
+.cardBottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.cardHolder {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.cardHolderLabel {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+}
+
+.cardHolderName {
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+}
+
+.cardExpiry {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    text-align: right;
+}
+
+.cardExpiryLabel {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+}
+
+.cardExpiryDate {
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+}
+
+.cardInfoBody {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.cardInfoSection {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cardInfoRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 0.5rem;
+}
+
+.cardInfoLabel {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.cardInfoValue {
+    font-size: 1rem;
+    color: white;
+    font-weight: 500;
+}
+
+.cardStatusActive {
+    color: var(--tone-pink);
+    font-weight: 600;
+}
+
+/* Transactions Tab */
+.transactionsContainer {
+    display: flex;
+    gap: 1rem;
+    padding: 1.35rem;
+}
+
+.transactionsLeft {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.transactionsSearch {
+    display: flex;
+    gap: 1rem;
+}
+
+.searchInput {
+    flex: 1;
+    background: #242424;
+    border: 1px solid #2a2a2a;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    color: white;
+    font-size: 0.95rem;
+}
+
+.searchInput::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.filterDropdown {
+    background: #242424;
+    border: 1px solid #2a2a2a;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    color: white;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+.transactionsMain {
+    background: #242424;
+    border: 1px solid #2a2a2a;
+    border-radius: 1rem;
+    padding: 0.5rem 1.35rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    max-height: 27rem;
+    overflow-y: auto;
+}
+
+/* scroll */
+.transactionsMain::-webkit-scrollbar {
+    width: 0.3rem;
+}
+
+.transactionsMain::-webkit-scrollbar-track {
+    background: #202020;
+}
+
+.transactionsMain::-webkit-scrollbar-thumb {
+    background: #333333;
+    border-radius: 3px;
+}
+
+.transactionsTable {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.transactionsTableHeader {
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.transactionsTableHeader th {
+    padding: 1rem 0;
+    text-align: left;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
+    border: none;
+    background: transparent;
+}
+
+.transactionsTableHeader th:first-child {
+    width: 50%;
+}
+
+.transactionsTableHeader th:nth-child(2) {
+    width: 25%;
+}
+
+.transactionsTableHeader th:last-child {
+    width: 25%;
+    text-align: right;
+}
+
+.transactionsTableRow {
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.transactionsTableRow:last-child {
+    border-bottom: none;
+}
+
+.transactionsTableRow td {
+    padding: 1.25rem 0;
+    vertical-align: middle;
+    border: none;
+}
+
+.transactionDescription {
+    color: white;
+    font-size: 0.95rem;
+}
+
+.transactionDate {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+}
+
+.transactionsRight {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.transactionsRightCard {
+    background: #242424;
+    border: 1px solid #2a2a2a;
+    border-radius: 1rem;
+    padding: 1.35rem;
+}
+
+.transactionsRightCard h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+}
+
+.transactionsRightCard p {
+    margin: 0 0 1.5rem 0;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.chartContainer {
+    background: transparent;
+    display: flex;;
+    align-items: center;
+    justify-content: center;
+}
+
+.chartStats {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.chartStat {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.chartStatLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.chartStatIndicator {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+}
+
+.chartStatValue {
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+}
+
+.noChartData {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.4);
+    padding: 3rem 2rem;
+    font-size: 0.9rem;
 }
 
 .logsList {
-    flex: 1;
-    overflow-y: auto;
-    max-height: 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-height: 1rem;
 }
 
 .transactionItem {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid rgba(80, 80, 80, 0.4);
-}
-
-.transactionItem:last-child {
-    border-bottom: none;
+    gap: 1rem;
 }
 
 .transactionIcon {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    background: #10b981;
 }
 
 .depositIcon {
-    color: #22c55e;
+    color: white;
 }
 
 .withdrawIcon {
-    color: #ef4444;
+    color: white;
+}
+
+.transactionDetailsSmall {
+    display: flex;
+    flex-direction: column;
 }
 
 .transactionDetails {
@@ -218,137 +715,95 @@
     min-width: 0;
 }
 
+.transactionTitle {
+    font-size: 0.9rem;
+    color: white;
+    margin-bottom: 0.25rem;
+}
+
 .transactionAmount {
     font-weight: 600;
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: white;
-}
-
-.transactionDate {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.65rem;
-    margin-top: 0.15rem;
-}
-
-.transactionBalance {
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 0.65rem;
+    margin-bottom: 0.25rem;
+    margin-left: auto;
+    margin-right: 0;
     text-align: right;
 }
 
-/* Keypad */
-.keypad {
-    padding: 0.75rem 1rem;
-    background: rgba(20, 20, 20, 0.6);
-}
-
-.keypadGrid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.5rem;
-    width: 100%;
-}
-
-.keypadButton {
-    height: 2.75rem;
-    width: 100%;
-    background: rgba(40, 40, 40, 0.8);
-    border: 1px solid rgba(80, 80, 80, 0.4);
-    border-radius: 0.5rem;
-    color: white;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.keypadButton:hover {
-    background: rgba(60, 60, 60, 0.9);
-    border-color: rgba(100, 100, 100, 0.6);
-    transform: translateY(-1px);
-}
-
-.keypadButton:active {
-    transform: translateY(0);
-    background: rgba(50, 50, 50, 0.9);
-}
-
-.clearButton, .backspaceButton {
-    background: rgba(60, 40, 40, 0.8);
-    border-color: rgba(120, 80, 80, 0.4);
-}
-
-.clearButton:hover, .backspaceButton:hover {
-    background: rgba(80, 50, 50, 0.9);
-    border-color: rgba(140, 90, 90, 0.6);
-}
-
-.actionBar {
-    padding: 1rem;
-    background: rgba(25, 25, 25, 0.8);
-    display: flex;
-    gap: 0.75rem;
-    border-top: 1px solid rgba(80, 80, 80, 0.3);
-}
-
-.actionBar > * {
-    flex: 1;
-    width: 100%;
-}
-
-.actionBar > * > * {
-    width: 100%;
-    min-width: unset;
-    padding: 0.75rem 0.5rem;
+.transactionDate {
+    color: rgba(255, 255, 255, 0.5);
     font-size: 0.85rem;
 }
 
+.transactionBalance {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.95rem;
+    text-align: right;
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+/* Modal Styles */
+.modalForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.modalActions {
+    display: flex;
+    gap: 1rem;
+}
+
 /* Custom Scrollbar */
-.logsList::-webkit-scrollbar {
-    width: 4px;
+.content::-webkit-scrollbar,
+.transactionsTable::-webkit-scrollbar {
+    width: 6px;
 }
 
-.logsList::-webkit-scrollbar-track {
-    background: rgba(60, 60, 60, 0.2);
-    border-radius: 2px;
+.content::-webkit-scrollbar-track,
+.transactionsTable::-webkit-scrollbar-track {
+    background: #1a1a1a;
 }
 
-.logsList::-webkit-scrollbar-thumb {
-    background: rgba(120, 120, 120, 0.5);
-    border-radius: 2px;
+.content::-webkit-scrollbar-thumb,
+.transactionsTable::-webkit-scrollbar-thumb {
+    background: #2a2a2a;
+    border-radius: 3px;
 }
 
-.logsList::-webkit-scrollbar-thumb:hover {
-    background: rgba(140, 140, 140, 0.7);
+.content::-webkit-scrollbar-thumb:hover,
+.transactionsTable::-webkit-scrollbar-thumb:hover {
+    background: #3a3a3a;
 }
 
 /* Animations */
-@keyframes slideIn {
+@keyframes scaleUp {
     from {
         opacity: 0;
-        transform: scale(0.9);
+        transform: translate(-50%, -50%) scale(0.8);
     }
     to {
         opacity: 1;
-        transform: scale(1);
+        transform: translate(-50%, -50%) scale(1);
     }
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .atmMachine {
-        width: 90vw;
-        max-width: 28rem;
+        width: 95vw;
+        max-height: 95vh;
     }
     
-    .amountDisplay {
-        font-size: 2rem;
+    .dashboardContainer,
+    .transactionsContainer {
+        flex-direction: column;
     }
     
-    .keypadButton {
-        font-size: 1rem;
+    .dashboardRight,
+    .transactionsRight {
+        width: 100%;
     }
 }

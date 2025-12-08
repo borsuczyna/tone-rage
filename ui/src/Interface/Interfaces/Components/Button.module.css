@@ -7,6 +7,10 @@
     text-wrap: nowrap;
 }
 
+.buttonWrapper.fullWidth {
+    width: 100%;
+}
+
 .toneButton {
     position: relative;
     border: none;
@@ -24,23 +28,24 @@
     box-sizing: border-box;
 }
 
+.buttonWrapper.fullWidth .toneButton {
+    width: 100%;
+}
+
 /* Button Sizes */
 .small {
     padding: 0.5rem 1rem;
     font-size: 0.8rem;
-    min-width: 80px;
 }
 
 .medium {
     padding: 0.875rem 2rem;
     font-size: 0.9rem;
-    min-width: 140px;
 }
 
 .large {
     padding: 1.125rem 2.5rem;
     font-size: 1rem;
-    min-width: 180px;
 }
 
 /* Glow effect - positioned behind main button */
