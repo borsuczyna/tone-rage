@@ -1,0 +1,61 @@
+.worldInteraction {
+    position: fixed;
+    top: 50%;
+    left: calc(50% + 15rem);
+    transform: translate(-50%, calc(-2.5rem * var(--selected-index)));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.9rem;
+    transition: transform 0.3s ease-in-out;
+    animation: fadeInScale 0.3s ease-in-out;
+}
+
+.interactionItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    width: 15rem;
+    background: rgba(15, 15, 15, 0.9);
+    border-left: 0.15rem solid #5d5d5d;
+    border-right: 0.15rem solid #5d5d5d;
+    color: #eee;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
+
+.iconBox {
+    width: 1.5rem;
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(60, 60, 60, 0.4);
+    border-radius: 0.3rem;
+}
+
+.interactionItem.active {
+    background: rgba(232, 232, 232, 0.9);
+    width: 16rem;
+    /* border-left: 0.2rem solid #4caf50; */
+    color: #111;
+    font-weight: 600;
+    border-color: #fff;
+    box-shadow: 0 0 0.5rem rgba(255, 255, 255, 0.3);
+}
+
+.interactionItem.active .iconBox {
+    background: rgba(26, 26, 26, 0.15);
+}
+
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, calc(-2.5rem * var(--selected-index))) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, calc(-2.5rem * var(--selected-index))) scale(1);
+    }
+}

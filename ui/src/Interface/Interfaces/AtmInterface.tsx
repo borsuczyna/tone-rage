@@ -128,8 +128,6 @@ export default function AtmInterface() {
         return false;
     };
 
-    if (!isInterfaceVisible('AtmInterface')) return null;
-
     return (
         <>
             <div className={styles.container}>

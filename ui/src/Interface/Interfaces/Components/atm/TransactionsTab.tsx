@@ -56,7 +56,6 @@ export default function TransactionsTab({ transactions }: TransactionsTabProps) 
 
     const totalEarned = income - expenses;
 
-    // Chart configuration for Wasabi design
     const chartOptions: ApexOptions = {
         chart: {
             type: 'donut',

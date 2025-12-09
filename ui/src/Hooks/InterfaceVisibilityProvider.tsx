@@ -17,12 +17,13 @@ export const InterfaceVisibilityProvider = ({ children }: { children: React.Reac
         // 'ScoreboardInterface': true,
         // 'HudInterface': true,
         // 'NotificationsInterface': true,
-        // 'AuthInterface': true,  // Set to true for development/testing
-        // 'SpawnSelectionInterface': true  // Set to true for development/testing
-        // 'AtmInterface': true  // Set to true for development/testing
-        // 'InteractionWheelInterface': true  // Set to true for development/testing
-        // 'MapDemoInterface': true  // Set to true for development/testing
-        // 'ChatInterface': true  // Set to true for development/testing
+        // 'AuthInterface': true,
+        // 'SpawnSelectionInterface': true
+        // 'AtmInterface': true
+        // 'InteractionWheelInterface': true
+        // 'MapDemoInterface': true
+        // 'ChatInterface': true
+        // 'WorldInteractionInterface': true
     });
 
     const setInterfaceVisible = (name: string, visible: boolean) => {
