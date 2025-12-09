@@ -12,6 +12,7 @@ import translate from '@shared/Translation/Translation';
 import { useRageEvent } from 'src/Hooks/RageEventProvider';
 import { useInterfaceVisibility } from 'src/Hooks/InterfaceVisibilityProvider';
 import { fetchClientData } from 'src/Hooks/Fetch';
+import csx from 'src/Utils/MergeClass';
 
 const playerCategories = [
     {
@@ -40,7 +41,6 @@ export default function ScoreboardInterface() {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
     const [hiding, setHiding] = useState(false);
-    const [firstRender, setFirstRender] = useState(true);
 
     const filteredPlayers = players.filter(player =>
         (
@@ -88,20 +88,13 @@ export default function ScoreboardInterface() {
         };
     }, [isInterfaceVisible('ScoreboardInterface')]);
 
-    useRageEvent('playScoreboardHideAnimation', () => {
+    useRageEvent('scoreboard:playHideAnimation', () => {
         setHiding(true);
     });
 
-    useEffect(() => {
-        if (firstRender) {
-            setFirstRender(false);
-            return;
-        }
-    }, [firstRender]);
-
     return (
         <div className={styles.container}>
-            <div className={`${styles.scoreboard} ${(hiding || firstRender) ? styles.hiding : ''}`}>
+            <div className={csx(styles.scoreboard, hiding && styles.hiding)}>
                 <div className={styles.header}>
                     <div className={styles.logoContainer}>
                         <Logo glow={4} className={styles.logo} />

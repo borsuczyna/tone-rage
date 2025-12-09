@@ -1,6 +1,5 @@
 import FetchService from "@/Services/Infrastructure/FetchService";
 import InterfaceService from "@/Services/Infrastructure/InterfaceService";
-import NotificationService from "@/Services/Infrastructure/NotificationService";
 import KeyboardService, { KeyState } from "@/Services/Utility/KeyboardService";
 import { WorldInteractionHandler, WorldInteractionItem, WorldInteractionListener } from "@shared/Models/WorldInteraction";
 import Chat from "../Chat/Chat";
@@ -20,8 +19,6 @@ export default class WorldInteractionFeature {
         FetchService.registerFetchListener('worldInteraction:getInteractions', this.getInterfaceInteractions.bind(this));
         EventService.registerEventHandler('worldInteraction:onSelect', this.onInteractionSelected.bind(this));
         TimerService.setTimer(this.updateInteractionPosition.bind(this), 50, 0);
-
-        this.initTestInteractions();
     }
 
     public static registerWorldInteractionListener(listener: WorldInteractionListener) {
@@ -80,7 +77,6 @@ export default class WorldInteractionFeature {
     }
 
     private static onInteractionSelected(index: number) {
-        Chat.outputChatMessage('interaction', 'selected ' + index);
         const interaction = this.worldInteractions[index];
         if (!interaction) return;
 
@@ -92,28 +88,6 @@ export default class WorldInteractionFeature {
     private static finallyHideInterface() {
         InterfaceService.setInterfaceVisible('WorldInteractionInterface', false);
         this.hiding = false;
-    }
-
-    private static initTestInteractions() {
-        this.registerWorldInteractionListener(() => {
-            return [
-                {
-                    icon: 'Hand',
-                    label: 'Pick up item',
-                    action: () => {
-                        NotificationService.addNotification('info', 'World Interaction', 'You picked up an item!');
-                    }
-                },
-                {
-                    icon: 'Eye',
-                    label: 'Examine object',
-                    action: () => {
-                        NotificationService.addNotification('info', 'World Interaction', 'You examined the object.');
-                    },
-                    priority: 999
-                }
-            ];
-        });
     }
 
     private static updateInteractionPosition() {

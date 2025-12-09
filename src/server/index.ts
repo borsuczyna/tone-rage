@@ -13,7 +13,7 @@ import MoneyServiceTest from './Tests/MoneyServiceTest';
 import AtmFeature from './Features/Atm/AtmFeature';
 import MarkerTest from './Tests/MarkerTest';
 import MarkerService from '@shared-rage/Services/MarkerService';
-import VehicleInteractionWheel from './Features/InteractionWheel/VehicleInteractionWheel';
+import VehicleInteractionFeature from './Features/Interaction/VehicleInteractionFeature';
 import MarkerServerService from './Services/Infrastructure/MarkerServerService';
 import Chat from './Features/Chat/Chat';
 import CommandService from './Services/Infrastructure/CommandService';
@@ -39,7 +39,7 @@ import InitMessage from './InitMessage';
 
 	// Features
 	await AtmFeature.init();
-	await VehicleInteractionWheel.init();
+	await VehicleInteractionFeature.init();
 
 	// Debug
 	Tests.getPositionCommandTest();

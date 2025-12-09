@@ -18,7 +18,8 @@ import DrawingService from './Services/Rendering/DrawingService';
 import MarkerClientService from './Services/Rendering/MarkerClientService';
 import Chat from './Features/Chat/Chat';
 import CommandService from './Services/Infrastructure/CommandService';
-import WorldInteractionFeature from './Features/InteractionWheel/WorldInteractionFeature';
+import WorldInteractionFeature from './Features/Interaction/WorldInteractionFeature';
+import VehicleInteractionFeature from './Features/Interaction/VehicleInteractionFeature';
 // import EventServiceTest from './Tests/EventServiceTest';
 // import ElementDataServiceTest from './Tests/ElementDataServiceTest';
 // import InterfaceServiceTest from './Tests/InterfaceServiceTest';
@@ -50,7 +51,7 @@ import WorldInteractionFeature from './Features/InteractionWheel/WorldInteractio
 	// Features
 	await AtmFeature.init();
 	await WorldInteractionFeature.init();
-	// await VehicleInteractionWheel.init();
+	await VehicleInteractionFeature.init();
 	// EventServiceTest.init();
 	// ElementDataServiceTest.init();
 	// InterfaceServiceTest.init();

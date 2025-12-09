@@ -3,12 +3,12 @@ import InterfaceService from '@/Services/Infrastructure/InterfaceService';
 import KeyboardService, { KeyState } from '@/Services/Utility/KeyboardService';
 import FetchService from '@/Services/Infrastructure/FetchService';
 import { ScoreboardPlayerItem } from '@shared/Models/ScoreboardData';
-import TimerService, { Timer } from '@shared/Services/TimerService';
+import TimerService from '@shared/Services/TimerService';
 import EmblemaService from '@shared-rage/Services/EmblemaService';
 import Chat from '../Chat/Chat';
 
 export default class Scoreboard {
-	private static hideTimer: Timer | null = null;
+	private static hiding: boolean = false;
 	private static visible: boolean = false;
 
 	public static async init() {
@@ -25,25 +25,21 @@ export default class Scoreboard {
 		this.visible = visible;
 
 		if (visible) {
-			if (InterfaceService.isInterfaceVisible('AtmInterface') || Chat.chatInputOpen) {
+			if (this.hiding || InterfaceService.isInterfaceVisible('AtmInterface') || Chat.chatInputOpen) {
 				return;
 			}
 
 			InterfaceService.setInterfaceVisible('ScoreboardInterface', true);
-
-			if (this.hideTimer) {
-				TimerService.killTimer(this.hideTimer);
-				this.hideTimer = null;
-			}
 		} else {
-			InterfaceService.callInterfaceEvent('playScoreboardHideAnimation', null);
-			this.hideTimer = TimerService.setTimer(this.finalizeHide.bind(this), 500, 1);
+			InterfaceService.callInterfaceEvent('scoreboard:playHideAnimation', null);
+            TimerService.setTimer(this.finalizeHide.bind(this), 500, 1);
+			this.hiding = true;
 		}
 	}
 
 	private static finalizeHide() {
 		InterfaceService.setInterfaceVisible('ScoreboardInterface', false);
-		this.hideTimer = null;
+		this.hiding = false;
 	}
 
 	private static getScoreboardData(): ScoreboardPlayerItem[] {

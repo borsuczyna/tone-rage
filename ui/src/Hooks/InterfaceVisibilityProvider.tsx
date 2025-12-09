@@ -20,7 +20,6 @@ export const InterfaceVisibilityProvider = ({ children }: { children: React.Reac
         // 'AuthInterface': true,
         // 'SpawnSelectionInterface': true
         // 'AtmInterface': true
-        // 'InteractionWheelInterface': true
         // 'MapDemoInterface': true
         // 'ChatInterface': true
         // 'WorldInteractionInterface': true

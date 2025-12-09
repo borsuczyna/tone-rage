@@ -31,7 +31,7 @@ export default class Chat {
 			this.chatInputOpen ||
 			!this.visible ||
 			InterfaceService.isInterfaceVisible('ScoreboardInterface') ||
-			InterfaceService.isInterfaceVisible('InteractionWheelInterface') ||
+			InterfaceService.isInterfaceVisible('WorldInteractionInterface') ||
 			InterfaceService.isInterfaceVisible('AtmInterface')
 		) {
 			return;
