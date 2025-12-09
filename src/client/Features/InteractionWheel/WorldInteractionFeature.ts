@@ -6,16 +6,20 @@ import { WorldInteractionHandler, WorldInteractionItem, WorldInteractionListener
 import Chat from "../Chat/Chat";
 import EventService from "@/Services/Infrastructure/EventService";
 import ElementDataService from "@/Services/Infrastructure/ElementDataService";
+import TimerService from "@shared/Services/TimerService";
+import DrawingService from "@/Services/Rendering/DrawingService";
 
 export default class WorldInteractionFeature {
     private static worldInteractionListeners: WorldInteractionListener[] = [];
     private static worldInteractions: WorldInteractionHandler[] = [];
+    private static hiding: boolean = false;
 
     public static init() {
         KeyboardService.registerKeyHandler('Shift', this.toggleWorldInteraction.bind(this));
         KeyboardService.registerKeyHandler('E', this.toggleWorldInteraction.bind(this));
         FetchService.registerFetchListener('worldInteraction:getInteractions', this.getInterfaceInteractions.bind(this));
         EventService.registerEventHandler('worldInteraction:onSelect', this.onInteractionSelected.bind(this));
+        TimerService.setTimer(this.updateInteractionPosition.bind(this), 50, 0);
 
         this.initTestInteractions();
     }
@@ -51,10 +55,11 @@ export default class WorldInteractionFeature {
 
     private static toggleWorldInteraction(state: KeyState) {
         if (state === KeyState.Down) {
-            const userId = ElementDataService.get(mp.players.local, 'userId') as number;
+            const spawnPosition = ElementDataService.get(mp.players.local, 'spawnPosition') as number;
 
             if (
-                !userId ||
+                this.hiding ||
+                !spawnPosition ||
                 mp.players.local.isDead() ||
                 InterfaceService.isInterfaceVisible('AtmInterface') ||
                 InterfaceService.isInterfaceVisible('ScoreboardInterface') ||
@@ -68,7 +73,9 @@ export default class WorldInteractionFeature {
 
             InterfaceService.setInterfaceVisible('WorldInteractionInterface', true);
         } else if (state === KeyState.Up && InterfaceService.isInterfaceVisible('WorldInteractionInterface')) {
-            InterfaceService.setInterfaceVisible('WorldInteractionInterface', false);
+            InterfaceService.callInterfaceEvent('worldInteraction:playHideAnimation', null);
+            TimerService.setTimer(this.finallyHideInterface.bind(this), 200, 1);
+            this.hiding = true;
         }
     }
 
@@ -78,7 +85,13 @@ export default class WorldInteractionFeature {
         if (!interaction) return;
 
         interaction.action();
+        TimerService.setTimer(this.finallyHideInterface.bind(this), 200, 1);
+        this.hiding = true;
+    }
+
+    private static finallyHideInterface() {
         InterfaceService.setInterfaceVisible('WorldInteractionInterface', false);
+        this.hiding = false;
     }
 
     private static initTestInteractions() {
@@ -101,5 +114,19 @@ export default class WorldInteractionFeature {
                 }
             ];
         });
+    }
+
+    private static updateInteractionPosition() {
+        if (!InterfaceService.isInterfaceVisible('WorldInteractionInterface')) {
+            return;
+        }
+        
+        const playerPos = mp.players.local.position;
+        const screenPos = DrawingService.getScreenFromWorldPosition(playerPos);
+        if (!screenPos) {
+            return;
+        }
+
+        InterfaceService.callInterfaceEvent('worldInteraction:updatePosition', screenPos);
     }
 }

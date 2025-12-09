@@ -18,6 +18,7 @@ import MarkerServerService from './Services/Infrastructure/MarkerServerService';
 import Chat from './Features/Chat/Chat';
 import CommandService from './Services/Infrastructure/CommandService';
 import RealTime from './Features/Core/RealTime';
+import InitMessage from './InitMessage';
 
 (async () => {
 	await Database.init();
@@ -46,7 +47,6 @@ import RealTime from './Features/Core/RealTime';
 	Tests.createTimeCommandTest();
 	MoneyServiceTest.init();
 	MarkerTest.init();
-	// EventServiceTest.init();
-	// ElementDataServiceTest.init();
-	// FetchServiceTest.init();
+
+    InitMessage.print();
 })();

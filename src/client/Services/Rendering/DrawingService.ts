@@ -1,5 +1,3 @@
-// import KeyboardService, { KeyState } from "./KeyboardService";
-
 import { MarkerTextureRequest, TextureData, TextureRequest, TextureUnloadRequest } from '@shared/Models/TextureData';
 import InterfaceService from '../Infrastructure/InterfaceService';
 import EventService from '../Infrastructure/EventService';
@@ -259,9 +257,81 @@ export default class DrawingService {
 		}
 	}
 
+    public static getScreenResolution(): { width: number; height: number } {
+        const screenRes = mp.game.graphics.getScreenActiveResolution(0, 0);
+        return { width: screenRes.x, height: screenRes.y };
+    }
+
+    public static getScreenFromWorldPosition(worldPos: Vector3): { x: number; y: number } | null {
+        const screenPos = mp.game.graphics.world3dToScreen2d(worldPos);
+        if (!screenPos.x) {
+            return null;
+        }
+
+        const screenResolution = this.getScreenResolution();
+        return {
+            x: screenPos.x * screenResolution.width,
+            y: screenPos.y * screenResolution.height
+        };
+    }
+
+    public static getWorldFromScreenPosition(screenX: number, screenY: number, depth: number = 1): Vector3 | null {
+        const worldPos = mp.game.graphics.screen2dToWorld3d(new mp.Vector3(screenX, screenY, depth));
+        if (!worldPos) {
+            return null;
+        }
+
+        return new mp.Vector3(worldPos.x, worldPos.y, worldPos.z);
+    }
+
+    public static drawSprite(x: number, y: number, width: number, height: number, image: string | TextureData, textureWidth = 1024, textureHeight = 1024, color: [number, number, number, number] = [255, 255, 255, 255]) {
+        if (typeof image === 'string' && !this.isTextureLoaded(image, textureWidth, textureHeight)) {
+			this.loadTexture(image, textureWidth, textureHeight);
+			return;
+		}
+
+		const key = typeof image === 'string' ? this.getTextureKey(image, textureWidth, textureHeight) : image.key;
+		const textureData = this.textureDictionary.get(key);
+		if (!textureData) {
+			this.logger.error(`Texture data not found for key: ${key} but was expected to be loaded.`);
+			return;
+		}
+
+        const screenResolution = this.getScreenResolution();
+        x = x / screenResolution.width;
+        y = y / screenResolution.height;
+        width = width / screenResolution.width;
+        height = height / screenResolution.height;
+        
+        mp.game.graphics.drawSprite(
+            `crtxd_${textureData.dictionary}`,
+            textureData.name,
+            x + width / 2,
+            y + height / 2,
+            width,
+            height,
+            0,
+            color[0],
+            color[1],
+            color[2],
+            color[3],
+            false
+        );
+    }
+
 	public static drawLine3D(start: Vector3, end: Vector3, color: [number, number, number, number] = [255, 0, 0, 255]) {
 		mp.game.graphics.drawLine(start.x, start.y, start.z, end.x, end.y, end.z, color[0], color[1], color[2], color[3]);
 	}
+
+    public static drawLine2D(x1: number, y1: number, x2: number, y2: number, color: [number, number, number, number] = [255, 0, 0, 255]) {
+        const worldPos1 = this.getWorldFromScreenPosition(x1, y1, 100);
+        const worldPos2 = this.getWorldFromScreenPosition(x2, y2, 100);
+        if (!worldPos1 || !worldPos2) {
+            return;
+        }
+
+        this.drawLine3D(worldPos1, worldPos2, color);
+    }
 
 	private static render() {
 		return; // disable debug drawing for now

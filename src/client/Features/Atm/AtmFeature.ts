@@ -68,7 +68,7 @@ export default class AtmFeature {
 	}
 
 	private static setVisible(visible: boolean) {
-		if (!ElementDataService.get(mp.players.local, 'userId') || mp.players.local.vehicle != null || mp.players.local.isDead()) {
+		if (!ElementDataService.get(mp.players.local, 'spawnPosition') || mp.players.local.vehicle != null || mp.players.local.isDead()) {
 			return;
 		}
 
