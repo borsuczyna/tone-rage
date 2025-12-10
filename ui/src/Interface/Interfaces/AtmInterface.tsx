@@ -3,11 +3,11 @@ import { useInterfaceVisibility } from 'src/Hooks/InterfaceVisibilityProvider';
 import { useUserInfo } from 'src/Hooks/UserInfoProvider';
 import styles from './Styles/AtmInterface.module.css';
 import type { MoneyLogEntityInterface } from '@shared/Models/MoneyLogData';
-import { formatMoney } from '@shared/MoneyHelper';
-import translate from '@shared/Translation/Translation';
 import { DashboardTab, TransactionsTab, DepositModal, WithdrawModal, TransferModal } from './Components/atm';
 import { fetchServerData, triggerEvent } from 'src/Hooks/Fetch';
 import * as Icons from 'lucide-react';
+import Header from './Components/atm/Header';
+import Sidebar from './Components/atm/Sidebar';
 
 interface AtmData {
     bankMoney: number;
@@ -29,7 +29,296 @@ export default function AtmInterface() {
     const [bankBalance, setBankBalance] = useState(0);
     const [walletMoney, setWalletMoney] = useState(0);
     const [userId, setUserId] = useState(0);
-    const [transactions, setTransactions] = useState<MoneyLogEntityInterface[]>([]);
+    const [transactions, setTransactions] = useState<MoneyLogEntityInterface[]>([
+        {
+            uid: 1,
+            amount: 500,
+            amountBefore: 1000,
+            type: 3,
+            description: 'ATM Deposit',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 2,
+            amount: -200,
+            amountBefore: 1500,
+            type: 4,
+            description: 'ATM Withdraw',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 3,
+            amount: -100,
+            amountBefore: 1300,
+            type: 5,
+            description: 'Transfer to User123',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 4,
+            amount: 750,
+            amountBefore: 1200,
+            type: 1,
+            description: 'Salary',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 1,
+            amount: 500,
+            amountBefore: 1000,
+            type: 3,
+            description: 'ATM Deposit',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 2,
+            amount: -200,
+            amountBefore: 1500,
+            type: 4,
+            description: 'ATM Withdraw',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 3,
+            amount: -100,
+            amountBefore: 1300,
+            type: 5,
+            description: 'Transfer to User123',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 4,
+            amount: 750,
+            amountBefore: 1200,
+            type: 1,
+            description: 'Salary',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 1,
+            amount: 500,
+            amountBefore: 1000,
+            type: 3,
+            description: 'ATM Deposit',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 2,
+            amount: -200,
+            amountBefore: 1500,
+            type: 4,
+            description: 'ATM Withdraw',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 3,
+            amount: -100,
+            amountBefore: 1300,
+            type: 5,
+            description: 'Transfer to User123',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 4,
+            amount: 750,
+            amountBefore: 1200,
+            type: 1,
+            description: 'Salary',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 1,
+            amount: 500,
+            amountBefore: 1000,
+            type: 3,
+            description: 'ATM Deposit',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 2,
+            amount: -200,
+            amountBefore: 1500,
+            type: 4,
+            description: 'ATM Withdraw',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 3,
+            amount: -100,
+            amountBefore: 1300,
+            type: 5,
+            description: 'Transfer to User123',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 4,
+            amount: 750,
+            amountBefore: 1200,
+            type: 1,
+            description: 'Salary',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 1,
+            amount: 500,
+            amountBefore: 1000,
+            type: 3,
+            description: 'ATM Deposit',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 2,
+            amount: -200,
+            amountBefore: 1500,
+            type: 4,
+            description: 'ATM Withdraw',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 3,
+            amount: -100,
+            amountBefore: 1300,
+            type: 5,
+            description: 'Transfer to User123',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 4,
+            amount: 750,
+            amountBefore: 1200,
+            type: 1,
+            description: 'Salary',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 1,
+            amount: 500,
+            amountBefore: 1000,
+            type: 3,
+            description: 'ATM Deposit',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 2,
+            amount: -200,
+            amountBefore: 1500,
+            type: 4,
+            description: 'ATM Withdraw',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 3,
+            amount: -100,
+            amountBefore: 1300,
+            type: 5,
+            description: 'Transfer to User123',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 4,
+            amount: 750,
+            amountBefore: 1200,
+            type: 1,
+            description: 'Salary',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 1,
+            amount: 500,
+            amountBefore: 1000,
+            type: 3,
+            description: 'ATM Deposit',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 2,
+            amount: -200,
+            amountBefore: 1500,
+            type: 4,
+            description: 'ATM Withdraw',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 3,
+            amount: -100,
+            amountBefore: 1300,
+            type: 5,
+            description: 'Transfer to User123',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 4,
+            amount: 750,
+            amountBefore: 1200,
+            type: 1,
+            description: 'Salary',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 1,
+            amount: 500,
+            amountBefore: 1000,
+            type: 3,
+            description: 'ATM Deposit',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 2,
+            amount: -200,
+            amountBefore: 1500,
+            type: 4,
+            description: 'ATM Withdraw',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 3,
+            amount: -100,
+            amountBefore: 1300,
+            type: 5,
+            description: 'Transfer to User123',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 4,
+            amount: 750,
+            amountBefore: 1200,
+            type: 1,
+            description: 'Salary',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 1,
+            amount: 500,
+            amountBefore: 1000,
+            type: 3,
+            description: 'ATM Deposit',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 2,
+            amount: -200,
+            amountBefore: 1500,
+            type: 4,
+            description: 'ATM Withdraw',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 3,
+            amount: -100,
+            amountBefore: 1300,
+            type: 5,
+            description: 'Transfer to User123',
+            createdAt: new Date().toISOString()
+        },
+        {
+            uid: 4,
+            amount: 750,
+            amountBefore: 1200,
+            type: 1,
+            description: 'Salary',
+            createdAt: new Date().toISOString()
+        },
+    ]);
     const [isLoading, setIsLoading] = useState(false);
     const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
     const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
@@ -132,42 +421,13 @@ export default function AtmInterface() {
         <>
             <div className={styles.container}>
                 <div className={styles.atmMachine}>
-                    {/* Header */}
-                    <div className={styles.header}>
-                        <div className={styles.headerBranding}>
-                            <span className={styles.brandName}>Tone</span>
-                            <span className={styles.brandSuffix}>Banking</span>
-                        </div>
-                        <div className={styles.headerRight}>
-                            <div className={styles.walletBadge}>
-                                <span className={styles.walletLabel}>{translate('atm.header.wallet')}</span>
-                                <span className={styles.walletAmount}>{formatMoney(walletMoney)}</span>
-                            </div>
-
-                            <div className={styles.closeButton} onClick={() => {triggerEvent('atm:closeInterface');}}>
-                                <Icons.X size="1.5rem" />
-                            </div>
-                        </div>
-                    </div>
+                    <Header onClose={() => triggerEvent('atm:closeInterface')} />
 
                     <div className={styles.mainLayout}>
-                        {/* Sidebar Navigation */}
-                        <div className={styles.sidebar}>
-                            <button 
-                                className={`${styles.sidebarItem} ${activeTab === 'dashboard' ? styles.active : ''}`}
-                                onClick={() => setActiveTab('dashboard')}
-                            >
-                                <Icons.LayoutDashboard size="1.2rem" />
-                                <span>{translate('atm.sidebar.dashboard')}</span>
-                            </button>
-                            <button 
-                                className={`${styles.sidebarItem} ${activeTab === 'transactions' ? styles.active : ''}`}
-                                onClick={() => setActiveTab('transactions')}
-                            >
-                                <Icons.Receipt size="1.2rem" />
-                                <span>{translate('atm.sidebar.transactions')}</span>
-                            </button>
-                        </div>
+                        <Sidebar 
+                            activeTab={activeTab} 
+                            onTabChange={setActiveTab} 
+                        />
 
                         {/* Main Content */}
                         <div className={styles.content}>
@@ -177,6 +437,7 @@ export default function AtmInterface() {
                                     recentTransactions={transactions}
                                     userId={userId}
                                     accountName={userInfo.username}
+                                    walletBalance={walletMoney}
                                     onDepositClick={() => setIsDepositModalOpen(true)}
                                     onWithdrawClick={() => setIsWithdrawModalOpen(true)}
                                     onTransferClick={() => setIsTransferModalOpen(true)}
@@ -187,7 +448,7 @@ export default function AtmInterface() {
                             ) : (
                                 <div className={styles.comingSoon}>
                                     <Icons.Construction size="3rem" />
-                                    <p>{translate('atm.comingSoon')}</p>
+                                    <p>Coming Soon</p>
                                 </div>
                             )}
                         </div>

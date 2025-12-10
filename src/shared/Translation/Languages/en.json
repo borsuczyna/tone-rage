@@ -153,6 +153,7 @@
     "atm.transactions.date": "Date",
     "atm.transactions.amount": "Amount",
     "atm.transactions.label": "Transactions",
+    "atm.transactions.description": "Description",
     "atm.chart.title": "Income vs Expenses",
     "atm.chart.income": "Income",
     "atm.chart.expenses": "Expenses",
@@ -190,6 +191,15 @@
     "atm.transfer.insufficient_funds": "You have insufficient funds to complete this transfer.",
     "atm.transfer.success": "Transfer completed successfully.",
     "atm.transfer.failed": "Transfer failed. Please try again.",
+    "atm.transactions.showingTransactions": "Showing {count} of {total} transactions",
+    "atm.transactions.pageInfo": "Showing page {page} of {total} pages",
+
+    "moneyLog.type.unknown": "Unknown",
+    "moneyLog.type.salary": "Salary",
+    "moneyLog.type.purchase": "Purchase",
+    "moneyLog.type.atmDeposit": "Deposit",
+    "moneyLog.type.atmWithdraw": "Withdrawal",
+    "moneyLog.type.transfer": "Transfer",
 
     "blip.atm": "ATM",
 

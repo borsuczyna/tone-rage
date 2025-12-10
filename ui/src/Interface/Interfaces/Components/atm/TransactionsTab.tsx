@@ -6,20 +6,14 @@ import Chart from 'react-apexcharts';
 import type { ApexOptions } from 'apexcharts';
 import { useEffect, useState } from 'react';
 import { getRemAsPx } from 'src/Interface/Main';
+import InputField from '../InputField';
+import TransactionsTable from './TransactionsTable';
 
 interface TransactionsTabProps {
     transactions: MoneyLogEntityInterface[];
 }
 
 export default function TransactionsTab({ transactions }: TransactionsTabProps) {
-    const formatDate = (date: Date) => {
-        return date.toLocaleString('en-US', {
-            day: '2-digit',
-            month: 'short',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-    };
 
     // Calculate income vs expenses in a single pass
     const { income, expenses } = transactions.reduce(
@@ -107,56 +101,32 @@ export default function TransactionsTab({ transactions }: TransactionsTabProps) 
     const chartSeries = [income, expenses];
 
     return (
+        
         <div className={styles.transactionsContainer}>
             <div className={styles.transactionsLeft}>
-                {/* Search and Filter */}
-                <div className={styles.transactionsSearch}>
-                    <input 
-                        type="text" 
-                        placeholder={translate('atm.transactions.search')}
-                        className={styles.searchInput}
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                </div>
+                <h2 className={styles.sectionTitle}>Transaction history</h2>
 
-                {/* Transactions Table */}
-                <div className={styles.transactionsMain}>
-                    {filteredTransactions.length === 0 ? (
-                        <div className={styles.noTransactions}>
-                            {translate('atm.dashboard.noTransactions')}
-                        </div>
-                    ) : (
-                        <table className={styles.transactionsTable}>
-                            <thead>
-                                <tr className={styles.transactionsTableHeader}>
-                                    <th>{translate('atm.transactions.action')}</th>
-                                    <th>{translate('atm.transactions.date')}</th>
-                                    <th>{translate('atm.transactions.amount')}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filteredTransactions.map((transaction) => (
-                                    <tr key={transaction.uid} className={styles.transactionsTableRow}>
-                                        <td className={styles.transactionDescription}>
-                                            {transaction.description}
-                                        </td>
-                                        <td className={styles.transactionDate}>
-                                            {formatDate(new Date(transaction.createdAt))}
-                                        </td>
-                                        <td className={styles.transactionAmount} style={{ color: transaction.amount > 0 ? '#10b981' : '#ef4444' }}>
-                                            {transaction.amount > 0 ? '+' : ''}{formatMoney(transaction.amount)}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
+                {/* Search and Filter */}
+                <div className={styles.transactionsDataContainer}>
+                    <div className={styles.transactionsSearch}>
+                        <InputField
+                            type="text"
+                            placeholder={translate('atm.transactions.search')}
+                            value={searchTerm}
+                            onChange={(value) => setSearchTerm(value)}
+                            groupStyle={{ width: '100%' }}
+                        />
+                    </div>
+
+                    {/* Transactions Table */}
+                    <div className={styles.transactionsMain}>
+                        <TransactionsTable transactions={filteredTransactions} />
+                    </div>
                 </div>
             </div>
 
             {/* Chart and Stats */}
-            <div className={styles.transactionsRight}>
+            {/* <div className={styles.transactionsRight}>
                 <div className={styles.transactionsRightCard}>
                     <h3>{translate('atm.transactions.bankTransactions')}</h3>
                     <p>{translate('atm.transactions.checkAccount')}</p>
@@ -206,7 +176,7 @@ export default function TransactionsTab({ transactions }: TransactionsTabProps) 
                         </>
                     )}
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }
