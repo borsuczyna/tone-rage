@@ -1,6 +1,7 @@
 import { generateCardNumber } from 'src/Utils/CardNumberGenerator';
 import styles from '../../Styles/AtmInterface.module.css';
 import AccountCard from './AccountCard';
+import translate from '@shared/Translation/Translation';
 
 interface AccountOverviewProps {
     bankBalance: number;
@@ -13,19 +14,19 @@ export default function AccountOverview({ bankBalance, walletBalance, userId }: 
 
     return (
         <div className={styles.accountOverview}>
-            <h2 className={styles.sectionTitle}>Account Overview</h2>
+            <h2 className={styles.sectionTitle}>{translate('atm.accountOverview.title')}</h2>
             <div className={styles.accountCards}>
                 <AccountCard 
                     type="main"
                     balance={bankBalance}
-                    title="Main Account"
-                    subtitle={`Account: ${number}`}
+                    title={translate('atm.dashboard.mainAccount')}
+                    subtitle={`${translate('atm.accountOverview.account')}: ${number}`}
                 />
                 <AccountCard 
                     type="wallet"
                     balance={walletBalance}
-                    title="Wallet Cash"
-                    subtitle="Available balance"
+                    title={translate('atm.accountOverview.walletCash')}
+                    subtitle={translate('atm.accountOverview.availableBalance')}
                 />
             </div>
         </div>

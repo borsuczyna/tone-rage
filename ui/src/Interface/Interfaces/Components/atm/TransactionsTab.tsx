@@ -104,7 +104,7 @@ export default function TransactionsTab({ transactions }: TransactionsTabProps) 
         
         <div className={styles.transactionsContainer}>
             <div className={styles.transactionsLeft}>
-                <h2 className={styles.sectionTitle}>Transaction history</h2>
+                <h2 className={styles.sectionTitle}>{translate('atm.transactions.title')}</h2>
 
                 {/* Search and Filter */}
                 <div className={styles.transactionsDataContainer}>

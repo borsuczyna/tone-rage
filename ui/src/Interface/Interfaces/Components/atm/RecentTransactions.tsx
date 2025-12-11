@@ -32,10 +32,8 @@ export default function RecentTransactions({ transactions, onViewAllClick }: Rec
     return (
         <div className={styles.recentTransactions}>
             <div className={styles.recentTransactionsHeader}>
-                <h2 className={styles.sectionTitle}>Recent Transactions</h2>
-                <div className={styles.transactionActions}>
-                    <button className={styles.transactionAction} onClick={onViewAllClick}>View All</button>
-                </div>
+                <h2 className={styles.sectionTitle}>{translate('atm.dashboard.recentTransactions')}</h2>
+                <button className={styles.transactionAction} onClick={onViewAllClick}>{translate('atm.action.viewAll')}</button>
             </div>
             <div className={styles.transactionsList}>
                 {last5Transactions.length === 0 ? (

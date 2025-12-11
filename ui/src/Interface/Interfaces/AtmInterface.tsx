@@ -8,6 +8,7 @@ import { fetchServerData, triggerEvent } from 'src/Hooks/Fetch';
 import * as Icons from 'lucide-react';
 import Header from './Components/atm/Header';
 import Sidebar from './Components/atm/Sidebar';
+import translate from '@shared/Translation/Translation';
 
 interface AtmData {
     bankMoney: number;
@@ -448,7 +449,7 @@ export default function AtmInterface() {
                             ) : (
                                 <div className={styles.comingSoon}>
                                     <Icons.Construction size="3rem" />
-                                    <p>Coming Soon</p>
+                                    <p>{translate('atm.comingSoon')}</p>
                                 </div>
                             )}
                         </div>

@@ -1,8 +1,7 @@
 @import '../../../styles/tone-variables.css';
 
 .atmMachine {
-    background: #2a2a2a;
-    border: 1px solid #404040;
+    background: #1e3a5f;
     border-radius: 1rem;
     overflow: hidden;
     animation: scaleUp 0.3s ease-out;
@@ -19,12 +18,12 @@
 
 /* Header */
 .header {
-    background: #171717;
+    background: #1a202c;
     padding: 0.8rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid #2a2a2a;
+    border-bottom: 1px solid #2c528255;
 }
 
 .headerBranding {
@@ -69,16 +68,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #202020;
-    border: 1px solid #2a2a2a;
+    background: #212731;
+    border: 1px solid #4a556855;
     border-radius: 0.5rem;
     transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
 }
 
 .closeButton:hover {
     color: white;
-    background: #2d2d2d;
-    border-color: #404040;
+    background: #4a556844;
+    border-color: #71809677;
 }
 
 /* Main Layout */
@@ -91,8 +90,8 @@
 /* Sidebar */
 .sidebar {
     width: 4rem;
-    background: #171717;
-    border-right: 1px solid #2a2a2a;
+    background: #1a202c;
+    border-right: 1px solid #2c528255;
     display: flex;
     flex-direction: column;
 }
@@ -114,20 +113,20 @@
 }
 
 .sidebarItem:hover {
-    background: rgba(185, 16, 114, 0.1);
+    background: rgba(59, 130, 246, 0.1);
     color: rgba(255, 255, 255, 0.9);
 }
 
 .sidebarItem.active {
-    background: rgba(185, 16, 106, 0.15);
-    color: var(--tone-pink);
-    border-left: 3px solid var(--tone-pink);
+    background: rgba(16, 117, 185, 0.15);
+    color: var(--tone-cyan);
+    border-left: 3px solid var(--tone-cyan);
 }
 
 /* Content Area */
 .content {
     flex: 1;
-    background: #1b1b1b;
+    background: #1e2833;
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -304,8 +303,8 @@
 }
 
 .actionButton {
-    background: rgb(37, 37, 37);
-    border: 1px solid rgb(47, 47, 47);
+    background: #1e2f3d;
+    border: 1px solid #2a3441;
     border-radius: 0.75rem;
     padding: 1.25rem;
     cursor: pointer;
@@ -317,8 +316,8 @@
 }
 
 .actionButton:hover {
-    background: rgb(45, 45, 45);
-    border-color: rgb(60, 60, 60);
+    background: #2a3441;
+    border-color: #374151;
     transform: translateY(-2px);
 }
 
@@ -399,14 +398,15 @@
 .transactionAction {
     background: transparent;
     border: none;
-    color: #ff00bb;
+    color: var(--tone-cyan);
     font-size: 0.9rem;
     cursor: pointer;
-    transition: color 0.2s ease;
+    opacity: 0.9;
+    transition: opacity 0.2s ease;
 }
 
 .transactionAction:hover {
-    color: #ff33cc;
+    opacity: 1;
 }
 
 .transactionsList {
@@ -414,8 +414,8 @@
     flex-direction: column;
     max-height: 13.4rem;
     overflow-y: auto;
-    background: rgb(37, 37, 37);
-    border: 1px solid rgb(47, 47, 47);
+    background: #1e2f3d;
+    border: 1px solid #2a3441;
     border-radius: 1rem;
 }
 
@@ -425,11 +425,11 @@
 }
 
 .transactionsList::-webkit-scrollbar-track {
-    background: #202020;
+    background: #1a202c;
 }
 
 .transactionsList::-webkit-scrollbar-thumb {
-    background: #333333;
+    background: #4a5568;
     border-radius: 3px;
 }
 
@@ -452,8 +452,8 @@
 }
 
 .cardVisual {
-    background: rgb(37, 37, 37);
-    border: 1px solid rgb(47, 47, 47);
+    background: #2d3748;
+    border: 1px solid #4a5568;
     border-radius: 1rem;
     padding: 1.5rem;
     width: 100%;
@@ -606,9 +606,9 @@
     flex-direction: column;
     gap: 1rem;
     flex: 1;
-    background: rgb(37, 37, 37);
-    border: 1px solid rgb(47, 47, 47);
-    border-radius: 1rem;
+    background: #1e2f3d;
+    border: 1px solid #2a3441;
+    border-radius: 0.75rem;
     padding: 1rem;
 }
 
@@ -626,8 +626,8 @@
 }
 
 .filterDropdown {
-    background: #242424;
-    border: 1px solid #2a2a2a;
+    background: #2d3748;
+    border: 1px solid #4a5568;
     border-radius: 0.5rem;
     padding: 0.75rem 1rem;
     color: white;
@@ -664,7 +664,7 @@
     text-align: left;
     font-weight: 500;
     padding: 0.75rem 1rem;
-    border-bottom: 1px solid #383838;
+    border-bottom: 1px solid #4a5568;
 }
 
 .transactionsTableHeader th:first-child {
@@ -681,7 +681,7 @@
 }
 
 .transactionsTableRow {
-    border-bottom: 1px solid #2a2a2a;
+    border-bottom: 1px solid #4a5568;
 }
 
 .transactionTableAction {
@@ -718,8 +718,8 @@
 }
 
 .transactionsRightCard {
-    background: #242424;
-    border: 1px solid #2a2a2a;
+    background: #2d3748;
+    border: 1px solid #4a5568;
     border-radius: 1rem;
     padding: 1.35rem;
 }
@@ -796,7 +796,7 @@
     align-items: center;
     gap: 1rem;
     padding: 1rem;
-    border-bottom: 1px solid #404040;
+    border-bottom: 1px solid #4a5568;
 }
 
 .transactionItem:last-child {
@@ -851,16 +851,16 @@
 }
 
 .content::-webkit-scrollbar-track {
-    background: #1a1a1a;
+    background: #1a202c;
 }
 
 .content::-webkit-scrollbar-thumb {
-    background: #2a2a2a;
+    background: #4a5568;
     border-radius: 3px;
 }
 
 .content::-webkit-scrollbar-thumb:hover {
-    background: #3a3a3a;
+    background: #718096;
 }
 
 /* Animations */
