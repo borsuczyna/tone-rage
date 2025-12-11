@@ -13,7 +13,10 @@ export default function TablePaginationControls({ page, setPage, totalItems, ite
     return (
         <div className={styles.tablePaginationControls}>
             <span className={styles.paginationInfo}>
-                {translate('atm.transactions.pageInfo').replace('{page}', (page + 1).toString()).replace('{total}', Math.ceil(totalItems / itemsPerPage).toString())}
+                {translate('atm.transactions.pageInfo', {
+                    'page': (page + 1).toString(),
+                    'total': Math.ceil(totalItems / itemsPerPage).toString()
+                })}
             </span>
 
             <div className={styles.paginationButtons}>

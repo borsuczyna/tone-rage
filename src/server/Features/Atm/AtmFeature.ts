@@ -39,6 +39,13 @@ export default class AtmFeature {
 
 		if (success) {
 			const atmData = await this.buildAtmData(player);
+            NotificationService.addNotification(
+                player,
+                NotificationType.Success,
+                translate('default.success'),
+                translate('atm.withdraw.success')
+            );
+
 			return {
 				success: true,
 				...atmData
@@ -60,6 +67,13 @@ export default class AtmFeature {
 
 		if (success) {
 			const atmData = await this.buildAtmData(player);
+            NotificationService.addNotification(
+                player,
+                NotificationType.Success,
+                translate('default.success'),
+                translate('atm.deposit.success')
+            );
+
 			return {
 				success: true,
 				...atmData

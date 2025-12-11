@@ -55,8 +55,9 @@ export default class MarkerClientService {
 				const uv = params[9];
 				if (!uv) return params;
 
-				uv[1] += ((0.08 * timeSinceLastFrame) / 1000) % 10;
-				uv[3] += ((0.08 * timeSinceLastFrame) / 1000) % 10;
+				const uvAnimationSpeed = (0.08 * timeSinceLastFrame) / 1000;
+				uv[1] += uvAnimationSpeed % 10;
+				uv[3] += uvAnimationSpeed % 10;
 
 				return params;
 			});
@@ -68,11 +69,11 @@ export default class MarkerClientService {
 		const position = new mp.Vector3(marker.position.x, marker.position.y, marker.position.z - 0.6);
 		const step = (2 * Math.PI) / sides;
 		const halfStep = step / 2;
-		const uvStep = 1 / sides;
+		const uvStep = marker.scale / sides;
 		let lastPoint: Vector3 | null = null;
 
 		for (let angle = 0; angle <= 2 * Math.PI; angle += step) {
-			const uv = angle / (2 * Math.PI);
+			const uv = (angle / (2 * Math.PI)) * marker.scale;
 			const point = new mp.Vector3(
 				position.x + (marker.scale / 2) * Math.cos(angle),
 				position.y + (marker.scale / 2) * Math.sin(angle),
