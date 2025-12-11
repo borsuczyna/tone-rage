@@ -13,6 +13,8 @@ export default function ChatInterface() {
     const [inputOpen, setInputOpen] = useState<boolean>(false);
     const [inputValue, setInputValue] = useState<string>('');
     const [commandSnippets, setCommandSnippets] = useState<CommandSnippet[]>([]);
+    const [messageHistory, setMessageHistory] = useState<string[]>([]);
+    const [historyIndex, setHistoryIndex] = useState<number>(-1);
     const { messages } = useChat();
 
     const [chatSettings, setChatSettings] = useState<ChatSettings>({
@@ -29,8 +31,12 @@ export default function ChatInterface() {
     });
 
     const handleSendMessage = (message: string) => {
+        if (message.trim()) {
+            setMessageHistory(prev => [...prev, message]);
+        }
         setInputValue('');
         setInputOpen(false);
+        setHistoryIndex(-1);
         triggerEvent('chat:sendMessage', message);
     };
 
@@ -38,6 +44,30 @@ export default function ChatInterface() {
         triggerEvent('chat:closeChatInput');
         setInputOpen(false);
         setInputValue('');
+        setHistoryIndex(-1);
+    };
+
+    const handleHistoryNavigation = (direction: 'up' | 'down') => {
+        if (messageHistory.length === 0) return;
+
+        if (direction === 'up') {
+            const newIndex = historyIndex === -1 
+                ? messageHistory.length - 1 
+                : Math.max(0, historyIndex - 1);
+            setHistoryIndex(newIndex);
+            setInputValue(messageHistory[newIndex]);
+        } else {
+            if (historyIndex === -1) return;
+            
+            const newIndex = historyIndex + 1;
+            if (newIndex >= messageHistory.length) {
+                setHistoryIndex(-1);
+                setInputValue('');
+            } else {
+                setHistoryIndex(newIndex);
+                setInputValue(messageHistory[newIndex]);
+            }
+        }
     };
 
     const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -97,6 +127,7 @@ export default function ChatInterface() {
                 onSend={handleSendMessage}
                 onClose={handleCloseInput}
                 commandSnippets={commandSnippets}
+                onHistoryNavigation={handleHistoryNavigation}
             />
         </div>
     )

@@ -18,6 +18,7 @@ interface ChatInputProps {
     setSettings: (settings: ChatSettingsType) => void;
     onSend?: (message: string) => void;
     onClose?: () => void;
+    onHistoryNavigation?: (direction: 'up' | 'down') => void;
 }
 
 export default function ChatInput({
@@ -28,7 +29,8 @@ export default function ChatInput({
     settings,
     setSettings,
     onSend,
-    onClose
+    onClose,
+    onHistoryNavigation
 }: ChatInputProps) {
     const [emojiPickerOpen, setEmojiPickerOpen] = useState<boolean>(false);
     const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
@@ -94,16 +96,26 @@ export default function ChatInput({
         } else if (e.key === 'Escape') {
             e.preventDefault();
             onClose?.();
-        } else if (e.key === 'ArrowUp' && filteredSnippets.length > 0) {
-            e.preventDefault();
-            setSelectedSnippetIndex(prev => 
-                prev <= 0 ? filteredSnippets.length - 1 : prev - 1
-            );
-        } else if (e.key === 'ArrowDown' && filteredSnippets.length > 0) {
-            e.preventDefault();
-            setSelectedSnippetIndex(prev => 
-                prev >= filteredSnippets.length - 1 ? 0 : prev + 1
-            );
+        } else if (e.key === 'ArrowUp') {
+            if (filteredSnippets.length > 0) {
+                e.preventDefault();
+                setSelectedSnippetIndex(prev => 
+                    prev <= 0 ? filteredSnippets.length - 1 : prev - 1
+                );
+            } else {
+                e.preventDefault();
+                onHistoryNavigation?.('up');
+            }
+        } else if (e.key === 'ArrowDown') {
+            if (filteredSnippets.length > 0) {
+                e.preventDefault();
+                setSelectedSnippetIndex(prev => 
+                    prev >= filteredSnippets.length - 1 ? 0 : prev + 1
+                );
+            } else {
+                e.preventDefault();
+                onHistoryNavigation?.('down');
+            }
         } else if (e.key === 'Tab' && filteredSnippets.length > 0) {
             e.preventDefault();
             const selectedSnippet = filteredSnippets[selectedSnippetIndex];
