@@ -42,7 +42,14 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 
     const addToHistory = (message: string) => {
         if (message.trim()) {
-            setMessageHistory(prev => [...prev, message]);
+            setMessageHistory(prev => {
+                // Don't add if it's the same as the last message
+                if (prev.length > 0 && prev[prev.length - 1] === message) {
+                    return prev;
+                }
+                // Limit history to last 100 messages
+                return [...prev, message].slice(-100);
+            });
         }
     };
 
