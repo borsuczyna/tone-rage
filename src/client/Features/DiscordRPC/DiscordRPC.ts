@@ -6,7 +6,7 @@ interface PresenceData {
 	state?: string;
 }
 
-export default class DiscordRPCService {
+export default class DiscordRPC {
 	private static isConnected: boolean = false;
 	private static presence: PresenceData = {};
 	private static readonly updateInterval = 15000;

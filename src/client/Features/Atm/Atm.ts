@@ -10,7 +10,7 @@ import MarkerHitType from '@shared-rage/Models/MarkerHitType';
 import ElementDataService from '@/Services/Infrastructure/ElementDataService';
 import translate from '@shared/Translation/Translation';
 
-export default class AtmFeature {
+export default class Atm {
 	private static atmMarkers: Set<Marker> = new Set();
 	private static atmObjects: Set<ObjectMp> = new Set();
 	private static atmBlips: Set<BlipMp> = new Set();

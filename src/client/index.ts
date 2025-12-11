@@ -1,25 +1,25 @@
 import LoginPanel from './Features/Auth/LoginPanel';
-import DiscordRPCService from './Features/DiscordRPC/DiscordRPCService';
+import DiscordRPC from './Features/DiscordRPC/DiscordRPC';
 import EventService from './Services/Infrastructure/EventService';
 import ElementDataService from './Services/Infrastructure/ElementDataService';
 import FetchService from './Services/Infrastructure/FetchService';
 import InterfaceService from './Services/Infrastructure/InterfaceService';
 import NotificationService from './Services/Infrastructure/NotificationService';
-import PlayerDataDisplayService from './Features/PlayerDataDisplay/PlayerDataDisplayService';
+import PlayerDataDisplay from './Features/PlayerDataDisplay/PlayerDataDisplay';
 import CredentialsStorageService from './Services/Utility/CredentialsStorageService';
 import Hud from './Features/Hud/Hud';
 import Scoreboard from './Features/Scoreboard/Scoreboard';
 import KeyboardService from './Services/Utility/KeyboardService';
 import PlayerBlipsService from './Services/Utility/PlayerBlipsService';
-import AtmFeature from './Features/Atm/AtmFeature';
+import Atm from './Features/Atm/Atm';
 import HandlingEditorService from './Features/HandlingEditor/HandlingEditorService';
 import MarkerService from '@shared-rage/Services/MarkerService';
 import DrawingService from './Services/Rendering/DrawingService';
 import MarkerClientService from './Services/Rendering/MarkerClientService';
 import Chat from './Features/Chat/Chat';
 import CommandService from './Services/Infrastructure/CommandService';
-import WorldInteractionFeature from './Features/Interaction/WorldInteractionFeature';
-import VehicleInteractionFeature from './Features/Interaction/VehicleInteractionFeature';
+import WorldInteraction from './Features/Interaction/WorldInteraction';
+import VehicleInteraction from './Features/Interaction/VehicleInteraction';
 // import EventServiceTest from './Tests/EventServiceTest';
 // import ElementDataServiceTest from './Tests/ElementDataServiceTest';
 // import InterfaceServiceTest from './Tests/InterfaceServiceTest';
@@ -28,10 +28,10 @@ import VehicleInteractionFeature from './Features/Interaction/VehicleInteraction
 // import PlayerDataDisplayServiceTest from './Tests/PlayerDataDisplayServiceTest';
 
 (async () => {
-	await DiscordRPCService.init();
+	await DiscordRPC.init();
 	await EventService.init();
 	await ElementDataService.init();
-	await PlayerDataDisplayService.init();
+	await PlayerDataDisplay.init();
 	await CredentialsStorageService.init();
 	await KeyboardService.init();
 	await InterfaceService.init();
@@ -49,9 +49,9 @@ import VehicleInteractionFeature from './Features/Interaction/VehicleInteraction
 	await CommandService.init();
 
 	// Features
-	await AtmFeature.init();
-	await WorldInteractionFeature.init();
-	await VehicleInteractionFeature.init();
+	await Atm.init();
+	await WorldInteraction.init();
+	await VehicleInteraction.init();
 	// EventServiceTest.init();
 	// ElementDataServiceTest.init();
 	// InterfaceServiceTest.init();

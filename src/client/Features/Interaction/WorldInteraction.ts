@@ -8,7 +8,7 @@ import ElementDataService from "@/Services/Infrastructure/ElementDataService";
 import TimerService from "@shared/Services/TimerService";
 import DrawingService from "@/Services/Rendering/DrawingService";
 
-export default class WorldInteractionFeature {
+export default class WorldInteraction {
     private static worldInteractionListeners: WorldInteractionListener[] = [];
     private static worldInteractions: WorldInteractionHandler[] = [];
     private static hiding: boolean = false;

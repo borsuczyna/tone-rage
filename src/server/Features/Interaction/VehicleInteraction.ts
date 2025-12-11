@@ -3,7 +3,7 @@ import NotificationService from '@/Services/Infrastructure/NotificationService';
 import { NotificationType } from '@shared/Models/NotificationType';
 import translate from '@shared/Translation/Translation';
 
-export default class VehicleInteractionFeature {
+export default class VehicleInteraction {
 	public static init() {
 		EventService.registerEventHandler('interaction:vehicle:toggleLocks', this.toggleLocks.bind(this));
 

@@ -1,13 +1,13 @@
 import { WorldInteractionHandler } from "@shared/Models/WorldInteraction";
-import WorldInteractionFeature from "./WorldInteractionFeature";
+import WorldInteraction from "./WorldInteraction";
 import translate from "@shared/Translation/Translation";
 import NotificationService from "@/Services/Infrastructure/NotificationService";
 import { NotificationType } from "@shared/Models/NotificationType";
 import EventService from "@/Services/Infrastructure/EventService";
 
-export default class VehicleInteractionFeature {
+export default class VehicleInteraction {
 	public static init() {
-		WorldInteractionFeature.registerWorldInteractionListener(this.vehicleInteractionsCallback.bind(this));
+		WorldInteraction.registerWorldInteractionListener(this.vehicleInteractionsCallback.bind(this));
 	}
 
     private static getClosestVehicle(): VehicleMp | null {

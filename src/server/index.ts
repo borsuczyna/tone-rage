@@ -10,10 +10,10 @@ import Tests from './Tests/Tests';
 import SpawnService from './Services/Core/SpawnService';
 import UserService from './Services/Core/UserService';
 import MoneyServiceTest from './Tests/MoneyServiceTest';
-import AtmFeature from './Features/Atm/AtmFeature';
+import Atm from './Features/Atm/Atm';
 import MarkerTest from './Tests/MarkerTest';
 import MarkerService from '@shared-rage/Services/MarkerService';
-import VehicleInteractionFeature from './Features/Interaction/VehicleInteractionFeature';
+import VehicleInteraction from './Features/Interaction/VehicleInteraction';
 import MarkerServerService from './Services/Infrastructure/MarkerServerService';
 import Chat from './Features/Chat/Chat';
 import CommandService from './Services/Infrastructure/CommandService';
@@ -38,8 +38,8 @@ import InitMessage from './InitMessage';
 	await RealTime.init();
 
 	// Features
-	await AtmFeature.init();
-	await VehicleInteractionFeature.init();
+	await Atm.init();
+	await VehicleInteraction.init();
 
 	// Debug
 	Tests.getPositionCommandTest();

@@ -5,7 +5,7 @@ import { NotificationType } from '@shared/Models/NotificationType';
 import translate from '@shared/Translation/Translation';
 import ElementDataService from '@/Services/Infrastructure/ElementDataService';
 
-export default class AtmFeature {
+export default class Atm {
 	public static async init() {
 		// Register fetch listener for getting ATM data
 		FetchService.registerFetchListener('atm:getData', this.onGetAtmData.bind(this));

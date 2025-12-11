@@ -5,7 +5,7 @@ import NotificationService from '@/Services/Infrastructure/NotificationService';
 /**
  * PlayerDataDisplayService - Debug feature to display all element data above players in 3D
  */
-export default class PlayerDataDisplayService {
+export default class PlayerDataDisplay {
 	/** Debug flag to control visibility */
 	private static isEnabled: boolean = false;
 
