@@ -5,10 +5,14 @@ import TimerService, { Timer } from '@shared/Services/TimerService';
 
 export default class Hud {
 	private static updateTimer: Timer | null = null;
+    private static minimapScaleform: number;
 
 	public static async init() {
+        this.minimapScaleform = mp.game.graphics.requestScaleformMovie('MINIMAP');
+
 		this.setVisible(false);
 		EventService.registerEventHandler('money:update', this.update.bind(this));
+        mp.events.add('render', this.onRender.bind(this));
 	}
 
 	public static setVisible(visible: boolean) {
@@ -44,4 +48,11 @@ export default class Hud {
 			}
 		});
 	}
+
+    // hide default health and armor bars
+    private static onRender() {
+        mp.game.graphics.pushScaleformMovieFunction(this.minimapScaleform, "SETUP_HEALTH_ARMOUR");
+        mp.game.graphics.pushScaleformMovieFunctionParameterInt(3);
+        mp.game.graphics.popScaleformMovieFunctionVoid();
+    }
 }
