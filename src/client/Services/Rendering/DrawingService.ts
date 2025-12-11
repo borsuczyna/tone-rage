@@ -95,8 +95,10 @@ export default class DrawingService {
         const name = player.name;
         const avatar = ElementDataService.get(player, 'avatar') || '';
         const adminLevel = (ElementDataService.get(player, 'adminLevel') || 0) as AdminLevel;
-        const adminLevelName = adminLevel != AdminLevel.User ? adminLevels[adminLevel] : undefined;
-        const adminLevelColor = adminLevel != AdminLevel.User ? adminLevelColors[adminLevel] : undefined;
+        // const adminLevelName = adminLevel != AdminLevel.User ? adminLevels[adminLevel] : undefined;
+        // const adminLevelColor = adminLevel != AdminLevel.User ? adminLevelColors[adminLevel] : undefined;
+        const adminLevelName = adminLevels[adminLevel];
+        const adminLevelColor = adminLevelColors[adminLevel];
         const emblemas = EmblemaService.getPlayerEmblems(player, adminLevel);
 
         InterfaceService.callInterfaceEvent('textureService:requestPlayerNametagTexture', {
