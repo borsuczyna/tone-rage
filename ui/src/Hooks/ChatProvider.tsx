@@ -7,12 +7,18 @@ interface ChatContextType {
     messages: ChatMessageData[];
     addMessage: (message: ChatMessageData) => void;
     clearMessages: () => void;
+    messageHistory: string[];
+    addToHistory: (message: string) => void;
+    historyIndex: number;
+    setHistoryIndex: (index: number) => void;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
 export function ChatProvider({ children }: { children: ReactNode }) {
     const [messages, setMessages] = useState<ChatMessageData[]>([]);
+    const [messageHistory, setMessageHistory] = useState<string[]>([]);
+    const [historyIndex, setHistoryIndex] = useState<number>(-1);
 
     const addMessage = (message: ChatMessageData) => {
         setMessages(prevMessages => {
@@ -34,6 +40,12 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         setMessages([]);
     };
 
+    const addToHistory = (message: string) => {
+        if (message.trim()) {
+            setMessageHistory(prev => [...prev, message]);
+        }
+    };
+
     // Listen for new messages from RageMP
     useRageEvent('chat:receiveMessage', (message: ChatMessageData) => {
         addMessage(message);
@@ -43,6 +55,10 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         messages,
         addMessage,
         clearMessages,
+        messageHistory,
+        addToHistory,
+        historyIndex,
+        setHistoryIndex,
     };
 
     return (

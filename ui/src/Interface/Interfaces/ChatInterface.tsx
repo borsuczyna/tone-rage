@@ -13,9 +13,7 @@ export default function ChatInterface() {
     const [inputOpen, setInputOpen] = useState<boolean>(false);
     const [inputValue, setInputValue] = useState<string>('');
     const [commandSnippets, setCommandSnippets] = useState<CommandSnippet[]>([]);
-    const [messageHistory, setMessageHistory] = useState<string[]>([]);
-    const [historyIndex, setHistoryIndex] = useState<number>(-1);
-    const { messages } = useChat();
+    const { messages, messageHistory, historyIndex, setHistoryIndex, addToHistory } = useChat();
 
     const [chatSettings, setChatSettings] = useState<ChatSettings>({
         width: 45,
@@ -31,9 +29,7 @@ export default function ChatInterface() {
     });
 
     const handleSendMessage = (message: string) => {
-        if (message.trim()) {
-            setMessageHistory(prev => [...prev, message]);
-        }
+        addToHistory(message);
         setInputValue('');
         setInputOpen(false);
         setHistoryIndex(-1);
