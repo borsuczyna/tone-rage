@@ -9,6 +9,7 @@ import * as Icons from 'lucide-react';
 import Header from './Components/atm/Header';
 import Sidebar from './Components/atm/Sidebar';
 import translate from '@shared/Translation/Translation';
+import InterfaceLoading from './Components/InterfaceLoading';
 
 interface AtmData {
     bankMoney: number;
@@ -32,6 +33,7 @@ export default function AtmInterface() {
     const [userId, setUserId] = useState(0);
     const [transactions, setTransactions] = useState<MoneyLogEntityInterface[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [dataLoaded, setDataLoaded] = useState(false);
     const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
     const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
     const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
@@ -44,6 +46,7 @@ export default function AtmInterface() {
             setWalletMoney(data.walletMoney);
             setUserId(data.userId);
             setTransactions(data.logs);
+            setDataLoaded(true);
         } catch (error) {
             console.error('Failed to fetch ATM data:', error);
         } finally {
@@ -128,6 +131,10 @@ export default function AtmInterface() {
 
         return false;
     };
+
+    if (!dataLoaded) {
+        return <InterfaceLoading/>;
+    }
 
     return (
         <>

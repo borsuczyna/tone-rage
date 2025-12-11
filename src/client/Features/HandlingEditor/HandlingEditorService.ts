@@ -3,6 +3,7 @@ import EventService from '@/Services/Infrastructure/EventService';
 import InterfaceService from '@/Services/Infrastructure/InterfaceService';
 import NotificationService from '@/Services/Infrastructure/NotificationService';
 import { NotificationType } from '@shared/Models/NotificationType';
+import CommandService from '@/Services/Infrastructure/CommandService';
 
 /**
  * HandlingEditorService - Manages the handling editor interface for the current player's vehicle
@@ -15,7 +16,11 @@ export default class HandlingEditorService {
 	 */
 	public static init() {
 		// Register command to toggle handling editor
-		mp.events.add('playerCommand', this.onCommand.bind(this));
+		// mp.events.add('playerCommand', this.onCommand.bind(this));
+        CommandService.registerCommandHandler({
+            command: '/he',
+            description: 'Toggle Handling Editor',
+        }, this.onCommand.bind(this));
 
 		// Register event to receive handling data requests
 		EventService.registerEventHandler('handlingEditor:getData', this.getVehicleHandlingData.bind(this));
@@ -32,10 +37,8 @@ export default class HandlingEditorService {
 	/**
 	 * Handle player commands
 	 */
-	private static onCommand(command: string) {
-		if (command === 'he') {
-			this.toggleHandlingEditor();
-		}
+	private static onCommand() {
+        this.toggleHandlingEditor();
 	}
 
 	/**

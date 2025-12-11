@@ -9,6 +9,8 @@ const SharedConfig = {
 	MaterialLineTextureCleanupIntervalMs: 30 * 1000, // 30 seconds
 	MarkerRenderDistance: 100.0,
 	MarkerTextureSize: 512,
+    PlayerNametagTextureWidth: 340,
+    PlayerNametagTextureHeight: 90,
 	LocalChatRange: 30.0,
 	MaxChatMessageLength: 256,
 	ChatMessageTimeout: 1 // in seconds

@@ -1,9 +1,12 @@
-import { MarkerTextureRequest, TextureData, TextureRequest, TextureUnloadRequest } from '@shared/Models/TextureData';
+import { MarkerTextureRequest, NametagTextureRequest, TextureData, TextureRequest, TextureUnloadRequest } from '@shared/Models/TextureData';
 import InterfaceService from '../Infrastructure/InterfaceService';
 import EventService from '../Infrastructure/EventService';
 import Logger from '@shared/Logger';
 import SharedConfig from '@shared/SharedConfig';
 import TimerService from '@shared/Services/TimerService';
+import ElementDataService from '../Infrastructure/ElementDataService';
+import EmblemaService from '@shared-rage/Services/EmblemaService';
+import { AdminLevel, adminLevelColors, adminLevels } from '@shared/Models/AdminLevel';
 
 export default class DrawingService {
 	private static logger: Logger = Logger.getLogger(DrawingService);
@@ -74,6 +77,41 @@ export default class DrawingService {
 		this.logger.info(`Requested marker texture load: ${key}`);
 	}
 
+    private static getPlayerNametagTextureKey(player: PlayerMp): string {
+        const name = player.name;
+        const avatar = ElementDataService.get(player, 'avatar');
+        const adminLevel = ElementDataService.get(player, 'adminLevel') || 0;
+        const emblemas = EmblemaService.getPlayerEmblems(player, adminLevel);
+
+        return `nametag_${name}_${avatar || 'noavatar'}_${emblemas.join(';')}`;
+    }
+
+    private static loadPlayerNametagTexture(player: PlayerMp) {
+        const key = this.getPlayerNametagTextureKey(player);
+        if (this.textureLoadQueue.has(key)) {
+            return;
+        }
+
+        const name = player.name;
+        const avatar = ElementDataService.get(player, 'avatar') || '';
+        const adminLevel = (ElementDataService.get(player, 'adminLevel') || 0) as AdminLevel;
+        const adminLevelName = adminLevel != AdminLevel.User ? adminLevels[adminLevel] : undefined;
+        const adminLevelColor = adminLevel != AdminLevel.User ? adminLevelColors[adminLevel] : undefined;
+        const emblemas = EmblemaService.getPlayerEmblems(player, adminLevel);
+
+        InterfaceService.callInterfaceEvent('textureService:requestPlayerNametagTexture', {
+            name: name,
+            avatar: avatar,
+            emblemas: emblemas,
+            key: key,
+            adminLevelName: adminLevelName,
+            adminLevelColor: adminLevelColor
+        } as NametagTextureRequest);
+
+        this.textureLoadQueue.add(key);
+        this.logger.info(`Requested player nametag texture load: ${key}`);
+    }
+
 	private static unloadTexture(textureData: TextureData) {
 		const key = this.getTextureKey(textureData.url, textureData.width, textureData.height);
 		if (!this.textureDictionary.has(key)) {
@@ -117,6 +155,17 @@ export default class DrawingService {
 
 		return textureData;
 	}
+
+    public static getPlayerNametagTexture(player: PlayerMp): TextureData | null {
+        const key = this.getPlayerNametagTextureKey(player);
+        const textureData = this.textureDictionary.get(key) || null;
+        if (!textureData) {
+            this.loadPlayerNametagTexture(player);
+            return null;
+        }
+
+        return textureData;
+    }
 
 	private static onTextureDataReady(data: TextureData) {
 		data.lastUsed = Date.now();

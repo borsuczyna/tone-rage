@@ -1,3 +1,5 @@
+import type { Emblema } from "./Emblema";
+
 export interface TextureData {
 	dictionary: string;
 	name: string;
@@ -20,6 +22,15 @@ export interface MarkerTextureRequest {
 	upperText: string;
 	lowerText: string;
 	key: string;
+}
+
+export interface NametagTextureRequest {
+    name: string;
+    avatar: string;
+    emblemas: Emblema[];
+    key: string;
+    adminLevelName?: string;
+    adminLevelColor?: string;
 }
 
 export interface TextureUnloadRequest {
