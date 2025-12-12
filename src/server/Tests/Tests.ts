@@ -25,7 +25,7 @@ export default class Tests {
         },
         (player: PlayerMp, ...args: string[]) => {
             const model = args.join(' ') || 'adder';
-            const hash = mp.joaat(model);
+            const hash = model.startsWith('0x') ? parseInt(model, 16) : mp.joaat(model);
 
             const vehicle = mp.vehicles.new(hash, player.position, {
                 heading: player.heading,

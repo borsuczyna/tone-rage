@@ -315,7 +315,7 @@ export default class DrawingService {
 
     public static getScreenFromWorldPosition(worldPos: Vector3): { x: number; y: number } | null {
         const screenPos = mp.game.graphics.world3dToScreen2d(worldPos);
-        if (!screenPos.x) {
+        if (!screenPos || !screenPos.x) {
             return null;
         }
 

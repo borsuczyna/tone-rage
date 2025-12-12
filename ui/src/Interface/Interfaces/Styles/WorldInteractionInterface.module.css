@@ -7,8 +7,34 @@
     flex-direction: column;
     align-items: center;
     font-size: 0.9rem;
-    transition: transform 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out, left 0.3s ease-in-out;
     animation: fadeInScale 0.3s ease-in-out;
+}
+
+.vinette {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background: radial-gradient(
+        circle at center,
+        rgba(0, 0, 0, 0.1) 0%,
+        rgba(0, 0, 0, 0.35) 50%,
+        rgba(0, 0, 0, 0.65) 100%
+    );
+    opacity: 1;
+    z-index: -1;
+    animation: vinetteFadeIn 0.3s ease-in-out;
+}
+
+.vinette.hiding {
+    animation: vinetteFadeOut 0.3s ease-in-out;
+}
+
+.pointInsideMenu .worldInteraction {
+    left: calc(50% - 5rem);
 }
 
 .worldInteraction.hiding {
@@ -42,7 +68,6 @@
 .interactionItem.active {
     background: rgba(232, 232, 232, 0.9);
     width: 16rem;
-    /* border-left: 0.2rem solid #4caf50; */
     color: #111;
     font-weight: 600;
     border-color: #fff;
@@ -60,13 +85,18 @@
     width: 1.5rem;
     height: 1.5rem;
     transform: translate(-50%, -50%);
-    transition: top 0.05s linear, left 0.05s linear;
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
     pointer-events: none;
     animation: rotateDiamond 2s linear infinite, fadeInDiamond 0.3s ease-in-out;
 }
 
 .interactionDiamond.hiding {
     animation: rotateDiamond 2s linear infinite, fadeOutDiamond 0.2s ease-in-out;
+}
+
+.noActiveEntity .interactionDiamond {
+    opacity: 0 !important;
 }
 
 .interactionLine {
@@ -76,7 +106,13 @@
     width: 100%;
     height: 100%;
     pointer-events: none;
+    opacity: 1;
     animation: dash 10s linear infinite, fadeInLine 0.3s ease-in-out;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.noActiveEntity .interactionLine {
+    opacity: 0 !important;
 }
 
 .interactionLine.hiding {
@@ -164,5 +200,23 @@
     100% {
         opacity: 0;
         transform: translate(-50%, -50%) scale(0);
+    }
+}
+
+@keyframes vinetteFadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes vinetteFadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
     }
 }

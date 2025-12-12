@@ -1,9 +1,12 @@
+declare const mp: any;
+
 export default class Logger {
 	private static loggers: { [key: string]: Logger } = {};
 	private parentName: string;
 	private logToFile: boolean = false;
 	private static fileHandle: any = null;
 	private static fileHandleName: string = '';
+    private static isClientSide: boolean = (typeof mp !== 'undefined' && mp && mp.console);
 
 	public static getLogger<T>(constructor: new (...args: any[]) => T, logToFile: boolean = false): Logger {
 		const className = constructor.name;
@@ -20,19 +23,35 @@ export default class Logger {
 	}
 
 	public info(...args: any[]) {
-		this.log(`\x1b[32m[INFO]\x1b[0m \x1b[36m[${this.parentName}]\x1b[0m`, ...args);
+        if (!Logger.isClientSide) {
+            this.log(`\x1b[32m[INFO]\x1b[0m \x1b[36m[${this.parentName}]\x1b[0m`, ...args);
+        } else {
+            mp.console.logInfo(`[INFO] [${this.parentName}] ${args.join(' ')}`);
+        }
 	}
 
 	public error(...args: any[]) {
-		this.log(`\x1b[31m[ERROR]\x1b[0m \x1b[36m[${this.parentName}]\x1b[0m`, ...args);
+        if (!Logger.isClientSide) {
+            this.log(`\x1b[31m[ERROR]\x1b[0m \x1b[36m[${this.parentName}]\x1b[0m`, ...args);
+        } else {
+            mp.console.logError(`[ERROR] [${this.parentName}] ${args.join(' ')}`);
+        }
 	}
 
 	public debug(...args: any[]) {
-		this.log(`\x1b[35m[DEBUG]\x1b[0m \x1b[36m[${this.parentName}]\x1b[0m`, ...args);
+        if (!Logger.isClientSide) {
+            this.log(`\x1b[35m[DEBUG]\x1b[0m \x1b[36m[${this.parentName}]\x1b[0m`, ...args);
+        } else {
+            mp.console.logInfo(`[DEBUG] [${this.parentName}] ${args.join(' ')}`);
+        }
 	}
 
 	public warn(...args: any[]) {
-		this.log(`\x1b[33m[WARN]\x1b[0m \x1b[36m[${this.parentName}]\x1b[0m`, ...args);
+        if (!Logger.isClientSide) {
+            this.log(`\x1b[33m[WARN]\x1b[0m \x1b[36m[${this.parentName}]\x1b[0m`, ...args);
+        } else {
+            mp.console.logWarning(`[WARN] [${this.parentName}] ${args.join(' ')}`);
+        }
 	}
 
 	private getFileHandle() {
@@ -61,7 +80,11 @@ export default class Logger {
 	}
 
 	private log(...args: any[]) {
-		console.log(...args);
+        if (mp && mp.console && mp.console.logInfo) {
+            mp.console.logInfo(args.join(' '));
+        } else {
+            console.log(...args);
+        }
 
 		if (this.logToFile) {
 			const fileHandle = this.getFileHandle();

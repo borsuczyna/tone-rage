@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useCallback } from 'react';
 import { useRageEvent } from './RageEventProvider';
 import type { ReactNode } from 'react';
 import type { ChatMessageData } from '@shared/Models/Chat';
@@ -54,9 +54,9 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     };
 
     // Listen for new messages from RageMP
-    useRageEvent('chat:receiveMessage', (message: ChatMessageData) => {
+    useRageEvent('chat:receiveMessage', useCallback((message: ChatMessageData) => {
         addMessage(message);
-    });
+    }, [addMessage]));
 
     const value: ChatContextType = {
         messages,

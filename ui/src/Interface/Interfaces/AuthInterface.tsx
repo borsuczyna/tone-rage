@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useInterfaceVisibility } from 'src/Hooks/InterfaceVisibilityProvider';
 import styles from './Styles/AuthInterface.module.css';
 import LoginForm from './Components/Auth/LoginForm';
@@ -34,7 +34,7 @@ export default function AuthInterface() {
     }, []); // Only run once on mount
 
     // Handle credentials loaded from client storage
-    useRageEvent('credentials:loaded', (credentials: { username: string; password: string; rememberMe: boolean } | null) => {
+    useRageEvent('credentials:loaded', useCallback((credentials: { username: string; password: string; rememberMe: boolean } | null) => {
         if (credentials && credentials.rememberMe) {
             setLoginData({
                 username: credentials.username,
@@ -42,7 +42,7 @@ export default function AuthInterface() {
                 rememberMe: true
             });
         }
-    });
+    }, []));
 
     // Form states
     const [loginData, setLoginData] = useState<AuthLoginData>({

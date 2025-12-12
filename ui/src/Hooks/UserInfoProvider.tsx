@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useCallback } from 'react';
 import { useRageEvent } from './RageEventProvider';
 import type { ReactNode } from 'react';
 import SharedConfig from '@shared/SharedConfig';
@@ -49,7 +49,7 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
     });
 
     // Listen for user info updates from RageMP
-    useRageEvent('updateUserInfo', (data: UserInfoUpdate) => {
+    useRageEvent('updateUserInfo', useCallback((data: UserInfoUpdate) => {
         if (data.userInfo) {
             data.userInfo.avatar = data.userInfo.avatar || SharedConfig.DefaultAvatar;
             setUserInfo(prev => ({ ...prev, ...data.userInfo }));
@@ -57,7 +57,7 @@ export function UserInfoProvider({ children }: { children: ReactNode }) {
         if (data.workInfo) {
             setWorkInfo(prev => ({ ...prev, ...data.workInfo }));
         }
-    });
+    }, []));
 
     const value: UserInfoContextType = {
         userInfo,

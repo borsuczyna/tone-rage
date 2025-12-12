@@ -30,8 +30,6 @@ export default class HandlingEditorService {
 
 		// Register event to close the interface
 		mp.events.add('handlingEditor:close', this.closeHandlingEditor.bind(this));
-
-		mp.console.logInfo('HandlingEditorService initialized');
 	}
 
 	/**

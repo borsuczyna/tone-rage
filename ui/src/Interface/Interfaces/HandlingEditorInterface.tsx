@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import styles from './Styles/HandlingEditorInterface.module.css';
 import { triggerEvent } from 'src/Hooks/Fetch';
 import { useRageEvent } from 'src/Hooks/RageEventProvider';
@@ -68,11 +68,11 @@ export default function HandlingEditorInterface() {
 	const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set(['Physical']));
 	const [hasChanges, setHasChanges] = useState(false);
 
-	useRageEvent('setHandlingData', (data: HandlingData) => {
+	useRageEvent('setHandlingData', useCallback((data: HandlingData) => {
         console.log('Received handling data:', data);
 		setHandlingData(data);
 		setHasChanges(false);
-	});
+	}, []));
 
 	useEffect(() => {
 		// Request initial data

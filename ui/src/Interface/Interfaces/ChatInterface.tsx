@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import ChatMessage from './Components/Chat/ChatMessage';
 import styles from './Styles/ChatInterface.module.css';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import ChatInput from './Components/Chat/ChatInput';
 import type { ChatSettings } from './Components/Chat/types';
 import { useRageEvent } from 'src/Hooks/RageEventProvider';
@@ -11,7 +11,7 @@ import { type CommandSnippet } from '@shared/Models/CommandSnippets';
 
 export default function ChatInterface() {
     const [inputOpen, setInputOpen] = useState<boolean>(false);
-    const [inputValue, setInputValue] = useState<string>('');
+    const [inputValue, _setInputValue] = useState<string>('');
     const [commandSnippets, setCommandSnippets] = useState<CommandSnippet[]>([]);
     const { messages, messageHistory, historyIndex, setHistoryIndex, addToHistory } = useChat();
 
@@ -22,11 +22,16 @@ export default function ChatInterface() {
         showAvatars: true
     });
 
-    useRageEvent('chat:openChatInput', ([message, commandSnippets]: [string, CommandSnippet[]]) => {
+    const setInputValue = (value: string) => {
+        if (!inputOpen) return;
+        _setInputValue(value);
+    };
+
+    useRageEvent('chat:openChatInput', useCallback(([message, commandSnippets]: [string, CommandSnippet[]]) => {
         setInputOpen(true);
         setInputValue(message);
         setCommandSnippets(commandSnippets);
-    });
+    }, []));
 
     const handleSendMessage = (message: string) => {
         addToHistory(message);

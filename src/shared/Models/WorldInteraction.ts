@@ -1,11 +1,5 @@
 export interface WorldInteractionItem {
     icon: string;
     label: string;
+    index?: number;
 }
-
-export interface WorldInteractionHandler extends WorldInteractionItem {
-    action: () => void;
-    priority?: number;
-}
-
-export type WorldInteractionListener = () => WorldInteractionHandler | WorldInteractionHandler[] | null;

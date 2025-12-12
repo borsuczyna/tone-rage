@@ -17,7 +17,8 @@ export default class Database {
 			host: Config.Database.Host,
 			user: Config.Database.User,
 			database: Config.Database.Database,
-			password: Config.Database.Password
+			password: Config.Database.Password,
+            connectTimeout: 10000,
 		})) as mysql.Connection & DatabaseConnection;
 
 		if (!this.connection) {

@@ -5,7 +5,7 @@ import Notification from './Components/Notifications/Notification';
 import { useRageEvent } from 'src/Hooks/RageEventProvider';
 import type { NotificationData } from '@shared/Models/NotificationData';
 import AudioService from 'src/Services/AudioService';
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 
 // Preload notification sounds for better performance
 const notificationSounds = [
@@ -46,10 +46,10 @@ export default function NotificationsInterface() {
         };
     }, []);
 
-    useRageEvent('addNotification', (data: NotificationData) => {
+    useRageEvent('addNotification', useCallback((data: NotificationData) => {
         addNotification(data.title, data.message, data.type, data.icon, data.iconFillOpacity);
         playNotificationSound(data.type);
-    });
+    }, []));
 
     return (
         <div className={styles.main} style={{ top }}>

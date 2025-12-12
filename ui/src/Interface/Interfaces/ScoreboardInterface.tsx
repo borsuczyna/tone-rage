@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import styles from './Styles/ScoreboardInterface.module.css';
 import * as Icons from 'lucide-react';
 import type { ScoreboardPlayerItem } from '@shared/Models/ScoreboardData';
@@ -88,9 +88,9 @@ export default function ScoreboardInterface() {
         };
     }, [isInterfaceVisible('ScoreboardInterface')]);
 
-    useRageEvent('scoreboard:playHideAnimation', () => {
+    useRageEvent('scoreboard:playHideAnimation', useCallback(() => {
         setHiding(true);
-    });
+    }, []));
 
     return (
         <div className={styles.container}>
