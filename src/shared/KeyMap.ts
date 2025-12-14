@@ -111,6 +111,10 @@ export const KeyMap = {
 	Meta: 91,
 	MetaRight: 92,
 	ContextMenu: 93,
+
+    // Mouse Wheel
+    MouseWheelUp: 99990,
+    MouseWheelDown: 99991,
 } as const;
 
 export type InputKey = keyof typeof KeyMap;

@@ -4,7 +4,6 @@ import type { WorldInteractionItem } from '@shared/Models/WorldInteraction';
 import * as Icons from 'lucide-react';
 import csx from 'src/Utils/MergeClass';
 import { triggerEvent } from 'src/Hooks/Fetch';
-import { useInterfaceVisibility } from 'src/Hooks/InterfaceVisibilityProvider';
 import { useRageEvent } from 'src/Hooks/RageEventProvider';
 import { getRemAsPx } from '../Main';
 import translate from '@shared/Translation/Translation';
@@ -35,7 +34,6 @@ export default function WorldInteractionInterface() {
         y: window.innerHeight * 0.5 + getRemAsPx(1.15)
     });
     const [isHiding, setIsHiding] = useState<boolean>(false);
-    const { setInterfaceVisible } = useInterfaceVisibility();
 
     useEffect(() => {
         const updateLineTarget = () => {
@@ -52,69 +50,6 @@ export default function WorldInteractionInterface() {
         };
     }, []);
 
-    useEffect(() => {
-        const handleKeyDown = (event: KeyboardEvent) => {
-            if (isHiding) return; // Prevent interactions during hiding animation
-            
-            if (event.key === 'ArrowUp') {
-                event.preventDefault();
-                setActiveIndex(prevIndex => 
-                    prevIndex > 0 ? prevIndex - 1 : interactionItems.length - 1
-                );
-            } else if (event.key === 'ArrowDown') {
-                event.preventDefault();
-                setActiveIndex(prevIndex => 
-                    prevIndex < interactionItems.length - 1 ? prevIndex + 1 : 0
-                );
-            } else if (event.key === 'Enter') {
-                event.preventDefault();
-                onInteractionSelected();
-            }
-        };
-
-        const handleWheel = (event: WheelEvent) => {
-            if (isHiding) return; // Prevent interactions during hiding animation
-            
-            event.preventDefault();
-            if (event.deltaY > 0) {
-                // Scrolling down
-                setActiveIndex(prevIndex => 
-                    prevIndex < interactionItems.length - 1 ? prevIndex + 1 : 0
-                );
-            } else {
-                // Scrolling up
-                setActiveIndex(prevIndex => 
-                    prevIndex > 0 ? prevIndex - 1 : interactionItems.length - 1
-                );
-            }
-        };
-
-        const handleClick = () => {
-            if (isHiding) return; // Prevent interactions during hiding animation
-            onInteractionSelected();
-        }
-
-        const onInteractionSelected = () => {
-            setIsHiding(true);
-            const selectedItem = interactionItems[activeIndex];
-            if (!selectedItem) {
-                console.error('No interaction item selected');
-                return;
-            }
-
-            triggerEvent('worldInteraction:onSelect', selectedItem.index);
-        }
-
-        window.addEventListener('keydown', handleKeyDown);
-        window.addEventListener('wheel', handleWheel);
-        window.addEventListener('click', handleClick);
-        return () => {
-            window.removeEventListener('keydown', handleKeyDown);
-            window.removeEventListener('wheel', handleWheel);
-            window.removeEventListener('click', handleClick);
-        };
-    }, [interactionItems.length, activeIndex, setInterfaceVisible, isHiding]);
-
     useRageEvent('worldInteraction:updatePosition', useCallback((position: { x: number; y: number }) => {
         setInteractionPosition(position);
         setHasActiveEntity(true);
@@ -130,6 +65,29 @@ export default function WorldInteractionInterface() {
     useRageEvent('worldInteraction:playHideAnimation', useCallback(() => {
         setIsHiding(true);
     }, []));
+
+    useRageEvent('worldInteraction:navigate', useCallback((direction: number) => {
+        setActiveIndex(prevIndex => {
+            const itemCount = interactionItems.length;
+            if (itemCount === 0) return prevIndex;
+            
+            let newIndex = prevIndex + direction;
+            if (newIndex < 0) newIndex = itemCount - 1;
+            if (newIndex >= itemCount) newIndex = 0;
+            return newIndex;
+        });
+    }, [interactionItems.length]));
+
+    useRageEvent('worldInteraction:select', useCallback(() => {
+        setIsHiding(true);
+        const selectedItem = interactionItems[activeIndex];
+        if (!selectedItem) {
+            console.error('No interaction item selected');
+            return;
+        }
+
+        triggerEvent('worldInteraction:onSelect', selectedItem.index);
+    }, [interactionItems, activeIndex]));
 
     useEffect(() => {
         triggerEvent('worldInteraction:isReady');

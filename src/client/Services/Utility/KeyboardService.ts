@@ -5,8 +5,10 @@ export enum KeyState {
 	Down = 1
 }
 
+export type KeyHandler = (state: KeyState, holdTime?: number, key?: InputKey) => void;
+
 export default class KeyboardService {
-	private static keyHandlers: Map<InputKey | 'any', (state: KeyState, holdTime?: number) => void> = new Map();
+	private static keyHandlers: Map<InputKey | 'any', KeyHandler> = new Map();
 	private static keysDown: Map<InputKey | 'any', number> = new Map();
 
 	public static init() {
@@ -14,8 +16,8 @@ export default class KeyboardService {
 	}
 
 	private static triggerEvent(key: InputKey, state: KeyState, holdTime?: number) {
-		this.keyHandlers.get(key)?.(state, holdTime);
-		this.keyHandlers.get('any')?.(state, holdTime);
+		this.keyHandlers.get(key)?.(state, holdTime, key);
+		this.keyHandlers.get('any')?.(state, holdTime, key);
 	}
 
 	private static onRender() {
@@ -35,9 +37,22 @@ export default class KeyboardService {
 				this.triggerEvent(key, KeyState.Up, holdTime);
 			}
 		});
+
+        // Scroll checking
+        const wheelUp = mp.game.controls.getDisabledControlNormal(0, 241);
+        const wheelDown = mp.game.controls.getDisabledControlNormal(0, 242);
+        if (wheelUp > 0) {
+            this.triggerEvent('MouseWheelUp', KeyState.Down);
+            this.triggerEvent('MouseWheelUp', KeyState.Up);
+        }
+        
+        if (wheelDown > 0) {
+            this.triggerEvent('MouseWheelDown', KeyState.Down);
+            this.triggerEvent('MouseWheelDown', KeyState.Up);
+        }
 	}
 
-	public static registerKeyHandler(key: InputKey | 'any', handler: (state: KeyState, holdTime?: number) => void) {
+	public static registerKeyHandler(key: InputKey | 'any', handler: KeyHandler) {
 		this.keyHandlers.set(key, handler);
 	}
 

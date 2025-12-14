@@ -7,6 +7,7 @@ import TimerService from "@shared/Services/TimerService";
 import DrawingService from "@/Services/Rendering/DrawingService";
 import { WorldInteractionHandler, WorldInteractionHandlerWithIndex, WorldInteractionListener } from "@shared-rage/Models/WorldInteractionListener";
 import { WorldInteractionItem } from "@shared/Models/WorldInteraction";
+import { InputKey } from "@shared/KeyMap";
 
 export default class WorldInteraction {
     private static worldInteractionListeners: WorldInteractionListener[] = [];
@@ -20,6 +21,11 @@ export default class WorldInteraction {
 
     public static init() {
         KeyboardService.registerKeyHandler('E', this.toggleWorldInteraction.bind(this));
+        KeyboardService.registerKeyHandler('MouseWheelDown', this.handleNavigation.bind(this));
+        KeyboardService.registerKeyHandler('MouseWheelUp', this.handleNavigation.bind(this));
+        KeyboardService.registerKeyHandler('ArrowDown', this.handleNavigation.bind(this));
+        KeyboardService.registerKeyHandler('ArrowUp', this.handleNavigation.bind(this));
+        KeyboardService.registerKeyHandler('Enter', this.handleNavigation.bind(this));
         EventService.registerEventHandler('worldInteraction:onSelect', this.onInteractionSelected.bind(this));
         EventService.registerEventHandler('worldInteraction:isReady', this.onInterfaceReady.bind(this));
         TimerService.setTimer(this.updateInteractionPosition.bind(this), 50, 0);
@@ -28,6 +34,7 @@ export default class WorldInteraction {
         this.createOverlayBatch();
 
         mp.events.add('render', this.onRender.bind(this));
+        mp.events.add('click', this.handleClick.bind(this));
     }
 
     private static createOverlayBatch() {
@@ -88,17 +95,37 @@ export default class WorldInteraction {
             // if (this.worldInteractions.length === 0) return;
 
             InterfaceService.setInterfaceVisible('WorldInteractionInterface', true);
-            InterfaceService.setCursorVisible(true, false);
             this.latestClosestEntity = null;
             this.ready = false;
         } else if (state === KeyState.Up && InterfaceService.isInterfaceVisible('WorldInteractionInterface')) {
             InterfaceService.callInterfaceEvent('worldInteraction:playHideAnimation', null);
-            InterfaceService.setCursorVisible(false, false);
             TimerService.setTimer(this.finallyHideInterface.bind(this), 200, 1);
             this.hiding = true;
         }
     }
 
+    private static handleNavigation(state: KeyState, _holdTime?: number, key?: InputKey) {
+        if (!InterfaceService.isInterfaceVisible('WorldInteractionInterface') || this.hiding || state === KeyState.Up) {
+            return;
+        }
+
+        if (key === 'Enter') {
+            InterfaceService.callInterfaceEvent('worldInteraction:select', null);
+            return;
+        }
+
+        const direction = (key === 'MouseWheelUp' || key === 'ArrowUp' )? -1 : 1;
+        InterfaceService.callInterfaceEvent('worldInteraction:navigate', direction);
+    }
+
+    private static handleClick(_absoluteX: number, _absoluteY: number, upOrDown: "up" | "down") {
+        if (!InterfaceService.isInterfaceVisible('WorldInteractionInterface') || this.hiding || upOrDown !== "down") {
+            return;
+        }
+
+        InterfaceService.callInterfaceEvent('worldInteraction:select', null);
+    }
+    
     private static onInteractionSelected(index: number) {
         const interaction = this.activeWorldInteraction.find(i => i.index === index);
         if (!interaction) return;
@@ -114,7 +141,6 @@ export default class WorldInteraction {
 
     private static finallyHideInterface() {
         InterfaceService.setInterfaceVisible('WorldInteractionInterface', false);
-        InterfaceService.setCursorVisible(false, false);
         this.hiding = false;
     }
 
