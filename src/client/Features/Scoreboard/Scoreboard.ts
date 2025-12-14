@@ -49,6 +49,7 @@ export default class Scoreboard {
 		for (let player of players) {
 			const id = player.id;
 			const userId = ElementDataService.get(player, 'userId');
+            const avatar = ElementDataService.get(player, 'avatar');
 			const username = player.name;
 			const level = ElementDataService.get(player, 'level') || 0;
 			const ping = player.ping;
@@ -58,6 +59,7 @@ export default class Scoreboard {
 
 			result.push({
 				id,
+                avatar,
 				username,
 				level,
 				ping,

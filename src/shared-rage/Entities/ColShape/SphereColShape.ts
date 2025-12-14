@@ -18,8 +18,8 @@ export default class SphereColShape extends ColShape {
     }
 
     public renderDebug(): void {
-        const latStep = 15; // vertical density
-        const lonStep = 15; // horizontal density
+        const latStep = 30; // vertical density
+        const lonStep = 30; // horizontal density
 
         // latitude rings
         for (let lat = -90 + latStep; lat <= 90 - latStep; lat += latStep) {
@@ -27,7 +27,7 @@ export default class SphereColShape extends ColShape {
         }
 
         // longitude rings
-        for (let lon = 0; lon < 180; lon += lonStep) {
+        for (let lon = 0; lon < 360; lon += lonStep) {
             this.drawLongitudeCircle(lon, latStep);
         }
     }
