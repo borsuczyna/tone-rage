@@ -59,22 +59,9 @@ export default class VehicleService {
 	}
 
 	public static async saveVehicles() {
-		const batchSize = 100;
-
-		for (let i = 0; i < this.vehicles.length; i += batchSize) {
-			const batch = this.vehicles.slice(i, i + batchSize);
-			const queries: string[] = [];
-			const allParams: any[] = [];
-
-			for (const vehicle of batch) {
-				const { query, params } = this.buildSaveQuery(vehicle);
-				queries.push(query.trim());
-				allParams.push(...params);
-			}
-
-			const finalQuery = queries.join('; '); // multiple UPDATEs in one query
-			await Database.Execute(finalQuery, allParams);
-		}
+        for (const vehicle of this.vehicles) {
+            await this.saveVehicle(vehicle);
+        }
 
 		this.logger.info(`Saved ${this.vehicles.length} vehicles to database`);
 	}

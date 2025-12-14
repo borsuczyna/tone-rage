@@ -121,47 +121,29 @@ export default class UserService {
         `;
 
 		const params = [money ?? 0, bankMoney ?? 0, level ?? 0, exp ?? 0, userId];
-
 		return { query, params };
 	}
 
-	public static async savePlayerData(client: PlayerMp): Promise<void> {
+	public static savePlayerData(client: PlayerMp) {
 		const saveData = this.buildSaveQuery(client);
 		if (!saveData) return;
 
 		const { query, params } = saveData;
-		await Database.Execute(query, params);
+		Database.Execute(query, params);
 	}
 
 	public static async savePlayers(): Promise<void> {
-		const batchSize = 100;
-		const players = mp.players.toArray();
-
-		for (let i = 0; i < players.length; i += batchSize) {
-			const batch = players.slice(i, i + batchSize);
-			const queries: string[] = [];
-			const allParams: any[] = [];
-
-			for (const player of batch) {
-				const saveData = this.buildSaveQuery(player);
-				if (!saveData) continue;
-
-				const { query, params } = saveData;
-				queries.push(query.trim());
-				allParams.push(...params);
-			}
-
-			if (queries.length === 0) continue;
-
-			const finalQuery = queries.join('; '); // multiple UPDATEs in one query
-			await Database.Execute(finalQuery, allParams);
-		}
+        const players = mp.players.toArray();
+        
+        for (const player of players) {
+            await this.savePlayerData(player);
+        }
 
 		this.logger.info(`Saved ${players.length} players to database`);
 	}
 
 	private static async onPlayerQuit(client: PlayerMp): Promise<void> {
-		await this.savePlayerData(client);
+		this.savePlayerData(client);
 		this.logger.info(`Saved data for player ${client.name} (ID: ${client.id}) on quit`);
 	}
 

@@ -8,6 +8,7 @@ export default class PlayerNametags {
     public static init() {
         mp.events.add('render', this.renderNametags.bind(this));
 		this.gameplayCamera = mp.cameras.new('gameplay');
+        mp.nametags.enabled = false;
     }
 
     private static renderNametags() {

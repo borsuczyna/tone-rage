@@ -119,7 +119,7 @@ export default class ElementDataService {
 	 * Get element type and ID from an element
 	 */
 	private static getElementInfo(element: PlayerMp | VehicleMp): string {
-		const elementId = element.id;
+		const elementId = element.remoteId;
 		const elementType = element.type === 'player' ? 'player' : 'vehicle';
 		return `${elementId}:${elementType}`;
 	}

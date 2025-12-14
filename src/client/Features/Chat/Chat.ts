@@ -61,7 +61,7 @@ export default class Chat {
 	}
 
 	private static onChatMessageReceive(ownerId: number | string, message: string, emblemas: Emblema[] = [], overrideName?: string) {
-		const owner = typeof ownerId === 'number' ? mp.players.at(ownerId) : ownerId;
+        const owner = typeof ownerId === 'number' ? mp.players.atRemoteId(ownerId) : ownerId;
 		const avatar = typeof owner === 'string' ? '' : ElementDataService.get(owner, 'avatar') || '';
 		let username = typeof owner === 'string' ? owner : owner.name;
 		emblemas = emblemas || [];

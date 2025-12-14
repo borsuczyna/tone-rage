@@ -1,6 +1,7 @@
 import { NotificationType } from '@shared/Models/NotificationType';
 import ElementDataService from '@/Services/Infrastructure/ElementDataService';
 import NotificationService from '@/Services/Infrastructure/NotificationService';
+import CommandService from '@/Services/Infrastructure/CommandService';
 
 /**
  * PlayerDataDisplayService - Debug feature to display all element data above players in 3D
@@ -17,10 +18,23 @@ export default class PlayerDataDisplay {
 		mp.events.add('render', this.onRender.bind(this));
 
 		// Register debug command to toggle display
-		mp.events.add('playerCommand', this.onCommand.bind(this));
+		// mp.events.add('playerCommand', this.onCommand.bind(this));
+        CommandService.registerCommandHandler({
+            command: '/toggledatadisplay',
+            description: 'Toggle the player data display debug feature',
+        }, this.toogleDataDisplay.bind(this));
 
 		mp.console.logInfo('PlayerDataDisplayService initialized (debug mode - use /toggledatadisplay to enable)');
 	}
+
+    private static toogleDataDisplay() {
+        this.isEnabled = !this.isEnabled;
+        NotificationService.addNotification(
+            NotificationType.Info,
+            'Player Data Display',
+            `Player data display: ${this.isEnabled ? 'enabled' : 'disabled'}`
+        );
+    }
 
 	/**
 	 * Handle player commands
@@ -72,6 +86,7 @@ export default class PlayerDataDisplay {
 
 			// Format data as key: value pairs
 			const dataLines: string[] = [];
+            dataLines.push(`Name: ${player.name} id: ${player.remoteId}`);
 			elementData.forEach((value: any, key: string) => {
 				// Convert value to string, handle objects/arrays
 				let valueStr: string;

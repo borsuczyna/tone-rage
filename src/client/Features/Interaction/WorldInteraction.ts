@@ -19,7 +19,6 @@ export default class WorldInteraction {
     private static latestClosestEntity: EntityMp | null = null;
 
     public static init() {
-        KeyboardService.registerKeyHandler('Shift', this.toggleWorldInteraction.bind(this));
         KeyboardService.registerKeyHandler('E', this.toggleWorldInteraction.bind(this));
         EventService.registerEventHandler('worldInteraction:onSelect', this.onInteractionSelected.bind(this));
         EventService.registerEventHandler('worldInteraction:isReady', this.onInterfaceReady.bind(this));
