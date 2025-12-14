@@ -177,7 +177,8 @@ export default class Marker {
 			this.colShape.destroy();
 		}
 
-		this.colShape = mp.colshapes.newSphere(this.position.x, this.position.y, this.position.z, this.scaleValue[0] / 2, this.dimension);
+        const scale = Math.max(this.scaleValue[0], this.scaleValue[1]) / 2;
+		this.colShape = mp.colshapes.newSphere(this.position.x, this.position.y, this.position.z, scale, this.dimension);
 	}
 
 	public serialize(): SerializedMarker {
