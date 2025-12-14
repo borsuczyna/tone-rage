@@ -2,44 +2,35 @@ import Marker from '../Entities/Marker';
 import MarkerType from '../Models/MarkerType';
 import MarkerEvent from '../Models/MarkerEvent';
 import MarkerHitType from '../Models/MarkerHitType';
-import isClientSide from '../isClientSide';
+import ColShapeService from './ColShapeService';
+import { ColShape, ColShapeHitType } from '../Entities/ColShape/ColShape';
 
 export default class MarkerService {
 	public static markers: Set<Marker> = new Set();
 	private static events: Set<MarkerEvent> = new Set();
 
 	public static init() {
-		mp.events.add('playerEnterColshape', this.onColshapeEnter.bind(this));
-		mp.events.add('playerExitColshape', this.onColshapeExit.bind(this));
+        ColShapeService.registerHandler(this.onColshapeEnter.bind(this), undefined, ColShapeHitType.Enter);
+        ColShapeService.registerHandler(this.onColshapeExit.bind(this), undefined, ColShapeHitType.Exit);
 	}
 
 	public static getMarkerById(id: string): Marker | null {
 		return Array.from(this.markers).find((marker) => marker.id === id) || null;
 	}
 
-	public static onColshapeEnter(player: PlayerMp, colshape: ColshapeMp) {
-		if (isClientSide) {
-			colshape = player as any; // On client side, colshape is the first parameter
-			player = mp.players.local;
-		}
-
+	public static onColshapeEnter(entity: EntityMp, colshape: ColShape) {
 		const marker = Array.from(MarkerService.markers).find((m) => m.colShape === colshape);
 		if (marker) {
-			marker._handleHit(MarkerHitType.Enter, player);
-			this._handleMarkerHit(marker, MarkerHitType.Enter, player);
+			marker._handleHit(MarkerHitType.Enter, entity);
+			this._handleMarkerHit(marker, MarkerHitType.Enter, entity);
 		}
 	}
 
-	public static onColshapeExit(player: PlayerMp, colshape: ColshapeMp) {
-		if (isClientSide) {
-			colshape = player as any; // On client side, colshape is the first parameter
-			player = mp.players.local;
-		}
-
+	public static onColshapeExit(entity: EntityMp, colshape: ColShape) {
 		const marker = Array.from(MarkerService.markers).find((m) => m.colShape === colshape);
 		if (marker) {
-			marker._handleHit(MarkerHitType.Exit, player);
-			this._handleMarkerHit(marker, MarkerHitType.Exit, player);
+			marker._handleHit(MarkerHitType.Exit, entity);
+			this._handleMarkerHit(marker, MarkerHitType.Exit, entity);
 		}
 	}
 
@@ -60,11 +51,11 @@ export default class MarkerService {
 		this.markers.delete(marker);
 	}
 
-	public static registerEventHandler(marker: Marker | null, callback: (hitType: MarkerHitType, player: PlayerMp, marker?: Marker) => void) {
+	public static registerEventHandler(marker: Marker | null, callback: (hitType: MarkerHitType, entity: EntityMp, marker?: Marker) => void) {
 		this.events.add({ marker, callback });
 	}
 
-	public static unregisterEventHandler(marker: Marker | null, callback: (hitType: MarkerHitType, player: PlayerMp, marker?: Marker) => void) {
+	public static unregisterEventHandler(marker: Marker | null, callback: (hitType: MarkerHitType, entity: EntityMp, marker?: Marker) => void) {
 		for (let event of this.events) {
 			if (event.marker === marker && event.callback === callback) {
 				this.events.delete(event);
@@ -73,10 +64,10 @@ export default class MarkerService {
 		}
 	}
 
-	public static _handleMarkerHit(marker: Marker, hitType: MarkerHitType, player: PlayerMp) {
+	public static _handleMarkerHit(marker: Marker, hitType: MarkerHitType, entity: EntityMp) {
 		for (let event of this.events) {
 			if (event.marker === marker || event.marker === null) {
-				event.callback(hitType, player, marker);
+				event.callback(hitType, entity, marker);
 			}
 		}
 	}

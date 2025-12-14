@@ -1,4 +1,4 @@
-import ColShapeService from "Services/ColShapeService";
+import ColShapeService from "../../Services/ColShapeService";
 
 export enum ColShapeType {
     Sphere = 'sphere',
@@ -20,6 +20,7 @@ export interface ColShapeHandler {
 
 export abstract class ColShape {
     public type: ColShapeType = ColShapeType.Sphere;
+    public dimension: number = 0;
     public elementsInside: Set<EntityMp> = new Set();
 
     constructor() {
@@ -31,7 +32,7 @@ export abstract class ColShape {
     }
 
     public update() {
-        const entitiesToCheck = ColShape.getEntitiesToCheck();
+        const entitiesToCheck = this.getEntitiesToCheck();
         entitiesToCheck.forEach((entity) => {
             const isInside = this.checkEntityInside(entity);
             const wasInside = this.elementsInside.has(entity);
@@ -53,16 +54,18 @@ export abstract class ColShape {
     public abstract renderDebug(): void;
     protected abstract checkEntityInside(_entity: EntityMp): boolean;
 
-    public static getEntitiesToCheck(): EntityMp[] {
+    public getEntitiesToCheck(): EntityMp[] {
         const entities: EntityMp[] = [];
         
         const playersForeachFunction = (mp.players as any).forEachInStreamRange || mp.players.forEach;
         playersForeachFunction.call(mp.players, (player: PlayerMp) => {
+            if (player.dimension !== this.dimension) return;
             entities.push(player);
         });
 
         const vehiclesForeachFunction = (mp.vehicles as any).forEachInStreamRange || mp.vehicles.forEach;
         vehiclesForeachFunction.call(mp.vehicles, (vehicle: VehicleMp) => {
+            if (vehicle.dimension !== this.dimension) return;
             entities.push(vehicle);
         });
 

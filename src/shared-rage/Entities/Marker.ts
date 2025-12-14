@@ -3,6 +3,9 @@ import MarkerService from '../Services/MarkerService';
 import MarkerHitType from '../Models/MarkerHitType';
 import SharedConfig from '@shared/SharedConfig';
 import { generateGuid } from '@shared/Hash';
+import { ColShape } from './ColShape/ColShape';
+import SphereColShape from './ColShape/SphereColShape';
+import BoxColShape from './ColShape/BoxColShape';
 
 export interface SerializedMarker {
 	id: string;
@@ -29,9 +32,9 @@ export default class Marker {
 	private iconValue: string = 'cart';
 	private upperTextValue: string = 'Marker';
 	private lowerTextValue: string = '';
-	public colShape: ColshapeMp = null!;
+	public colShape: ColShape = null!;
 	public resyncToPlayers = false;
-	public insideMarker: Set<PlayerMp> = new Set();
+	public insideMarker: Set<EntityMp> = new Set();
 
 	constructor(position: Vector3, color: RGBA, scale: number | [number, number] | [number, number, number], type: MarkerType = MarkerType.Cylinder, dimension: number = 0, hitDistance?: number) {
 		hitDistance = hitDistance || (Array.isArray(scale) ? scale[0] : scale);
@@ -44,11 +47,11 @@ export default class Marker {
 		this.createColshape();
 	}
 
-	public _handleHit(hitType: MarkerHitType, player: PlayerMp) {
+	public _handleHit(hitType: MarkerHitType, entity: EntityMp) {
 		if (hitType === MarkerHitType.Enter) {
-			this.insideMarker.add(player);
+			this.insideMarker.add(entity);
 		} else {
-			this.insideMarker.delete(player);
+			this.insideMarker.delete(entity);
 		}
 	}
 
@@ -68,7 +71,15 @@ export default class Marker {
 
 	public set position(value: Vector3) {
 		this.positionValue = value;
-		this.createColshape();
+
+        if (this.colShape) {
+            if (this.colShape instanceof SphereColShape) {
+                (this.colShape as SphereColShape).position = value;
+            } else if (this.colShape instanceof BoxColShape) {
+                (this.colShape as BoxColShape).position = value;
+            }
+        }
+
 		this.resyncToPlayers = true;
 	}
 
@@ -84,8 +95,16 @@ export default class Marker {
 		this.scaleValue = Array.isArray(value) ? (
             value.length === 2 ? [value[0], value[1], 0] : value
         ) : [value, value, 0];
-		this.createColshape();
-		this.resyncToPlayers = true;
+
+        if (this.colShape) {
+            if (this.colShape instanceof SphereColShape) {
+                (this.colShape as SphereColShape).radius = this.scaleValue[0] / 2;
+            } else if (this.colShape instanceof BoxColShape) {
+                (this.colShape as BoxColShape).size = new mp.Vector3(this.scaleValue[0], this.scaleValue[1], 5);
+            }
+        }
+
+        this.resyncToPlayers = true;
 	}
 
 	public get type(): MarkerType {
@@ -103,7 +122,11 @@ export default class Marker {
 
 	public set dimension(value: number) {
 		this.dimensionValue = value;
-		this.createColshape();
+
+        if (this.colShape) {
+            this.colShape.dimension = value;
+        }
+
 		this.resyncToPlayers = true;
 	}
 
@@ -164,21 +187,31 @@ export default class Marker {
 		MarkerService._destroyInternal(this);
 	}
 
-	public registerEventHandler(callback: (hitType: MarkerHitType, player: PlayerMp, marker?: Marker) => void) {
+	public registerEventHandler(callback: (hitType: MarkerHitType, entity: EntityMp, marker?: Marker) => void) {
 		MarkerService.registerEventHandler(this, callback);
 	}
 
-	public unregisterEventHandler(callback: (hitType: MarkerHitType, player: PlayerMp, marker?: Marker) => void) {
+	public unregisterEventHandler(callback: (hitType: MarkerHitType, entity: EntityMp, marker?: Marker) => void) {
 		MarkerService.unregisterEventHandler(this, callback);
 	}
 
 	private createColshape() {
-		if (this.colShape) {
-			this.colShape.destroy();
-		}
+        if (this.type === MarkerType.Cylinder) {
+            this.colShape = new SphereColShape(
+                this.position,
+                this.scaleValue[0] / 2
+            );
+        } else {
+            this.colShape = new BoxColShape(
+                this.position,
+                new mp.Vector3(this.scaleValue[0], this.scaleValue[1], 5),
+                this.scaleValue[2]
+            );
+        }
 
-        const scale = Math.max(this.scaleValue[0], this.scaleValue[1]) / 2;
-		this.colShape = mp.colshapes.newSphere(this.position.x, this.position.y, this.position.z, scale, this.dimension);
+        if (mp.console) {
+            mp.console.logInfo(`Created colshape for marker ${this.id} of type ${MarkerType[this.type]}`);
+        }
 	}
 
 	public serialize(): SerializedMarker {

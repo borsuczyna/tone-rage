@@ -1,6 +1,6 @@
 import TimerService from "@shared/Services/TimerService";
 import SharedConfig from "@shared/SharedConfig";
-import { ColShape, ColShapeEventCallback, ColShapeHandler, ColShapeHitType } from "Entities/ColShape/ColShape";
+import { ColShape, ColShapeEventCallback, ColShapeHandler, ColShapeHitType } from "../Entities/ColShape/ColShape";
 
 const isClientSide = typeof mp !== 'undefined' && typeof mp.game !== 'undefined';
 

@@ -43,9 +43,9 @@ export default class MarkerTest {
 		this.cylinder.registerEventHandler(this.onCylinderHit.bind(this));
 	}
 
-	private static onCylinderHit(hitType: MarkerHitType, player: PlayerMp) {
+	private static onCylinderHit(hitType: MarkerHitType, entity: EntityMp) {
 		if (hitType === MarkerHitType.Enter) {
-			console.log(`Player ${player.id} entered cylinder marker.`);
+			console.log(`Player ${entity.id} entered cylinder marker.`);
 			const pos = this.cylinder.position;
 			this.cylinder.position = new mp.Vector3(pos.x + 1, pos.y, pos.z);
 			this.cylinder.color = [Math.floor(Math.random() * 255), Math.floor(Math.random() * 255), Math.floor(Math.random() * 255), 155];
@@ -55,7 +55,7 @@ export default class MarkerTest {
 				1
 			)}, ${this.cylinder.position.z.toFixed(1)})`;
 		} else if (hitType === MarkerHitType.Exit) {
-			console.log(`Player ${player.id} exited cylinder marker.`);
+			console.log(`Player ${entity.id} exited cylinder marker.`);
 		}
 	}
 }
