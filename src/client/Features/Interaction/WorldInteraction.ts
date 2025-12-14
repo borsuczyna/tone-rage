@@ -5,12 +5,13 @@ import EventService from "@/Services/Infrastructure/EventService";
 import ElementDataService from "@/Services/Infrastructure/ElementDataService";
 import TimerService from "@shared/Services/TimerService";
 import DrawingService from "@/Services/Rendering/DrawingService";
-import { WorldInteractionHandler, WorldInteractionListener } from "@shared-rage/Models/WorldInteractionListener";
+import { WorldInteractionHandler, WorldInteractionHandlerWithIndex, WorldInteractionListener } from "@shared-rage/Models/WorldInteractionListener";
 import { WorldInteractionItem } from "@shared/Models/WorldInteraction";
 
 export default class WorldInteraction {
     private static worldInteractionListeners: WorldInteractionListener[] = [];
     private static worldInteractions: WorldInteractionHandler[] = [];
+    private static activeWorldInteraction: WorldInteractionHandlerWithIndex[] = [];
     private static hiding: boolean = false;
     private static ready: boolean = false;
     private static overlayBatch: EntityOverlayBatch = null!;
@@ -98,7 +99,7 @@ export default class WorldInteraction {
     }
 
     private static onInteractionSelected(index: number) {
-        const interaction = this.worldInteractions[index];
+        const interaction = this.activeWorldInteraction.find(i => i.index === index);
         if (!interaction) return;
 
         interaction.action();
@@ -202,13 +203,13 @@ export default class WorldInteraction {
             return;
         }
 
-        const interactions = this.latestClosestEntity ? this.worldInteractions.map((interaction, index) => ({ ...interaction, index })).filter(interaction => interaction.entity === this.latestClosestEntity) : [];
+        this.activeWorldInteraction = this.latestClosestEntity ? this.worldInteractions.map<WorldInteractionHandlerWithIndex>((interaction, index) => ({ ...interaction, index })).filter(interaction => interaction.entity === this.latestClosestEntity) : [];
 
-        const interfaceInteractions: WorldInteractionItem[] = interactions.map(interaction => ({
+        const interfaceInteractions: WorldInteractionItem[] = this.activeWorldInteraction?.map(interaction => ({
             icon: interaction.icon,
             label: interaction.label,
             index: interaction.index
-        }));
+        })) ?? [];
 
         InterfaceService.callInterfaceEvent('worldInteraction:updateInteractions', interfaceInteractions);
     }

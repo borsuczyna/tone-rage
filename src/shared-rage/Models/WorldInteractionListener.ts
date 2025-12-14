@@ -6,4 +6,6 @@ export interface WorldInteractionHandler extends WorldInteractionItem {
     priority?: number;
 }
 
+export type WorldInteractionHandlerWithIndex = WorldInteractionHandler & { index: number };
+
 export type WorldInteractionListener = () => WorldInteractionHandler | WorldInteractionHandler[] | null;
