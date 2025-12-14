@@ -46,7 +46,7 @@ export default class MarkerService {
 	public static createMarker(
 		position: Vector3,
 		color: RGBA,
-		scale: number,
+		scale: number | [number, number] | [number, number, number],
 		type: MarkerType = MarkerType.Cylinder,
 		dimension: number = 0,
 		hitDistance?: number

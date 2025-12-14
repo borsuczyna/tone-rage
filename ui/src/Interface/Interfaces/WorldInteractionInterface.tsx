@@ -7,6 +7,7 @@ import { triggerEvent } from 'src/Hooks/Fetch';
 import { useInterfaceVisibility } from 'src/Hooks/InterfaceVisibilityProvider';
 import { useRageEvent } from 'src/Hooks/RageEventProvider';
 import { getRemAsPx } from '../Main';
+import translate from '@shared/Translation/Translation';
 
 function InteractionItem({ icon, label, active }: WorldInteractionItem & { active: boolean }) {
     const IconComponent = (Icons as any)[icon];
@@ -138,7 +139,12 @@ export default function WorldInteractionInterface() {
 
     return (
         <div className={csx(!hasActiveEntity && styles.noActiveEntity, isPointInsideMenu && styles.pointInsideMenu)}>
-            <div className={csx(styles.vinette, isHiding && styles.hiding)}></div>
+            <div className={csx(styles.vinette, isHiding && styles.hiding)}>
+                <div className={styles.worldInteractionText}>
+                    <h3>{translate('worldInteraction.title')}</h3>
+                    <span>{translate('worldInteraction.instructions')}</span>
+                </div>
+            </div>
 
             <div
                 className={csx(styles.worldInteraction, isHiding && styles.hiding)}

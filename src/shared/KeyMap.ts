@@ -110,7 +110,7 @@ export const KeyMap = {
 	// Meta / Windows / Context keys
 	Meta: 91,
 	MetaRight: 92,
-	ContextMenu: 93
+	ContextMenu: 93,
 } as const;
 
 export type InputKey = keyof typeof KeyMap;

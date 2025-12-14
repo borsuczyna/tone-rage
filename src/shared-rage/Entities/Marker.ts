@@ -8,7 +8,7 @@ export interface SerializedMarker {
 	id: string;
 	position: Vector3;
 	color: RGBA;
-	scale: number;
+	scale: [number, number, number];
 	type: MarkerType;
 	dimension: number;
 	icon: string;
@@ -22,7 +22,7 @@ export default class Marker {
 	private colorValue: RGBA = [255, 255, 255, 255];
 	private colorLighterCache: Map<number, RGBA> = new Map();
 	public id: string = generateGuid();
-	private scaleValue: number = 0;
+	private scaleValue: [number, number, number] = [0, 0, 0];
 	private typeValue: MarkerType = MarkerType.Cylinder;
 	private dimensionValue: number = 0;
 	private renderDistanceValue: number = SharedConfig.MarkerRenderDistance;
@@ -33,8 +33,8 @@ export default class Marker {
 	public resyncToPlayers = false;
 	public insideMarker: Set<PlayerMp> = new Set();
 
-	constructor(position: Vector3, color: RGBA, scale: number, type: MarkerType = MarkerType.Cylinder, dimension: number = 0, hitDistance?: number) {
-		hitDistance = hitDistance || scale;
+	constructor(position: Vector3, color: RGBA, scale: number | [number, number] | [number, number, number], type: MarkerType = MarkerType.Cylinder, dimension: number = 0, hitDistance?: number) {
+		hitDistance = hitDistance || (Array.isArray(scale) ? scale[0] : scale);
 
 		this.position = position;
 		this.color = color;
@@ -72,12 +72,18 @@ export default class Marker {
 		this.resyncToPlayers = true;
 	}
 
-	public get scale(): number {
-		return this.scaleValue;
+	public get scale(): number | [number, number, number] {
+        if (this.typeValue === MarkerType.Box) {
+            return this.scaleValue;
+        }
+
+        return this.scaleValue[0];
 	}
 
-	public set scale(value: number) {
-		this.scaleValue = value;
+	public set scale(value: number | [number, number] | [number, number, number]) {
+		this.scaleValue = Array.isArray(value) ? (
+            value.length === 2 ? [value[0], value[1], 0] : value
+        ) : [value, value, 0];
 		this.createColshape();
 		this.resyncToPlayers = true;
 	}
@@ -171,7 +177,7 @@ export default class Marker {
 			this.colShape.destroy();
 		}
 
-		this.colShape = mp.colshapes.newSphere(this.position.x, this.position.y, this.position.z, this.scale / 2, this.dimension);
+		this.colShape = mp.colshapes.newSphere(this.position.x, this.position.y, this.position.z, this.scaleValue[0] / 2, this.dimension);
 	}
 
 	public serialize(): SerializedMarker {
@@ -179,7 +185,7 @@ export default class Marker {
 			id: this.id,
 			position: this.position,
 			color: this.color,
-			scale: this.scale,
+			scale: this.scaleValue,
 			type: this.type,
 			dimension: this.dimension,
 			icon: this.icon,

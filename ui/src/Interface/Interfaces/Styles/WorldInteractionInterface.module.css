@@ -119,6 +119,28 @@
     animation: dash 10s linear infinite, fadeOutLine 0.2s ease-in-out;
 }
 
+.worldInteractionText {
+    position: fixed;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    max-width: 30rem;
+    color: #eee;
+    font-size: 0.85rem;
+}
+
+.worldInteractionText h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.worldInteractionText span {
+    font-weight: 400;
+    opacity: 0.9;
+}
+
 @keyframes fadeInScale {
     0% {
         opacity: 0;

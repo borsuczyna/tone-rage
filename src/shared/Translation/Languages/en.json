@@ -237,6 +237,9 @@
     "interaction_wheel.vehicle.title": "Vehicle",
     "interaction_wheel.vehicle.subtitle": "Interactions",
 
+    "worldInteraction.title": "World Interaction",
+    "worldInteraction.instructions": "Aim at highlighted objects and then select interaction using the mouse wheel or arrow keys, to accept press Enter or Left Mouse Button.",
+
     "discord.rpc.driving": "Driving",
     "discord.rpc.at": "at",
     "discord.rpc.walking": "Walking",

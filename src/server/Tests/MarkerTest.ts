@@ -26,6 +26,20 @@ export default class MarkerTest {
 			MarkerType.Cylinder
 		);
 
+        MarkerService.createMarker(
+            new mp.Vector3(-34.44065856933594, 33.07141876220703, 71.95735168457031),
+            [255, 255, 0, 155],
+            [2, 4.5],
+            MarkerType.Box
+        );
+
+        MarkerService.createMarker(
+            new mp.Vector3(-39.44065856933594, 33.07141876220703, 71.95735168457031),
+            [255, 255, 0, 155],
+            [2, 4.5, 45],
+            MarkerType.Box
+        );
+
 		this.cylinder.registerEventHandler(this.onCylinderHit.bind(this));
 	}
 
@@ -35,7 +49,7 @@ export default class MarkerTest {
 			const pos = this.cylinder.position;
 			this.cylinder.position = new mp.Vector3(pos.x + 1, pos.y, pos.z);
 			this.cylinder.color = [Math.floor(Math.random() * 255), Math.floor(Math.random() * 255), Math.floor(Math.random() * 255), 155];
-			this.cylinder.scale += 0.5;
+			this.cylinder.scale = (this.cylinder.scale as number) + 0.5;
 			this.cylinder.upperText = `Scale: ${this.cylinder.scale.toFixed(1)}`;
 			this.cylinder.lowerText = `Pos: (${this.cylinder.position.x.toFixed(1)}, ${this.cylinder.position.y.toFixed(
 				1

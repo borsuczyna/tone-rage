@@ -86,13 +86,15 @@ export default class WorldInteraction {
             }
 
             this.worldInteractions = this.getWorldInteractions();
-            if (this.worldInteractions.length === 0) return;
+            // if (this.worldInteractions.length === 0) return;
 
             InterfaceService.setInterfaceVisible('WorldInteractionInterface', true);
+            InterfaceService.setCursorVisible(true, false);
             this.latestClosestEntity = null;
             this.ready = false;
         } else if (state === KeyState.Up && InterfaceService.isInterfaceVisible('WorldInteractionInterface')) {
             InterfaceService.callInterfaceEvent('worldInteraction:playHideAnimation', null);
+            InterfaceService.setCursorVisible(false, false);
             TimerService.setTimer(this.finallyHideInterface.bind(this), 200, 1);
             this.hiding = true;
         }
@@ -113,6 +115,7 @@ export default class WorldInteraction {
 
     private static finallyHideInterface() {
         InterfaceService.setInterfaceVisible('WorldInteractionInterface', false);
+        InterfaceService.setCursorVisible(false, false);
         this.hiding = false;
     }
 
