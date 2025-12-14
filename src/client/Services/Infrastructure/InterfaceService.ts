@@ -1,6 +1,7 @@
 import Logger from '@shared/Logger';
 import TimerService from '@shared/Services/TimerService';
 import { chunkData, ChunkAssembler, DataChunk } from '@shared/ChunkingUtils';
+import { cursors } from '@/Models/Cursor';
 
 export default class InterfaceService {
 	private static browser: BrowserMp = null!;
@@ -25,9 +26,19 @@ export default class InterfaceService {
 		// Bind F3 key for cursor toggle
 		this.setupCursorToggle();
 
+        // Register custom cursors
+        this.registerCursors();
+
 		// Set timer to update cursor state
 		TimerService.setTimer(this.updateCursor.bind(this), 500, 0);
 	}
+
+    private static registerCursors() {
+        for (const cursor of cursors) {
+            const offset = cursor.offset || [0, 0];
+            mp.gui.cursor.registerCustomIcon(cursor.type, cursor.path, offset[0], offset[1]);
+        }
+    }
 
 	public static callInterfaceEvent(eventName: string, data: any) {
 		if (!this.browser) {
