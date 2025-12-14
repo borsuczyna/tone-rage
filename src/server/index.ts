@@ -19,6 +19,7 @@ import Chat from './Features/Chat/Chat';
 import CommandService from './Services/Infrastructure/CommandService';
 import RealTime from './Features/Core/RealTime';
 import InitMessage from './InitMessage';
+import ColShapeService from '@shared-rage/Services/ColShapeService';
 
 (async () => {
 	await Database.init();
@@ -36,6 +37,7 @@ import InitMessage from './InitMessage';
 	await Chat.init();
 	await CommandService.init();
 	await RealTime.init();
+    await ColShapeService.init();
 
 	// Features
 	await Atm.init();

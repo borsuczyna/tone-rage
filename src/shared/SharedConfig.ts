@@ -13,7 +13,8 @@ const SharedConfig = {
     PlayerNametagTextureHeight: 90,
 	LocalChatRange: 30.0,
 	MaxChatMessageLength: 256,
-	ChatMessageTimeout: 1 // in seconds
+	ChatMessageTimeout: 1, // in seconds
+	ColShapeDebug: true
 };
 
 export default SharedConfig;

@@ -21,6 +21,7 @@ import CommandService from './Services/Infrastructure/CommandService';
 import WorldInteraction from './Features/Interaction/WorldInteraction';
 import VehicleInteraction from './Features/Interaction/VehicleInteraction';
 import PlayerNametags from './Features/Nametags/PlayerNametags';
+import ColShapeService from '@shared-rage/Services/ColShapeService';
 // import EventServiceTest from './Tests/EventServiceTest';
 // import ElementDataServiceTest from './Tests/ElementDataServiceTest';
 // import InterfaceServiceTest from './Tests/InterfaceServiceTest';
@@ -48,6 +49,7 @@ import PlayerNametags from './Features/Nametags/PlayerNametags';
 	await DrawingService.init();
 	await Chat.init();
 	await CommandService.init();
+    await ColShapeService.init();
 
 	// Features
 	await Atm.init();
