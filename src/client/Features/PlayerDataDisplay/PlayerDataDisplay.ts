@@ -18,7 +18,6 @@ export default class PlayerDataDisplay {
 		mp.events.add('render', this.onRender.bind(this));
 
 		// Register debug command to toggle display
-		// mp.events.add('playerCommand', this.onCommand.bind(this));
         CommandService.registerCommandHandler({
             command: '/toggledatadisplay',
             description: 'Toggle the player data display debug feature',
@@ -35,33 +34,6 @@ export default class PlayerDataDisplay {
             `Player data display: ${this.isEnabled ? 'enabled' : 'disabled'}`
         );
     }
-
-	/**
-	 * Handle player commands
-	 */
-	private static onCommand(command: string) {
-		if (command === 'toggledatadisplay') {
-			this.isEnabled = !this.isEnabled;
-			NotificationService.addNotification(
-				NotificationType.Info,
-				'Player Data Display',
-				`Player data display: ${this.isEnabled ? 'enabled' : 'disabled'}`
-			);
-		} else if (command.startsWith('adddata')) {
-			// Example command: /adddata key value
-			const parts = command.split(' ');
-			if (parts.length < 3) {
-				NotificationService.addNotification(NotificationType.Warning, 'Player Data Display', 'Usage: /adddata key value');
-				return;
-			}
-
-			const key = parts[1];
-			const value = parts.slice(2).join(' ');
-
-			// Add the data to the element
-			ElementDataService.set(mp.players.local, key, value);
-		}
-	}
 
 	/**
 	 * Render handler - called every frame

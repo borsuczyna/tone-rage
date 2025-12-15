@@ -26,32 +26,36 @@ export default class Chat {
 	}
 
 	private static onChatMessageSend(client: PlayerMp, message: string) {
-		message = message.trim();
-		if (message.length === 0) {
-			return;
-		}
+        try {
+            message = String(message);
 
-		if (this.isPlayerInTimeout(client.id)) {
-			NotificationService.addNotification(client, NotificationType.Error, translate('default.error'), translate('chat.messageTimeout'));
-			return;
-		}
+            message = message.trim();
+            if (message.length === 0) {
+                return;
+            }
 
-		const userId = ElementDataService.get(client, 'userId');
-		if (!userId) {
-			this.logger.warn(`Player ${client.name} tried to send a message without being authenticated.`);
-			return;
-		}
+            if (this.isPlayerInTimeout(client.id)) {
+                NotificationService.addNotification(client, NotificationType.Error, translate('default.error'), translate('chat.messageTimeout'));
+                return;
+            }
 
-		if (message.length > SharedConfig.MaxChatMessageLength) {
-			this.logger.warn(`Player ${client.name} tried to send a message exceeding max length.`);
-			NotificationService.addNotification(client, NotificationType.Error, translate('default.error'), translate('chat.messageTooLong'));
-			return;
-		}
+            const userId = ElementDataService.get(client, 'userId');
+            if (!userId) {
+                this.logger.warn(`Player ${client.name} tried to send a message without being authenticated.`);
+                return;
+            }
 
-		const playersInRange = this.getPlayersInRange(client.position, SharedConfig.LocalChatRange);
-		for (const player of playersInRange) {
-			this.outputChatMessage(player, client, message);
-		}
+            if (message.length > SharedConfig.MaxChatMessageLength) {
+                this.logger.warn(`Player ${client.name} tried to send a message exceeding max length.`);
+                NotificationService.addNotification(client, NotificationType.Error, translate('default.error'), translate('chat.messageTooLong'));
+                return;
+            }
+
+            const playersInRange = this.getPlayersInRange(client.position, SharedConfig.LocalChatRange);
+            for (const player of playersInRange) {
+                this.outputChatMessage(player, client, message);
+            }
+        } catch (e) {}
 	}
 
 	public static outputChatMessage(player: PlayerMp, owner: PlayerMp | string, message: string, emblemas: Emblema[] = [], overrideName?: string) {

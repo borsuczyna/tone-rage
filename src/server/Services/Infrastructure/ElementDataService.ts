@@ -135,21 +135,27 @@ export default class ElementDataService {
 	 * clients from bypassing permission restrictions.
 	 */
 	private static onClientSetElementData(client: PlayerMp, elementId: string, shareMode: ShareMode, key: string, value: any) {
-		// Check if client has permission to write this key
-		if (!canSyncElementDataKey(key, shareMode)) {
-			this.logger.warn(`Client ${client.name} attempted to set element data key '${key}' with invalid share mode`);
-			return;
-		}
+        try {
+            elementId = String(elementId);
+			shareMode = String(shareMode) as ShareMode;
+            key = String(key);
+            
+            // Check if client has permission to write this key
+            if (!canSyncElementDataKey(key, shareMode)) {
+                this.logger.warn(`Client ${client.name} attempted to set element data key '${key}' with invalid share mode`);
+                return;
+            }
 
-		// Get the element
-		const element = this.getElementByIdAndType(elementId);
-		if (!element) {
-			this.logger.warn(`Client ${client.name} attempted to set element data for non-existent element ${elementId}`);
-			return;
-		}
+            // Get the element
+            const element = this.getElementByIdAndType(elementId);
+            if (!element) {
+                this.logger.warn(`Client ${client.name} attempted to set element data for non-existent element ${elementId}`);
+                return;
+            }
 
-		// Set the data
-		this.set(element, key, value, shareMode, client);
+            // Set the data
+            this.set(element, key, value, shareMode, client);
+        } catch (e) {}
 	}
 
 	/**

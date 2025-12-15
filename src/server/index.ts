@@ -6,14 +6,10 @@ import ElementDataService from './Services/Infrastructure/ElementDataService';
 import FetchService from './Services/Infrastructure/FetchService';
 import ShutdownService from './Services/Infrastructure/ShutdownService';
 import PrivateVehicleService from './Services/Core/PrivateVehicleService';
-import Tests from './Tests/Tests';
 import SpawnService from './Services/Core/SpawnService';
 import UserService from './Services/Core/UserService';
-import MoneyServiceTest from './Tests/MoneyServiceTest';
 import Atm from './Features/Atm/Atm';
-import MarkerTest from './Tests/MarkerTest';
 import MarkerService from '@shared-rage/Services/MarkerService';
-import VehicleInteraction from './Features/Interaction/VehicleInteraction';
 import MarkerServerService from './Services/Infrastructure/MarkerServerService';
 import Chat from './Features/Chat/Chat';
 import CommandService from './Services/Infrastructure/CommandService';
@@ -44,15 +40,7 @@ import WinterSeason from './Features/Core/WinterSeason';
 
 	// Features
 	await Atm.init();
-	await VehicleInteraction.init();
     await WinterSeason.init();
-
-	// Debug
-	Tests.getPositionCommandTest();
-	Tests.createVehicleCommandTest();
-	Tests.createTimeCommandTest();
-	MoneyServiceTest.init();
-	MarkerTest.init();
 
     InitMessage.print();
 })();

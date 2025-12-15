@@ -25,12 +25,6 @@ import ColShapeService from '@shared-rage/Services/ColShapeService';
 import PlayerControlService from './Services/Gameplay/PlayerControlService';
 import VehicleService from './Services/Core/VehicleService';
 import WinterSeason from './Features/Core/WinterSeason';
-// import EventServiceTest from './Tests/EventServiceTest';
-// import ElementDataServiceTest from './Tests/ElementDataServiceTest';
-// import InterfaceServiceTest from './Tests/InterfaceServiceTest';
-// import FetchServiceTest from './Tests/FetchServiceTest';
-// import NotificationServiceTest from './Tests/NotificationServiceTest';
-// import PlayerDataDisplayServiceTest from './Tests/PlayerDataDisplayServiceTest';
 
 (async () => {
 	await DiscordRPC.init();
@@ -62,10 +56,4 @@ import WinterSeason from './Features/Core/WinterSeason';
 	await VehicleInteraction.init();
     await PlayerNametags.init();
     await WinterSeason.init();
-	// EventServiceTest.init();
-	// ElementDataServiceTest.init();
-	// InterfaceServiceTest.init();
-	// FetchServiceTest.init();
-	// NotificationServiceTest.init();
-	// PlayerDataDisplayServiceTest.init();
 })();

@@ -49,6 +49,7 @@ export default function AtmInterface() {
             setDataLoaded(true);
         } catch (error) {
             console.error('Failed to fetch ATM data:', error);
+            triggerEvent('atm:closeInterface');
         } finally {
             setIsLoading(false);
         }

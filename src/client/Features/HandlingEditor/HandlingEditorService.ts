@@ -16,7 +16,6 @@ export default class HandlingEditorService {
 	 */
 	public static init() {
 		// Register command to toggle handling editor
-		// mp.events.add('playerCommand', this.onCommand.bind(this));
         CommandService.registerCommandHandler({
             command: '/he',
             description: 'Toggle Handling Editor',

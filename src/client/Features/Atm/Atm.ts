@@ -55,15 +55,13 @@ export default class Atm {
 		}
 	}
 
-	private static onAtmMarkerHit(hitType: MarkerHitType, player: PlayerMp, marker?: Marker) {
-		if (!marker || !this.atmMarkers.has(marker) || player !== mp.players.local) {
+	private static onAtmMarkerHit(hitType: MarkerHitType, entity: EntityMp, marker?: Marker) {
+		if (!marker || !this.atmMarkers.has(marker) || entity !== mp.players.local) {
 			return;
 		}
 
 		if (hitType === MarkerHitType.Enter) {
 			this.setVisible(true);
-		} else if (hitType === MarkerHitType.Exit) {
-			this.setVisible(false);
 		}
 	}
 

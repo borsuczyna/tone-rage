@@ -31,15 +31,19 @@ export default class CommandService {
 	}
 
 	public static executeCommand(player: PlayerMp, commandLine: string) {
-		const parts = commandLine.split(' ');
-		const commandName = parts[0].toLowerCase();
-		const args = parts.slice(1);
+        try {
+            commandLine = String(commandLine);
 
-		if (this.commands.has(commandName)) {
-			const commandData = this.commands.get(commandName)!;
-			for (const listener of commandData.listeners) {
-				listener(player, ...args);
-			}
-		}
+            const parts = commandLine.split(' ');
+            const commandName = parts[0].toLowerCase();
+            const args = parts.slice(1);
+
+            if (this.commands.has(commandName)) {
+                const commandData = this.commands.get(commandName)!;
+                for (const listener of commandData.listeners) {
+                    listener(player, ...args);
+                }
+            }
+        } catch (e) {}
 	}
 }
