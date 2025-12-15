@@ -25,6 +25,7 @@ import ColShapeService from '@shared-rage/Services/ColShapeService';
 import PlayerControlService from './Services/Gameplay/PlayerControlService';
 import VehicleService from './Services/Core/VehicleService';
 import WinterSeason from './Features/Core/WinterSeason';
+import UserService from './Services/Core/UserService';
 
 (async () => {
 	await DiscordRPC.init();
@@ -49,6 +50,7 @@ import WinterSeason from './Features/Core/WinterSeason';
     await ColShapeService.init();
     await PlayerControlService.init();
     await VehicleService.init();
+    await UserService.init();
 
 	// Features
 	await Atm.init();

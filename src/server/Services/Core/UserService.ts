@@ -24,8 +24,14 @@ export default class UserService {
 	private static logger = Logger.getLogger(UserService, true);
 
 	public static init() {
+        mp.events.add('playerJoin', this.onPlayerJoin.bind(this));
 		mp.events.add('playerQuit', this.onPlayerQuit.bind(this));
-		TimerService.setTimer(this.savePlayers.bind(this), Config.SaveInterval.Users, 0); // Save every 60 seconds
+
+        // Save all players periodically
+		TimerService.setTimer(this.savePlayers.bind(this), Config.SaveInterval.Users, 0);
+
+        // Update frozen players
+        TimerService.setTimer(this.updateFrozenPlayers.bind(this), 500, 0);
 	}
 
 	public static async createUser(username: string, email: string, password: string): Promise<CreateUserResult> {
@@ -142,21 +148,25 @@ export default class UserService {
 		this.logger.info(`Saved ${players.length} players to database`);
 	}
 
-	private static async onPlayerQuit(client: PlayerMp): Promise<void> {
+    private static onPlayerJoin(client: PlayerMp) {
+        this.setPlayerFrozen(client, true);
+    }
+
+	private static onPlayerQuit(client: PlayerMp) {
 		this.savePlayerData(client);
 		this.logger.info(`Saved data for player ${client.name} (ID: ${client.id}) on quit`);
 	}
 
-	public static async spawnPlayerAtLocation(client: PlayerMp, spawn: SpawnLocation): Promise<void> {
+	public static spawnPlayerAtLocation(client: PlayerMp, spawn: SpawnLocation) {
 		client.position = new mp.Vector3(spawn.position[0], spawn.position[1], spawn.position[2]);
 		client.heading = spawn.position[3] || 0;
 		client.alpha = 255;
 		ElementDataService.set(client, 'spawnPosition', spawn.position, ShareMode.SpecificClient);
-        this.setPlayerFrozen(client, true);
+        this.setPlayerFrozen(client, false);
 	}
 
     public static setPlayerFrozen(client: PlayerMp, frozen: boolean) {
-        ElementDataService.set(client, 'isFrozen', frozen, ShareMode.SpecificClient);
+        ElementDataService.set(client, 'isFrozen', frozen, ShareMode.Everywhere);
 
         if (frozen) {
             ElementDataService.set(client, 'freezePosition', client.position, ShareMode.Local);
@@ -171,6 +181,21 @@ export default class UserService {
 
     public static getPlayerFrozenPosition(client: PlayerMp): Vector3 | null {
         return ElementDataService.get(client, 'freezePosition') as Vector3 || null;
+    }
+
+    private static updateFrozenPlayers(): void {
+        const players = mp.players.toArray();
+        for (const player of players) {
+            if (this.isPlayerFrozen(player)) {
+                const freezePos = this.getPlayerFrozenPosition(player);
+                if (!freezePos) continue;
+
+                const length = player.position.subtract(freezePos!).length();
+                if (length > 0.1) {
+                    player.position = freezePos;
+                }
+            }
+        }
     }
 
 	public static getActivePlayerByUserId(userId: number): PlayerMp | null {
