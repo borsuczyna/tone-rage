@@ -5,7 +5,7 @@ import EventService from './Services/Infrastructure/EventService';
 import ElementDataService from './Services/Infrastructure/ElementDataService';
 import FetchService from './Services/Infrastructure/FetchService';
 import ShutdownService from './Services/Infrastructure/ShutdownService';
-import VehicleService from './Services/Core/VehicleService';
+import PrivateVehicleService from './Services/Core/PrivateVehicleService';
 import Tests from './Tests/Tests';
 import SpawnService from './Services/Core/SpawnService';
 import UserService from './Services/Core/UserService';
@@ -20,13 +20,14 @@ import CommandService from './Services/Infrastructure/CommandService';
 import RealTime from './Features/Core/RealTime';
 import InitMessage from './InitMessage';
 import ColShapeService from '@shared-rage/Services/ColShapeService';
+import VehicleService from './Services/Core/VehicleService';
 
 (async () => {
 	await Database.init();
 	await EventService.init();
 	await ElementDataService.init();
 	await AnticheatService.init();
-	await VehicleService.init();
+	await PrivateVehicleService.init();
 	await ShutdownService.init();
 	await FetchService.init();
 	await AuthService.init();
@@ -38,6 +39,7 @@ import ColShapeService from '@shared-rage/Services/ColShapeService';
 	await CommandService.init();
 	await RealTime.init();
     await ColShapeService.init();
+    await VehicleService.init();
 
 	// Features
 	await Atm.init();

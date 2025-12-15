@@ -1,91 +1,59 @@
-import { Config } from '@/Config';
-import Database from '@/Database/Database';
-import { VehicleEntity } from '@/Database/Entities/VehicleEntity';
-import PrivateVehicle from '@/Entities/PrivateVehicle';
-import Logger from '@shared/Logger';
-import TimerService from '@shared/Services/TimerService';
+import { NotificationType } from "@shared/Models/NotificationType";
+import EventService from "../Infrastructure/EventService";
+import NotificationService from "../Infrastructure/NotificationService";
+import translate from "@shared/Translation/Translation";
+import ElementDataService from "../Infrastructure/ElementDataService";
+import { ShareMode } from "@shared/Models/ElementDataModels";
 
 export default class VehicleService {
-	private static vehicles: PrivateVehicle[] = [];
-	private static logger: Logger = Logger.getLogger(VehicleService, true);
+    public static init() {
+        mp.events.add('entityCreated', this.onEntityCreated.bind(this));
+        EventService.registerEventHandler('vehicleService:setEngineState', this.setEngineStateHandler.bind(this));
+        EventService.registerEventHandler('vehicleService:setLightsState', this.setLightsStateHandler.bind(this));
+    }
 
-	public static async init() {
-		try {
-			await this.reloadVehiclesFromDatabase();
-			TimerService.setTimer(this.saveVehicles.bind(this), Config.SaveInterval.Vehicles, 0); // Save every 60 seconds
-			this.logger.info('VehicleService initialized successfully');
-		} catch (error) {
-			this.logger.error(`Failed to initialize VehicleService: ${error}`);
-		}
-	}
+    public static setEngineState(vehicle: VehicleMp, state: boolean) {
+        vehicle.engine = !state;
+        vehicle.engine = state;
+    }
 
-	private static destroyAllVehicles() {
-		for (let vehicle of this.vehicles) {
-			vehicle.destroy();
-		}
-	}
+    public static setLightsState(vehicle: VehicleMp, state: number) {
+        ElementDataService.set(vehicle, 'lightsState', state, ShareMode.Everywhere);
+    }
 
-	private static loadVehicle(data: VehicleEntity) {
-		try {
-			let privateVehicle = new PrivateVehicle(data);
-			this.vehicles.push(privateVehicle);
-		} catch (error) {
-			this.logger.error(`Failed to load vehicle`, error);
-		}
-	}
-
-	private static buildSaveQuery(data: PrivateVehicle): { query: string; params: any[] } {
-		const query = `
-            UPDATE vehicles SET
-                model = ?,
-                position = ?,
-                rotation = ?,
-                color = ?
-            WHERE uid = ?
-        `;
-
-		const model = data.model;
-		const position = `${data.vehicle.position.x},${data.vehicle.position.y},${data.vehicle.position.z}`;
-		const rotation = `${data.vehicle.rotation.x},${data.vehicle.rotation.y},${data.vehicle.rotation.z}`;
-		const color = data.colorString;
-
-		const params = [model, position, rotation, color, data.uid];
-		return { query, params };
-	}
-
-	public static async saveVehicle(data: PrivateVehicle) {
-		const { query, params } = this.buildSaveQuery(data);
-		await Database.Execute(query, params);
-	}
-
-	public static async saveVehicles() {
-        for (const vehicle of this.vehicles) {
-            await this.saveVehicle(vehicle);
+    private static onEntityCreated(entity: EntityMp) {
+        console.log(`Entity Created: ${entity.type} (${entity.id})`);
+        if (entity.type !== 'vehicle') {
+            return;
         }
 
-		this.logger.info(`Saved ${this.vehicles.length} vehicles to database`);
-	}
+        setTimeout(this.setEngineState.bind(this, entity as VehicleMp, false), 0);
+        console.log(`Vehicle engine set to off for entity ID: ${entity.id}`);
+    }
 
-	public static getVehicleByUid(uid: number): PrivateVehicle | undefined {
-		return this.vehicles.find((v) => v.uid === uid);
-	}
+    private static setEngineStateHandler(client: PlayerMp, state: boolean) {
+        const vehicle = client.vehicle;
+        if (!vehicle || vehicle.getOccupant(0) !== client || vehicle.engine == state) {
+            return;
+        }
 
-	public static getVehicleByEntity(vehicle: VehicleMp): PrivateVehicle | undefined {
-		return this.vehicles.find((v) => v.vehicle === vehicle);
-	}
+        this.setEngineState(vehicle, state);
 
-	public static async reloadVehiclesFromDatabase() {
-		try {
-			this.destroyAllVehicles();
+        NotificationService.addNotification(client, NotificationType.Info, translate('vehicle.engine.title'),
+            state ? translate('vehicle.engine.on') : translate('vehicle.engine.off'), 'Engine');
+    }
 
-			let vehicles = await Database.Select(VehicleEntity, 'SELECT * FROM vehicles');
-			for (let vehicleData of vehicles) {
-				this.loadVehicle(vehicleData);
-			}
+    private static setLightsStateHandler(client: PlayerMp, state: number) {
+        const vehicle = client.vehicle;
+        if (!vehicle || vehicle.getOccupant(0) !== client) {
+            return;
+        }
+        
+        const lightsState = ElementDataService.get(vehicle, 'lightsState');
+        if (lightsState === state || typeof state !== 'number' || state < 0 || state > 2) {
+            return;
+        }
 
-			this.logger.info(`Loaded ${vehicles.length} vehicles from database`);
-		} catch (error) {
-			this.logger.error(`Failed to reload vehicles from database: ${error}`);
-		}
-	}
+        this.setLightsState(vehicle, state);
+    }
 }

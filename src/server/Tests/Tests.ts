@@ -32,6 +32,7 @@ export default class Tests {
                 numberPlate: 'TEST',
                 dimension: player.dimension
             });
+            vehicle.engine = false;
             Tests.logger.info(`Created vehicle with model: ${model} for player: ${player.name}`);
 
             player.notify(`Vehicle ${model} created!`);

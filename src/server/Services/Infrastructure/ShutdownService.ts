@@ -1,12 +1,12 @@
 import UserService from '@/Services/Core/UserService';
-import VehicleService from '@/Services/Core/VehicleService';
+import PrivateVehicleService from '@/Services/Core/PrivateVehicleService';
 import Logger from '@shared/Logger';
 
 export default class ShutdownService {
 	private static logger = Logger.getLogger(ShutdownService, true);
 
 	public static async shutdown() {
-		await VehicleService.saveVehicles();
+		await PrivateVehicleService.saveVehicles();
 		await UserService.savePlayers();
 	}
 

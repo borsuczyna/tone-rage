@@ -23,6 +23,7 @@ import VehicleInteraction from './Features/Interaction/VehicleInteraction';
 import PlayerNametags from './Features/Nametags/PlayerNametags';
 import ColShapeService from '@shared-rage/Services/ColShapeService';
 import PlayerControlService from './Services/Gameplay/PlayerControlService';
+import VehicleService from './Services/Core/VehicleService';
 // import EventServiceTest from './Tests/EventServiceTest';
 // import ElementDataServiceTest from './Tests/ElementDataServiceTest';
 // import InterfaceServiceTest from './Tests/InterfaceServiceTest';
@@ -52,6 +53,7 @@ import PlayerControlService from './Services/Gameplay/PlayerControlService';
 	await CommandService.init();
     await ColShapeService.init();
     await PlayerControlService.init();
+    await VehicleService.init();
 
 	// Features
 	await Atm.init();
