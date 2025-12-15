@@ -18,7 +18,7 @@ export default class BoxColShape extends ColShape {
         const p = entity.position;
 
         // Z check
-        if (p.z < this.position.z || p.z > this.position.z + this.size.z) {
+        if (p.z < this.position.z - this.size.z / 2 || p.z > this.position.z + this.size.z / 2) {
             return false;
         }
 
@@ -80,18 +80,18 @@ export default class BoxColShape extends ColShape {
 
         sides.forEach((side) => {
             mp.game.graphics.drawLine(
-                side.from.x, side.from.y, this.position.z,
-                side.to.x, side.to.y, this.position.z,
+                side.from.x, side.from.y, this.position.z - this.size.z / 2,
+                side.to.x, side.to.y, this.position.z - this.size.z / 2,
                 255, 0, 0, 100
             );
             mp.game.graphics.drawLine(
-                side.from.x, side.from.y, this.position.z + this.size.z,
-                side.to.x, side.to.y, this.position.z + this.size.z,
+                side.from.x, side.from.y, this.position.z + this.size.z / 2,
+                side.to.x, side.to.y, this.position.z + this.size.z / 2,
                 255, 0, 0, 100
             );
             mp.game.graphics.drawLine(
-                side.from.x, side.from.y, this.position.z,
-                side.from.x, side.from.y, this.position.z + this.size.z,
+                side.from.x, side.from.y, this.position.z - this.size.z / 2,
+                side.from.x, side.from.y, this.position.z + this.size.z / 2,
                 255, 0, 0, 100
             );
         });
