@@ -21,6 +21,7 @@ import RealTime from './Features/Core/RealTime';
 import InitMessage from './InitMessage';
 import ColShapeService from '@shared-rage/Services/ColShapeService';
 import VehicleService from './Services/Core/VehicleService';
+import WinterSeason from './Features/Core/WinterSeason';
 
 (async () => {
 	await Database.init();
@@ -44,6 +45,7 @@ import VehicleService from './Services/Core/VehicleService';
 	// Features
 	await Atm.init();
 	await VehicleInteraction.init();
+    await WinterSeason.init();
 
 	// Debug
 	Tests.getPositionCommandTest();
