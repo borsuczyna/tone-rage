@@ -26,6 +26,9 @@ export default class ElementDataService {
 
 		// Handle player quit - cleanup
 		mp.events.add('playerQuit', this.onPlayerQuit.bind(this));
+
+        // On entity destroy - cleanup
+        mp.events.add('entityDestroyed', this.onEntityDestroyed.bind(this));
 	}
 
 	/**
@@ -88,6 +91,24 @@ export default class ElementDataService {
 		const elementId = this.getElementInfo(element);
 		return this.elementData.get(elementId) || new Map();
 	}
+
+    /**
+     * Delete element data
+     * @param element The element (player or vehicle)
+     * @param key The data key
+     */
+    public static delete(element: ElementDataEntity, key: string) {
+        const elementId = this.getElementInfo(element);
+        const dataMap = this.elementData.get(elementId);
+        if (!dataMap) return;
+
+        const oldValue = dataMap.get(key)?.value;
+        dataMap.delete(key);
+
+        this.triggerListeners(element, key, oldValue, undefined);
+        // Notify clients about deletion
+        this.syncElementData(null, element, { key, value: undefined, shareMode: ShareMode.Everywhere });
+    }
 
 	/**
 	 * Sync element data based on share mode
@@ -187,6 +208,14 @@ export default class ElementDataService {
 		const elementId = this.getElementInfo(player);
 		this.elementData.delete(elementId);
 	}
+
+    /**
+     * Clean up element data when an entity is destroyed
+     */
+    private static onEntityDestroyed(entity: ElementDataEntity) {
+        const elementId = this.getElementInfo(entity);
+        this.elementData.delete(elementId);
+    }
 
     /**
      * Add a listener for element data changes

@@ -15,6 +15,12 @@ export default class ElementDataService {
 	 * Initialize the service and register event handlers
 	 */
 	public static init() {
+        // On player leave - cleanup
+        mp.events.add('playerQuit', this.onPlayerQuit.bind(this));
+
+        // On entity destroy - cleanup
+        mp.events.add('entityDestroyed', this.onEntityDestroyed.bind(this));
+
 		// Handle element data sync from server
 		EventService.registerEventHandler('elementData:sync', this.onElementDataSync.bind(this));
 
@@ -45,7 +51,13 @@ export default class ElementDataService {
 		}
 
         oldValue = dataMap.get(key);
-		dataMap.set(key, value);
+
+        if (value === undefined) {
+            dataMap.delete(key);
+        } else {
+            dataMap.set(key, value);
+        }
+
         this.triggerListeners(element, key, oldValue, value);
 
 		// Sync based on share mode
@@ -96,10 +108,31 @@ export default class ElementDataService {
 
 		const dataMap = this.elementData.get(elementId)!;
         oldValue = dataMap.get(key);
-		dataMap.set(key, value);
+
+        if (value === undefined) {
+            dataMap.delete(key);
+        } else {
+            dataMap.set(key, value);
+        }
 
         this.triggerListeners(this.getElementByIdAndType(elementId), key, oldValue, value);
 	}
+
+    /**
+     * * Handle player quit - cleanup
+     */
+    private static onPlayerQuit(client: PlayerMp) {
+        const elementId = this.getElementInfo(client);
+        this.elementData.delete(elementId);
+    }
+    
+    /**
+     * Clean up element data when an entity is destroyed
+     */
+    private static onEntityDestroyed(entity: ElementDataEntity) {
+        const elementId = this.getElementInfo(entity);
+        this.elementData.delete(elementId);
+    }
 
 	/**
 	 * Handle bulk element data sync from server
@@ -114,7 +147,11 @@ export default class ElementDataService {
 
 			const dataMap = this.elementData.get(elementId)!;
             oldValue = dataMap.get(key);
-			dataMap.set(key, value);
+            if (value === undefined) {
+                dataMap.delete(key);
+            } else {
+                dataMap.set(key, value);
+            }
 
             this.triggerListeners(this.getElementByIdAndType(elementId), key, oldValue, value);
 		});

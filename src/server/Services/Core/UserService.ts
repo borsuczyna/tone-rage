@@ -152,7 +152,26 @@ export default class UserService {
 		client.heading = spawn.position[3] || 0;
 		client.alpha = 255;
 		ElementDataService.set(client, 'spawnPosition', spawn.position, ShareMode.SpecificClient);
+        this.setPlayerFrozen(client, true);
 	}
+
+    public static setPlayerFrozen(client: PlayerMp, frozen: boolean) {
+        ElementDataService.set(client, 'isFrozen', frozen, ShareMode.SpecificClient);
+
+        if (frozen) {
+            ElementDataService.set(client, 'freezePosition', client.position, ShareMode.Local);
+        } else {
+            ElementDataService.delete(client, 'freezePosition');
+        }
+    }
+
+    public static isPlayerFrozen(client: PlayerMp): boolean {
+        return ElementDataService.get(client, 'isFrozen') as boolean || false;
+    }
+
+    public static getPlayerFrozenPosition(client: PlayerMp): Vector3 | null {
+        return ElementDataService.get(client, 'freezePosition') as Vector3 || null;
+    }
 
 	public static getActivePlayerByUserId(userId: number): PlayerMp | null {
 		const players = mp.players.toArray();
