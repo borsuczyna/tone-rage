@@ -105,7 +105,7 @@ export default class WorldInteraction {
     }
 
     private static handleNavigation(state: KeyState, _holdTime?: number, key?: InputKey) {
-        if (!InterfaceService.isInterfaceVisible('WorldInteractionInterface') || this.hiding || state === KeyState.Up) {
+        if (!InterfaceService.isInterfaceVisible('WorldInteractionInterface') || this.hiding || state === KeyState.Up || this.activeWorldInteraction.length === 0) {
             return;
         }
 
@@ -119,7 +119,7 @@ export default class WorldInteraction {
     }
 
     private static handleClick(_absoluteX: number, _absoluteY: number, upOrDown: "up" | "down") {
-        if (!InterfaceService.isInterfaceVisible('WorldInteractionInterface') || this.hiding || upOrDown !== "down") {
+        if (!InterfaceService.isInterfaceVisible('WorldInteractionInterface') || this.hiding || upOrDown !== "down" || this.activeWorldInteraction.length === 0) {
             return;
         }
 

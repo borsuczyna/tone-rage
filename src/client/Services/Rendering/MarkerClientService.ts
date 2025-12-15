@@ -73,9 +73,8 @@ export default class MarkerClientService {
         const halfWidth = scale[0] / 2;
         const halfDepth = scale[1] / 2;
         const rotation = scale[2] - 90;
-        const zPos = marker.position.z;
         const uvScale = [scale[0] / 3, scale[1] / 3];
-        const markerCenter = new mp.Vector3(marker.position.x, marker.position.y, zPos);
+        const markerCenter = new mp.Vector3(marker.position.x, marker.position.y, marker.position.z - 0.6);
 
         const frontFaceCenter = getPointFromDistanceRotation(markerCenter, halfDepth, rotation);
         const backFaceCenter = getPointFromDistanceRotation(markerCenter, halfDepth, rotation + 180);
