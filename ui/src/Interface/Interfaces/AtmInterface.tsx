@@ -10,6 +10,7 @@ import Header from './Components/atm/Header';
 import Sidebar from './Components/atm/Sidebar';
 import translate from '@shared/Translation/Translation';
 import InterfaceLoading from './Components/InterfaceLoading';
+import { useNotifications } from 'src/Hooks/NotificationsProvider';
 
 interface AtmData {
     bankMoney: number;
@@ -37,6 +38,7 @@ export default function AtmInterface() {
     const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
     const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
     const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
+    const { addNotification } = useNotifications();
 
     const fetchAtmData = useCallback(async () => {
         try {
@@ -50,6 +52,7 @@ export default function AtmInterface() {
         } catch (error) {
             console.error('Failed to fetch ATM data:', error);
             triggerEvent('atm:closeInterface');
+            addNotification(translate('default.error'), translate('atm.failedToLoadData'), 'error');
         } finally {
             setIsLoading(false);
         }

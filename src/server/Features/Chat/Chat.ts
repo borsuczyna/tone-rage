@@ -62,6 +62,10 @@ export default class Chat {
 		EventService.triggerClientEvent(player, 'chat:receiveMessage', typeof owner === 'string' ? owner : owner.id, message, emblemas, overrideName);
 	}
 
+	public static outputChatHtmlMessage(player: PlayerMp, owner: PlayerMp | string, message: string, emblemas: Emblema[] = [], overrideName?: string) {
+		EventService.triggerClientEvent(player, 'chat:receiveHtmlMessage', typeof owner === 'string' ? owner : owner.id, message, emblemas, overrideName);
+	}
+
 	private static getPlayersInRange(position: Vector3, range: number): PlayerMp[] {
 		return mp.players.toArray().filter((player) => {
 			const length = player.position.subtract(position).length();

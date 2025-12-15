@@ -5,6 +5,9 @@ export default class VehicleService {
     public static init() {
         mp.events.add('entityStreamIn', this.onEntityStreamIn.bind(this));
         ElementDataService.registerListener('lightsState', this.onLightsStateChange.bind(this));
+
+        // Disable engine auto start
+        mp.events.add('playerReady', this.disableVehicleEngineAutoStart.bind(this));
     }
 
     private static onEntityStreamIn(entity: EntityMp) {
@@ -27,5 +30,11 @@ export default class VehicleService {
     private static setLightsState(vehicle: VehicleMp, state: number) {
         // @ts-ignore
         vehicle.setLights(state);
+    }
+
+    private static disableVehicleEngineAutoStart() {
+        mp.game.vehicle.defaultEngineBehaviour = false;
+        mp.game.controls.useDefaultVehicleEntering = false;
+        mp.players.local.setConfigFlag(429, true);
     }
 }

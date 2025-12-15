@@ -18,6 +18,7 @@ import InitMessage from './InitMessage';
 import ColShapeService from '@shared-rage/Services/ColShapeService';
 import VehicleService from './Services/Core/VehicleService';
 import WinterSeason from './Features/Core/WinterSeason';
+import Tests from './Tests/Tests';
 
 (async () => {
 	await Database.init();
@@ -41,6 +42,11 @@ import WinterSeason from './Features/Core/WinterSeason';
 	// Features
 	await Atm.init();
     await WinterSeason.init();
+
+    // Tests
+    await Tests.getPositionCommandTest();
+    await Tests.createVehicleCommandTest();
+    await Tests.createTimeCommandTest();
 
     InitMessage.print();
 })();

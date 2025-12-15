@@ -209,6 +209,7 @@
     "atm.card.virtualCard": "Virtual Card",
     "atm.card.cardHolder": "Card Holder",
     "atm.card.expires": "Expires",
+    "atm.failedToLoadData": "Failed to load ATM data. Please try again later.",
 
     "moneyLog.type.unknown": "Unknown",
     "moneyLog.type.salary": "Salary",
