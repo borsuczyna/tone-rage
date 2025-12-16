@@ -23,6 +23,7 @@ export const InterfaceVisibilityProvider = ({ children }: { children: React.Reac
         // 'MapDemoInterface': true
         // 'ChatInterface': true
         // 'WorldInteractionInterface': true
+        'CharacterCreatorInterface': true
     });
 
     const setInterfaceVisible = (name: string, visible: boolean) => {

@@ -7,6 +7,7 @@ import { spawnData, type SpawnResponse } from '@shared/SpawnsData';
 import { fetchServerData, triggerEvent } from 'src/Hooks/Fetch';
 import { addNotification } from 'src/Hooks/NotificationsProvider';
 import { loginMusicManager } from 'src/Utils/LoginMusicManager';
+import csx from 'src/Utils/MergeClass';
 
 export default function SpawnSelectionInterface() {
     const [expandedCategories, setExpandedCategories] = useState<Set<number>>(new Set());
@@ -51,7 +52,7 @@ export default function SpawnSelectionInterface() {
     };
 
     return (
-        <div className={`${styles.container} ${isDisappearing ? styles.disappearing : ''}`}>
+        <div className={csx(styles.container, isDisappearing && styles.disappearing)}>
             <div className={styles.spawnPanel}>
                 <div className={styles.header}>
                     <h1>{translate('spawn.title')}</h1>

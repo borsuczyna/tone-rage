@@ -11,6 +11,7 @@ import MapDemoInterface from "./Interfaces/MapDemoInterface";
 import TextureDebugInterface from "./Interfaces/TextureDebugInterface";
 import ChatInterface from "./Interfaces/ChatInterface";
 import WorldInteractionInterface from "./Interfaces/WorldInteractionInterface";
+import CharacterCreatorInterface from "./Interfaces/CharacterCreatorInterface";
 
 function Interfaces() {
     const { visibleInterfaces } = useInterfaceVisibility();
@@ -32,6 +33,7 @@ function Interfaces() {
             {isInterfaceVisible("TextureDebugInterface") && <TextureDebugInterface key="TextureDebugInterface" />}
             {isInterfaceVisible("ChatInterface") && <ChatInterface key="ChatInterface" />}
             {isInterfaceVisible("WorldInteractionInterface") && <WorldInteractionInterface key="WorldInteractionInterface" />}
+            {isInterfaceVisible("CharacterCreatorInterface") && <CharacterCreatorInterface key="CharacterCreatorInterface" />}
         </>
     )
 }
