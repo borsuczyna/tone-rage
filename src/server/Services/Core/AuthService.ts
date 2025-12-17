@@ -49,7 +49,8 @@ export default class AuthService {
 
 		return {
 			success: true,
-			message: 'auth.login.success'
+			message: 'auth.login.success',
+            hasCharacter: result.user.characterVisuals.length > 0
 		};
 	}
 

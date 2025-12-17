@@ -5,10 +5,11 @@ import EmailValidator from '@shared/EmailValidator';
 import PasswordValidator from '@shared/PasswordValidator';
 import ElementDataService from '@/Services/Infrastructure/ElementDataService';
 import { ShareMode } from '@shared/Models/ElementDataModels';
-import { SpawnLocation } from '@shared/SpawnsData';
+import { characterCreationPosition, SpawnLocation } from '@shared/SpawnsData';
 import Logger from '@shared/Logger';
 import TimerService from '@shared/Services/TimerService';
 import { Config } from '@/Config';
+import Dimensions from '@shared-rage/Models/Dimensions';
 
 interface CreateUserResult {
 	userId: number | null;
@@ -106,6 +107,11 @@ export default class UserService {
 		ElementDataService.set(client, 'adminLevel', user.adminLevel, ShareMode.Everywhere);
 		ElementDataService.set(client, 'avatar', user.avatar, ShareMode.Everywhere);
 		client.name = user.username;
+
+        if (user.characterVisuals.length === 0) {
+            this.goToCharacterCreation(client);
+            return;
+        }
 	}
 
 	private static buildSaveQuery(client: PlayerMp): { query: string; params: any[] } | null {
@@ -150,6 +156,21 @@ export default class UserService {
 
     private static onPlayerJoin(client: PlayerMp) {
         this.setPlayerFrozen(client, true);
+        client.dimension = Dimensions.LoginRoom;
+    }
+
+    public static goToCharacterCreation(client: PlayerMp) {
+        const userId = ElementDataService.get(client, 'userId') as number | null;
+        if (!userId) {
+            this.logger.error(`Cannot send player ${client.name} to character creation: userId is null`);
+            return;
+        }
+
+        client.dimension = Dimensions.CharacterCreation + userId;
+        client.position = new mp.Vector3(characterCreationPosition[0], characterCreationPosition[1], characterCreationPosition[2]);
+        client.heading = characterCreationPosition[3] || 0;
+        client.alpha = 255;
+        this.updatePlayerFreezePosition(client);
     }
 
 	private static onPlayerQuit(client: PlayerMp) {
@@ -163,21 +184,6 @@ export default class UserService {
 		client.alpha = 255;
 		ElementDataService.set(client, 'spawnPosition', spawn.position, ShareMode.SpecificClient);
         this.setPlayerFrozen(client, false);
-
-        var bGender = false;
-        var MotherBlend = 21, FatherBlend = 41, fBlendShape = 0.5, fBlendSkin = 0.5, HairHighlight = 0, HairColour = 0;
-
-        var NoseWidth = 0, NoseHeight = 0, NoseLength = 0, NoseBridge = 0, NoseTip = 0, NoseBridgeShift = 0;
-        var BrowHeight = 0, BrowWidth = 0, CBoneHeight = 0, CBoneWidth = 0, CheekWidth = 0, Eyes = 0, Lips = 0;
-        var JawWidth = 0, jawHeight = 0, ChinLength = 0, ChinPos = 0, ChinWidth = 0, ChinShape = 0, NeckWidth = 0;
-
-        client.setCustomization(bGender, MotherBlend, FatherBlend, 0, MotherBlend, FatherBlend, 0, fBlendShape, fBlendSkin, 0, 1, HairColour, HairHighlight, 
-            [
-                NoseWidth, NoseHeight, NoseLength, NoseBridge, NoseTip, NoseBridgeShift, 
-                BrowHeight, BrowWidth, CBoneHeight, CBoneWidth, CheekWidth, Eyes, Lips,
-                JawWidth, jawHeight, ChinLength, ChinPos, ChinWidth, ChinShape, NeckWidth
-            ]
-        );
 	}
 
     public static setPlayerFrozen(client: PlayerMp, frozen: boolean) {
@@ -188,6 +194,12 @@ export default class UserService {
         } else {
             ElementDataService.delete(client, 'freezePosition');
         }
+    }
+
+    public static updatePlayerFreezePosition(client: PlayerMp) {
+        if (!this.isPlayerFrozen(client)) return;
+
+        ElementDataService.set(client, 'freezePosition', client.position, ShareMode.Local);
     }
 
     public static isPlayerFrozen(client: PlayerMp): boolean {

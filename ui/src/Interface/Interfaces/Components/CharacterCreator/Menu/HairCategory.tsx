@@ -1,21 +1,22 @@
 import styles from '../../../Styles/CharacterCreatorInterface.module.css';
-import { CharacterGender, femaleHairStyles, maleHairStyles } from '@shared/Models/Character';
-import CustomSlider from './CustomSlider';
-import ColorPicker from './ColorPicker';
+import { CharacterGender, femaleHairStyles, hairColors, maleHairStyles } from '@shared/Models/Character';
+// import CustomSlider from './CustomSlider';
+// import ColorPicker from './ColorPicker';
 import HairStyleSelector from './HairStyleSelector';
+import ColorPicker from './ColorPicker';
 
 interface HairCategoryProps {
     gender: CharacterGender;
     hairStyle: number;
     setHairStyle: (style: number) => void;
-    hairColor: string;
-    setHairColor: (color: string) => void;
-    hairHighlightColor: string;
-    setHairHighlightColor: (color: string) => void;
-    hairLength: number;
-    setHairLength: (length: number) => void;
-    hairOpacity: number;
-    setHairOpacity: (opacity: number) => void;
+    hairColor: number;
+    setHairColor: (color: number) => void;
+    hairHighlightColor: number;
+    setHairHighlightColor: (color: number) => void;
+    // hairLength: number;
+    // setHairLength: (length: number) => void;
+    // hairOpacity: number;
+    // setHairOpacity: (opacity: number) => void;
 }
 
 export default function HairCategory({
@@ -26,39 +27,11 @@ export default function HairCategory({
     setHairColor,
     hairHighlightColor,
     setHairHighlightColor,
-    hairLength,
-    setHairLength,
-    hairOpacity,
-    setHairOpacity
+//     hairLength,
+//     setHairLength,
+//     hairOpacity,
+//     setHairOpacity
 }: HairCategoryProps) {
-    // Hair colors array with common hair colors
-    const hairColors = [
-        '#000000', // Black
-        '#2c1b18', // Dark Brown
-        '#5d4037', // Brown
-        '#8d6e63', // Light Brown
-        '#a1887f', // Ash Brown
-        '#d7ccc8', // Light Ash
-        '#ffcc80', // Blonde
-        '#fff59d', // Light Blonde
-        '#ffecb3', // Platinum Blonde
-        '#f44336', // Red
-        '#e91e63', // Pink
-        '#9c27b0', // Purple
-        '#673ab7', // Deep Purple
-        '#3f51b5', // Indigo
-        '#2196f3', // Blue
-        '#00bcd4', // Cyan
-        '#4caf50', // Green
-        '#cddc39', // Lime
-        '#ffeb3b', // Yellow
-        '#ff9800', // Orange
-        '#795548', // Auburn
-        '#607d8b', // Blue Grey
-        '#9e9e9e', // Grey
-        '#ffffff'  // White
-    ];
-
     const availableStyles = gender === CharacterGender.Male ? maleHairStyles : femaleHairStyles;
 
     return (
@@ -73,19 +46,29 @@ export default function HairCategory({
 
             <div className={styles.smallLabel}>Color</div>
             <ColorPicker 
-                selectedColor={hairColor}
-                onColorChange={setHairColor}
-                colors={hairColors}
+                selectedColor={hairColors[hairColor].hex}
+                onColorChange={(colorHex) => {
+                    const colorIndex = hairColors.findIndex(c => c.hex === colorHex);
+                    if (colorIndex !== -1) {
+                        setHairColor(colorIndex);
+                    }
+                }}
+                colors={hairColors.map(c => c.hex)}
             />
 
             <div className={styles.smallLabel}>Highlight Color</div>
             <ColorPicker 
-                selectedColor={hairHighlightColor}
-                onColorChange={setHairHighlightColor}
-                colors={hairColors}
+                selectedColor={hairColors[hairHighlightColor].hex}
+                onColorChange={(colorHex) => {
+                    const colorIndex = hairColors.findIndex(c => c.hex === colorHex);
+                    if (colorIndex !== -1) {
+                        setHairHighlightColor(colorIndex);
+                    }
+                }}
+                colors={hairColors.map(c => c.hex)}
             />
 
-            <div className={styles.label} style={{ marginTop: '1rem' }}>Hair Settings</div>
+            {/* <div className={styles.label} style={{ marginTop: '1rem' }}>Hair Settings</div>
             
             <CustomSlider 
                 label="Length"
@@ -101,7 +84,7 @@ export default function HairCategory({
                 onChange={setHairOpacity}
                 min={0}
                 max={100}
-            />
+            /> */}
         </>
     );
 }

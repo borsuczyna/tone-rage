@@ -6,6 +6,7 @@ export class UserEntity extends DatabaseEntity {
 	email: string = '';
 	passwordHash: string = '';
 	avatar: string = '';
+    characterVisuals: string = '';
 	createdAt: Date = new Date(Date.now());
 	lastLogin: Date | null = null;
 	money: number = 0;

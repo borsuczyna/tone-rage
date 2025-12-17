@@ -20,7 +20,7 @@ export default class SpawnPanel {
 
 			this.camera = mp.cameras.new('spawnCamera', new mp.Vector3(0, 0, 300), new mp.Vector3(0, 0, 0), 60);
 			this.camera.setActive(true);
-			mp.game.cam.renderScriptCams(true, false, 0, true, false);
+			mp.game.cam.renderScriptCams(true, false, 0, true, false, 0);
 		} else {
 			EventService.removeEventHandler('spawn:preview', this.handleSpawnPreview.bind(this));
 			EventService.removeEventHandler('spawn:select', this.handleSpawnSelect.bind(this));
@@ -31,7 +31,7 @@ export default class SpawnPanel {
 				this.camera.destroy();
 				this.camera = null;
 			}
-			mp.game.cam.renderScriptCams(false, false, 0, true, false);
+			mp.game.cam.renderScriptCams(false, false, 0, true, false, 0);
 		}
 
 		mp.game.ui.displayHud(!visible);

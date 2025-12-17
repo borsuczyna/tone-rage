@@ -8,7 +8,7 @@ export enum KeyState {
 export type KeyHandler = (state: KeyState, holdTime?: number, key?: InputKey) => void;
 
 export default class KeyboardService {
-	private static keyHandlers: Map<InputKey | 'any', KeyHandler> = new Map();
+	private static keyHandlers: Map<InputKey | 'any', KeyHandler[]> = new Map();
 	private static keysDown: Map<InputKey | 'any', number> = new Map();
 
 	public static init() {
@@ -16,8 +16,15 @@ export default class KeyboardService {
 	}
 
 	private static triggerEvent(key: InputKey, state: KeyState, holdTime?: number) {
-		this.keyHandlers.get(key)?.(state, holdTime, key);
-		this.keyHandlers.get('any')?.(state, holdTime, key);
+		const handlers = this.keyHandlers.get(key);
+		if (handlers) {
+			handlers.forEach(handler => handler(state, holdTime, key));
+		}
+		
+		const anyHandlers = this.keyHandlers.get('any');
+		if (anyHandlers) {
+			anyHandlers.forEach(handler => handler(state, holdTime, key));
+		}
 	}
 
 	private static onRender() {
@@ -53,10 +60,23 @@ export default class KeyboardService {
 	}
 
 	public static registerKeyHandler(key: InputKey | 'any', handler: KeyHandler) {
-		this.keyHandlers.set(key, handler);
+		if (!this.keyHandlers.has(key)) {
+			this.keyHandlers.set(key, []);
+		}
+		this.keyHandlers.get(key)!.push(handler);
 	}
 
-	public static unregisterKeyHandler(key: InputKey | 'any') {
-		this.keyHandlers.delete(key);
+	public static unregisterKeyHandler(key: InputKey | 'any', handler: KeyHandler) {
+		const handlers = this.keyHandlers.get(key);
+		if (handlers) {
+			const index = handlers.indexOf(handler);
+			if (index !== -1) {
+				handlers.splice(index, 1);
+				// Remove the key entry if no handlers remain
+				if (handlers.length === 0) {
+					this.keyHandlers.delete(key);
+				}
+			}
+		}
 	}
 }

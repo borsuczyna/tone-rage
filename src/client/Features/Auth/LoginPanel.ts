@@ -2,6 +2,7 @@ import EventService from '@/Services/Infrastructure/EventService';
 import InterfaceService from '@/Services/Infrastructure/InterfaceService';
 import SpawnPanel from '@/Features/Spawn/SpawnPanel';
 import TimerService from '@shared/Services/TimerService';
+import CharacterCreatorPanel from '../CharacterCreator/CharacterCreatorPanel';
 
 export default class LoginPanel {
 	public static async init() {
@@ -9,8 +10,8 @@ export default class LoginPanel {
 		EventService.registerEventHandler('auth:loginSuccess', this.handleLoginSuccess.bind(this));
 	}
 
-	private static handleLoginSuccess() {
-		TimerService.setTimer(this.hideLoginPanel.bind(this), 400, 1);
+	private static handleLoginSuccess(hasCharacter: boolean) {
+		TimerService.setTimer(this.hideLoginPanel.bind(this, hasCharacter), 400, 1);
 	}
 
 	private static setVisible(visible: boolean) {
@@ -20,8 +21,14 @@ export default class LoginPanel {
 		mp.game.ui.displayRadar(!visible);
 	}
 
-	private static hideLoginPanel() {
+	private static hideLoginPanel(hasCharacter: boolean) {
 		this.setVisible(false);
+
+        if (!hasCharacter) {
+            CharacterCreatorPanel.setVisible(true);
+            return;
+        }
+
 		SpawnPanel.setVisible(true);
 	}
 }

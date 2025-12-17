@@ -79,8 +79,7 @@ export default function AuthInterface() {
 
                 addNotification(translate('default.success'), translate('auth.login.success'), NotificationType.Success);
                 setIsDisappearing(true);
-                triggerEvent('auth:loginSuccess');
-
+                triggerEvent('auth:loginSuccess', response.hasCharacter || false);
             } else {
                 addNotification(translate('default.error'), translate(response?.message || 'auth.login.failed' as any), NotificationType.Error);
                 setIsLoading(false);
