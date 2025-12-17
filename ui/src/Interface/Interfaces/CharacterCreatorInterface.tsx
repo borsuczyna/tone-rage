@@ -12,6 +12,8 @@ export default function CharacterCreatorInterface() {
     const [gender, setGender] = useState<CharacterGender>(CharacterGender.Male);
     const [femaleParent, setFemaleParent] = useState<number>(0);
     const [maleParent, setMaleParent] = useState<number>(0);
+    const [faceSimilarity, setFaceSimilarity] = useState<number>(50);
+    const [skinSimilarity, setSkinSimilarity] = useState<number>(50);
     
     return (
         <div className={csx(styles.container, hiding && styles.hiding)}>
@@ -25,6 +27,10 @@ export default function CharacterCreatorInterface() {
                     setFemaleParent={setFemaleParent}
                     maleParent={maleParent}
                     setMaleParent={setMaleParent}
+                    faceSimilarity={faceSimilarity}
+                    setFaceSimilarity={setFaceSimilarity}
+                    skinSimilarity={skinSimilarity}
+                    setSkinSimilarity={setSkinSimilarity}
                 />}
             </RightMenu>
         </div>
