@@ -1,0 +1,111 @@
+import { useState, useRef, useEffect } from 'react';
+import styles from '../../../Styles/CharacterCreatorInterface.module.css';
+
+interface Control2DProps {
+    labelX: string;
+    labelY: string;
+    valueX: number;
+    valueY: number;
+    onChangeX: (value: number) => void;
+    onChangeY: (value: number) => void;
+    minX?: number;
+    maxX?: number;
+    minY?: number;
+    maxY?: number;
+}
+
+export default function Control2D({ 
+    labelX, 
+    labelY, 
+    valueX, 
+    valueY, 
+    onChangeX, 
+    onChangeY,
+    minX = 0, 
+    maxX = 100, 
+    minY = 0, 
+    maxY = 100 
+}: Control2DProps) {
+    const [isDragging, setIsDragging] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const dotRef = useRef<HTMLDivElement>(null);
+
+    const percentageX = ((valueX - minX) / (maxX - minX)) * 100;
+    const percentageY = ((valueY - minY) / (maxY - minY)) * 100;
+
+    const handleMouseDown = (e: React.MouseEvent) => {
+        e.preventDefault();
+        setIsDragging(true);
+        updateValues(e.clientX, e.clientY);
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+        if (!isDragging) return;
+        updateValues(e.clientX, e.clientY);
+    };
+
+    const handleMouseUp = () => {
+        setIsDragging(false);
+    };
+
+    const updateValues = (clientX: number, clientY: number) => {
+        if (!containerRef.current) return;
+        
+        const rect = containerRef.current.getBoundingClientRect();
+        const percentX = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+        const percentY = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height));
+        
+        const newValueX = Math.round(minX + percentX * (maxX - minX));
+        const newValueY = Math.round(minY + percentY * (maxY - minY));
+        
+        onChangeX(newValueX);
+        onChangeY(newValueY);
+    };
+
+    const handleContainerClick = (e: React.MouseEvent) => {
+        if (e.target === dotRef.current) return;
+        updateValues(e.clientX, e.clientY);
+    };
+
+    useEffect(() => {
+        if (!isDragging) return;
+
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+
+        return () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+        };
+    }, [isDragging]);
+
+    return (
+        <div className={styles.control2DContainer}>
+            <div className={styles.control2DLabels}>
+                <span className={styles.control2DLabel}>{labelX}</span>
+                <span className={styles.control2DLabel}>{labelY}</span>
+            </div>
+            <div 
+                ref={containerRef}
+                className={styles.control2DBox}
+                onMouseDown={handleContainerClick}
+            >
+                <div className={styles.control2DGrid}>
+                    <div className={styles.control2DGridLine} style={{ left: '25%' }} />
+                    <div className={styles.control2DGridLine} style={{ left: '50%' }} />
+                    <div className={styles.control2DGridLine} style={{ left: '75%' }} />
+                    <div className={styles.control2DGridLineHorizontal} style={{ top: '50%' }} />
+                </div>
+                <div 
+                    ref={dotRef}
+                    className={styles.control2DDot}
+                    style={{ 
+                        left: `${percentageX}%`, 
+                        top: `${percentageY}%` 
+                    }}
+                    onMouseDown={handleMouseDown}
+                />
+            </div>
+        </div>
+    );
+}
