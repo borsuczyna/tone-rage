@@ -90,16 +90,16 @@ export default function CharacterCreatorInterface() {
             <RightMenu>
                 <div className={csx(styles.categoryContent, isTransitioning && styles.transitioning)}>
                     {displayedCategory == 0 && <DNACategory
-                    gender={gender}
-                    setGender={setGender}
-                    femaleParent={femaleParent}
-                    setFemaleParent={setFemaleParent}
-                    maleParent={maleParent}
-                    setMaleParent={setMaleParent}
-                    faceSimilarity={faceSimilarity}
-                    setFaceSimilarity={setFaceSimilarity}
-                    skinSimilarity={skinSimilarity}
-                    setSkinSimilarity={setSkinSimilarity}
+                        gender={gender}
+                        setGender={setGender}
+                        femaleParent={femaleParent}
+                        setFemaleParent={setFemaleParent}
+                        maleParent={maleParent}
+                        setMaleParent={setMaleParent}
+                        faceSimilarity={faceSimilarity}
+                        setFaceSimilarity={setFaceSimilarity}
+                        skinSimilarity={skinSimilarity}
+                        setSkinSimilarity={setSkinSimilarity}
                     />}
                     {displayedCategory == 1 && <HairCategory
                         gender={gender}

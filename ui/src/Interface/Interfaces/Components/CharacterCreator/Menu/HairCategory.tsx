@@ -1,5 +1,5 @@
 import styles from '../../../Styles/CharacterCreatorInterface.module.css';
-import { CharacterGender } from '@shared/Models/Character';
+import { CharacterGender, femaleHairStyles, maleHairStyles } from '@shared/Models/Character';
 import CustomSlider from './CustomSlider';
 import ColorPicker from './ColorPicker';
 import HairStyleSelector from './HairStyleSelector';
@@ -59,10 +59,6 @@ export default function HairCategory({
         '#ffffff'  // White
     ];
 
-    // Available hair styles (0-indexed, will display as 1-indexed)
-    const maleHairStyles = Array.from({ length: 25 }, (_, i) => i); // 0-24
-    const femaleHairStyles = Array.from({ length: 25 }, (_, i) => i); // 0-24
-
     const availableStyles = gender === CharacterGender.Male ? maleHairStyles : femaleHairStyles;
 
     return (
@@ -72,6 +68,7 @@ export default function HairCategory({
                 selectedStyle={hairStyle}
                 onStyleChange={setHairStyle}
                 availableStyles={availableStyles}
+                gender={gender}
             />
 
             <div className={styles.smallLabel}>Color</div>

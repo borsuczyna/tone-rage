@@ -26,6 +26,7 @@ import PlayerControlService from './Services/Gameplay/PlayerControlService';
 import VehicleService from './Services/Core/VehicleService';
 import WinterSeason from './Features/Core/WinterSeason';
 import UserService from './Services/Core/UserService';
+import GreenScreen from './Features/GreenScreen/GreenScreen';
 
 (async () => {
 	await DiscordRPC.init();
@@ -56,6 +57,7 @@ import UserService from './Services/Core/UserService';
 	await Atm.init();
 	await WorldInteraction.init();
 	await VehicleInteraction.init();
-    await PlayerNametags.init();
+    // await PlayerNametags.init();
     await WinterSeason.init();
+    await GreenScreen.init();
 })();

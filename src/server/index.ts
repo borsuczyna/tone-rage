@@ -41,7 +41,7 @@ import Tests from './Tests/Tests';
 
 	// Features
 	await Atm.init();
-    await WinterSeason.init();
+    // await WinterSeason.init();
 
     // Tests
     await Tests.getPositionCommandTest();
