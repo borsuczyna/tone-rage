@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './Styles/CharacterCreatorInterface.module.css';
 import csx from 'src/Utils/MergeClass';
 import Categories from './Components/CharacterCreator/Categories';
@@ -13,6 +13,8 @@ import { CharacterGender } from '@shared/Models/Character';
 export default function CharacterCreatorInterface() {
     const [hiding, _setHiding] = useState(false);
     const [activeCategory, setActiveCategory] = useState(0);
+    const [displayedCategory, setDisplayedCategory] = useState(0);
+    const [isTransitioning, setIsTransitioning] = useState(false);
     const [gender, setGender] = useState<CharacterGender>(CharacterGender.Male);
     const [femaleParent, setFemaleParent] = useState<number>(0);
     const [maleParent, setMaleParent] = useState<number>(0);
@@ -46,7 +48,7 @@ export default function CharacterCreatorInterface() {
     const [noseLength, setNoseLength] = useState<number>(50);
     const [noseBridgeDepth, setNoseBridgeDepth] = useState<number>(50);
     const [noseTipHeight, setNoseTipHeight] = useState<number>(50);
-    const [noseBreakage, setNoseBreakage] = useState<number>(0);
+    const [noseBreakage, setNoseBreakage] = useState<number>(50);
     const [cheekbonesHeight, setCheekbonesHeight] = useState<number>(50);
     const [cheekbonesWidth, setCheekbonesWidth] = useState<number>(50);
     const [cheekbonesDepth, setCheekbonesDepth] = useState<number>(50);
@@ -58,12 +60,36 @@ export default function CharacterCreatorInterface() {
     const [chinHoleSize, setChinHoleSize] = useState<number>(0);
     const [lipsThickness, setLipsThickness] = useState<number>(50);
     
+    // Handle category transitions with smooth fade effect
+    const handleCategoryChange = (newCategory: number) => {
+        if (newCategory === activeCategory) return;
+        
+        setIsTransitioning(true);
+        
+        // Fade out current category
+        setTimeout(() => {
+            setDisplayedCategory(newCategory);
+            setActiveCategory(newCategory);
+        }, 220); // Half of transition duration
+        
+        // Fade in new category
+        setTimeout(() => {
+            setIsTransitioning(false);
+        }, 440); // Full transition duration
+    };
+    
+    // Initialize displayed category
+    useEffect(() => {
+        setDisplayedCategory(activeCategory);
+    }, []);
+    
     return (
         <div className={csx(styles.container, hiding && styles.hiding)}>
-            <Categories activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
+            <Categories isTransitioning={isTransitioning} activeCategory={activeCategory} setActiveCategory={handleCategoryChange} />
 
             <RightMenu>
-                {activeCategory == 0 && <DNACategory
+                <div className={csx(styles.categoryContent, isTransitioning && styles.transitioning)}>
+                    {displayedCategory == 0 && <DNACategory
                     gender={gender}
                     setGender={setGender}
                     femaleParent={femaleParent}
@@ -74,47 +100,47 @@ export default function CharacterCreatorInterface() {
                     setFaceSimilarity={setFaceSimilarity}
                     skinSimilarity={skinSimilarity}
                     setSkinSimilarity={setSkinSimilarity}
-                />}
-                {activeCategory == 1 && <HairCategory
-                    gender={gender}
-                    hairStyle={hairStyle}
-                    setHairStyle={setHairStyle}
-                    hairColor={hairColor}
-                    setHairColor={setHairColor}
-                    hairHighlightColor={hairHighlightColor}
-                    setHairHighlightColor={setHairHighlightColor}
-                    hairLength={hairLength}
-                    setHairLength={setHairLength}
-                    hairOpacity={hairOpacity}
-                    setHairOpacity={setHairOpacity}
-                />}
-                {activeCategory == 2 && <FacialHairCategory
-                    gender={gender}
-                    beardStyle={beardStyle}
-                    setBeardStyle={setBeardStyle}
-                    beardColor={beardColor}
-                    setBeardColor={setBeardColor}
-                    beardSize={beardSize}
-                    setBeardSize={setBeardSize}
-                />}
-                {activeCategory == 3 && <EyesCategory
-                    gender={gender}
-                    squinting={squinting}
-                    setSquinting={setSquinting}
-                    eyeColor={eyeColor}
-                    setEyeColor={setEyeColor}
-                    eyebrowType={eyebrowType}
-                    setEyebrowType={setEyebrowType}
-                    eyebrowSize={eyebrowSize}
-                    setEyebrowSize={setEyebrowSize}
-                    eyebrowColor={eyebrowColor}
-                    setEyebrowColor={setEyebrowColor}
-                    eyebrowHeight={eyebrowHeight}
-                    setEyebrowHeight={setEyebrowHeight}
-                    eyebrowDepth={eyebrowDepth}
-                    setEyebrowDepth={setEyebrowDepth}
-                />}
-                {activeCategory == 4 && <FaceShapeCategory
+                    />}
+                    {displayedCategory == 1 && <HairCategory
+                        gender={gender}
+                        hairStyle={hairStyle}
+                        setHairStyle={setHairStyle}
+                        hairColor={hairColor}
+                        setHairColor={setHairColor}
+                        hairHighlightColor={hairHighlightColor}
+                        setHairHighlightColor={setHairHighlightColor}
+                        hairLength={hairLength}
+                        setHairLength={setHairLength}
+                        hairOpacity={hairOpacity}
+                        setHairOpacity={setHairOpacity}
+                    />}
+                    {displayedCategory == 2 && <FacialHairCategory
+                        gender={gender}
+                        beardStyle={beardStyle}
+                        setBeardStyle={setBeardStyle}
+                        beardColor={beardColor}
+                        setBeardColor={setBeardColor}
+                        beardSize={beardSize}
+                        setBeardSize={setBeardSize}
+                    />}
+                    {displayedCategory == 3 && <EyesCategory
+                        gender={gender}
+                        squinting={squinting}
+                        setSquinting={setSquinting}
+                        eyeColor={eyeColor}
+                        setEyeColor={setEyeColor}
+                        eyebrowType={eyebrowType}
+                        setEyebrowType={setEyebrowType}
+                        eyebrowSize={eyebrowSize}
+                        setEyebrowSize={setEyebrowSize}
+                        eyebrowColor={eyebrowColor}
+                        setEyebrowColor={setEyebrowColor}
+                        eyebrowHeight={eyebrowHeight}
+                        setEyebrowHeight={setEyebrowHeight}
+                        eyebrowDepth={eyebrowDepth}
+                        setEyebrowDepth={setEyebrowDepth}
+                    />}
+                    {displayedCategory == 4 && <FaceShapeCategory
                     noseWidth={noseWidth}
                     setNoseWidth={setNoseWidth}
                     noseHeight={noseHeight}
@@ -146,8 +172,9 @@ export default function CharacterCreatorInterface() {
                     chinHoleSize={chinHoleSize}
                     setChinHoleSize={setChinHoleSize}
                     lipsThickness={lipsThickness}
-                    setLipsThickness={setLipsThickness}
-                />}
+                        setLipsThickness={setLipsThickness}
+                    />}
+                </div>
             </RightMenu>
         </div>
     );

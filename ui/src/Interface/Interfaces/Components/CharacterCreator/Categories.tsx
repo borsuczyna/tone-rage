@@ -4,9 +4,10 @@ import styles from '../../Styles/CharacterCreatorInterface.module.css';
 interface CategoriesProps {
     activeCategory: number;
     setActiveCategory: (category: number) => void;
+    isTransitioning: boolean;
 }
 
-export default function Categories({ activeCategory, setActiveCategory }: CategoriesProps) {
+export default function Categories({ activeCategory, setActiveCategory, isTransitioning }: CategoriesProps) {
     const activeColor = '#FF2D55';
     const color = '#0c0c0ccc';
 
@@ -93,13 +94,13 @@ export default function Categories({ activeCategory, setActiveCategory }: Catego
                             key={category}
                             category={category}
                             active={activeCategory === category}
-                            setActiveCategory={setActiveCategory}
+                            setActiveCategory={() => { if (!isTransitioning) setActiveCategory(category); }}
                         />
                         <CategoryItem
                             key={category + 10}
                             category={category}
                             active={activeCategory === category}
-                            setActiveCategory={setActiveCategory}
+                            setActiveCategory={() => { if (!isTransitioning) setActiveCategory(category); }}
                             activeItemGhost={true}
                         />
                     </>
