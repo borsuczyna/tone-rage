@@ -34,28 +34,27 @@ export default class PrivateVehicleService {
 		}
 	}
 
-	private static buildSaveQuery(data: PrivateVehicle): { query: string; params: any[] } {
-		const query = `
-            UPDATE vehicles SET
-                model = ?,
-                position = ?,
-                rotation = ?,
-                color = ?
-            WHERE uid = ?
-        `;
-
-		const model = data.model;
-		const position = `${data.vehicle.position.x},${data.vehicle.position.y},${data.vehicle.position.z}`;
-		const rotation = `${data.vehicle.rotation.x},${data.vehicle.rotation.y},${data.vehicle.rotation.z}`;
-		const color = data.colorString;
-
-		const params = [model, position, rotation, color, data.uid];
-		return { query, params };
-	}
-
 	public static async saveVehicle(data: PrivateVehicle) {
-		const { query, params } = this.buildSaveQuery(data);
-		await Database.Execute(query, params);
+		try {
+			const model = data.model;
+			const position = `${data.vehicle.position.x},${data.vehicle.position.y},${data.vehicle.position.z}`;
+			const rotation = `${data.vehicle.rotation.x},${data.vehicle.rotation.y},${data.vehicle.rotation.z}`;
+			const color = data.colorString;
+
+			await VehicleEntity.update(
+				{
+					model,
+					position,
+					rotation,
+					color
+				},
+				{
+					where: { uid: data.uid }
+				}
+			);
+		} catch (error) {
+			this.logger.error(`Failed to save vehicle: ${error}`);
+		}
 	}
 
 	public static async saveVehicles() {
@@ -78,7 +77,7 @@ export default class PrivateVehicleService {
 		try {
 			this.destroyAllVehicles();
 
-			let vehicles = await Database.Select(VehicleEntity, 'SELECT * FROM vehicles');
+			let vehicles = await VehicleEntity.findAll();
 			for (let vehicleData of vehicles) {
 				this.loadVehicle(vehicleData);
 			}

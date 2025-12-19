@@ -1,10 +1,26 @@
-import { DatabaseEntity } from './DatabaseEntity';
+import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement } from 'sequelize-typescript';
 
-export class VehicleEntity extends DatabaseEntity {
-	model: string = '';
-	position: string = '0,0,0';
-	rotation: string = '0,0,0';
-	color: string = '0,0,0,0,0,0';
+@Table({
+	tableName: 'vehicles',
+	timestamps: false
+})
+export class VehicleEntity extends Model {
+	@PrimaryKey
+	@AutoIncrement
+	@Column(DataType.INTEGER)
+	uid!: number;
+
+	@Column(DataType.STRING)
+	model!: string;
+
+	@Column(DataType.STRING)
+	position!: string;
+
+	@Column(DataType.STRING)
+	rotation!: string;
+
+	@Column(DataType.STRING)
+	color!: string;
 
 	get positionVector(): Vector3 {
 		const [x, y, z] = this.position.split(',').map(Number);

@@ -19,12 +19,17 @@ export default class MoneyService {
 		const userId = typeof player === 'number' ? player : ElementDataService.get(player, 'userId');
 		if (!userId) return null;
 
-		const logs = await Database.Select<MoneyLogEntity>(
-			MoneyLogEntity,
-			'SELECT * FROM moneyLogs WHERE userId = ? ORDER BY createdAt DESC LIMIT ? OFFSET ?',
-			[userId, limit, skip]
-		);
-		return logs;
+		try {
+			const logs = await MoneyLogEntity.findAll({
+				where: { userId },
+				order: [['createdAt', 'DESC']],
+				limit,
+				offset: skip
+			});
+			return logs;
+		} catch (error) {
+			return null;
+		}
 	}
 
 	public static async addMoneyLog(
@@ -37,10 +42,12 @@ export default class MoneyService {
 		const userId = typeof player === 'number' ? player : ElementDataService.get(player, 'userId');
 		if (!userId) return false;
 
-		const log = MoneyLogEntity.create(userId, amount, amountBefore, type, description);
-		const insertId = await Database.InsertEntity<MoneyLogEntity>('moneyLogs', log);
-
-		return !!insertId;
+		try {
+			await MoneyLogEntity.createLog(userId, amount, amountBefore, type, description);
+			return true;
+		} catch (error) {
+			return false;
+		}
 	}
 
 	public static getPlayerMoney(player: PlayerMp): number {

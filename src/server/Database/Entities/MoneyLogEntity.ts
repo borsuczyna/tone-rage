@@ -1,51 +1,50 @@
 import { MoneyLogType } from '@shared/Models/MoneyLogData';
-import { DatabaseEntity } from './DatabaseEntity';
+import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement } from 'sequelize-typescript';
 
-export class MoneyLogEntity extends DatabaseEntity {
-	userId: number = 0;
-	amount: number = 0;
-	amountBefore: number = 0;
-	type: MoneyLogType = MoneyLogType.Unknown;
-	description: string = '';
-	createdAt: Date = new Date(Date.now());
+@Table({
+	tableName: 'moneyLogs',
+	timestamps: false
+})
+export class MoneyLogEntity extends Model {
+	@PrimaryKey
+	@AutoIncrement
+	@Column(DataType.INTEGER)
+	uid!: number;
 
-	constructor() {
-		super();
+	@Column(DataType.INTEGER)
+	userId!: number;
+
+	@Column(DataType.DECIMAL(10, 2))
+	amount!: number;
+
+	@Column(DataType.DECIMAL(10, 2))
+	amountBefore!: number;
+
+	@Column(DataType.INTEGER)
+	type!: MoneyLogType;
+
+	@Column(DataType.STRING)
+	description!: string;
+
+	@Column(DataType.DATE)
+	createdAt!: Date;
+
+	public static async createLog(userId: number, amount: number, amountBefore: number, type: MoneyLogType, description: string): Promise<MoneyLogEntity> {
+		return await MoneyLogEntity.create({
+			userId,
+			amount,
+			amountBefore,
+			type,
+			description,
+			createdAt: new Date()
+		});
 	}
 
-	protected convertDatabaseTypes(): void {
-		super.convertDatabaseTypes();
-
-		// Convert decimal fields from strings to numbers
-		if (typeof this.amount === 'string') {
-			this.amount = parseFloat(this.amount);
-		}
-		if (typeof this.amountBefore === 'string') {
-			this.amountBefore = parseFloat(this.amountBefore);
-		}
-		if (typeof this.userId === 'string') {
-			this.userId = parseInt(this.userId);
-		}
-		if (typeof this.type === 'string') {
-			this.type = parseInt(this.type) as MoneyLogType;
-		}
+	public static async createAtmDeposit(userId: number, amount: number, amountBefore: number): Promise<MoneyLogEntity> {
+		return await MoneyLogEntity.createLog(userId, amount, amountBefore, MoneyLogType.ATMDeposit, 'ATM Deposit');
 	}
 
-	public static create(userId: number, amount: number, amountBefore: number, type: MoneyLogType, description: string): MoneyLogEntity {
-		const log = new MoneyLogEntity();
-		log.userId = userId;
-		log.amount = amount;
-		log.amountBefore = amountBefore;
-		log.type = type;
-		log.description = description;
-		return log;
-	}
-
-	public static createAtmDeposit(userId: number, amount: number, amountBefore: number): MoneyLogEntity {
-		return MoneyLogEntity.create(userId, amount, amountBefore, MoneyLogType.ATMDeposit, 'ATM Deposit');
-	}
-
-	public static createAtmWithdraw(userId: number, amount: number, amountBefore: number): MoneyLogEntity {
-		return MoneyLogEntity.create(userId, -amount, amountBefore, MoneyLogType.ATMWithdraw, 'ATM Withdrawal');
+	public static async createAtmWithdraw(userId: number, amount: number, amountBefore: number): Promise<MoneyLogEntity> {
+		return await MoneyLogEntity.createLog(userId, -amount, amountBefore, MoneyLogType.ATMWithdraw, 'ATM Withdrawal');
 	}
 }

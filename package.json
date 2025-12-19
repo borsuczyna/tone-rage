@@ -47,7 +47,10 @@
 		"bcryptjs": "^3.0.2",
 		"colorette": "^2.0.16",
 		"dotenv": "^16.0.0",
-		"mysql2": "^3.15.3"
+		"mysql2": "^3.15.3",
+		"reflect-metadata": "^0.2.2",
+		"sequelize": "^6.37.7",
+		"sequelize-typescript": "^2.1.6"
 	},
 	"prettier": {
 		"$schema": "http://json.schemastore.org/prettierrc",

@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import Database from './Database/Database';
 import AnticheatService from './Services/Security/AnticheatService';
 import AuthService from './Services/Core/AuthService';
