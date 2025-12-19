@@ -49,7 +49,7 @@ export class UserEntity extends Model<UserEntity> {
 
 	public static async createUser(username: string, email: string, password: string): Promise<UserEntity> {
 		const passwordHash = await PasswordHash.hashPassword(password);
-		return await UserEntity.create({
+		const user = UserEntity.build({
 			username,
 			email,
 			passwordHash,
@@ -63,5 +63,7 @@ export class UserEntity extends Model<UserEntity> {
 			exp: 0,
 			adminLevel: 0
 		});
+		await user.save();
+		return user;
 	}
 }
