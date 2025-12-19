@@ -102,6 +102,7 @@
     gap: 1rem;
     overflow-y: auto;
     animation: slideLeft 0.8s ease-out;
+    transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 /* scroll */
@@ -141,7 +142,6 @@
     text-align: left;
     text-transform: uppercase;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    margin-bottom: 0.4rem;
 }
 
 .genderOptions {
@@ -398,7 +398,7 @@
 .colorGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(1.5rem, 1fr));
-    gap: 0.5rem;
+    gap: 0.4rem;
     justify-content: space-around;
 }
 
@@ -407,12 +407,12 @@
     height: 1.5rem;
     border-radius: 0.4rem;
     cursor: pointer;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
     box-shadow: 
-        0 2px 8px rgba(0, 0, 0, 0.2),
+        0 0.125rem 0.5rem rgba(0, 0, 0, 0.2),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
@@ -455,7 +455,7 @@
     opacity: 1;
 }
 
-.hairStyleGrid {
+.imageSelectGrid {
     display: flex;
     flex-wrap: wrap;
     gap: 0.6rem;
@@ -468,14 +468,14 @@
     overflow-y: auto;
 }
 
-.hairStyleNavigator {
+.styleNavigator {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 0.5rem;
 }
 
-.hairStyleArrow {
+.styleArrow {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -492,19 +492,19 @@
     user-select: none;
 }
 
-.hairStyleArrow:hover {
+.styleArrow:hover {
     background: rgba(255, 255, 255, 0.2);
     border-color: rgba(255, 255, 255, 0.4);
     color: white;
     transform: scale(1.05);
 }
 
-.hairStyleArrow:active {
+.styleArrow:active {
     transform: scale(0.95);
     background: rgba(255, 255, 255, 0.15);
 }
 
-.hairStyleValue {
+.styleValue {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -520,21 +520,21 @@
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-.hairStyleGrid::-webkit-scrollbar {
+.imageSelectGrid::-webkit-scrollbar {
     width: 0.6rem;
 }
 
-.hairStyleGrid::-webkit-scrollbar-track {
+.imageSelectGrid::-webkit-scrollbar-track {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 0.3rem;
 }
 
-.hairStyleGrid::-webkit-scrollbar-thumb {
+.imageSelectGrid::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.2);
     border-radius: 0.3rem;
 }
 
-.hairStyleItem {
+.imageItem {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -554,7 +554,7 @@
     overflow: hidden;
 }
 
-.hairStyleItem::before {
+.imageItem::before {
     content: '';
     position: absolute;
     top: 0;
@@ -569,7 +569,7 @@
     transition: opacity 0.3s ease;
 }
 
-.hairStyleItem:hover {
+.imageItem:hover {
     transform: translateY(-2px);
     border-color: rgba(255, 255, 255, 0.3);
     color: rgba(255, 255, 255, 0.9);
@@ -578,11 +578,11 @@
         0 0 20px rgba(102, 126, 234, 0.1);
 }
 
-.hairStyleItem:hover::before {
+.imageItem:hover::before {
     opacity: 1;
 }
 
-.hairStyleItem.active {
+.imageItem.active {
     background: linear-gradient(135deg, 
         rgba(102, 126, 234, 0.2) 0%, 
         rgba(118, 75, 162, 0.2) 100%
@@ -596,7 +596,7 @@
         0 0 30px rgba(102, 126, 234, 0.2);
 }
 
-.hairStyleItem.active::before {
+.imageItem.active::before {
     opacity: 1;
 }
 
@@ -723,9 +723,19 @@
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.categoryContent.transitioning {
+.rightMenu.transitioning {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(1.5rem);
+}
+
+.grabBox {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 60rem;
+    height: 100vh;
+    transform: translate(-50%, -50%);
+    cursor: grab;
 }
 
 @keyframes slideRight {

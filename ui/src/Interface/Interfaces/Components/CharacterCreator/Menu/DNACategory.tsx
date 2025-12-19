@@ -1,35 +1,19 @@
 import csx from 'src/Utils/MergeClass';
 import styles from '../../../Styles/CharacterCreatorInterface.module.css';
-import { CharacterGender } from '@shared/Models/Character';
+import { CharacterGender, type CharacterAppearance } from '@shared/Models/Character';
 import { useState } from 'react';
 import Parents from './Parents';
 import GenderSelector from './GenderSelector';
 import CustomSlider from './CustomSlider';
 
 interface DNACategoryProps {
-    gender: CharacterGender;
-    setGender: (gender: CharacterGender) => void;
-    femaleParent: number;
-    setFemaleParent: (parent: number) => void;
-    maleParent: number;
-    setMaleParent: (parent: number) => void;
-    faceSimilarity: number;
-    setFaceSimilarity: (similarity: number) => void;
-    skinSimilarity: number;
-    setSkinSimilarity: (similarity: number) => void;
+    characterAppearance: CharacterAppearance;
+    setCharacterAppearance: (values: [keyof CharacterAppearance, any][]) => void;
 }
 
 export default function DNACategory({
-    gender,
-    setGender,
-    femaleParent,
-    setFemaleParent,
-    maleParent,
-    setMaleParent,
-    faceSimilarity,
-    setFaceSimilarity,
-    skinSimilarity,
-    setSkinSimilarity
+    characterAppearance,
+    setCharacterAppearance
 }: DNACategoryProps) {
     const [parentOption, setParentOption] = useState<CharacterGender>(CharacterGender.Female);
     const femaleParents = [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 45];
@@ -37,7 +21,7 @@ export default function DNACategory({
 
     return (
         <>
-            <GenderSelector gender={gender} setGender={setGender} />
+            <GenderSelector gender={characterAppearance.gender} setGender={(gender) => setCharacterAppearance([['gender', gender]])} />
 
             <div className={styles.label} style={{ marginTop: '1rem' }}>Parents</div>
             <div className={styles.parentsMenu}>
@@ -46,23 +30,23 @@ export default function DNACategory({
                     <div className={csx(styles.parentOption, parentOption === CharacterGender.Male && styles.active)} onClick={() => setParentOption(CharacterGender.Male)}>Father</div>
                 </div>
                 
-                <Parents gender={parentOption} options={parentOption === CharacterGender.Female ? femaleParents : maleParents} selected={parentOption === CharacterGender.Female ? femaleParent : maleParent} setSelected={parentOption === CharacterGender.Female ? setFemaleParent : setMaleParent} />
+                <Parents gender={parentOption} options={parentOption === CharacterGender.Female ? femaleParents : maleParents} selected={parentOption === CharacterGender.Female ? characterAppearance.femaleParent : characterAppearance.maleParent} setSelected={parentOption === CharacterGender.Female ? (parent) => setCharacterAppearance([['femaleParent', parent]]) : (parent) => setCharacterAppearance([['maleParent', parent]])} />
             </div>
 
             <div className={styles.label} style={{ marginTop: '1rem' }}>Similarity</div>
             
             <CustomSlider 
                 label="Face"
-                value={faceSimilarity}
-                onChange={setFaceSimilarity}
+                value={characterAppearance.faceSimilarity}
+                onChange={(similarity) => setCharacterAppearance([['faceSimilarity', similarity]])}
                 min={0}
                 max={100}
             />
 
             <CustomSlider 
                 label="Skin"
-                value={skinSimilarity}
-                onChange={setSkinSimilarity}
+                value={characterAppearance.skinSimilarity}
+                onChange={(similarity) => setCharacterAppearance([['skinSimilarity', similarity]])}
                 min={0}
                 max={100}
             />

@@ -6,8 +6,7 @@ interface Control2DProps {
     labelY: string;
     valueX: number;
     valueY: number;
-    onChangeX: (value: number) => void;
-    onChangeY: (value: number) => void;
+    onChange: (valueX: number, valueY: number) => void;
     minX?: number;
     maxX?: number;
     minY?: number;
@@ -19,8 +18,7 @@ export default function Control2D({
     labelY, 
     valueX, 
     valueY, 
-    onChangeX, 
-    onChangeY,
+    onChange, 
     minX = 0, 
     maxX = 100, 
     minY = 0, 
@@ -58,8 +56,7 @@ export default function Control2D({
         const newValueX = Math.round(minX + percentX * (maxX - minX));
         const newValueY = Math.round(minY + percentY * (maxY - minY));
         
-        onChangeX(newValueX);
-        onChangeY(newValueY);
+        onChange(newValueX, newValueY);
     };
 
     const handleContainerClick = (e: React.MouseEvent) => {

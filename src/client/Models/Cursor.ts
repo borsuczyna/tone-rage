@@ -82,9 +82,14 @@ export const cursors = [
         type: MAP_CURSOR_NAME_TO_TYPE.CT_NORTHSOUTHRESIZE,
         path: 'ui/cursors/nort-south-resize.png',
     },
+    // {
+    //     type: MAP_CURSOR_NAME_TO_TYPE.CT_NOTALLOWED,
+    //     path: 'ui/cursors/notallowed.png',
+    //     offset: [-12, -12],
+    // },
     {
-        type: MAP_CURSOR_NAME_TO_TYPE.CT_NOTALLOWED,
-        path: 'ui/cursors/notallowed.png',
-        offset: [-12, -12],
-    }
+        type: MAP_CURSOR_NAME_TO_TYPE.CT_GRAB,
+        path: 'ui/cursors/hand.png',
+        offset: [-10, 0],
+    },
 ];

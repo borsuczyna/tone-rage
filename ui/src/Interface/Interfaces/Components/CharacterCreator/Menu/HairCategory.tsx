@@ -1,56 +1,36 @@
 import styles from '../../../Styles/CharacterCreatorInterface.module.css';
-import { CharacterGender, femaleHairStyles, hairColors, maleHairStyles } from '@shared/Models/Character';
-// import CustomSlider from './CustomSlider';
-// import ColorPicker from './ColorPicker';
-import HairStyleSelector from './HairStyleSelector';
+import { CharacterGender, type CharacterAppearance, femaleHairStyles, hairColors, maleHairStyles } from '@shared/Models/Character';
+import ImageSelector from './HairStyleSelector';
 import ColorPicker from './ColorPicker';
 
 interface HairCategoryProps {
-    gender: CharacterGender;
-    hairStyle: number;
-    setHairStyle: (style: number) => void;
-    hairColor: number;
-    setHairColor: (color: number) => void;
-    hairHighlightColor: number;
-    setHairHighlightColor: (color: number) => void;
-    // hairLength: number;
-    // setHairLength: (length: number) => void;
-    // hairOpacity: number;
-    // setHairOpacity: (opacity: number) => void;
+    characterAppearance: CharacterAppearance;
+    setCharacterAppearance: (values: [keyof CharacterAppearance, any][]) => void;
 }
 
 export default function HairCategory({
-    gender,
-    hairStyle,
-    setHairStyle,
-    hairColor,
-    setHairColor,
-    hairHighlightColor,
-    setHairHighlightColor,
-//     hairLength,
-//     setHairLength,
-//     hairOpacity,
-//     setHairOpacity
+    characterAppearance,
+    setCharacterAppearance,
 }: HairCategoryProps) {
-    const availableStyles = gender === CharacterGender.Male ? maleHairStyles : femaleHairStyles;
+    const availableStyles = characterAppearance.gender === CharacterGender.Male ? maleHairStyles : femaleHairStyles;
 
     return (
         <>
             <div className={styles.label}>Hair Style</div>
-            <HairStyleSelector 
-                selectedStyle={hairStyle}
-                onStyleChange={setHairStyle}
+            <ImageSelector 
+                selectedStyle={characterAppearance.hairStyle}
+                onStyleChange={(style) => setCharacterAppearance([['hairStyle', style]])}
                 availableStyles={availableStyles}
-                gender={gender}
+                gender={characterAppearance.gender}
             />
 
             <div className={styles.smallLabel}>Color</div>
             <ColorPicker 
-                selectedColor={hairColors[hairColor].hex}
+                selectedColor={hairColors[characterAppearance.hairColor].hex}
                 onColorChange={(colorHex) => {
                     const colorIndex = hairColors.findIndex(c => c.hex === colorHex);
                     if (colorIndex !== -1) {
-                        setHairColor(colorIndex);
+                        setCharacterAppearance([['hairColor', colorIndex]]);
                     }
                 }}
                 colors={hairColors.map(c => c.hex)}
@@ -58,33 +38,15 @@ export default function HairCategory({
 
             <div className={styles.smallLabel}>Highlight Color</div>
             <ColorPicker 
-                selectedColor={hairColors[hairHighlightColor].hex}
+                selectedColor={hairColors[characterAppearance.hairHighlightColor].hex}
                 onColorChange={(colorHex) => {
                     const colorIndex = hairColors.findIndex(c => c.hex === colorHex);
                     if (colorIndex !== -1) {
-                        setHairHighlightColor(colorIndex);
+                        setCharacterAppearance([['hairHighlightColor', colorIndex]]);
                     }
                 }}
                 colors={hairColors.map(c => c.hex)}
             />
-
-            {/* <div className={styles.label} style={{ marginTop: '1rem' }}>Hair Settings</div>
-            
-            <CustomSlider 
-                label="Length"
-                value={hairLength}
-                onChange={setHairLength}
-                min={0}
-                max={100}
-            />
-
-            <CustomSlider 
-                label="Opacity"
-                value={hairOpacity}
-                onChange={setHairOpacity}
-                min={0}
-                max={100}
-            /> */}
         </>
     );
 }

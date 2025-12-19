@@ -3,15 +3,19 @@ import styles from '../../../Styles/CharacterCreatorInterface.module.css';
 import { PakImage } from '../../PakImage';
 import { CharacterGender } from '@shared/Models/Character';
 
-interface HairStyleSelectorProps {
+interface ImageSelectorProps {
     selectedStyle: number;
     onStyleChange: (style: number) => void;
     availableStyles: number[];
     gender: CharacterGender;
+    component?: number;
+    isOverlay?: boolean;
 }
 
-export default function HairStyleSelector({ selectedStyle, onStyleChange, availableStyles, gender }: HairStyleSelectorProps) {
-    const imageUrl = `component_2_d{id}_t0${gender === CharacterGender.Male ? '' : '_f'}.png`;
+export default function ImageSelector({ selectedStyle, onStyleChange, availableStyles, gender, component = 2, isOverlay = false }: ImageSelectorProps) {
+    const imageUrl = isOverlay ?
+        `headOverlay_${component}_o{id}.png` :
+        `component_${component}_d{id}_t0${gender === CharacterGender.Male ? '' : '_f'}.png`;
 
     return (
         <div className={styles.parentsMenu}>

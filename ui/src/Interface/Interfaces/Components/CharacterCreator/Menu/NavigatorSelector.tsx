@@ -23,19 +23,19 @@ export default function NavigatorSelector({ label, selectedValue, onValueChange,
     return (
         <>
             <div className={styles.smallLabel}>{label}</div>
-            <div className={styles.hairStyleNavigator}>
+            <div className={styles.styleNavigator}>
                 <button 
-                    className={styles.hairStyleArrow} 
+                    className={styles.styleArrow} 
                     onClick={goToPrevious}
                     type="button"
                 >
                     &#8249;
                 </button>
-                <div className={styles.hairStyleValue}>
+                <div className={styles.styleValue}>
                     {selectedValue + 1}
                 </div>
                 <button 
-                    className={styles.hairStyleArrow} 
+                    className={styles.styleArrow} 
                     onClick={goToNext}
                     type="button"
                 >
