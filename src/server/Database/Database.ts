@@ -1,73 +1,96 @@
 import { Config } from '@/Config';
 import Logger from '@shared/Logger';
-import mysql from 'mysql2/promise';
-import { DatabaseEntity } from './Entities/DatabaseEntity';
-
-interface DatabaseConnection {
-	execute<T = any>(query: string, params?: any[]): Promise<[T, mysql.FieldPacket[]]>;
-	ping(): Promise<void>;
-}
+import { Sequelize } from 'sequelize-typescript';
+import { UserEntity } from './Entities/UserEntity';
+import { VehicleEntity } from './Entities/VehicleEntity';
+import { MoneyLogEntity } from './Entities/MoneyLogEntity';
 
 export default class Database {
-	private static connection: mysql.Connection & DatabaseConnection;
+	private static sequelize: Sequelize;
 	private static logger: Logger = Logger.getLogger(Database);
 
 	public static async init() {
-		this.connection = (await mysql.createConnection({
-			host: Config.Database.Host,
-			user: Config.Database.User,
-			database: Config.Database.Database,
-			password: Config.Database.Password,
-            connectTimeout: 10000,
-		})) as mysql.Connection & DatabaseConnection;
+		try {
+			this.sequelize = new Sequelize({
+				database: Config.Database.Database,
+				dialect: 'mysql',
+				username: Config.Database.User,
+				password: Config.Database.Password,
+				host: Config.Database.Host,
+				logging: false, // Set to console.log to see SQL queries
+				models: [UserEntity, VehicleEntity, MoneyLogEntity],
+				pool: {
+					max: 10,
+					min: 0,
+					acquire: 30000,
+					idle: 10000
+				}
+			});
 
-		if (!this.connection) {
-			this.logger.error('Failed to connect to the database, retrying in 5 seconds...');
+			// Test the connection
+			await this.sequelize.authenticate();
+			this.logger.info('Database connection established successfully.');
+
+			// Sync models (without altering existing tables)
+			await this.sequelize.sync({ alter: false });
+			this.logger.info('Database models synchronized.');
+
+			// Set up heartbeat
+			setInterval(() => this.heartbeat(), 60000);
+		} catch (error) {
+			this.logger.error(`Failed to connect to the database: ${error}`);
+			this.logger.error('Retrying in 5 seconds...');
 			setTimeout(() => this.init(), 5000);
-			return;
 		}
-
-		this.logger.info('Database initialized.');
-		setInterval(() => this.heartbeat(), 60000);
-		this.heartbeat();
 	}
 
 	private static async heartbeat() {
 		try {
-			await this.connection.ping();
+			await this.sequelize.authenticate();
 		} catch (error) {
 			this.logger.error('Database connection lost, attempting to reconnect...');
 			await this.init();
 		}
 	}
 
-	public static async Select<T extends DatabaseEntity>(entityClass: new () => T, query: string, params: any[] = []): Promise<T[]> {
+	public static getSequelize(): Sequelize {
+		return this.sequelize;
+	}
+
+	// Backwards compatibility methods (these are now deprecated, use Sequelize models directly)
+	public static async Select<T>(entityClass: any, query: string, params: any[] = []): Promise<T[]> {
 		try {
-			const [rows] = await this.connection.execute<mysql.RowDataPacket[]>(query, params);
-			return rows.map((row) =>
-				(entityClass as any).fromDatabaseRow ? (entityClass as any).fromDatabaseRow(row) : Object.assign(new entityClass(), row)
-			);
+			const [results] = await this.sequelize.query(query, {
+				replacements: params,
+				raw: true
+			});
+			return results as T[];
 		} catch (error) {
 			this.logger.error(`Select query failed: ${error}`);
 			return [];
 		}
 	}
 
-	public static async First<T extends DatabaseEntity>(query: string, params: any[] = []): Promise<T | null> {
+	public static async First<T>(query: string, params: any[] = []): Promise<T | null> {
 		try {
-			const [rows] = await this.connection.execute<mysql.RowDataPacket[]>(query, params);
-			const first = (rows as T[])[0];
-			return first ?? null;
+			const [results] = await this.sequelize.query(query, {
+				replacements: params,
+				raw: true
+			});
+			const rows = results as T[];
+			return rows[0] ?? null;
 		} catch (error) {
 			this.logger.error(`First query failed: ${error}`);
 			return null;
 		}
 	}
 
-	public static async Execute(query: string, params: any[] = []): Promise<mysql.ResultSetHeader | null> {
+	public static async Execute(query: string, params: any[] = []): Promise<any> {
 		try {
-			const [result] = await this.connection.execute<mysql.ResultSetHeader>(query, params);
-			return result;
+			const [results, metadata] = await this.sequelize.query(query, {
+				replacements: params
+			});
+			return metadata;
 		} catch (error) {
 			this.logger.error(`Execute query failed: ${error}`);
 			return null;
@@ -76,8 +99,10 @@ export default class Database {
 
 	public static async Insert(query: string, params: any[] = []): Promise<number | null> {
 		try {
-			const [result] = await this.connection.execute<mysql.ResultSetHeader>(query, params);
-			return result.insertId;
+			const [results, metadata] = await this.sequelize.query(query, {
+				replacements: params
+			});
+			return (metadata as any)?.insertId ?? null;
 		} catch (error) {
 			this.logger.error(`Insert query failed: ${error}`);
 			return null;
@@ -91,8 +116,10 @@ export default class Database {
 			const placeholders = columns.map(() => '?').join(', ');
 
 			const query = `INSERT INTO ${tableName} (${columns.join(', ')}) VALUES (${placeholders})`;
-			const [result] = await this.connection.execute<mysql.ResultSetHeader>(query, values);
-			return result.insertId;
+			const [results, metadata] = await this.sequelize.query(query, {
+				replacements: values
+			});
+			return (metadata as any)?.insertId ?? null;
 		} catch (error) {
 			this.logger.error(`Insert query failed: ${error}`);
 			return null;

@@ -10,6 +10,7 @@ import Logger from '@shared/Logger';
 import TimerService from '@shared/Services/TimerService';
 import { Config } from '@/Config';
 import Dimensions from '@shared-rage/Models/Dimensions';
+import { Op } from 'sequelize';
 
 interface CreateUserResult {
 	userId: number | null;
@@ -56,33 +57,41 @@ export default class UserService {
 			};
 		}
 
-		const newUser = await UserEntity.create(username, email, password);
-		const userId = await Database.InsertEntity('users', newUser);
-		if (!userId) {
+		try {
+			const newUser = await UserEntity.createUser(username, email, password);
+			return { userId: newUser.uid };
+		} catch (error) {
+			this.logger.error(`Failed to create user: ${error}`);
 			return { userId: null, error: 'auth.register.failed' };
 		}
-
-		return { userId };
 	}
 
 	public static async getUserById(uid: number): Promise<UserEntity | null> {
-		return await Database.First<UserEntity>('SELECT * FROM users WHERE uid = ?', [uid]);
+		return await UserEntity.findOne({ where: { uid } });
 	}
 
 	public static async getUserByUsername(username: string): Promise<UserEntity | null> {
-		return await Database.First<UserEntity>('SELECT * FROM users WHERE username = ?', [username]);
+		return await UserEntity.findOne({ where: { username } });
 	}
 
 	public static async getUserByEmail(email: string): Promise<UserEntity | null> {
-		return await Database.First<UserEntity>('SELECT * FROM users WHERE email = ?', [email]);
+		return await UserEntity.findOne({ where: { email } });
 	}
 
 	public static async getUserByUsernameOrEmail(identifier: string): Promise<UserEntity | null> {
-		return await Database.First<UserEntity>('SELECT * FROM users WHERE username = ? OR email = ?', [identifier, identifier]);
+		return await UserEntity.findOne({
+			where: {
+				[Op.or]: [{ username: identifier }, { email: identifier }]
+			}
+		});
 	}
 
 	public static async loginUser(identifier: string, password: string): Promise<LoginResult> {
-		const user = await Database.First<UserEntity>('SELECT * FROM users WHERE username = ? OR email = ?', [identifier, identifier]);
+		const user = await UserEntity.findOne({
+			where: {
+				[Op.or]: [{ username: identifier }, { email: identifier }]
+			}
+		});
 
 		if (!user) {
 			return { user: null, error: 'auth.login.failed' };
@@ -93,7 +102,7 @@ export default class UserService {
 			return { user: null, error: 'auth.login.failed' };
 		}
 
-		await Database.Execute('UPDATE users SET lastLogin = NOW() WHERE uid = ?', [user.uid]);
+		await user.update({ lastLogin: new Date() });
 
 		return { user };
 	}
@@ -114,42 +123,37 @@ export default class UserService {
         }
 	}
 
-	private static buildSaveQuery(client: PlayerMp): { query: string; params: any[] } | null {
+	public static async savePlayerData(client: PlayerMp) {
 		const userId = ElementDataService.get(client, 'userId') as number | null;
-		if (!userId) return null;
+		if (!userId) return;
 
 		const money = ElementDataService.get(client, 'money') as number | null;
 		const bankMoney = ElementDataService.get(client, 'bankMoney') as number | null;
 		const level = ElementDataService.get(client, 'level') as number | null;
 		const exp = ElementDataService.get(client, 'exp') as number | null;
 
-		const query = `
-            UPDATE users SET
-                money = ?,
-                bankMoney = ?,
-                level = ?,
-                exp = ?
-            WHERE uid = ?
-        `;
-
-		const params = [money ?? 0, bankMoney ?? 0, level ?? 0, exp ?? 0, userId];
-		return { query, params };
-	}
-
-	public static savePlayerData(client: PlayerMp) {
-		const saveData = this.buildSaveQuery(client);
-		if (!saveData) return;
-
-		const { query, params } = saveData;
-		Database.Execute(query, params);
+		try {
+			await UserEntity.update(
+				{
+					money: money ?? 0,
+					bankMoney: bankMoney ?? 0,
+					level: level ?? 0,
+					exp: exp ?? 0
+				},
+				{
+					where: { uid: userId }
+				}
+			);
+		} catch (error) {
+			this.logger.error(`Failed to save player data: ${error}`);
+		}
 	}
 
 	public static async savePlayers(): Promise<void> {
-        const players = mp.players.toArray();
-        
-        for (const player of players) {
-            await this.savePlayerData(player);
-        }
+		const players = mp.players.toArray();
+
+		// Save all players in parallel for better performance
+		await Promise.allSettled(players.map((player) => this.savePlayerData(player)));
 
 		this.logger.info(`Saved ${players.length} players to database`);
 	}
@@ -251,35 +255,63 @@ export default class UserService {
 	 * @internal Direct database access - bypasses business logic
 	 */
 	public static async takeMoneyFromUserIdInternal(userId: number, amount: number): Promise<boolean> {
-		const result = await Database.Execute('UPDATE users SET money = money - ? WHERE uid = ? AND money >= ?', [amount, userId, amount]);
-		return result !== null && result.affectedRows > 0;
+		try {
+			const user = await UserEntity.findOne({ where: { uid: userId } });
+			if (!user || user.money < amount) return false;
+
+			await user.update({ money: user.money - amount });
+			return true;
+		} catch (error) {
+			this.logger.error(`Failed to take money from user: ${error}`);
+			return false;
+		}
 	}
 
 	/**
 	 * @internal Direct database access - bypasses business logic
 	 */
 	public static async giveMoneyToUserIdInternal(userId: number, amount: number): Promise<boolean> {
-		const result = await Database.Execute('UPDATE users SET money = money + ? WHERE uid = ?', [amount, userId]);
-		return result !== null && result.affectedRows > 0;
+		try {
+			const user = await UserEntity.findOne({ where: { uid: userId } });
+			if (!user) return false;
+
+			await user.update({ money: user.money + amount });
+			return true;
+		} catch (error) {
+			this.logger.error(`Failed to give money to user: ${error}`);
+			return false;
+		}
 	}
 
 	/**
 	 * @internal Direct database access - bypasses business logic
 	 */
 	public static async takeBankMoneyFromUserIdInternal(userId: number, amount: number): Promise<boolean> {
-		const result = await Database.Execute('UPDATE users SET bankMoney = bankMoney - ? WHERE uid = ? AND bankMoney >= ?', [
-			amount,
-			userId,
-			amount
-		]);
-		return result !== null && result.affectedRows > 0;
+		try {
+			const user = await UserEntity.findOne({ where: { uid: userId } });
+			if (!user || user.bankMoney < amount) return false;
+
+			await user.update({ bankMoney: user.bankMoney - amount });
+			return true;
+		} catch (error) {
+			this.logger.error(`Failed to take bank money from user: ${error}`);
+			return false;
+		}
 	}
 
 	/**
 	 * @internal Direct database access - bypasses business logic
 	 */
 	public static async giveBankMoneyToUserIdInternal(userId: number, amount: number): Promise<boolean> {
-		const result = await Database.Execute('UPDATE users SET bankMoney = bankMoney + ? WHERE uid = ?', [amount, userId]);
-		return result !== null && result.affectedRows > 0;
+		try {
+			const user = await UserEntity.findOne({ where: { uid: userId } });
+			if (!user) return false;
+
+			await user.update({ bankMoney: user.bankMoney + amount });
+			return true;
+		} catch (error) {
+			this.logger.error(`Failed to give bank money to user: ${error}`);
+			return false;
+		}
 	}
 }

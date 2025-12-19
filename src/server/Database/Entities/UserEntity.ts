@@ -1,29 +1,68 @@
 import PasswordHash from '@/Utils/PasswordHash';
-import { DatabaseEntity } from './DatabaseEntity';
+import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement } from 'sequelize-typescript';
 
-export class UserEntity extends DatabaseEntity {
-	username: string = '';
-	email: string = '';
-	passwordHash: string = '';
-	avatar: string = '';
-    characterVisuals: string = '';
-	createdAt: Date = new Date(Date.now());
-	lastLogin: Date | null = null;
-	money: number = 0;
-	bankMoney: number = 0;
-	level: number = 0;
-	exp: number = 0;
-	adminLevel: number = 0;
+@Table({
+	tableName: 'users',
+	timestamps: false
+})
+export class UserEntity extends Model<UserEntity> {
+	@PrimaryKey
+	@AutoIncrement
+	@Column(DataType.INTEGER)
+	uid!: number;
 
-	constructor() {
-		super();
-	}
+	@Column(DataType.STRING)
+	username!: string;
 
-	public static async create(username: string, email: string, password: string): Promise<UserEntity> {
+	@Column(DataType.STRING)
+	email!: string;
+
+	@Column(DataType.STRING)
+	passwordHash!: string;
+
+	@Column(DataType.STRING)
+	avatar!: string;
+
+	@Column(DataType.TEXT)
+	characterVisuals!: string;
+
+	@Column(DataType.DATE)
+	createdAt!: Date;
+
+	@Column(DataType.DATE)
+	lastLogin!: Date | null;
+
+	@Column(DataType.DECIMAL(10, 2))
+	money!: number;
+
+	@Column(DataType.DECIMAL(10, 2))
+	bankMoney!: number;
+
+	@Column(DataType.INTEGER)
+	level!: number;
+
+	@Column(DataType.INTEGER)
+	exp!: number;
+
+	@Column(DataType.INTEGER)
+	adminLevel!: number;
+
+	public static async createUser(username: string, email: string, password: string): Promise<UserEntity> {
+		const passwordHash = await PasswordHash.hashPassword(password);
 		const user = new UserEntity();
 		user.username = username;
 		user.email = email;
-		user.passwordHash = await PasswordHash.hashPassword(password);
+		user.passwordHash = passwordHash;
+		user.avatar = '';
+		user.characterVisuals = '';
+		user.createdAt = new Date();
+		user.lastLogin = null;
+		user.money = 0;
+		user.bankMoney = 0;
+		user.level = 0;
+		user.exp = 0;
+		user.adminLevel = 0;
+		await user.save();
 		return user;
 	}
 }
