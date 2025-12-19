@@ -4,7 +4,6 @@ import { Sequelize } from 'sequelize-typescript';
 import { UserEntity } from './Entities/UserEntity';
 import { VehicleEntity } from './Entities/VehicleEntity';
 import { MoneyLogEntity } from './Entities/MoneyLogEntity';
-import path from 'path';
 
 export default class Database {
 	private static sequelize: Sequelize;

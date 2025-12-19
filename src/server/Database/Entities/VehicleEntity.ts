@@ -23,20 +23,23 @@ export class VehicleEntity extends Model {
 	color!: string;
 
 	get positionVector(): Vector3 {
-		const [x, y, z] = this.position.split(',').map(Number);
+		const parts = this.position.split(',').map(Number);
+		const [x = 0, y = 0, z = 0] = parts;
 		return new mp.Vector3(x, y, z);
 	}
 
 	get rotationVector(): Vector3 {
-		const [x, y, z] = this.rotation.split(',').map(Number);
+		const parts = this.rotation.split(',').map(Number);
+		const [x = 0, y = 0, z = 0] = parts;
 		return new mp.Vector3(x, y, z);
 	}
 
 	get colorArray(): [RGB, RGB] {
 		const colors = this.color.split(',').map(Number);
+		const [r1 = 0, g1 = 0, b1 = 0, r2 = 0, g2 = 0, b2 = 0] = colors;
 		return [
-			[colors[0], colors[1], colors[2]],
-			[colors[3], colors[4], colors[5]]
+			[r1, g1, b1],
+			[r2, g2, b2]
 		];
 	}
 }

@@ -150,11 +150,10 @@ export default class UserService {
 	}
 
 	public static async savePlayers(): Promise<void> {
-        const players = mp.players.toArray();
-        
-        for (const player of players) {
-            await this.savePlayerData(player);
-        }
+		const players = mp.players.toArray();
+
+		// Save all players in parallel for better performance
+		await Promise.allSettled(players.map((player) => this.savePlayerData(player)));
 
 		this.logger.info(`Saved ${players.length} players to database`);
 	}
