@@ -4,7 +4,7 @@ import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement } from 'seque
 	tableName: 'vehicles',
 	timestamps: false
 })
-export class VehicleEntity extends Model {
+export class VehicleEntity extends Model<VehicleEntity> {
 	@PrimaryKey
 	@AutoIncrement
 	@Column(DataType.INTEGER)

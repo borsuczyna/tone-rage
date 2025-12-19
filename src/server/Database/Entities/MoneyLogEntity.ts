@@ -5,7 +5,7 @@ import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement } from 'seque
 	tableName: 'moneyLogs',
 	timestamps: false
 })
-export class MoneyLogEntity extends Model {
+export class MoneyLogEntity extends Model<MoneyLogEntity> {
 	@PrimaryKey
 	@AutoIncrement
 	@Column(DataType.INTEGER)

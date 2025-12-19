@@ -5,7 +5,7 @@ import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement } from 'seque
 	tableName: 'users',
 	timestamps: false
 })
-export class UserEntity extends Model {
+export class UserEntity extends Model<UserEntity> {
 	@PrimaryKey
 	@AutoIncrement
 	@Column(DataType.INTEGER)
