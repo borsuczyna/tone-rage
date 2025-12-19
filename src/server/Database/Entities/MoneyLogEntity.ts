@@ -30,14 +30,13 @@ export class MoneyLogEntity extends Model<MoneyLogEntity> {
 	createdAt!: Date;
 
 	public static async createLog(userId: number, amount: number, amountBefore: number, type: MoneyLogType, description: string): Promise<MoneyLogEntity> {
-		const log = MoneyLogEntity.build({
-			userId,
-			amount,
-			amountBefore,
-			type,
-			description,
-			createdAt: new Date()
-		});
+		const log = new MoneyLogEntity();
+		log.userId = userId;
+		log.amount = amount;
+		log.amountBefore = amountBefore;
+		log.type = type;
+		log.description = description;
+		log.createdAt = new Date();
 		await log.save();
 		return log;
 	}

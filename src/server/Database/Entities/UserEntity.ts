@@ -49,20 +49,19 @@ export class UserEntity extends Model<UserEntity> {
 
 	public static async createUser(username: string, email: string, password: string): Promise<UserEntity> {
 		const passwordHash = await PasswordHash.hashPassword(password);
-		const user = UserEntity.build({
-			username,
-			email,
-			passwordHash,
-			avatar: '',
-			characterVisuals: '',
-			createdAt: new Date(),
-			lastLogin: null,
-			money: 0,
-			bankMoney: 0,
-			level: 0,
-			exp: 0,
-			adminLevel: 0
-		});
+		const user = new UserEntity();
+		user.username = username;
+		user.email = email;
+		user.passwordHash = passwordHash;
+		user.avatar = '';
+		user.characterVisuals = '';
+		user.createdAt = new Date();
+		user.lastLogin = null;
+		user.money = 0;
+		user.bankMoney = 0;
+		user.level = 0;
+		user.exp = 0;
+		user.adminLevel = 0;
 		await user.save();
 		return user;
 	}
