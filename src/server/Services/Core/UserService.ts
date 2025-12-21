@@ -108,10 +108,10 @@ export default class UserService {
 		ElementDataService.set(client, 'avatar', user.avatar, ShareMode.Everywhere);
 		client.name = user.username;
 
-        // if (user.characterVisuals.length === 0) {
-        //     this.goToCharacterCreation(client);
-        //     return;
-        // }
+        if (user.characterVisuals.length === 0) {
+            this.goToCharacterCreation(client);
+            return;
+        }
 	}
 
 	private static buildSaveQuery(client: PlayerMp): { query: string; params: any[] } | null {

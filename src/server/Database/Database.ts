@@ -12,32 +12,45 @@ export default class Database {
 	private static connection: mysql.Connection & DatabaseConnection;
 	private static logger: Logger = Logger.getLogger(Database);
 
-	public static async init() {
-		this.connection = (await mysql.createConnection({
-			host: Config.Database.Host,
-			user: Config.Database.User,
-			database: Config.Database.Database,
-			password: Config.Database.Password,
-            connectTimeout: 10000,
-		})) as mysql.Connection & DatabaseConnection;
+	public static async init(): Promise<void> {
+		try {
+			this.logger.info(`Attempting to connect to database at ${Config.Database.Host}...`);
+			
+			this.connection = (await mysql.createConnection({
+				host: Config.Database.Host,
+				user: Config.Database.User,
+				database: Config.Database.Database,
+				password: Config.Database.Password,
+				connectTimeout: 15000,
+			})) as mysql.Connection & DatabaseConnection;
 
-		if (!this.connection) {
-			this.logger.error('Failed to connect to the database, retrying in 5 seconds...');
-			setTimeout(() => this.init(), 5000);
-			return;
+			this.logger.info('Database initialized successfully.');
+			setInterval(() => this.heartbeat(), 60000);
+			this.heartbeat();
+		} catch (error) {
+			this.logger.error(`Failed to connect to the database: ${error}`);
+			this.logger.info('Retrying in 5 seconds...');
+			
+			// Use a proper timeout with promise to avoid unhandled rejections
+			setTimeout(() => {
+				this.init().catch(err => {
+					this.logger.error(`Database reconnection failed: ${err}`);
+				});
+			}, 5000);
 		}
-
-		this.logger.info('Database initialized.');
-		setInterval(() => this.heartbeat(), 60000);
-		this.heartbeat();
 	}
 
-	private static async heartbeat() {
+	private static async heartbeat(): Promise<void> {
 		try {
 			await this.connection.ping();
 		} catch (error) {
-			this.logger.error('Database connection lost, attempting to reconnect...');
-			await this.init();
+			this.logger.error(`Database connection lost: ${error}`);
+			this.logger.info('Attempting to reconnect...');
+			
+			// Properly handle the reconnection promise
+			this.init().catch(err => {
+				this.logger.error(`Heartbeat reconnection failed: ${err}`);
+			});
 		}
 	}
 

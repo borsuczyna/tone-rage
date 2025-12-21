@@ -5,7 +5,7 @@ import { isInBrowser } from 'src/Interface/Main';
 
 interface ImageSelectorProps {
     path: string;
-    selectedStyle: number;
+    selectedStyle: number | [number, number];
     onStyleChange: (style: number, index: number) => void;
     availableStyles: number[] | [number, number][];
     gender: CharacterGender;
@@ -49,11 +49,18 @@ export default function ImageSelector({ path, selectedStyle, onStyleChange, avai
         return url;
     }
 
+    const optionValue = (option: number | [number, number]) => {
+        if (Array.isArray(option)) {
+            return `${option[0]}_${option[1]}`;
+        }
+        return option;
+    }
+
     return (
         <div className={styles.parentsMenu}>
             <div className={styles.parentsList}>
                 {availableStyles.map((option, index) => (
-                    <div key={optionAsStr(option)} className={csx(styles.parentItem, selectedStyle === option && styles.active)} onClick={() => onStyleChange(optionData(option), index)}>
+                    <div key={optionAsStr(option)} className={csx(styles.parentItem, optionValue(selectedStyle) === optionValue(option) && styles.active)} onClick={() => onStyleChange(optionData(option), index)}>
                         <img loading="lazy" src={`${pathUrl}/${getName(option)}`} width={64} height={64} />
                     </div>
                 ))}

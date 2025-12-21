@@ -12,6 +12,7 @@ import Toolbar from './Components/CharacterCreator/Toolbar';
 import EyesCategory from './Components/CharacterCreator/Menu/EyesCategory';
 import FaceShapeCategory from './Components/CharacterCreator/Menu/FaceShapeCategory';
 import ClothesCategory from './Components/CharacterCreator/Menu/ClothesCategory';
+import { useRageEvent } from 'src/Hooks/RageEventProvider';
 
 // function skinMenu:getDrawableList(component)
 //     local list = {}
@@ -72,6 +73,12 @@ export default function CharacterCreatorInterface() {
             appearance.beardStyle = 0;
             appearance.beardColor = 0;
             appearance.beardLength = 0;
+            appearance.topStyle = 0;
+            appearance.topTexture = 0;
+            appearance.legsStyle = 0;
+            appearance.legsTexture = 0;
+            appearance.shoesStyle = 0;
+            appearance.shoesTexture = 0;
         } else if (key == 'beardStyle') {
             if (value == 0) {
                 appearance.beardLength = 0;
@@ -146,6 +153,16 @@ export default function CharacterCreatorInterface() {
             grabBox.removeEventListener('mouseleave', handleMouseLeave);
         };
     }, []);
+
+    useRageEvent('dumpTopsData', (topsData: any) => {
+        const data = JSON.stringify(topsData, null, 2);
+        const input = document.createElement('textarea');
+        input.value = data;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+    });
     
     return (
         <div className={csx(styles.container, hiding && styles.hiding)}>

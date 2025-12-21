@@ -20,33 +20,40 @@ import VehicleService from './Services/Core/VehicleService';
 import WinterSeason from './Features/Core/WinterSeason';
 import Tests from './Tests/Tests';
 
-(async () => {
-	await Database.init();
-	await EventService.init();
-	await ElementDataService.init();
-	await AnticheatService.init();
-	await PrivateVehicleService.init();
-	await ShutdownService.init();
-	await FetchService.init();
-	await AuthService.init();
-	await SpawnService.init();
-	await UserService.init();
-	await MarkerService.init();
-	await MarkerServerService.init();
-	await Chat.init();
-	await CommandService.init();
-	await RealTime.init();
-    await ColShapeService.init();
-    await VehicleService.init();
+async function initializeServer() {
+    try {
+        await Database.init();
+        await EventService.init();
+        await ElementDataService.init();
+        await AnticheatService.init();
+        await PrivateVehicleService.init();
+        await ShutdownService.init();
+        await FetchService.init();
+        await AuthService.init();
+        await SpawnService.init();
+        await UserService.init();
+        await MarkerService.init();
+        await MarkerServerService.init();
+        await Chat.init();
+        await CommandService.init();
+        await RealTime.init();
+        await ColShapeService.init();
+        await VehicleService.init();
 
-	// Features
-	await Atm.init();
-    // await WinterSeason.init();
+        // Features
+        await Atm.init();
+        // await WinterSeason.init();
 
-    // Tests
-    await Tests.getPositionCommandTest();
-    await Tests.createVehicleCommandTest();
-    await Tests.createTimeCommandTest();
+        // Tests
+        await Tests.getPositionCommandTest();
+        await Tests.createVehicleCommandTest();
+        await Tests.createTimeCommandTest();
 
-    InitMessage.print();
-})();
+        InitMessage.print();
+    } catch (error) {
+        console.error('Failed to initialize server:', error);
+        // Don't exit the process, let database retry mechanism handle reconnection
+    }
+}
+
+setTimeout(initializeServer, 1000); // Delay initialization by 1 second to allow DB connection retries

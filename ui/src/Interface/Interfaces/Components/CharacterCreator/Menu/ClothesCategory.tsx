@@ -14,18 +14,18 @@ export default function ClothesCategory({
     const topsData = clothingData.tops[characterAppearance.gender];
     // const tops = topsData.map((item) => [item.id, item.te
     const tops: [number, number][] = [];
+    let selectedTop: [number, number] | null = null;
     topsData.forEach((item) => {
         for (let texture of item.textures) {
+            if (item.id === characterAppearance.topStyle && texture === characterAppearance.topTexture) {
+                selectedTop = [item.id, texture];
+            }
+
             tops.push([item.id, texture]);
         }
     });
 
-    const onStyleChange = (style: keyof CharacterAppearance, data: [number, number], index: number) => {
-        const item = data[index];
-        if (!item) return;
-
-        setCharacterAppearance([[style, item]]);
-    }
+    console.log('selectedTop', selectedTop)
 
     return (
         <>
@@ -34,8 +34,8 @@ export default function ClothesCategory({
             <div className={styles.subLabel}>Top</div>
             <ImageSelector
                 path={'/creator/tops'}
-                selectedStyle={characterAppearance.topStyle}
-                onStyleChange={(_style, index) => {onStyleChange('topStyle', tops[index], index)}}
+                selectedStyle={selectedTop ?? 0}
+                onStyleChange={(_style, index) => {setCharacterAppearance([['topStyle', tops[index][0]], ['topTexture', tops[index][1]]])}}
                 availableStyles={tops}
                 gender={characterAppearance.gender}
                 component={11}

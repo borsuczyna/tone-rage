@@ -8,6 +8,8 @@ import ShoesFemale from './shoes-female.json';
 interface ClothingJsonItem {
     id: number;
     textures: number[];
+    torso?: number;
+    undershirts?: number[];
 }
 
 export const CharacterGender = {
@@ -62,6 +64,26 @@ export function getRandomClothingItem(gender: CharacterGender, type: 'tops' | 'l
     const item = data[Math.floor(Math.random() * data.length)];
     const texture = item.textures[Math.floor(Math.random() * item.textures.length)];
     return { id: item.id, texture };
+}
+
+export function getTopData(gender: CharacterGender, topId: number): ClothingJsonItem | null {
+    let data = clothingData['tops'][gender];
+    const item = data.find(c => c.id === topId);
+    return item || null;
+}
+
+export function getBestTorso(gender: CharacterGender, topId: number): number {
+    return gender === CharacterGender.Male ? 15 : 4; // default torso values
+}
+
+export function setTorsoForTop(gender: CharacterGender, top: number, torso: number) {
+    const item = clothingData.tops[gender].find(e => e.id == top);
+    if (!item) return;
+    item.undershirts = [torso];
+}
+
+export function getTopsData(gender: CharacterGender): ClothingJsonItem[] {
+    return clothingData.tops[gender];
 }
 
 export interface CharacterClothingItem {
