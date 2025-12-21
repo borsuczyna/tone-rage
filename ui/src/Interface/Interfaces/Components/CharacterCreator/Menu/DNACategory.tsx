@@ -1,6 +1,6 @@
 import csx from 'src/Utils/MergeClass';
 import styles from '../../../Styles/CharacterCreatorInterface.module.css';
-import { CharacterGender, type CharacterAppearance } from '@shared/Models/Character';
+import { CharacterGender, type CharacterAppearance } from '@shared/Models/Character/Character';
 import { useState } from 'react';
 import Parents from './Parents';
 import GenderSelector from './GenderSelector';

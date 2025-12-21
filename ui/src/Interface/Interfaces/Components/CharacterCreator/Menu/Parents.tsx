@@ -1,6 +1,6 @@
 import csx from 'src/Utils/MergeClass';
 import styles from '../../../Styles/CharacterCreatorInterface.module.css';
-import type { CharacterGender } from "@shared/Models/Character";
+import type { CharacterGender } from "@shared/Models/Character/Character";
 
 interface ParentsProps {
     gender: CharacterGender;

@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import styles from './Styles/Toolbar.module.css';
-import { type CharacterAppearance, validateCharacterAppearance } from '@shared/Models/Character';
+import { type CharacterAppearance, validateCharacterAppearance } from '@shared/Models/Character/Character';
 import { ArrowDownToLine, ArrowUpToLine, RefreshCcw } from 'lucide-react';
 import { useNotifications } from 'src/Hooks/NotificationsProvider';
 import Modal from '../Modal';

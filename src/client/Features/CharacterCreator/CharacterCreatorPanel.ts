@@ -4,7 +4,7 @@ import EventService from "@/Services/Infrastructure/EventService";
 import InterfaceService from "@/Services/Infrastructure/InterfaceService";
 import KeyboardService, { KeyState } from "@/Services/Utility/KeyboardService";
 import { InputKey } from "@shared/KeyMap";
-import { CharacterAppearance, CharacterGender, femaleHairOverlays, maleHairOverlays } from "@shared/Models/Character";
+import { CharacterAppearance, CharacterGender, femaleHairOverlays, maleHairOverlays } from "@shared/Models/Character/Character";
 
 export default class CharacterCreatorPanel {
     private static cameraFov: number = 70;
@@ -139,6 +139,9 @@ export default class CharacterCreatorPanel {
         }
 
         mp.players.local.setComponentVariation(2, appearance.hairStyle, 0, 1);
+        // mp.players.local.setComponentVariation(4, appearance.legsStyle, appearance.legsTexture, 2);
+        // mp.players.local.setComponentVariation(6, appearance.shoesStyle, appearance.shoesTexture, 2);
+        mp.players.local.setComponentVariation(11, appearance.topStyle, appearance.topTexture, 2);
         mp.players.local.setHairColor(appearance.hairColor, appearance.hairHighlightColor);
         updateEntityHairOverlay(mp.players.local);
 
@@ -201,7 +204,6 @@ export default class CharacterCreatorPanel {
 
     private static onCursorEnterExitGrabBox(isEntering: boolean) {
         this.isCursorInGrabBox = isEntering;
-        mp.console.logInfo(`Cursor is now ${isEntering ? 'inside' : 'outside'} grab box.`);
     }
 
     private static onClick(absoluteX: number, _absoluteY: number, upOrDown: "up" | "down", leftOrRight: "left" | "right", _relativeX: number, _relativeY: number, _worldPosition: Vector3, _hitEntity: number) {

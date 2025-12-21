@@ -1,8 +1,8 @@
-import { ageingStyles, blemishesStyles, type CharacterAppearance, complexionStyles, frecklesStyles, hairColors, lipstickStyles, makeupStyles, sunDamageStyles } from '@shared/Models/Character';
+import { ageingStyles, blemishesStyles, type CharacterAppearance, CharacterGender, complexionStyles, frecklesStyles, hairColors, lipstickStyles, makeupStyles, sunDamageStyles } from '@shared/Models/Character/Character';
 import styles from '../../../Styles/CharacterCreatorInterface.module.css';
 import Control2D from './Control2D';
 import CustomSlider from './CustomSlider';
-import ImageSelector from './HairStyleSelector';
+import ImageSelector from './ImageSelector';
 import ColorPicker from './ColorPicker';
 
 interface FaceShapeCategoryProps {
@@ -19,12 +19,12 @@ export default function FaceShapeCategory({
             <div className={styles.label}>Skin Details</div>
 
             <div className={styles.subLabel}>Blemishes</div>
-
             <ImageSelector 
+                path={'/creator/heads'}
                 selectedStyle={characterAppearance.blemishesStyle}
                 onStyleChange={(style) => setCharacterAppearance([['blemishesStyle', style]])}
                 availableStyles={blemishesStyles}
-                gender={characterAppearance.gender}
+                gender={CharacterGender.Male}
                 component={0}
                 isOverlay={true}
             />
@@ -38,12 +38,12 @@ export default function FaceShapeCategory({
             />
 
             <div className={styles.subLabel}>Ageing</div>
-
             <ImageSelector
+                path={'/creator/heads'}
                 selectedStyle={characterAppearance.ageingStyle}
                 onStyleChange={(style) => setCharacterAppearance([['ageingStyle', style]])}
                 availableStyles={ageingStyles}
-                gender={characterAppearance.gender}
+                gender={CharacterGender.Male}
                 component={3}
                 isOverlay={true}
             />
@@ -59,10 +59,11 @@ export default function FaceShapeCategory({
             <div className={styles.subLabel}>Makeup</div>
 
             <ImageSelector
+                path={'/creator/heads'}
                 selectedStyle={characterAppearance.makeupStyle}
                 onStyleChange={(style) => setCharacterAppearance([['makeupStyle', style]])}
                 availableStyles={makeupStyles}
-                gender={characterAppearance.gender}
+                gender={CharacterGender.Male}
                 component={4}
                 isOverlay={true}
             />
@@ -78,10 +79,11 @@ export default function FaceShapeCategory({
             <div className={styles.subLabel}>Blush</div>
 
             <ImageSelector
+                path={'/creator/heads'}
                 selectedStyle={characterAppearance.blushStyle}
                 onStyleChange={(style) => setCharacterAppearance([['blushStyle', style]])}
                 availableStyles={blemishesStyles}
-                gender={characterAppearance.gender}
+                gender={CharacterGender.Male}
                 component={5}
                 isOverlay={true}
             />
@@ -109,10 +111,11 @@ export default function FaceShapeCategory({
             <div className={styles.subLabel}>Complexion</div>
 
             <ImageSelector
+                path={'/creator/heads'}
                 selectedStyle={characterAppearance.complexionStyle}
                 onStyleChange={(style) => setCharacterAppearance([['complexionStyle', style]])}
                 availableStyles={complexionStyles}
-                gender={characterAppearance.gender}
+                gender={CharacterGender.Male}
                 component={6}
                 isOverlay={true}
             />
@@ -128,10 +131,11 @@ export default function FaceShapeCategory({
             <div className={styles.subLabel}>Sun Damage</div>
 
             <ImageSelector
+                path={'/creator/heads'}
                 selectedStyle={characterAppearance.sunDamageStyle}
                 onStyleChange={(style) => setCharacterAppearance([['sunDamageStyle', style]])}
                 availableStyles={sunDamageStyles}
-                gender={characterAppearance.gender}
+                gender={CharacterGender.Male}
                 component={7}
                 isOverlay={true}
             />
@@ -147,10 +151,11 @@ export default function FaceShapeCategory({
             <div className={styles.subLabel}>Lipstick</div>
 
             <ImageSelector
+                path={'/creator/heads'}
                 selectedStyle={characterAppearance.lipstickStyle}
                 onStyleChange={(style) => setCharacterAppearance([['lipstickStyle', style]])}
                 availableStyles={lipstickStyles}
-                gender={characterAppearance.gender}
+                gender={CharacterGender.Male}
                 component={8}
                 isOverlay={true}
             />
@@ -178,10 +183,11 @@ export default function FaceShapeCategory({
             <div className={styles.subLabel}>Freckles</div>
 
             <ImageSelector
+                path={'/creator/heads'}
                 selectedStyle={characterAppearance.frecklesStyle}
                 onStyleChange={(style) => setCharacterAppearance([['frecklesStyle', style]])}
                 availableStyles={frecklesStyles}
-                gender={characterAppearance.gender}
+                gender={CharacterGender.Male}
                 component={9}
                 isOverlay={true}
             />

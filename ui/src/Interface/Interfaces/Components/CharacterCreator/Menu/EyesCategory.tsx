@@ -1,7 +1,7 @@
-import { type CharacterAppearance, eyebrows, eyeColors, hairColors } from '@shared/Models/Character';
+import { type CharacterAppearance, CharacterGender, eyebrows, eyeColors, hairColors } from '@shared/Models/Character/Character';
 import styles from '../../../Styles/CharacterCreatorInterface.module.css';
 import ColorPicker from './ColorPicker';
-import ImageSelector from './HairStyleSelector';
+import ImageSelector from './ImageSelector';
 import CustomSlider from './CustomSlider';
 
 interface EyesCategoryProps {
@@ -18,10 +18,11 @@ export default function EyesCategory({
             <div className={styles.label}>Eyes</div>
             <div className={styles.smallLabel}>Eyebrows</div>
             <ImageSelector 
+                path={'/creator/heads'}
                 selectedStyle={characterAppearance.eyebrowStyle}
                 onStyleChange={(style) => setCharacterAppearance([['eyebrowStyle', style]])}
                 availableStyles={eyebrows}
-                gender={characterAppearance.gender}
+                gender={CharacterGender.Male}
                 component={2}
                 isOverlay={true}
             />

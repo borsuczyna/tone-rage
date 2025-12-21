@@ -1,6 +1,8 @@
 import CommandService from "@/Services/Infrastructure/CommandService";
 import NotificationService from "@/Services/Infrastructure/NotificationService";
 import DrawingService from "@/Services/Rendering/DrawingService";
+import Chat from "../Chat/Chat";
+import { updateEntityHairOverlay } from "@/Prototypes/player";
 
 interface GreenScreenItem {
     name: string;
@@ -36,22 +38,26 @@ function clothesListCallback(componentId: number) {
 }
 
 function clothesApplyCallback(componentId: number) {
-    return (element: EntityMp, itemData: any, data: GreenScreenItem) => {
+    return (element: EntityMp, itemData: any, _data: GreenScreenItem) => {
         const ped = element as PedMp;
         GreenScreen.hideBodyParts(element as PedMp, true);
 
         ped.setComponentVariation(componentId, itemData.drawable, itemData.texture, 2);
+
+        if(componentId == 2) {
+            updateEntityHairOverlay(mp.players.local);
+        }
     }
 }
 
 function clothesFilenameCallback(componentId: number) {
     return (itemData: any) => {
-        return `component_${componentId}_d${itemData.drawable}_t${itemData.texture}`;
+        return `component_${componentId}_d${itemData.drawable}_t${itemData.texture}${GreenScreen.isFemale ? '_f' : ''}`;
     }
 }
 
 function createArray(start: number, end: number) {
-    return (element: EntityMp) => {
+    return (_element: EntityMp) => {
         const result: number[] = [];
         for (let i = start; i <= end; i++) {
             result.push(i);
@@ -64,6 +70,13 @@ function headOverlayApplyCallback(overlayId: number) {
     return (element: EntityMp, itemData: any, data: GreenScreenItem) => {
         const ped = element as PedMp;
         GreenScreen.hideBodyParts(element as PedMp, data.hideHead || false);
+        // reset all other overlays
+        for (let i = 0; i < 10; i++) {
+            if (i !== overlayId) {
+                // @ts-ignore
+                ped.setHeadOverlay(i, 255, 1.0, 56, 56);
+            }
+        }
         // @ts-ignore
         ped.setHeadOverlay(overlayId, itemData, 1.0, 56, 56);
     }
@@ -71,11 +84,12 @@ function headOverlayApplyCallback(overlayId: number) {
 
 function headOverlayFilenameCallback(overlayId: number) {
     return (itemData: any) => {
-        return `headOverlay_${overlayId}_o${itemData}`;
+        return `headOverlay_${overlayId}_o${itemData}${GreenScreen.isFemale ? '_f' : ''}`;
     }
 }
 
 export default class GreenScreen {
+    public static isFemale = false;
     private static activeGreenScreen: {
         item: GreenScreenItem,
         camera: CameraMp,
@@ -98,20 +112,52 @@ export default class GreenScreen {
             filename: clothesFilenameCallback(1)
         },
         {
-            name: 'hair',
+            name: 'tops',
             camera: {
-                height: 0.8,
-                headingOffset: 30,
+                height: 0.15,
+                headingOffset: 25,
                 fov: 40,
-                distance: 0.72,
+                distance: 1.2,
                 greenScreenSize: 3,
             },
-            hideHead: false,
+            hideHead: true,
 
             element: () => mp.players.local,
-            getPossibleList: clothesListCallback(2),
-            applyItem: clothesApplyCallback(2),
-            filename: clothesFilenameCallback(2)
+            getPossibleList: clothesListCallback(11),
+            applyItem: clothesApplyCallback(11),
+            filename: clothesFilenameCallback(11)
+        },
+        {
+            name: 'legs',
+            camera: {
+                height: -0.25,
+                headingOffset: 25,
+                fov: 40,
+                distance: 1.2,
+                greenScreenSize: 3,
+            },
+            hideHead: true,
+
+            element: () => mp.players.local,
+            getPossibleList: clothesListCallback(4),
+            applyItem: clothesApplyCallback(4),
+            filename: clothesFilenameCallback(4)
+        },
+        {
+            name: 'shoes',
+            camera: {
+                height: -0.85,
+                headingOffset: 25,
+                fov: 40,
+                distance: 1.2,
+                greenScreenSize: 3,
+            },
+            hideHead: true,
+
+            element: () => mp.players.local,
+            getPossibleList: clothesListCallback(6),
+            applyItem: clothesApplyCallback(6),
+            filename: clothesFilenameCallback(6)
         },
         {
             name: 'torso',
@@ -160,22 +206,6 @@ export default class GreenScreen {
             getPossibleList: clothesListCallback(5),
             applyItem: clothesApplyCallback(5),
             filename: clothesFilenameCallback(5)
-        },
-        {
-            name: 'hair',
-            camera: {
-                height: 0.8,
-                headingOffset: 30,
-                fov: 40,
-                distance: 0.72,
-                greenScreenSize: 3,
-            },
-            hideHead: false,
-
-            element: () => mp.players.local,
-            getPossibleList: clothesListCallback(2),
-            applyItem: clothesApplyCallback(2),
-            filename: clothesFilenameCallback(2)
         },
         {
             name: 'hair',
@@ -350,9 +380,11 @@ export default class GreenScreen {
             command: '/greenscreen',
             description: 'Toggle green screen mode for screenshots',
             params: [
-                { name: 'type', type: 'string' }
+                { name: 'type', type: 'string' },
+                { name: 'female', type: 'number' }
             ]
-        }, (type: string) => {
+        }, (type: string, female: string) => {
+            this.isFemale = parseInt(female) === 1;
             this.toggleGreenScreen(type);
         });
 
@@ -366,6 +398,7 @@ export default class GreenScreen {
             return;
         }
 
+        mp.players.local.model = mp.game.joaat(this.isFemale ? 'mp_f_freemode_01' : 'mp_m_freemode_01');
         const viewEntity = item.element();
         if (!viewEntity) {
             NotificationService.addNotification('error', 'Green screen', `Could not get entity for green screen type: ${type}`);
@@ -394,13 +427,26 @@ export default class GreenScreen {
         await mp.game.waitAsync(200);
 
         const list = this.activeGreenScreen.item.getPossibleList(element);
-        for (let item of list) {
+        Chat.outputChatMessage('greenscreen', `Found ${list.length} items`);
+        // let skip = true;
+        for (let [index, item] of list.entries()) {
+            const fileName = this.activeGreenScreen.item.filename(item);
+            // if (skip) {
+            //     if (fileName === 'component_11_d374_t0') {
+            //         skip = false;
+            //     } else {
+            //         continue;
+            //     }
+            // }
             this.activeGreenScreen.item.applyItem(element, item, this.activeGreenScreen.item);
 
             // Wait a bit for the changes to apply
-            await mp.game.waitAsync(100);
-            const fileName = this.activeGreenScreen.item.filename(item);
+            await mp.game.waitAsync(10);
             await this.takeScreenshot(element as PedMp, fileName);
+
+            if (index % 50 === 0) {
+                Chat.outputChatMessage('greenscreen', `Took screenshot ${index + 1} / ${list.length}`);
+            }
         }
     }
 
@@ -452,12 +498,17 @@ export default class GreenScreen {
         // roof
         const ra = new mp.Vector3(position.x - size / 2, position.y, position.z + size/2);
         const rb = new mp.Vector3(position.x + size / 2, position.y, position.z + size/2);
+        
+        // floor
+        const fa = new mp.Vector3(position.x - size / 2, position.y, position.z - 0.145);
+        const fb = new mp.Vector3(position.x + size / 2, position.y, position.z - 0.145);
 
         DrawingService.drawPlane3D(a, b, position, size, '/white.png', color, true, 100, 100);
         DrawingService.drawPlane3D(b, c, position, size, '/white.png', color, true, 100, 100);
         DrawingService.drawPlane3D(c, d, position, size, '/white.png', color, true, 100, 100);
         DrawingService.drawPlane3D(d, a, position, size, '/white.png', color, true, 100, 100);
         DrawingService.drawPlane3D(ra, rb, position, size, '/white.png', color, true, 100, 100);
+        DrawingService.drawPlane3D(fa, fb, position, size, '/white.png', color, true, 100, 100);
     }
 
     public static hideBodyParts(ped: PedMp, hideHead: boolean) {    
@@ -483,7 +534,7 @@ export default class GreenScreen {
 
         mp.game.time.setTime(12, 0, 0);
 
-        await mp.game.waitAsync(200);
+        await mp.game.waitAsync(20);
         mp.gui.takeScreenshot(fileName, 1, 100, 0);
     }
 

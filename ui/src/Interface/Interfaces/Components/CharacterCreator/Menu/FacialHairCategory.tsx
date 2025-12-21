@@ -1,6 +1,6 @@
 import styles from '../../../Styles/CharacterCreatorInterface.module.css';
-import { beards, type CharacterAppearance, hairColors } from '@shared/Models/Character';
-import ImageSelector from './HairStyleSelector';
+import { beards, type CharacterAppearance, CharacterGender, hairColors } from '@shared/Models/Character/Character';
+import ImageSelector from './ImageSelector';
 import ColorPicker from './ColorPicker';
 import CustomSlider from './CustomSlider';
 
@@ -17,10 +17,11 @@ export default function FacialHairCategory({
         <>
             <div className={styles.label}>Facial Hair Style</div>
             <ImageSelector 
+                path={'/creator/heads'}
                 selectedStyle={characterAppearance.beardStyle}
                 onStyleChange={(style) => setCharacterAppearance([['beardStyle', style]])}
                 availableStyles={beards}
-                gender={characterAppearance.gender}
+                gender={CharacterGender.Male}
                 component={1}
                 isOverlay={true}
             />

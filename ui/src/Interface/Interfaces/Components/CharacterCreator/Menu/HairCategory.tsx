@@ -1,6 +1,6 @@
 import styles from '../../../Styles/CharacterCreatorInterface.module.css';
-import { CharacterGender, type CharacterAppearance, femaleHairStyles, hairColors, maleHairStyles } from '@shared/Models/Character';
-import ImageSelector from './HairStyleSelector';
+import { CharacterGender, type CharacterAppearance, femaleHairStyles, hairColors, maleHairStyles } from '@shared/Models/Character/Character';
+import ImageSelector from './ImageSelector';
 import ColorPicker from './ColorPicker';
 
 interface HairCategoryProps {
@@ -18,6 +18,7 @@ export default function HairCategory({
         <>
             <div className={styles.label}>Hair Style</div>
             <ImageSelector 
+                path={'/creator/heads'}
                 selectedStyle={characterAppearance.hairStyle}
                 onStyleChange={(style) => setCharacterAppearance([['hairStyle', style]])}
                 availableStyles={availableStyles}
