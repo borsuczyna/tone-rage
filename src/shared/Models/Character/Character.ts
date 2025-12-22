@@ -72,7 +72,7 @@ export function getTopData(gender: CharacterGender, topId: number): ClothingJson
     return item || null;
 }
 
-export function getBestTorso(gender: CharacterGender, topId: number): number {
+export function getBestTorso(gender: CharacterGender, _topId: number): number {
     return gender === CharacterGender.Male ? 15 : 4; // default torso values
 }
 

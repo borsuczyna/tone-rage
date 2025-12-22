@@ -12,6 +12,7 @@ import TextureDebugInterface from "./Interfaces/TextureDebugInterface";
 import ChatInterface from "./Interfaces/ChatInterface";
 import WorldInteractionInterface from "./Interfaces/WorldInteractionInterface";
 import CharacterCreatorInterface from "./Interfaces/CharacterCreatorInterface";
+import TopsMakerInterface from "./Interfaces/TopsMakerInterface";
 
 function Interfaces() {
     const { visibleInterfaces } = useInterfaceVisibility();
@@ -34,6 +35,7 @@ function Interfaces() {
             {isInterfaceVisible("ChatInterface") && <ChatInterface key="ChatInterface" />}
             {isInterfaceVisible("WorldInteractionInterface") && <WorldInteractionInterface key="WorldInteractionInterface" />}
             {isInterfaceVisible("CharacterCreatorInterface") && <CharacterCreatorInterface key="CharacterCreatorInterface" />}
+            {isInterfaceVisible("TopsMakerInterface") && <TopsMakerInterface key="CharacterCreatorITopsMakerInterfacenterface" />}
         </>
     )
 }

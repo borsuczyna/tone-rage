@@ -27,6 +27,7 @@ import VehicleService from './Services/Core/VehicleService';
 import WinterSeason from './Features/Core/WinterSeason';
 import UserService from './Services/Core/UserService';
 import GreenScreen from './Features/GreenScreen/GreenScreen';
+import TopsMaker from './Features/GreenScreen/TopsMaker';
 
 (async () => {
 	await DiscordRPC.init();
@@ -59,5 +60,8 @@ import GreenScreen from './Features/GreenScreen/GreenScreen';
 	await VehicleInteraction.init();
     // await PlayerNametags.init();
     await WinterSeason.init();
+
+    // Tests
     await GreenScreen.init();
+    await TopsMaker.init();
 })();

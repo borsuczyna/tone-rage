@@ -171,6 +171,8 @@ export default class UserService {
         client.heading = characterCreationPosition[3] || 0;
         client.alpha = 255;
         this.updatePlayerFreezePosition(client);
+
+        ElementDataService.set(client, 'inCharacterCreation', true, ShareMode.SpecificClient);
     }
 
 	private static onPlayerQuit(client: PlayerMp) {
