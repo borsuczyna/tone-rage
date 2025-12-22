@@ -5,7 +5,7 @@ import Categories from './Components/CharacterCreator/Categories';
 import RightMenu from './Components/CharacterCreator/RightMenu';
 import DNACategory from './Components/CharacterCreator/Menu/DNACategory';
 import HairCategory from './Components/CharacterCreator/Menu/HairCategory';
-import { type CharacterAppearance, getDefaultAppearance, getRandomAppearance } from '@shared/Models/Character/Character';
+import { type CharacterAppearance, getBestUndershirtsForTop, getDefaultAppearance, getRandomAppearance } from '@shared/Models/Character/Character';
 import { triggerEvent } from 'src/Hooks/Fetch';
 import FacialHairCategory from './Components/CharacterCreator/Menu/FacialHairCategory';
 import Toolbar from './Components/CharacterCreator/Toolbar';
@@ -13,46 +13,6 @@ import EyesCategory from './Components/CharacterCreator/Menu/EyesCategory';
 import FaceShapeCategory from './Components/CharacterCreator/Menu/FaceShapeCategory';
 import ClothesCategory from './Components/CharacterCreator/Menu/ClothesCategory';
 import { useRageEvent } from 'src/Hooks/RageEventProvider';
-
-// function skinMenu:getDrawableList(component)
-//     local list = {}
-//     for i = 0, GetNumberOfPedDrawableVariations(GetPlayerPed(-1), component) do
-//         local cmp               = component
-//         list[i]                 = {}
-//         list[i].name            = "Item n°".. i
-//         list[i].id              = i
-//         list[i].max             = false
-//         if GetNumberOfPedTextureVariations(GetPlayerPed(-1), cmp, i) - 1 ~= nil or GetNumberOfPedTextureVariations(GetPlayerPed(-1), cmp, i) - 1 > 0 then
-//             list[i].max         = GetNumberOfPedTextureVariations(GetPlayerPed(-1), cmp, i) - 1
-//         end
-//         list[i].onClick         = function()
-//             skinMenu:saveItem( skinMenu.currentmenu, i, skinMenu.menu[skinMenu.currentmenu].userSelectVariation )
-//             BuyItem({collection = "component", id = cmp}, {value = i, texture_value = skinMenu.menu[skinMenu.currentmenu].userSelectVariation})
-            
-//         end
-//         list[i].onLeft          = function()
-//             if skinMenu.menu[skinMenu.currentmenu].userSelectVariation > 0 then
-//                 skinMenu:setCurrentVariation("left", skinMenu.currentmenu)
-//                 SetPedComponentVariation(GetPlayerPed(-1), cmp, i, skinMenu.menu[skinMenu.currentmenu].userSelectVariation, 4)
-
-//             end
-//         end
-//         list[i].onRight         = function()
-//             if  skinMenu.menu[skinMenu.currentmenu].userSelectVariation < ( GetNumberOfPedTextureVariations(GetPlayerPed(-1), cmp, i) - 1 ) then
-//                 skinMenu:setCurrentVariation("right", skinMenu.currentmenu)
-//                 SetPedComponentVariation(GetPlayerPed(-1), cmp, i, skinMenu.menu[skinMenu.currentmenu].userSelectVariation, 4)
-//             end
-//         end
-//         list[i].onSelected      = function()
-//             skinMenu.menu[skinMenu.currentmenu].userSelect = i
-//             SetPedComponentVariation(GetPlayerPed(-1), cmp, i, skinMenu.menu[skinMenu.currentmenu].userSelectVariation, 0)
-//         end
-//         list[i].onBack          = function()
-//             skinMenu:toMenu(skinMenu:getLastMenu())
-//         end
-//     end
-//     return list
-// end
 
 export default function CharacterCreatorInterface() {
     const [hiding, _setHiding] = useState(false);
@@ -66,7 +26,6 @@ export default function CharacterCreatorInterface() {
         appearance = { ...appearance, [key]: value };
 
         if (key === 'gender') {
-            // Reset dependent features when gender changes
             appearance.hairStyle = 0;
             appearance.hairColor = 0;
             appearance.hairHighlightColor = 0;
@@ -84,6 +43,13 @@ export default function CharacterCreatorInterface() {
                 appearance.beardLength = 0;
             } else if (appearance.beardLength == 0 && value != 0) {
                 appearance.beardLength = 50;
+            }
+        } else if (key == 'topStyle') {
+            const undershirtsData = getBestUndershirtsForTop(characterAppearance.gender, value);
+            if (!undershirtsData.find(item => item.id === appearance.undershirtStyle)) {
+                const bestUndershirt = undershirtsData[0];
+                appearance.undershirtStyle = bestUndershirt.id;
+                appearance.undershirtTexture = bestUndershirt.textures[0];
             }
         }
 

@@ -150,7 +150,7 @@ export default class CharacterCreatorPanel {
         // mp.players.local.setComponentVariation(4, appearance.legsStyle, appearance.legsTexture, 2);
         // mp.players.local.setComponentVariation(6, appearance.shoesStyle, appearance.shoesTexture, 2);
         mp.players.local.setComponentVariation(3, bestTorso, 0, 2);
-        mp.players.local.setComponentVariation(8, bestUndershirts[0], 0, 2);
+        mp.players.local.setComponentVariation(8, appearance.undershirtStyle ?? bestUndershirts[0].id, appearance.undershirtTexture ?? bestUndershirts[0].textures[0], 2);
         mp.players.local.setComponentVariation(11, appearance.topStyle, appearance.topTexture, 2);
         mp.players.local.setHairColor(appearance.hairColor, appearance.hairHighlightColor);
         updateEntityHairOverlay(mp.players.local);

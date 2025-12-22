@@ -20,14 +20,14 @@ import Chat from './Features/Chat/Chat';
 import CommandService from './Services/Infrastructure/CommandService';
 import WorldInteraction from './Features/Interaction/WorldInteraction';
 import VehicleInteraction from './Features/Interaction/VehicleInteraction';
-import PlayerNametags from './Features/Nametags/PlayerNametags';
+// import PlayerNametags from './Features/Nametags/PlayerNametags';
 import ColShapeService from '@shared-rage/Services/ColShapeService';
 import PlayerControlService from './Services/Gameplay/PlayerControlService';
 import VehicleService from './Services/Core/VehicleService';
 import WinterSeason from './Features/Core/WinterSeason';
 import UserService from './Services/Core/UserService';
 import GreenScreen from './Features/GreenScreen/GreenScreen';
-import TopsMaker from './Features/GreenScreen/TopsMaker';
+// import TopsMaker from './Features/GreenScreen/TopsMaker';
 
 (async () => {
 	await DiscordRPC.init();
@@ -63,5 +63,5 @@ import TopsMaker from './Features/GreenScreen/TopsMaker';
 
     // Tests
     await GreenScreen.init();
-    await TopsMaker.init();
+    // await TopsMaker.init();
 })();

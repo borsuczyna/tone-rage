@@ -1,4 +1,4 @@
-import { clothingData, type CharacterAppearance } from "@shared/Models/Character/Character";
+import { clothingData, getBestUndershirtsForTop, type CharacterAppearance } from "@shared/Models/Character/Character";
 import styles from '../../../Styles/CharacterCreatorInterface.module.css';
 import ImageSelector from "./ImageSelector";
 
@@ -12,7 +12,6 @@ export default function ClothesCategory({
     setCharacterAppearance
 }: ClothesCategoryProps) {
     const topsData = clothingData.tops[characterAppearance.gender];
-    // const tops = topsData.map((item) => [item.id, item.te
     const tops: [number, number][] = [];
     let selectedTop: [number, number] | null = null;
     topsData.forEach((item) => {
@@ -25,7 +24,17 @@ export default function ClothesCategory({
         }
     });
 
-    console.log('selectedTop', selectedTop)
+    const undershirtsData = getBestUndershirtsForTop(characterAppearance.gender, characterAppearance.topStyle);
+    const undershirts: [number, number][] = [];
+    let selectedUndershirt: [number, number] | null = null;
+    undershirtsData.forEach((item) => {
+        for (let texture of item.textures) {
+            if (item.id === characterAppearance.undershirtStyle && texture === characterAppearance.undershirtTexture) {
+                selectedUndershirt = [item.id, texture];
+            }
+            undershirts.push([item.id, texture]);
+        }
+    });
 
     return (
         <>
@@ -40,6 +49,20 @@ export default function ClothesCategory({
                 gender={characterAppearance.gender}
                 component={11}
             />
+
+            {undershirts.length > 1 && (
+                <>
+                    <div className={styles.subLabel}>Undershirt</div>
+                    <ImageSelector
+                        path={'/creator/undershirts'}
+                        selectedStyle={selectedUndershirt ?? 0}
+                        onStyleChange={(_style, index) => {setCharacterAppearance([['undershirtStyle', undershirts[index][0]], ['undershirtTexture', undershirts[index][1]]])}}
+                        availableStyles={undershirts}
+                        gender={characterAppearance.gender}
+                        component={8}
+                    />
+                </>
+            )}
         </>
     );
 }

@@ -128,6 +128,22 @@ export default class GreenScreen {
             filename: clothesFilenameCallback(11)
         },
         {
+            name: 'undershirts',
+            camera: {
+                height: 0.15,
+                headingOffset: 25,
+                fov: 40,
+                distance: 1.2,
+                greenScreenSize: 3,
+            },
+            hideHead: true,
+
+            element: () => mp.players.local,
+            getPossibleList: clothesListCallback(8),
+            applyItem: clothesApplyCallback(8),
+            filename: clothesFilenameCallback(8)
+        },
+        {
             name: 'legs',
             camera: {
                 height: -0.25,

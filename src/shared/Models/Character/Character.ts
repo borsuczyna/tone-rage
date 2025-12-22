@@ -4,6 +4,8 @@ import LegsMale from './legs-male.json';
 import LegsFemale from './legs-female.json';
 import ShoesMale from './shoes-male.json';
 import ShoesFemale from './shoes-female.json';
+import UndershirtsMale from './undershirts-male.json';
+import UndershirtsFemale from './undershirts-female.json';
 import _MaleTopsData from './male-data.json';
 import _FemaleTopsData from './female-data.json';
 
@@ -27,7 +29,7 @@ export const CharacterGender = {
     Female: 'female'
 } as const;
 
-export const clothingData: Record<'tops' | 'legs' | 'shoes', Record<CharacterGender, ClothingJsonItem[]>> = {
+export const clothingData: Record<'tops' | 'legs' | 'shoes' | 'undershirts', Record<CharacterGender, ClothingJsonItem[]>> = {
     tops: {
         [CharacterGender.Male]: TopsMale,
         [CharacterGender.Female]: TopsFemale
@@ -39,6 +41,10 @@ export const clothingData: Record<'tops' | 'legs' | 'shoes', Record<CharacterGen
     shoes: {
         [CharacterGender.Male]: ShoesMale,
         [CharacterGender.Female]: ShoesFemale
+    },
+    undershirts: {
+        [CharacterGender.Male]: UndershirtsMale,
+        [CharacterGender.Female]: UndershirtsFemale
     }
 }
 
@@ -90,9 +96,10 @@ export function getBestTorsoForTop(gender: CharacterGender, topId: number): numb
     return data?.torso ?? (gender == CharacterGender.Male ? 15 : 4);
 }
 
-export function getBestUndershirtsForTop(gender: CharacterGender, topId: number): number[] {
+export function getBestUndershirtsForTop(gender: CharacterGender, topId: number): ClothingJsonItem[] {
     const data = findBestDataForTop(gender, topId);
-    return data?.undershirts ?? (gender == CharacterGender.Male ? [0] : [15]);
+    const ids = data?.undershirts ?? (gender == CharacterGender.Male ? [0] : [15]);
+    return clothingData.undershirts[gender].filter(und => ids.includes(und.id));
 }
 
 export function getTopsData(gender: CharacterGender): ClothingJsonItem[] {
@@ -439,6 +446,8 @@ export interface CharacterAppearance {
     legsTexture: number;
     shoesStyle: number;
     shoesTexture: number;
+    undershirtStyle: number;
+    undershirtTexture: number;
 }
 
 export function validateCharacterAppearance(appearance: CharacterAppearance): boolean {
@@ -505,6 +514,10 @@ export function validateCharacterAppearance(appearance: CharacterAppearance): bo
     if (appearance.blushColor < 0 || appearance.blushColor >= hairColors.length) return false;
     if (appearance.lipstickColor < 0 || appearance.lipstickColor >= hairColors.length) return false;
 
+    const undershirts = getBestUndershirtsForTop(appearance.gender, appearance.topStyle);
+    const hasUndershirt = undershirts.some((item) => item.id === appearance.undershirtStyle && item.textures.includes(appearance.undershirtTexture));
+    if (!hasUndershirt) return false;
+
     return true;
 }
 
@@ -524,6 +537,8 @@ export function getRandomAppearance(gender: CharacterGender): CharacterAppearanc
     const randomTop = getRandomClothingItem(gender, 'tops');
     const randomLegs = getRandomClothingItem(gender, 'legs');
     const randomShoes = getRandomClothingItem(gender, 'shoes');
+    const undershirts = getBestUndershirtsForTop(gender, randomTop.id);
+    const randomUndershirt = getRandomArrayItem(undershirts);
 
     const randomAppearance: CharacterAppearance = {
         gender,
@@ -586,6 +601,8 @@ export function getRandomAppearance(gender: CharacterGender): CharacterAppearanc
         legsTexture: randomLegs.texture,
         shoesStyle: randomShoes.id,
         shoesTexture: randomShoes.texture,
+        undershirtStyle: randomUndershirt.id,
+        undershirtTexture: getRandomArrayItem(randomUndershirt.textures),
     };
 
     return randomAppearance;
@@ -652,5 +669,7 @@ export function getDefaultAppearance(): CharacterAppearance {
         legsTexture: 0,
         shoesStyle: 0,
         shoesTexture: 0,
+        undershirtStyle: 0,
+        undershirtTexture: 0,
     };
 }
