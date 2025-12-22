@@ -64,7 +64,7 @@ export const sunDamageStyles = Array.from({ length: 11 }, (_, i) => i);
 export const lipstickStyles = Array.from({ length: 10 }, (_, i) => i);
 export const frecklesStyles = Array.from({ length: 18 }, (_, i) => i);
 
-export function isClothingValid(gender: CharacterGender, type: 'tops' | 'legs' | 'shoes', id: number, texture: number): boolean {
+export function isClothingValid(gender: CharacterGender, type: 'tops' | 'legs' | 'shoes' | 'undershirts', id: number, texture: number): boolean {
     if (id === 0) return true; // default clothing
 
     let data = clothingData[type][gender];
@@ -73,6 +73,11 @@ export function isClothingValid(gender: CharacterGender, type: 'tops' | 'legs' |
 
     const textureIndex = item.textures.indexOf(texture);
     return textureIndex !== -1;
+}
+
+export function getClothingItemById(gender: CharacterGender, category: 'tops' | 'legs' | 'shoes' | 'undershirts', id: number) {
+    const categoryItems = clothingData[category][gender];
+    return categoryItems.find(item => item.id === id) || null;
 }
 
 export function getRandomClothingItem(gender: CharacterGender, type: 'tops' | 'legs' | 'shoes'): { id: number; texture: number } {
@@ -513,6 +518,10 @@ export function validateCharacterAppearance(appearance: CharacterAppearance): bo
     if (appearance.frecklesOpacity < 0 || appearance.frecklesOpacity > 100) return false;
     if (appearance.blushColor < 0 || appearance.blushColor >= hairColors.length) return false;
     if (appearance.lipstickColor < 0 || appearance.lipstickColor >= hairColors.length) return false;
+
+    if (!isClothingValid(appearance.gender, 'tops', appearance.topStyle, appearance.topTexture)) return false;
+    if (!isClothingValid(appearance.gender, 'shoes', appearance.shoesStyle, appearance.shoesTexture)) return false;
+    if (!isClothingValid(appearance.gender, 'legs', appearance.legsStyle, appearance.legsTexture)) return false;
 
     const undershirts = getBestUndershirtsForTop(appearance.gender, appearance.topStyle);
     const hasUndershirt = undershirts.some((item) => item.id === appearance.undershirtStyle && item.textures.includes(appearance.undershirtTexture));

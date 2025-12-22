@@ -19,7 +19,6 @@ export default function ClothesCategory({
             if (item.id === characterAppearance.topStyle && texture === characterAppearance.topTexture) {
                 selectedTop = [item.id, texture];
             }
-
             tops.push([item.id, texture]);
         }
     });
@@ -33,6 +32,30 @@ export default function ClothesCategory({
                 selectedUndershirt = [item.id, texture];
             }
             undershirts.push([item.id, texture]);
+        }
+    });
+
+    const legsData = clothingData.legs[characterAppearance.gender];
+    const legs: [number, number][] = [];
+    let selectedLegs: [number, number] | null = null;
+    legsData.forEach((item) => {
+        for (let texture of item.textures) {
+            if (item.id === characterAppearance.legsStyle && texture === characterAppearance.legsTexture) {
+                selectedLegs = [item.id, texture];
+            }
+            legs.push([item.id, texture]);
+        }
+    });
+
+    const shoesData = clothingData.shoes[characterAppearance.gender];
+    const shoes: [number, number][] = [];
+    let selectedShoes: [number, number] | null = null;
+    shoesData.forEach((item) => {
+        for (let texture of item.textures) {
+            if (item.id === characterAppearance.shoesStyle && texture === characterAppearance.shoesTexture) {
+                selectedShoes = [item.id, texture];
+            }
+            shoes.push([item.id, texture]);
         }
     });
 
@@ -63,6 +86,26 @@ export default function ClothesCategory({
                     />
                 </>
             )}
+
+            <div className={styles.subLabel}>Legs</div>
+            <ImageSelector
+                path={'/creator/legs'}
+                selectedStyle={selectedLegs ?? 0}
+                onStyleChange={(_style, index) => {setCharacterAppearance([['legsStyle', legs[index][0]], ['legsTexture', legs[index][1]]])}}
+                availableStyles={legs}
+                gender={characterAppearance.gender}
+                component={4}
+            />
+
+            <div className={styles.subLabel}>Shoes</div>
+            <ImageSelector
+                path={'/creator/shoes'}
+                selectedStyle={selectedShoes ?? 0}
+                onStyleChange={(_style, index) => {setCharacterAppearance([['shoesStyle', shoes[index][0]], ['shoesTexture', shoes[index][1]]])}}
+                availableStyles={shoes}
+                gender={characterAppearance.gender}
+                component={6}
+            />
         </>
     );
 }

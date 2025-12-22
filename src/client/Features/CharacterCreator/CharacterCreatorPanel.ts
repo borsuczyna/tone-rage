@@ -4,10 +4,8 @@ import EventService from "@/Services/Infrastructure/EventService";
 import InterfaceService from "@/Services/Infrastructure/InterfaceService";
 import KeyboardService, { KeyState } from "@/Services/Utility/KeyboardService";
 import { InputKey } from "@shared/KeyMap";
-import { CharacterAppearance, CharacterGender, femaleHairOverlays, findBestDataForTop, getBestTorsoForTop, getBestUndershirtsForTop, maleHairOverlays } from "@shared/Models/Character/Character";
+import { CharacterAppearance, CharacterGender, femaleHairOverlays, getBestTorsoForTop, getBestUndershirtsForTop, maleHairOverlays } from "@shared/Models/Character/Character";
 import Chat from "../Chat/Chat";
-import CommandService from "@/Services/Infrastructure/CommandService";
-import NotificationService from "@/Services/Infrastructure/NotificationService";
 
 export default class CharacterCreatorPanel {
     private static cameraFov: number = 70;
@@ -17,7 +15,9 @@ export default class CharacterCreatorPanel {
     private static playerMatrix: Matrix | null = null;
     private static zoomLevel: number = 0;
     private static isCursorInGrabBox: boolean = false;
-    private static rotatingPed: number | null = null;
+    private static rotatingPed: [number, number] | null = null;
+    private static cameraY: number = 0;
+    private static category: number = 0;
 
     public static setVisible(visible: boolean) {
         InterfaceService.setInterfaceVisible('CharacterCreatorInterface', visible);
@@ -43,6 +43,7 @@ export default class CharacterCreatorPanel {
             EventService.registerEventHandler('characterCreator:updateAppearance', this.onUpdateAppearance.bind(this));
             EventService.registerEventHandler('characterCreator:cursorEnterGrabBox', this.onCursorEnterExitGrabBox.bind(this, true).bind(this));
             EventService.registerEventHandler('characterCreator:cursorLeaveGrabBox', this.onCursorEnterExitGrabBox.bind(this, false).bind(this));
+            EventService.registerEventHandler('characterCreator:categoryChanged', this.onCategoryChanged.bind(this));
         } else {
             mp.events.remove('render', this.renderLoop.bind(this));
 
@@ -62,6 +63,7 @@ export default class CharacterCreatorPanel {
             EventService.removeEventHandler('characterCreator:updateAppearance', this.onUpdateAppearance.bind(this));
             EventService.removeEventHandler('characterCreator:cursorEnterGrabBox', this.onCursorEnterExitGrabBox.bind(this, true).bind(this));
             EventService.removeEventHandler('characterCreator:cursorLeaveGrabBox', this.onCursorEnterExitGrabBox.bind(this, false).bind(this));
+            EventService.removeEventHandler('characterCreator:categoryChanged', this.onCategoryChanged.bind(this));
         }
     }
 
@@ -81,11 +83,13 @@ export default class CharacterCreatorPanel {
         this.cameraLookAtOffset = this.interpolateVector3(this.cameraLookAtOffset, targetLookAtOffset, 0.03);
 
         if (this.rotatingPed !== null) {
-            const [cursorX] = mp.gui.cursor.position;
-            const deltaX = cursorX - this.rotatingPed;
+            const [cursorX, cursorY] = mp.gui.cursor.position;
+            const deltaX = cursorX - this.rotatingPed[0];
+            const deltaY = cursorY - this.rotatingPed[1];
             const rotationSpeed = 0.2;
             mp.players.local.setHeading(mp.players.local.getHeading() + deltaX * rotationSpeed);
-            this.rotatingPed = cursorX;
+            this.cameraY = Math.max(-10, Math.min(10, this.cameraY + deltaY * rotationSpeed * 0.1));
+            this.rotatingPed = [cursorX, cursorY];
         }
 
         mp.game.time.setTime(12, 0, 0);
@@ -97,12 +101,20 @@ export default class CharacterCreatorPanel {
     private static getCameraTargetPosition(): [Vector3, Vector3, number] {
         const isFemale = mp.players.local.model === mp.game.joaat('mp_f_freemode_01');
         const femaleZ = isFemale ? 0.09 : 0;
+
+        if (this.category === 5) { // Clothes
+            return [
+                new mp.Vector3(0, 1.25, 0.25 + this.cameraY/10 * this.zoomLevel),
+                new mp.Vector3(0, 0, -0.05 + this.cameraY/15 * this.zoomLevel),
+                80 - this.zoomLevel * 40
+            ];
+        }
         
         return [
-            new mp.Vector3(0, 0.72, 0.7 + femaleZ),
-            new mp.Vector3(0, 0, 0.67 + femaleZ),
+            new mp.Vector3(0, 0.72, 0.7 + femaleZ + this.cameraY/45 * this.zoomLevel),
+            new mp.Vector3(0, 0, 0.67 + femaleZ + this.cameraY/55 * this.zoomLevel),
             70 - this.zoomLevel * 40
-        ]
+        ];
     }
 
     private static onUpdateAppearance(appearance: CharacterAppearance) {
@@ -142,13 +154,11 @@ export default class CharacterCreatorPanel {
             }
         }
 
-        // const bestTorso = this.getBestTorso(appearance.topStyle, appearance.topTexture);
-        // const torsoData = findBestDataForTop(appearance.gender, appearance.topStyle);
         const bestTorso = getBestTorsoForTop(appearance.gender, appearance.topStyle);
         const bestUndershirts = getBestUndershirtsForTop(appearance.gender, appearance.topStyle);
         mp.players.local.setComponentVariation(2, appearance.hairStyle, 0, 1);
-        // mp.players.local.setComponentVariation(4, appearance.legsStyle, appearance.legsTexture, 2);
-        // mp.players.local.setComponentVariation(6, appearance.shoesStyle, appearance.shoesTexture, 2);
+        mp.players.local.setComponentVariation(4, appearance.legsStyle, appearance.legsTexture, 2);
+        mp.players.local.setComponentVariation(6, appearance.shoesStyle, appearance.shoesTexture, 2);
         mp.players.local.setComponentVariation(3, bestTorso, 0, 2);
         mp.players.local.setComponentVariation(8, appearance.undershirtStyle ?? bestUndershirts[0].id, appearance.undershirtTexture ?? bestUndershirts[0].textures[0], 2);
         mp.players.local.setComponentVariation(11, appearance.topStyle, appearance.topTexture, 2);
@@ -208,7 +218,7 @@ export default class CharacterCreatorPanel {
         if (key === 'MouseWheelUp') {
             this.zoomLevel = Math.min(1, this.zoomLevel + 0.1);
         } else if (key === 'MouseWheelDown') {
-            this.zoomLevel = Math.max(-1, this.zoomLevel - 0.1);
+            this.zoomLevel = Math.max(0, this.zoomLevel - 0.1);
         }
     }
 
@@ -216,11 +226,15 @@ export default class CharacterCreatorPanel {
         this.isCursorInGrabBox = isEntering;
     }
 
-    private static onClick(absoluteX: number, _absoluteY: number, upOrDown: "up" | "down", leftOrRight: "left" | "right", _relativeX: number, _relativeY: number, _worldPosition: Vector3, _hitEntity: number) {
+    private static onCategoryChanged(category: number) {
+        this.category = category;
+    }
+
+    private static onClick(absoluteX: number, absoluteY: number, upOrDown: "up" | "down", leftOrRight: "left" | "right", _relativeX: number, _relativeY: number, _worldPosition: Vector3, _hitEntity: number) {
         if (leftOrRight !== "left") return;
 
         if (upOrDown === "down" && this.isCursorInGrabBox && this.rotatingPed === null) {
-            this.rotatingPed = absoluteX;
+            this.rotatingPed = [absoluteX, absoluteY];
         } else if (upOrDown === "up" && this.rotatingPed !== null) {
             this.rotatingPed = null;
         }

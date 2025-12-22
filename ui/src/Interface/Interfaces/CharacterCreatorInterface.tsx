@@ -16,7 +16,7 @@ import { useRageEvent } from 'src/Hooks/RageEventProvider';
 
 export default function CharacterCreatorInterface() {
     const [hiding, _setHiding] = useState(false);
-    const [activeCategory, setActiveCategory] = useState(0);
+    const [activeCategory, _setActiveCategory] = useState(0);
     const [displayedCategory, setDisplayedCategory] = useState(0);
     const [isTransitioning, setIsTransitioning] = useState(false);
     const grabBoxRef = useRef<HTMLDivElement>(null);
@@ -69,6 +69,11 @@ export default function CharacterCreatorInterface() {
     const updateFullCharacterAppearance = (appearance: CharacterAppearance) => {
         _setCharacterAppearance(appearance);
         triggerEvent('characterCreator:updateAppearance', appearance);
+    }
+
+    const setActiveCategory = (category: number) => {
+        _setActiveCategory(category);
+        triggerEvent('characterCreator:categoryChanged', category);
     }
 
     // Handle category transitions with smooth fade effect
