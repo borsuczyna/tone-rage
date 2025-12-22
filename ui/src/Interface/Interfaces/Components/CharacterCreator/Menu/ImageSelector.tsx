@@ -1,7 +1,7 @@
 import csx from 'src/Utils/MergeClass';
 import styles from '../../../Styles/CharacterCreatorInterface.module.css';
 import { CharacterGender } from '@shared/Models/Character/Character';
-import { isInBrowser } from 'src/Interface/Main';
+import PakImage from '../../PakImage';
 
 interface ImageSelectorProps {
     path: string;
@@ -18,7 +18,7 @@ export default function ImageSelector({ path, selectedStyle, onStyleChange, avai
         `headOverlay_${component}_o{id}_f${gender === CharacterGender.Male ? '' : '_f'}.png` :
         `component_${component}_d{id}_t{texture}_f${gender === CharacterGender.Male ? '' : '_f'}.png`;
 
-    const pathUrl = isInBrowser() ? `/package2${path}` : `package2:/${path}`;
+    const pathUrl = `${path}.pak`
 
     const optionAsStr = (option: number | [number, number]) => {
         if (Array.isArray(option)) {
@@ -61,7 +61,8 @@ export default function ImageSelector({ path, selectedStyle, onStyleChange, avai
             <div className={styles.parentsList}>
                 {availableStyles.map((option, index) => (
                     <div key={optionAsStr(option)} className={csx(styles.parentItem, optionValue(selectedStyle) === optionValue(option) && styles.active)} onClick={() => onStyleChange(optionData(option), index)}>
-                        <img loading="lazy" src={`${pathUrl}/${getName(option)}`} width={64} height={64} />
+                        {/* <img loading="lazy" src={`${pathUrl}/${getName(option)}`} width={64} height={64} /> */}
+                        <PakImage pak={pathUrl} image={getName(option)} width={64} height={64} />
                     </div>
                 ))}
             </div>

@@ -4,12 +4,22 @@ import LegsMale from './legs-male.json';
 import LegsFemale from './legs-female.json';
 import ShoesMale from './shoes-male.json';
 import ShoesFemale from './shoes-female.json';
+import _MaleTopsData from './male-data.json';
+import _FemaleTopsData from './female-data.json';
+
+interface TopData {
+    torso?: number;
+    undershirts?: number[];
+}
+
+type TopsData = Record<string, TopData>;
+
+const maleTopsData: TopsData = _MaleTopsData as TopsData;
+const femaleTopsData: TopsData = _FemaleTopsData as TopsData;
 
 interface ClothingJsonItem {
     id: number;
     textures: number[];
-    torso?: number;
-    undershirts?: number[];
 }
 
 export const CharacterGender = {
@@ -66,20 +76,23 @@ export function getRandomClothingItem(gender: CharacterGender, type: 'tops' | 'l
     return { id: item.id, texture };
 }
 
-export function getTopData(gender: CharacterGender, topId: number): ClothingJsonItem | null {
-    let data = clothingData['tops'][gender];
-    const item = data.find(c => c.id === topId);
-    return item || null;
+export function findBestDataForTop(gender: CharacterGender, topId: number): TopData | null {
+    const data = gender === CharacterGender.Male ? maleTopsData : femaleTopsData;
+    if (data[topId]) {
+        return data[topId];
+    } else {
+        return null;
+    }
 }
 
-export function getBestTorso(gender: CharacterGender, _topId: number): number {
-    return gender === CharacterGender.Male ? 15 : 4; // default torso values
+export function getBestTorsoForTop(gender: CharacterGender, topId: number): number {
+    const data = findBestDataForTop(gender, topId);
+    return data?.torso ?? (gender == CharacterGender.Male ? 15 : 4);
 }
 
-export function setTorsoForTop(gender: CharacterGender, top: number, torso: number) {
-    const item = clothingData.tops[gender].find(e => e.id == top);
-    if (!item) return;
-    item.undershirts = [torso];
+export function getBestUndershirtsForTop(gender: CharacterGender, topId: number): number[] {
+    const data = findBestDataForTop(gender, topId);
+    return data?.undershirts ?? (gender == CharacterGender.Male ? [0] : [15]);
 }
 
 export function getTopsData(gender: CharacterGender): ClothingJsonItem[] {

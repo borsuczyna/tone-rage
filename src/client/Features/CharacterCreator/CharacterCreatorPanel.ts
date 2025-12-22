@@ -4,7 +4,7 @@ import EventService from "@/Services/Infrastructure/EventService";
 import InterfaceService from "@/Services/Infrastructure/InterfaceService";
 import KeyboardService, { KeyState } from "@/Services/Utility/KeyboardService";
 import { InputKey } from "@shared/KeyMap";
-import { CharacterAppearance, CharacterGender, femaleHairOverlays, getBestTorso, getTopData, getTopsData, maleHairOverlays, setTorsoForTop } from "@shared/Models/Character/Character";
+import { CharacterAppearance, CharacterGender, femaleHairOverlays, findBestDataForTop, getBestTorsoForTop, getBestUndershirtsForTop, maleHairOverlays } from "@shared/Models/Character/Character";
 import Chat from "../Chat/Chat";
 import CommandService from "@/Services/Infrastructure/CommandService";
 import NotificationService from "@/Services/Infrastructure/NotificationService";
@@ -29,24 +29,7 @@ export default class CharacterCreatorPanel {
 			mp.events.add('render', this.renderLoop.bind(this));
             mp.events.add('click', this.onClick.bind(this));
             Chat.setVisible(true);
-            CommandService.registerCommandHandler({
-                command: '/torso',
-                description: 'Set torso for current top',
-                params: [
-                    { name: 'drawable', type: 'number' },
-                ]
-            }, (drawable: string) => {
-                  setTorsoForTop(mp.players.local.model === mp.game.joaat('mp_m_freemode_01') ? CharacterGender.Male : CharacterGender.Female, mp.players.local.getDrawableVariation(11), parseInt(drawable, 10));
-                  NotificationService.addNotification('info', 'torso', `Set torso to ${drawable} for current top.`);  
-            });
-
-            CommandService.registerCommandHandler({
-                command: '/dumptops',
-                description: 'Dump tops data to clipboard',
-            }, () => {
-                InterfaceService.callInterfaceEvent('dumpTopsData', getTopsData(mp.players.local.model === mp.game.joaat('mp_m_freemode_01') ? CharacterGender.Male : CharacterGender.Female));
-            });
-
+            
             this.camera = mp.cameras.new('spawnCamera', new mp.Vector3(0, 0, 300), new mp.Vector3(0, 0, 0), 60);
 			this.camera.setActive(true);
 			mp.game.cam.renderScriptCams(true, false, 0, true, false, 0);
@@ -160,12 +143,14 @@ export default class CharacterCreatorPanel {
         }
 
         // const bestTorso = this.getBestTorso(appearance.topStyle, appearance.topTexture);
-        const topData = getTopData(appearance.gender, appearance.topStyle);
+        // const torsoData = findBestDataForTop(appearance.gender, appearance.topStyle);
+        const bestTorso = getBestTorsoForTop(appearance.gender, appearance.topStyle);
+        const bestUndershirts = getBestUndershirtsForTop(appearance.gender, appearance.topStyle);
         mp.players.local.setComponentVariation(2, appearance.hairStyle, 0, 1);
         // mp.players.local.setComponentVariation(4, appearance.legsStyle, appearance.legsTexture, 2);
         // mp.players.local.setComponentVariation(6, appearance.shoesStyle, appearance.shoesTexture, 2);
-        mp.players.local.setComponentVariation(3, getBestTorso(appearance.gender, appearance.topStyle), 0, 2);
-        mp.players.local.setComponentVariation(8, topData?.undershirts?.[0] ?? 15, 0, 2);
+        mp.players.local.setComponentVariation(3, bestTorso, 0, 2);
+        mp.players.local.setComponentVariation(8, bestUndershirts[0], 0, 2);
         mp.players.local.setComponentVariation(11, appearance.topStyle, appearance.topTexture, 2);
         mp.players.local.setHairColor(appearance.hairColor, appearance.hairHighlightColor);
         updateEntityHairOverlay(mp.players.local);
@@ -203,49 +188,6 @@ export default class CharacterCreatorPanel {
         mp.players.local.setFaceFeature(18, (appearance.chinShape - 50) / 50); // Chin Shape
         mp.players.local.setFaceFeature(19, (appearance.neckWidth - 50) / 50); // Neck Width
     }
-
-    private static getBestTorso(drawable: number, texture: number): [number, number] {
-        const pedHandle = mp.players.local.handle;
-        const topHash = mp.game.files.getHashNameForComponent(pedHandle, 11, drawable, texture);
-
-        let fcTorsoDrawable = 0;
-        let fcTorsoTexture = 0;
-
-        const numForcedComponents = mp.game.files.getNumForcedComponents(topHash);
-
-        for (let i = 0; i < numForcedComponents; i++) {
-            const forcedComponent = mp.game.files.getForcedComponent(topHash, i);
-            const fcNameHash = forcedComponent.nameHash;
-            const fcEnumValue = forcedComponent.enumValue;
-            const fcType = forcedComponent.componentType;
-
-            if (fcType === 3) { // Torso component type
-                if (fcNameHash === 0 || fcNameHash === mp.game.gameplay.getHashKey("0")) {
-                    fcTorsoDrawable = fcEnumValue;
-                    fcTorsoTexture = 0;
-                    mp.console.logInfo(`fcTorsoDrawable: ${fcTorsoDrawable}, fcTorsoTexture: ${fcTorsoTexture}`);
-                } else {
-                    // Allocate buffer for PedComponent struct (136 bytes is enough)
-                    const buffer = [new ArrayBuffer(136)];
-
-                    // Call native to fill buffer
-                    // @ts-ignore
-                    const success = mp.game.invoke(0x74C0E2A57EC66760n, fcNameHash, buffer); // GET_SHOP_PED_COMPONENT
-                    if (!success) continue;
-
-                    // Read drawable & texture from buffer
-                    const view = new DataView(buffer[0]);
-                    fcTorsoDrawable = view.getInt32(24, true); // offset 24 = drawable
-                    fcTorsoTexture = view.getInt32(32, true);  // offset 32 = texture
-
-                    mp.console.logInfo(`xd fcTorsoDrawable: ${fcTorsoDrawable}, fcTorsoTexture: ${fcTorsoTexture}`);
-                }
-            }
-        }
-
-        return [fcTorsoDrawable, fcTorsoTexture];
-    }
-
 
     private static setHeadOverlay(index: number, style: number, opacity: number, color1: number, color2: number) {
         if (style == 0) style = 255; // Clear overlay if style is 0
