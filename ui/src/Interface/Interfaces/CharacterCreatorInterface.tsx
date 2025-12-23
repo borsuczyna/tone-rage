@@ -5,7 +5,7 @@ import Categories from './Components/CharacterCreator/Categories';
 import RightMenu from './Components/CharacterCreator/RightMenu';
 import DNACategory from './Components/CharacterCreator/Menu/DNACategory';
 import HairCategory from './Components/CharacterCreator/Menu/HairCategory';
-import { type CharacterAppearance, getBestUndershirtsForTop, getDefaultAppearance, getRandomAppearance } from '@shared/Models/Character/Character';
+import { type CharacterAppearance, getBestUndershirtsForTop, getDefaultAppearance, getRandomAppearance, randomizeClothes, randomizeDNA, randomizeEyes, randomizeFace, randomizeFacialHair, randomizeHair } from '@shared/Models/Character/Character';
 import { triggerEvent } from 'src/Hooks/Fetch';
 import FacialHairCategory from './Components/CharacterCreator/Menu/FacialHairCategory';
 import Toolbar from './Components/CharacterCreator/Toolbar';
@@ -97,6 +97,34 @@ export default function CharacterCreatorInterface() {
     const randomizeAppearance = () => {
         updateFullCharacterAppearance(getRandomAppearance(characterAppearance.gender));
     };
+
+    const randomizeCategoryAppearance = () => {
+        let appearance = { ...characterAppearance };
+        switch (activeCategory) {
+            case 0: // DNA
+                appearance = randomizeDNA(appearance);
+                break;
+            case 1: // Hair
+                appearance = randomizeHair(appearance);
+                break;
+            case 2: // Facial Hair
+                appearance = randomizeFacialHair(appearance);
+                break;
+            case 3: // Eyes
+                appearance = randomizeEyes(appearance);
+                break;
+            case 4: // Face Shape
+                appearance = randomizeFace(appearance);
+                break;
+            case 5: // Clothes
+                appearance = randomizeClothes(appearance);
+                break;
+            default:
+                break;
+        }
+
+        updateFullCharacterAppearance(appearance);
+    }
     
     // Initialize displayed category
     useEffect(() => {
@@ -144,26 +172,32 @@ export default function CharacterCreatorInterface() {
                     {displayedCategory == 0 && <DNACategory
                         characterAppearance={characterAppearance}
                         setCharacterAppearance={setCharacterAppearance}
+                        randomize={randomizeCategoryAppearance}
                     />}
                     {displayedCategory == 1 && <HairCategory
                         characterAppearance={characterAppearance}
                         setCharacterAppearance={setCharacterAppearance}
+                        randomize={randomizeCategoryAppearance}
                     />}
                     {displayedCategory == 2 && <FacialHairCategory
                         characterAppearance={characterAppearance}
                         setCharacterAppearance={setCharacterAppearance}
+                        randomize={randomizeCategoryAppearance}
                     />}
                     {displayedCategory == 3 && <EyesCategory
                         characterAppearance={characterAppearance}
                         setCharacterAppearance={setCharacterAppearance}
+                        randomize={randomizeCategoryAppearance}
                     />}
                     {displayedCategory == 4 && <FaceShapeCategory
                         characterAppearance={characterAppearance}
                         setCharacterAppearance={setCharacterAppearance}
+                        randomize={randomizeCategoryAppearance}
                     />}
                     {displayedCategory == 5 && <ClothesCategory
                         characterAppearance={characterAppearance}
                         setCharacterAppearance={setCharacterAppearance}
+                        randomize={randomizeCategoryAppearance}
                     />}
                 </div>
             </RightMenu>

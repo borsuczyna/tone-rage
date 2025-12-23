@@ -3,15 +3,18 @@ import styles from '../../../Styles/CharacterCreatorInterface.module.css';
 import ColorPicker from './ColorPicker';
 import ImageSelector from './ImageSelector';
 import CustomSlider from './CustomSlider';
+import RandomizeButton from './RandomizeButton';
 
 interface EyesCategoryProps {
     characterAppearance: CharacterAppearance;
     setCharacterAppearance: (values: [keyof CharacterAppearance, any][]) => void;
+    randomize: () => void;
 }
 
 export default function EyesCategory({
     characterAppearance,
-    setCharacterAppearance
+    setCharacterAppearance,
+    randomize
 }: EyesCategoryProps) {
     return (
         <>
@@ -58,6 +61,8 @@ export default function EyesCategory({
                 }}
                 colors={eyeColors.map(c => c.hex)}
             />
+
+            <RandomizeButton style={{marginTop: '0.5rem'}} onClick={randomize} />
         </>
     );
 }

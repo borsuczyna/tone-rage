@@ -5,15 +5,18 @@ import { useState } from 'react';
 import Parents from './Parents';
 import GenderSelector from './GenderSelector';
 import CustomSlider from './CustomSlider';
+import RandomizeButton from './RandomizeButton';
 
 interface DNACategoryProps {
     characterAppearance: CharacterAppearance;
     setCharacterAppearance: (values: [keyof CharacterAppearance, any][]) => void;
+    randomize: () => void;
 }
 
 export default function DNACategory({
     characterAppearance,
-    setCharacterAppearance
+    setCharacterAppearance,
+    randomize
 }: DNACategoryProps) {
     const [parentOption, setParentOption] = useState<CharacterGender>(CharacterGender.Female);
     const femaleParents = [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 45];
@@ -50,6 +53,8 @@ export default function DNACategory({
                 min={0}
                 max={100}
             />
+
+            <RandomizeButton style={{marginTop: '0.5rem'}} onClick={randomize} />
         </>
     );
 }

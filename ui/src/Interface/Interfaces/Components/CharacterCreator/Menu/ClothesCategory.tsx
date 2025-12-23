@@ -1,15 +1,18 @@
 import { clothingData, getBestUndershirtsForTop, type CharacterAppearance } from "@shared/Models/Character/Character";
 import styles from '../../../Styles/CharacterCreatorInterface.module.css';
 import ImageSelector from "./ImageSelector";
+import RandomizeButton from "./RandomizeButton";
 
 interface ClothesCategoryProps {
     characterAppearance: CharacterAppearance;
     setCharacterAppearance: (values: [keyof CharacterAppearance, any][]) => void;
+    randomize: () => void;
 }
 
 export default function ClothesCategory({
     characterAppearance,
-    setCharacterAppearance
+    setCharacterAppearance,
+    randomize
 }: ClothesCategoryProps) {
     const topsData = clothingData.tops[characterAppearance.gender];
     const tops: [number, number][] = [];
@@ -106,6 +109,8 @@ export default function ClothesCategory({
                 gender={characterAppearance.gender}
                 component={6}
             />
+
+            <RandomizeButton style={{marginTop: '0.5rem'}} onClick={randomize} />
         </>
     );
 }

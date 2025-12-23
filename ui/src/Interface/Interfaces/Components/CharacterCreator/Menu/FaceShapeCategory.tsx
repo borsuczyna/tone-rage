@@ -4,15 +4,18 @@ import Control2D from './Control2D';
 import CustomSlider from './CustomSlider';
 import ImageSelector from './ImageSelector';
 import ColorPicker from './ColorPicker';
+import RandomizeButton from './RandomizeButton';
 
 interface FaceShapeCategoryProps {
     characterAppearance: CharacterAppearance;
     setCharacterAppearance: (values: [keyof CharacterAppearance, any][]) => void;
+    randomize: () => void;
 }
 
 export default function FaceShapeCategory({
     characterAppearance,
-    setCharacterAppearance
+    setCharacterAppearance,
+    randomize
 }: FaceShapeCategoryProps) {
     return (
         <>
@@ -343,6 +346,8 @@ export default function FaceShapeCategory({
                 min={0}
                 max={100}
             />
+
+            <RandomizeButton style={{marginTop: '0.5rem'}} onClick={randomize} />
         </>
     );
 }

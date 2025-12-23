@@ -3,16 +3,23 @@ import { beards, type CharacterAppearance, CharacterGender, hairColors } from '@
 import ImageSelector from './ImageSelector';
 import ColorPicker from './ColorPicker';
 import CustomSlider from './CustomSlider';
+import RandomizeButton from './RandomizeButton';
 
 interface FacialHairCategoryProps {
     characterAppearance: CharacterAppearance;
     setCharacterAppearance: (values: [keyof CharacterAppearance, any][]) => void;
+    randomize: () => void;
 }
 
 export default function FacialHairCategory({
     characterAppearance,
-    setCharacterAppearance
+    setCharacterAppearance,
+    randomize
 }: FacialHairCategoryProps) {
+    if (characterAppearance.gender !== CharacterGender.Male) {
+        return <div className={styles.label}>No facial hair options for female characters.</div>;
+    }
+    
     return (
         <>
             <div className={styles.label}>Facial Hair Style</div>
@@ -45,6 +52,8 @@ export default function FacialHairCategory({
                 min={0}
                 max={100}
             />
+
+            <RandomizeButton style={{marginTop: '0.5rem'}} onClick={randomize} />
         </>
     );
 }

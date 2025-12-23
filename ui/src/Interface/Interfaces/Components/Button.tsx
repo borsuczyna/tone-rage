@@ -10,6 +10,7 @@ interface ToneButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     glow?: boolean;
     loading?: boolean;
     fullWidth?: boolean;
+    wrapperStyle?: React.CSSProperties;
 }
 
 export default function Button({ 
@@ -22,6 +23,7 @@ export default function Button({
     style,
     disabled,
     fullWidth = false,
+    wrapperStyle,
     ...buttonProps
 }: ToneButtonProps) {
     const buttonClass = `${styles.toneButton} ${styles[variant]} ${styles[size]} ${className}`;
@@ -35,8 +37,8 @@ export default function Button({
     );
     
     return (
-        <div className={wrapperClass} style={style}>
-            {/* Glow effect - only for variants that support it */}
+        <div className={wrapperClass} style={{...style, ...wrapperStyle}}>
+            {/* Glow effect - only for variants tha.t support it */}
             {glow && (variant === 'primary' || variant === 'secondary' || variant === 'glass') && (
                 <button 
                     className={glowClass}

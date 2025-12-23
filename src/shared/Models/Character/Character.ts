@@ -538,33 +538,57 @@ const getRandomArrayItem = <T,>(array: T[]): T => {
     return array[Math.floor(Math.random() * array.length)];
 };
 
-export function getRandomAppearance(gender: CharacterGender): CharacterAppearance {
-    const availableHairStyles = gender === CharacterGender.Male ? maleHairStyles : femaleHairStyles;
-    const hairColor = getRandomValue(0, hairColors.length - 1);
-    const hairHighlightColor = getRandomValue(0, hairColors.length - 1);
-
-    const randomTop = getRandomClothingItem(gender, 'tops');
-    const randomLegs = getRandomClothingItem(gender, 'legs');
-    const randomShoes = getRandomClothingItem(gender, 'shoes');
-    const undershirts = getBestUndershirtsForTop(gender, randomTop.id);
-    const randomUndershirt = getRandomArrayItem(undershirts);
-
-    const randomAppearance: CharacterAppearance = {
-        gender,
+export function randomizeDNA(appearance: CharacterAppearance): CharacterAppearance {
+    return {
+        ...appearance,
         femaleParent: getRandomValue(0, 45),
         maleParent: getRandomValue(0, 45),
         faceSimilarity: getRandomValue(0, 100),
         skinSimilarity: getRandomValue(0, 100),
+    };
+}
+
+export function randomizeHair(appearance: CharacterAppearance): CharacterAppearance {
+    const availableHairStyles = appearance.gender === CharacterGender.Male ? maleHairStyles : femaleHairStyles;
+    const hairColor = getRandomValue(0, hairColors.length - 1);
+    const hairHighlightColor = getRandomValue(0, hairColors.length - 1);
+
+    return {
+        ...appearance,
         hairStyle: getRandomArrayItem(availableHairStyles),
         hairColor: hairColor,
-        hairHighlightColor: hairHighlightColor,
-        beardStyle: gender === CharacterGender.Male ? getRandomArrayItem(beards) : 0,
         beardColor: hairColor,
-        beardLength: gender === CharacterGender.Male ? getRandomValue(0, 100) : 0,
+        hairHighlightColor: hairHighlightColor,
+        blushColor: hairColor,
+    };
+}
+
+export function randomizeFacialHair(appearance: CharacterAppearance): CharacterAppearance {
+    const hairColor = appearance.hairColor;
+
+    return {
+        ...appearance,
+        beardStyle: appearance.gender === CharacterGender.Male ? getRandomArrayItem(beards) : 0,
+        beardColor: hairColor,
+        beardLength: appearance.gender === CharacterGender.Male ? getRandomValue(0, 100) : 0,
+    };
+}
+
+export function randomizeEyes(appearance: CharacterAppearance): CharacterAppearance {
+    return {
+        ...appearance,
         eyeColor: eyeColors.indexOf(getRandomArrayItem(eyeColors)),
         eyebrowStyle: getRandomArrayItem(eyebrows),
         eyebrowColor: 0, // Default to black,
         eyebrowLength: getRandomValue(70, 100),
+    };
+}
+
+export function randomizeFace(appearance: CharacterAppearance): CharacterAppearance {
+    const hairColor = appearance.hairColor;
+    
+    return {
+        ...appearance,
         blemishesStyle: getRandomArrayItem(blemishesStyles),
         ageingStyle: getRandomArrayItem(ageingStyles),
         makeupStyle: getRandomArrayItem(makeupStyles),
@@ -603,7 +627,18 @@ export function getRandomAppearance(gender: CharacterGender): CharacterAppearanc
         frecklesOpacity: getRandomValue(0, 100),
         blushColor: hairColor,
         lipstickColor: getRandomValue(0, hairColors.length - 1),
+    };
+}
 
+export function randomizeClothes(appearance: CharacterAppearance): CharacterAppearance {
+    const randomTop = getRandomClothingItem(appearance.gender, 'tops');
+    const randomLegs = getRandomClothingItem(appearance.gender, 'legs');
+    const randomShoes = getRandomClothingItem(appearance.gender, 'shoes');
+    const undershirts = getBestUndershirtsForTop(appearance.gender, randomTop.id);
+    const randomUndershirt = getRandomArrayItem(undershirts);
+
+    return {
+        ...appearance,
         topStyle: randomTop.id,
         topTexture: randomTop.texture,
         legsStyle: randomLegs.id,
@@ -613,8 +648,21 @@ export function getRandomAppearance(gender: CharacterGender): CharacterAppearanc
         undershirtStyle: randomUndershirt.id,
         undershirtTexture: getRandomArrayItem(randomUndershirt.textures),
     };
+}
 
-    return randomAppearance;
+export function getRandomAppearance(gender: CharacterGender): CharacterAppearance {
+    let appearance: CharacterAppearance = {
+        gender: gender
+    } as CharacterAppearance;
+
+    appearance = randomizeDNA(appearance);
+    appearance = randomizeHair(appearance);
+    appearance = randomizeFacialHair(appearance);
+    appearance = randomizeEyes(appearance);
+    appearance = randomizeFace(appearance);
+    appearance = randomizeClothes(appearance);
+
+    return appearance;
 }
 
 export function getDefaultAppearance(): CharacterAppearance {
