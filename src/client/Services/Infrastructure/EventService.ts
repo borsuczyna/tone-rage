@@ -42,8 +42,17 @@ export default class EventService {
 	 * Remove an event handler
 	 */
 	public static removeEventHandler(eventName: string, callback: (...args: any[]) => void) {
+        const count = this.listeners.length;
 		this.listeners = this.listeners.filter((listener) => listener.eventName !== eventName || listener.callback !== callback);
+        this.logger.info(`Removed ${count - this.listeners.length} handlers for event '${eventName}'`);
 	}
+
+    /**
+     * Removes all event handlers for a given event name
+     */
+    public static removeAllEventHandlers(eventName: string) {
+        this.listeners = this.listeners.filter((listener) => listener.eventName !== eventName);
+    }
 
 	/**
 	 * Trigger a server event with support for large data
