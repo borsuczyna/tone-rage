@@ -3,6 +3,7 @@ import { CharacterGender, type CharacterAppearance, femaleHairStyles, hairColors
 import ImageSelector from './ImageSelector';
 import ColorPicker from './ColorPicker';
 import RandomizeButton from './RandomizeButton';
+import translate from '@shared/Translation/Translation';
 
 interface HairCategoryProps {
     characterAppearance: CharacterAppearance;
@@ -19,7 +20,7 @@ export default function HairCategory({
 
     return (
         <>
-            <div className={styles.label}>Hair Style</div>
+            <div className={styles.label}>{translate('character.creator.hair.style')}</div>
             <ImageSelector 
                 path={'/creator/heads'}
                 selectedStyle={characterAppearance.hairStyle}
@@ -28,7 +29,7 @@ export default function HairCategory({
                 gender={characterAppearance.gender}
             />
 
-            <div className={styles.smallLabel}>Color</div>
+            <div className={styles.smallLabel}>{translate('character.creator.hair.color')}</div>
             <ColorPicker 
                 selectedColor={hairColors[characterAppearance.hairColor].hex}
                 onColorChange={(colorHex) => {
@@ -40,7 +41,7 @@ export default function HairCategory({
                 colors={hairColors.map(c => c.hex)}
             />
 
-            <div className={styles.smallLabel}>Highlight Color</div>
+            <div className={styles.smallLabel}>{translate('character.creator.hair.highlight')}</div>
             <ColorPicker 
                 selectedColor={hairColors[characterAppearance.hairHighlightColor].hex}
                 onColorChange={(colorHex) => {

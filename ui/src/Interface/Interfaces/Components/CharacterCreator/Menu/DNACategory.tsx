@@ -6,6 +6,7 @@ import Parents from './Parents';
 import GenderSelector from './GenderSelector';
 import CustomSlider from './CustomSlider';
 import RandomizeButton from './RandomizeButton';
+import translate from '@shared/Translation/Translation';
 
 interface DNACategoryProps {
     characterAppearance: CharacterAppearance;
@@ -26,20 +27,20 @@ export default function DNACategory({
         <>
             <GenderSelector gender={characterAppearance.gender} setGender={(gender) => setCharacterAppearance([['gender', gender]])} />
 
-            <div className={styles.label} style={{ marginTop: '1rem' }}>Parents</div>
+            <div className={styles.label} style={{ marginTop: '1rem' }}>{translate('character.creator.dna.parents')}</div>
             <div className={styles.parentsMenu}>
                 <div className={styles.parentsOptions}>
-                    <div className={csx(styles.parentOption, parentOption === CharacterGender.Female && styles.active)} onClick={() => setParentOption(CharacterGender.Female)}>Mother</div>
-                    <div className={csx(styles.parentOption, parentOption === CharacterGender.Male && styles.active)} onClick={() => setParentOption(CharacterGender.Male)}>Father</div>
+                    <div className={csx(styles.parentOption, parentOption === CharacterGender.Female && styles.active)} onClick={() => setParentOption(CharacterGender.Female)}>{translate('character.creator.dna.mother')}</div>
+                    <div className={csx(styles.parentOption, parentOption === CharacterGender.Male && styles.active)} onClick={() => setParentOption(CharacterGender.Male)}>{translate('character.creator.dna.father')}</div>
                 </div>
                 
                 <Parents gender={parentOption} options={parentOption === CharacterGender.Female ? femaleParents : maleParents} selected={parentOption === CharacterGender.Female ? characterAppearance.femaleParent : characterAppearance.maleParent} setSelected={parentOption === CharacterGender.Female ? (parent) => setCharacterAppearance([['femaleParent', parent]]) : (parent) => setCharacterAppearance([['maleParent', parent]])} />
             </div>
 
-            <div className={styles.label} style={{ marginTop: '1rem' }}>Similarity</div>
+            <div className={styles.label} style={{ marginTop: '1rem' }}>{translate('character.creator.dna.similarity')}</div>
             
             <CustomSlider 
-                label="Face"
+                label={translate('character.creator.dna.face')}
                 value={characterAppearance.faceSimilarity}
                 onChange={(similarity) => setCharacterAppearance([['faceSimilarity', similarity]])}
                 min={0}
@@ -47,7 +48,7 @@ export default function DNACategory({
             />
 
             <CustomSlider 
-                label="Skin"
+                label={translate('character.creator.dna.skin')}
                 value={characterAppearance.skinSimilarity}
                 onChange={(similarity) => setCharacterAppearance([['skinSimilarity', similarity]])}
                 min={0}

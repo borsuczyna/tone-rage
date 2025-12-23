@@ -5,6 +5,7 @@ import { ArrowDownToLine, ArrowUpToLine, Check, Loader2, RefreshCcw } from 'luci
 import { useNotifications } from 'src/Hooks/NotificationsProvider';
 import Modal from '../Modal';
 import Button from '../Button';
+import translate from '@shared/Translation/Translation';
 
 interface ToolbarProps {
     characterAppearance: CharacterAppearance;
@@ -32,13 +33,13 @@ export default function Toolbar({ characterAppearance, randomizeAppearance, onFu
                 
                 const successful = document.execCommand('copy');
                 if (successful) {
-                    showFeedback('Character saved to clipboard!', 'success');
+                    showFeedback(translate('character.creator.feedback.saved.clipboard'), 'success');
                 } else {
-                    showFeedback('Failed to save to clipboard', 'error');
+                    showFeedback(translate('character.creator.feedback.failed.clipboard'), 'error');
                 }
             }
         } catch (error) {
-            showFeedback('Failed to save to clipboard', 'error');
+            showFeedback(translate('character.creator.feedback.failed.clipboard'), 'error');
         }
     };
 
@@ -47,13 +48,13 @@ export default function Toolbar({ characterAppearance, randomizeAppearance, onFu
             setPasteValue('');
             setIsModalOpen(true);
         } catch (error) {
-            showFeedback('Failed to load character data', 'error');
+            showFeedback(translate('character.creator.feedback.failed.load'), 'error');
         }
     };
 
     const processLoadedData = (data: string) => {
         if (!data.trim()) {
-            showFeedback('No data provided', 'error');
+            showFeedback(translate('character.creator.feedback.failed.load'), 'error');
             return;
         }
         
@@ -61,10 +62,10 @@ export default function Toolbar({ characterAppearance, randomizeAppearance, onFu
         
         if (decoded) {
             onFullUpdate(decoded);
-            showFeedback('Character loaded successfully!', 'success');
+            showFeedback(translate('character.creator.feedback.loaded.successfully'), 'success');
             setIsModalOpen(false);
         } else {
-            showFeedback('Invalid character data', 'error');
+            showFeedback(translate('character.creator.feedback.invalid.data'), 'error');
         }
     };
 
@@ -73,7 +74,7 @@ export default function Toolbar({ characterAppearance, randomizeAppearance, onFu
     };
 
     const showFeedback = (message: string, type: 'success' | 'error') => {
-        addNotification('Character Creator', message, type);
+        addNotification(translate('character.creator.title'), message, type);
     };
 
     return (
@@ -131,16 +132,16 @@ export default function Toolbar({ characterAppearance, randomizeAppearance, onFu
             <Modal 
                 isOpen={isModalOpen} 
                 onClose={() => setIsModalOpen(false)} 
-                title="Load Character Data"
+                title={translate('character.creator.modal.load.title')}
             >
                 <div className={styles.modalContent}>
                     <p className={styles.modalDescription}>
-                        Paste your character data below:
+                        {translate('character.creator.modal.load.description')}
                     </p>
                     <textarea 
                         value={pasteValue}
                         onChange={(e) => setPasteValue(e.target.value)}
-                        placeholder="Paste character data here..."
+                        placeholder={translate('character.creator.modal.load.placeholder')}
                         className={styles.modalTextarea}
                         rows={4}
                     />
@@ -150,7 +151,7 @@ export default function Toolbar({ characterAppearance, randomizeAppearance, onFu
                             size='small'
                             onClick={() => setIsModalOpen(false)}
                         >
-                            Cancel
+                            {translate('character.creator.modal.cancel')}
                         </Button>
 
                         <Button
@@ -159,7 +160,7 @@ export default function Toolbar({ characterAppearance, randomizeAppearance, onFu
                             onClick={handleModalLoad}
                             disabled={!pasteValue.trim()}
                         >
-                            Load Character
+                            {translate('character.creator.modal.load.button')}
                         </Button>
                     </div>
                 </div>

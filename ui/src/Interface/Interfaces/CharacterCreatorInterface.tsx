@@ -15,6 +15,7 @@ import ClothesCategory from './Components/CharacterCreator/Menu/ClothesCategory'
 import { useRageEvent } from 'src/Hooks/RageEventProvider';
 import { useNotifications } from 'src/Hooks/NotificationsProvider';
 import ConfirmationModal from './Components/CharacterCreator/ConfirmationModal';
+import translate from '@shared/Translation/Translation';
 
 export default function CharacterCreatorInterface() {
     const [hiding, _setHiding] = useState(false);
@@ -138,14 +139,14 @@ export default function CharacterCreatorInterface() {
 
         try {
             const result = await fetchServerData<SaveCharacterAppearanceResponse>('characterCreator:saveCharacter', characterAppearance);
-            addNotification('Character Creator', result.message ?? 'Failed to save character', result.success ? 'success' : 'error');
+            addNotification(translate('character.creator.title'), result.message ?? translate('character.creator.feedback.save.error'), result.success ? 'success' : 'error');
 
             if (result.success) {
                 setHidingInterface(true);
                 triggerEvent('characterCreator:finished');
             }
         } catch (error) {
-            addNotification('Character Creator', 'Error saving character', 'error');
+            addNotification(translate('character.creator.title'), translate('character.creator.feedback.save.error'), 'error');
         }
 
         setIsSaving(false);

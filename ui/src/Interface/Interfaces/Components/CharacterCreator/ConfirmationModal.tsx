@@ -1,6 +1,7 @@
 import Button from "../Button";
 import Modal from "../Modal";
 import styles from './Styles/Toolbar.module.css';
+import translate from '@shared/Translation/Translation';
 
 interface ConfirmationModalProps {
     onConfirm: () => void;
@@ -12,17 +13,17 @@ export default function ConfirmationModal({ onConfirm, onCancel }: ConfirmationM
         <Modal 
             isOpen={true} 
             onClose={onCancel}
-            title="Confirm Save"
+            title={translate('character.creator.modal.confirm.title')}
         >
             <div className={styles.modalContent}>
-                <p className={styles.modalDescription}>Are you sure you want to save your character?</p>
+                <p className={styles.modalDescription}>{translate('character.creator.modal.confirm.description')}</p>
                 <div className={styles.modalButtons}>
                     <Button
                         variant='glass'
                         size='small'
                         onClick={onCancel}
                     >
-                        Cancel
+                        {translate('character.creator.modal.cancel')}
                     </Button>
 
                     <Button
@@ -30,7 +31,7 @@ export default function ConfirmationModal({ onConfirm, onCancel }: ConfirmationM
                         size='small'
                         onClick={onConfirm}
                     >
-                        Save Character
+                        {translate('character.creator.modal.confirm.button')}
                     </Button>
                 </div>
             </div>
