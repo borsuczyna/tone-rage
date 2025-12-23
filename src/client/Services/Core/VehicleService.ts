@@ -1,6 +1,7 @@
 import { ElementDataEntity } from "@shared-rage/Models/ElementDataType";
 import ElementDataService from "../Infrastructure/ElementDataService";
 import EventService from "../Infrastructure/EventService";
+import TimerService from "@shared/Services/TimerService";
 
 export default class VehicleService {
     public static init() {
@@ -10,6 +11,8 @@ export default class VehicleService {
 
         // Disable engine auto start
         mp.events.add('playerReady', this.disableVehicleEngineAutoStart.bind(this));
+
+        TimerService.setTimer(this.forceOffRadioStation.bind(this), 1000, 0);
     }
 
     private static onEntityStreamIn(entity: EntityMp) {
@@ -43,5 +46,16 @@ export default class VehicleService {
     private static onSpawned() {
         this.disableVehicleEngineAutoStart();
         mp.game.audio.freezeRadioStation('OFF');
+    }
+
+    private static forceOffRadioStation() {
+        const player = mp.players.local;
+        if (player.isInAnyVehicle(false)) {
+            const vehicle = player.vehicle;
+            if (vehicle && vehicle.getPedInSeat(-1) === player.handle) {
+                mp.game.audio.freezeRadioStation('OFF');
+                mp.game.audio.setRadioToStationName('OFF');
+            }
+        }
     }
 }

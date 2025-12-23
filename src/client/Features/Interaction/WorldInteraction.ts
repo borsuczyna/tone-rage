@@ -20,7 +20,7 @@ export default class WorldInteraction {
     private static latestClosestEntity: EntityMp | null = null;
 
     public static init() {
-        KeyboardService.registerKeyHandler('E', this.toggleWorldInteraction.bind(this));
+        KeyboardService.registerKeyHandler('Q', this.toggleWorldInteraction.bind(this));
         KeyboardService.registerKeyHandler('MouseWheelDown', this.handleNavigation.bind(this));
         KeyboardService.registerKeyHandler('MouseWheelUp', this.handleNavigation.bind(this));
         KeyboardService.registerKeyHandler('ArrowDown', this.handleNavigation.bind(this));
