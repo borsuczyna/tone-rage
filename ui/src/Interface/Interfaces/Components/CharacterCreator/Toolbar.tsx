@@ -1,17 +1,20 @@
 import { useRef, useState } from 'react';
 import styles from './Styles/Toolbar.module.css';
 import { type CharacterAppearance, validateCharacterAppearance } from '@shared/Models/Character/Character';
-import { ArrowDownToLine, ArrowUpToLine, RefreshCcw } from 'lucide-react';
+import { ArrowDownToLine, ArrowUpToLine, Check, Loader2, RefreshCcw } from 'lucide-react';
 import { useNotifications } from 'src/Hooks/NotificationsProvider';
 import Modal from '../Modal';
+import Button from '../Button';
 
 interface ToolbarProps {
     characterAppearance: CharacterAppearance;
     randomizeAppearance: () => void;
     onFullUpdate: (appearance: CharacterAppearance) => void;
+    saveCharacter: () => void;
+    isSaving: boolean;
 }
 
-export default function Toolbar({ characterAppearance, randomizeAppearance, onFullUpdate }: ToolbarProps) {
+export default function Toolbar({ characterAppearance, randomizeAppearance, onFullUpdate, saveCharacter, isSaving }: ToolbarProps) {
     const { addNotification } = useNotifications();
     const hiddenInputRef = useRef<HTMLInputElement>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,7 +40,8 @@ export default function Toolbar({ characterAppearance, randomizeAppearance, onFu
             const appearance = JSON.parse(decoded) as CharacterAppearance;
             
             // Validate the decoded appearance
-            if (validateCharacterAppearance(appearance)) {
+            const [isValid] = validateCharacterAppearance(appearance);
+            if (isValid) {
                 return appearance;
             }
             return null;
@@ -140,6 +144,18 @@ export default function Toolbar({ characterAppearance, randomizeAppearance, onFu
                 >
                     <ArrowUpToLine />
                 </button>
+                
+                <button 
+                    className={`${styles.button}`}
+                    onClick={!isSaving ? saveCharacter : undefined}
+                    title="Save character"
+                    disabled={isSaving}
+                >
+                    {isSaving ? 
+                        <Loader2 className={styles.spinner} /> :
+                        <Check />
+                    }
+                </button>
             </div>
 
             <Modal 
@@ -159,19 +175,22 @@ export default function Toolbar({ characterAppearance, randomizeAppearance, onFu
                         rows={4}
                     />
                     <div className={styles.modalButtons}>
-                        <button 
+                        <Button
+                            variant='glass'
+                            size='small'
                             onClick={() => setIsModalOpen(false)}
-                            className={styles.modalButtonCancel}
                         >
                             Cancel
-                        </button>
-                        <button 
+                        </Button>
+
+                        <Button
+                            variant='primary'
+                            size='small'
                             onClick={handleModalLoad}
-                            className={styles.modalButtonLoad}
                             disabled={!pasteValue.trim()}
                         >
                             Load Character
-                        </button>
+                        </Button>
                     </div>
                 </div>
             </Modal>

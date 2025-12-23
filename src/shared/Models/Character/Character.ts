@@ -455,79 +455,79 @@ export interface CharacterAppearance {
     undershirtTexture: number;
 }
 
-export function validateCharacterAppearance(appearance: CharacterAppearance): boolean {
-    if (!Object.values(CharacterGender).includes(appearance.gender)) return false;
-    if (appearance.femaleParent < 0 || appearance.femaleParent > 45) return false;
-    if (appearance.maleParent < 0 || appearance.maleParent > 45) return false;
-    if (appearance.faceSimilarity < 0 || appearance.faceSimilarity > 100) return false;
-    if (appearance.skinSimilarity < 0 || appearance.skinSimilarity > 100) return false;
+export function validateCharacterAppearance(appearance: CharacterAppearance): [boolean, string] {
+    if (!Object.values(CharacterGender).includes(appearance.gender)) return [false, "Invalid gender"];
+    if (appearance.femaleParent < 0 || appearance.femaleParent > 45) return [false, "Invalid female parent value"];
+    if (appearance.maleParent < 0 || appearance.maleParent > 45) return [false, "Invalid male parent value"];
+    if (appearance.faceSimilarity < 0 || appearance.faceSimilarity > 100) return [false, "Invalid face similarity value"];
+    if (appearance.skinSimilarity < 0 || appearance.skinSimilarity > 100) return [false, "Invalid skin similarity value"];
 
     const availableStyles = appearance.gender === CharacterGender.Male ? maleHairStyles : femaleHairStyles;
-    if (!availableStyles.includes(appearance.hairStyle)) return false;
+    if (!availableStyles.includes(appearance.hairStyle)) return [false, "Invalid hair style"];
 
-    if (appearance.hairColor < 0 || appearance.hairColor >= hairColors.length) return false;
-    if (appearance.hairHighlightColor < 0 || appearance.hairHighlightColor >= hairColors.length) return false;
+    if (appearance.hairColor < 0 || appearance.hairColor >= hairColors.length) return [false, "Invalid hair color"];
+    if (appearance.hairHighlightColor < 0 || appearance.hairHighlightColor >= hairColors.length) return [false, "Invalid hair highlight color"];
     if (appearance.gender === CharacterGender.Male) {
-        if (!beards.includes(appearance.beardStyle)) return false;
+        if (!beards.includes(appearance.beardStyle)) return [false, "Invalid beard style"];
     } else {
-        if (appearance.beardStyle !== 0) return false; // No beards for females
+        if (appearance.beardStyle !== 0) return [false, "Females cannot have beards"];
     }
 
-    if (appearance.beardColor < 0 || appearance.beardColor >= hairColors.length) return false;
-    if (appearance.gender === CharacterGender.Female && appearance.beardLength !== 0) return false; // No beards for females
-    if (appearance.beardLength < 0 || appearance.beardLength > 100) return false;
-    if (appearance.eyeColor < 0 || appearance.eyeColor >= eyeColors.length) return false;
-    if (!eyebrows.includes(appearance.eyebrowStyle)) return false;
-    if (appearance.eyebrowColor < 0 || appearance.eyebrowColor >= hairColors.length) return false;
-    if (appearance.eyebrowLength < 0 || appearance.eyebrowLength > 100) return false;
-    if (!blemishesStyles.includes(appearance.blemishesStyle)) return false;
-    if (!ageingStyles.includes(appearance.ageingStyle)) return false;
-    if (!makeupStyles.includes(appearance.makeupStyle)) return false;
-    if (!blushStyles.includes(appearance.blushStyle)) return false;
-    if (!complexionStyles.includes(appearance.complexionStyle)) return false;
-    if (!sunDamageStyles.includes(appearance.sunDamageStyle)) return false;
-    if (!lipstickStyles.includes(appearance.lipstickStyle)) return false;
-    if (!frecklesStyles.includes(appearance.frecklesStyle)) return false;
-    if (appearance.noseWidth < 0 || appearance.noseWidth > 100) return false;
-    if (appearance.noseHeight < 0 || appearance.noseHeight > 100) return false;
-    if (appearance.noseLength < 0 || appearance.noseLength > 100) return false;
-    if (appearance.noseBridge < 0 || appearance.noseBridge > 100) return false;
-    if (appearance.noseTip < 0 || appearance.noseTip > 100) return false;
-    if (appearance.noseBridgeShift < 0 || appearance.noseBridgeShift > 100) return false;
-    if (appearance.eyebrowHeight < 0 || appearance.eyebrowHeight > 100) return false;
-    if (appearance.eyebrowWidth < 0 || appearance.eyebrowWidth > 100) return false;
-    if (appearance.cheekboneHeight < 0 || appearance.cheekboneHeight > 100) return false;
-    if (appearance.cheekboneWidth < 0 || appearance.cheekboneWidth > 100) return false;
-    if (appearance.cheeksWidth < 0 || appearance.cheeksWidth > 100) return false;
-    if (appearance.eyesOpening < 0 || appearance.eyesOpening > 100) return false;
-    if (appearance.lipsThickness < 0 || appearance.lipsThickness > 100) return false;
-    if (appearance.jawWidth < 0 || appearance.jawWidth > 100) return false;
-    if (appearance.jawHeight < 0 || appearance.jawHeight > 100) return false;
-    if (appearance.chinLength < 0 || appearance.chinLength > 100) return false;
-    if (appearance.chinPosition < 0 || appearance.chinPosition > 100) return false;
-    if (appearance.chinWidth < 0 || appearance.chinWidth > 100) return false;
-    if (appearance.chinShape < 0 || appearance.chinShape > 100) return false;
-    if (appearance.neckWidth < 0 || appearance.neckWidth > 100) return false;
-    if (appearance.blemishesOpacity < 0 || appearance.blemishesOpacity > 100) return false;
-    if (appearance.ageingOpacity < 0 || appearance.ageingOpacity > 100) return false;
-    if (appearance.makeupOpacity < 0 || appearance.makeupOpacity > 100) return false;
-    if (appearance.blushOpacity < 0 || appearance.blushOpacity > 100) return false;
-    if (appearance.complexionOpacity < 0 || appearance.complexionOpacity > 100) return false;
-    if (appearance.sunDamageOpacity < 0 || appearance.sunDamageOpacity > 100) return false;
-    if (appearance.lipstickOpacity < 0 || appearance.lipstickOpacity > 100) return false;
-    if (appearance.frecklesOpacity < 0 || appearance.frecklesOpacity > 100) return false;
-    if (appearance.blushColor < 0 || appearance.blushColor >= hairColors.length) return false;
-    if (appearance.lipstickColor < 0 || appearance.lipstickColor >= hairColors.length) return false;
+    if (appearance.beardColor < 0 || appearance.beardColor >= hairColors.length) return [false, "Invalid beard color"];
+    if (appearance.gender === CharacterGender.Female && appearance.beardLength !== 0) return [false, "Females cannot have beard length"];
+    if (appearance.beardLength < 0 || appearance.beardLength > 100) return [false, "Invalid beard length"];
+    if (appearance.eyeColor < 0 || appearance.eyeColor >= eyeColors.length) return [false, "Invalid eye color"];
+    if (!eyebrows.includes(appearance.eyebrowStyle)) return [false, "Invalid eyebrow style"];
+    if (appearance.eyebrowColor < 0 || appearance.eyebrowColor >= hairColors.length) return [false, "Invalid eyebrow color"];
+    if (appearance.eyebrowLength < 0 || appearance.eyebrowLength > 100) return [false, "Invalid eyebrow length"];
+    if (!blemishesStyles.includes(appearance.blemishesStyle)) return [false, "Invalid blemishes style"];
+    if (!ageingStyles.includes(appearance.ageingStyle)) return [false, "Invalid ageing style"];
+    if (!makeupStyles.includes(appearance.makeupStyle)) return [false, "Invalid makeup style"];
+    if (!blushStyles.includes(appearance.blushStyle)) return [false, "Invalid blush style"];
+    if (!complexionStyles.includes(appearance.complexionStyle)) return [false, "Invalid complexion style"];
+    if (!sunDamageStyles.includes(appearance.sunDamageStyle)) return [false, "Invalid sun damage style"];
+    if (!lipstickStyles.includes(appearance.lipstickStyle)) return [false, "Invalid lipstick style"];
+    if (!frecklesStyles.includes(appearance.frecklesStyle)) return [false, "Invalid freckles style"];
+    if (appearance.noseWidth < 0 || appearance.noseWidth > 100) return [false, "Invalid nose width"];
+    if (appearance.noseHeight < 0 || appearance.noseHeight > 100) return [false, "Invalid nose height"];
+    if (appearance.noseLength < 0 || appearance.noseLength > 100) return [false, "Invalid nose length"];
+    if (appearance.noseBridge < 0 || appearance.noseBridge > 100) return [false, "Invalid nose bridge"];
+    if (appearance.noseTip < 0 || appearance.noseTip > 100) return [false, "Invalid nose tip"];
+    if (appearance.noseBridgeShift < 0 || appearance.noseBridgeShift > 100) return [false, "Invalid nose bridge shift"];
+    if (appearance.eyebrowHeight < 0 || appearance.eyebrowHeight > 100) return [false, "Invalid eyebrow height"];
+    if (appearance.eyebrowWidth < 0 || appearance.eyebrowWidth > 100) return [false, "Invalid eyebrow width"];
+    if (appearance.cheekboneHeight < 0 || appearance.cheekboneHeight > 100) return [false, "Invalid cheekbone height"];
+    if (appearance.cheekboneWidth < 0 || appearance.cheekboneWidth > 100) return [false, "Invalid cheekbone width"];
+    if (appearance.cheeksWidth < 0 || appearance.cheeksWidth > 100) return [false, "Invalid cheeks width"];
+    if (appearance.eyesOpening < 0 || appearance.eyesOpening > 100) return [false, "Invalid eyes opening"];
+    if (appearance.lipsThickness < 0 || appearance.lipsThickness > 100) return [false, "Invalid lips thickness"];
+    if (appearance.jawWidth < 0 || appearance.jawWidth > 100) return [false, "Invalid jaw width"];
+    if (appearance.jawHeight < 0 || appearance.jawHeight > 100) return [false, "Invalid jaw height"];
+    if (appearance.chinLength < 0 || appearance.chinLength > 100) return [false, "Invalid chin length"];
+    if (appearance.chinPosition < 0 || appearance.chinPosition > 100) return [false, "Invalid chin position"];
+    if (appearance.chinWidth < 0 || appearance.chinWidth > 100) return [false, "Invalid chin width"];
+    if (appearance.chinShape < 0 || appearance.chinShape > 100) return [false, "Invalid chin shape"];
+    if (appearance.neckWidth < 0 || appearance.neckWidth > 100) return [false, "Invalid neck width"];
+    if (appearance.blemishesOpacity < 0 || appearance.blemishesOpacity > 100) return [false, "Invalid blemishes opacity"];
+    if (appearance.ageingOpacity < 0 || appearance.ageingOpacity > 100) return [false, "Invalid ageing opacity"];
+    if (appearance.makeupOpacity < 0 || appearance.makeupOpacity > 100) return [false, "Invalid makeup opacity"];
+    if (appearance.blushOpacity < 0 || appearance.blushOpacity > 100) return [false, "Invalid blush opacity"];
+    if (appearance.complexionOpacity < 0 || appearance.complexionOpacity > 100) return [false, "Invalid complexion opacity"];
+    if (appearance.sunDamageOpacity < 0 || appearance.sunDamageOpacity > 100) return [false, "Invalid sun damage opacity"];
+    if (appearance.lipstickOpacity < 0 || appearance.lipstickOpacity > 100) return [false, "Invalid lipstick opacity"];
+    if (appearance.frecklesOpacity < 0 || appearance.frecklesOpacity > 100) return [false, "Invalid freckles opacity"];
+    if (appearance.blushColor < 0 || appearance.blushColor >= hairColors.length) return [false, "Invalid blush color"];
+    if (appearance.lipstickColor < 0 || appearance.lipstickColor >= hairColors.length) return [false, "Invalid lipstick color"];
 
-    if (!isClothingValid(appearance.gender, 'tops', appearance.topStyle, appearance.topTexture)) return false;
-    if (!isClothingValid(appearance.gender, 'shoes', appearance.shoesStyle, appearance.shoesTexture)) return false;
-    if (!isClothingValid(appearance.gender, 'legs', appearance.legsStyle, appearance.legsTexture)) return false;
+    if (!isClothingValid(appearance.gender, 'tops', appearance.topStyle, appearance.topTexture)) return [false, "Invalid top clothing"];
+    if (!isClothingValid(appearance.gender, 'shoes', appearance.shoesStyle, appearance.shoesTexture)) return [false, "Invalid shoe clothing"];
+    if (!isClothingValid(appearance.gender, 'legs', appearance.legsStyle, appearance.legsTexture)) return [false, "Invalid legs clothing"];
 
     const undershirts = getBestUndershirtsForTop(appearance.gender, appearance.topStyle);
     const hasUndershirt = undershirts.some((item) => item.id === appearance.undershirtStyle && item.textures.includes(appearance.undershirtTexture));
-    if (!hasUndershirt) return false;
+    if (!hasUndershirt) return [false, "Invalid undershirt for selected top"];
 
-    return true;
+    return [true, "Valid appearance"];
 }
 
 const getRandomValue = (min: number, max: number): number => {
@@ -727,6 +727,11 @@ export function getDefaultAppearance(): CharacterAppearance {
         shoesStyle: 0,
         shoesTexture: 0,
         undershirtStyle: 0,
-        undershirtTexture: 0,
+        undershirtTexture: 15,
     };
+}
+
+export interface SaveCharacterAppearanceResponse {
+    success: boolean;
+    message?: string;
 }

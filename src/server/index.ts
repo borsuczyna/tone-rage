@@ -19,6 +19,7 @@ import ColShapeService from '@shared-rage/Services/ColShapeService';
 import VehicleService from './Services/Core/VehicleService';
 import WinterSeason from './Features/Core/WinterSeason';
 import Tests from './Tests/Tests';
+import CharacterCreator from './Features/CharacterCreator/CharacterCreator';
 
 async function initializeServer() {
     try {
@@ -42,6 +43,7 @@ async function initializeServer() {
 
         // Features
         await Atm.init();
+        await CharacterCreator.init();
         // await WinterSeason.init();
 
         // Tests

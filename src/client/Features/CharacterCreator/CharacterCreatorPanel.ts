@@ -4,8 +4,9 @@ import EventService from "@/Services/Infrastructure/EventService";
 import InterfaceService from "@/Services/Infrastructure/InterfaceService";
 import KeyboardService, { KeyState } from "@/Services/Utility/KeyboardService";
 import { InputKey } from "@shared/KeyMap";
-import { CharacterAppearance, CharacterGender, femaleHairOverlays, getBestTorsoForTop, getBestUndershirtsForTop, maleHairOverlays } from "@shared/Models/Character/Character";
-import Chat from "../Chat/Chat";
+import { CharacterAppearance, CharacterGender, femaleHairOverlays, getBestTorsoForTop, getBestUndershirtsForTop, getDefaultAppearance, maleHairOverlays } from "@shared/Models/Character/Character";
+import TimerService from "@shared/Services/TimerService";
+import SpawnPanel from "../Spawn/SpawnPanel";
 
 export default class CharacterCreatorPanel {
     private static cameraFov: number = 70;
@@ -28,7 +29,6 @@ export default class CharacterCreatorPanel {
         if (visible) {
 			mp.events.add('render', this.renderLoop.bind(this));
             mp.events.add('click', this.onClick.bind(this));
-            Chat.setVisible(true);
             
             this.camera = mp.cameras.new('spawnCamera', new mp.Vector3(0, 0, 300), new mp.Vector3(0, 0, 0), 60);
 			this.camera.setActive(true);
@@ -44,6 +44,7 @@ export default class CharacterCreatorPanel {
             EventService.registerEventHandler('characterCreator:cursorEnterGrabBox', this.onCursorEnterExitGrabBox.bind(this, true).bind(this));
             EventService.registerEventHandler('characterCreator:cursorLeaveGrabBox', this.onCursorEnterExitGrabBox.bind(this, false).bind(this));
             EventService.registerEventHandler('characterCreator:categoryChanged', this.onCategoryChanged.bind(this));
+            EventService.registerEventHandler('characterCreator:finished', this.finished.bind(this));
         } else {
             mp.events.remove('render', this.renderLoop.bind(this));
 
@@ -64,6 +65,9 @@ export default class CharacterCreatorPanel {
             EventService.removeEventHandler('characterCreator:cursorEnterGrabBox', this.onCursorEnterExitGrabBox.bind(this, true).bind(this));
             EventService.removeEventHandler('characterCreator:cursorLeaveGrabBox', this.onCursorEnterExitGrabBox.bind(this, false).bind(this));
             EventService.removeEventHandler('characterCreator:categoryChanged', this.onCategoryChanged.bind(this));
+            EventService.removeEventHandler('characterCreator:finished', this.finished.bind(this));
+
+            this.onUpdateAppearance(getDefaultAppearance());
         }
     }
 
@@ -228,6 +232,15 @@ export default class CharacterCreatorPanel {
 
     private static onCategoryChanged(category: number) {
         this.category = category;
+    }
+
+    private static finished() {
+        TimerService.setTimer(this.finishedFinal.bind(this), 800, 1);
+    }
+
+    private static finishedFinal() {
+        this.setVisible(false);
+        SpawnPanel.setVisible(true);
     }
 
     private static onClick(absoluteX: number, absoluteY: number, upOrDown: "up" | "down", leftOrRight: "left" | "right", _relativeX: number, _relativeY: number, _worldPosition: Vector3, _hitEntity: number) {

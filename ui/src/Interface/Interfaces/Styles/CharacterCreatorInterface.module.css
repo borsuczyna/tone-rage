@@ -22,6 +22,10 @@
     animation: opacityUp 0.8s ease forwards;
 }
 
+.container.hidingInterface {
+    animation: opacityDown 0.8s ease forwards;
+}
+
 .categories {
     position: fixed;
     top: 0%;
@@ -29,7 +33,11 @@
     height: 100vh;
     pointer-events: none;
     transform: translateX(5rem) scale(1.1);
-    animation: slideRight 0.8s ease-out;
+    animation: slideRightCategories 0.8s ease-out;
+}
+
+.hidingInterface .categories {
+    animation: slideLeftCategories 0.8s ease forwards;
 }
 
 .categories svg polygon,
@@ -103,6 +111,10 @@
     overflow-y: auto;
     animation: slideLeft 0.8s ease-out;
     transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.hidingInterface .rightMenu {
+    animation: slideRight 0.8s ease forwards;
 }
 
 /* scroll */
@@ -738,13 +750,23 @@
     cursor: grab;
 }
 
-@keyframes slideRight {
+@keyframes slideRightCategories {
     0% {
         transform: translateX(calc(5rem - 35vw)) scale(2.5);
         filter: blur(3rem);
     }
     100% {
         transform: translateX(5rem) scale(1.1);
+    }
+}
+
+@keyframes slideLeftCategories {
+    0% {
+        transform: translateX(5rem) scale(1.1);
+    }
+    100% {
+        transform: translateX(calc(5rem - 35vw)) scale(2.5);
+        filter: blur(3rem);
     }
 }
 
@@ -758,11 +780,30 @@
     }
 }
 
+@keyframes slideRight {
+    0% {
+        transform: translateX(0) scale(1);
+    }
+    100% {
+        transform: translateX(calc(35vw + 1.6rem)) scale(2.5);
+        filter: blur(3rem);
+    }
+}
+
 @keyframes opacityUp {
     0% {
         opacity: 0;
     }
     100% {
         opacity: 1;
+    }
+}
+
+@keyframes opacityDown {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
     }
 }

@@ -10,6 +10,7 @@ import Logger from '@shared/Logger';
 import TimerService from '@shared/Services/TimerService';
 import { Config } from '@/Config';
 import Dimensions from '@shared-rage/Models/Dimensions';
+import { CharacterAppearance } from '@shared/Models/Character/Character';
 
 interface CreateUserResult {
 	userId: number | null;
@@ -106,6 +107,7 @@ export default class UserService {
 		ElementDataService.set(client, 'exp', user.exp, ShareMode.SpecificClient);
 		ElementDataService.set(client, 'adminLevel', user.adminLevel, ShareMode.Everywhere);
 		ElementDataService.set(client, 'avatar', user.avatar, ShareMode.Everywhere);
+		ElementDataService.set(client, 'characterVisuals', user.characterVisuals, ShareMode.SpecificClient);
 		client.name = user.username;
 
         if (user.characterVisuals.length === 0) {
@@ -174,6 +176,23 @@ export default class UserService {
 
         ElementDataService.set(client, 'inCharacterCreation', true, ShareMode.SpecificClient);
     }
+
+	public static async updateCharacterAppearance(client: PlayerMp, appearance: CharacterAppearance): Promise<boolean> {
+		const userId = ElementDataService.get(client, 'userId') as number | null;
+		if (!userId) {
+			this.logger.error(`Cannot update character appearance for player ${client.name}: userId is null`);
+			return false;
+		}
+
+		const appearanceString = JSON.stringify(appearance);
+		const result = await Database.Execute('UPDATE users SET characterVisuals = ? WHERE uid = ?', [appearanceString, userId]);
+        if (result === null || result.affectedRows === 0) {
+            return false;
+        }
+
+        ElementDataService.set(client, 'characterVisuals', appearance, ShareMode.SpecificClient);
+        return true;
+	}
 
 	private static onPlayerQuit(client: PlayerMp) {
 		this.savePlayerData(client);

@@ -5,14 +5,16 @@ import Categories from './Components/CharacterCreator/Categories';
 import RightMenu from './Components/CharacterCreator/RightMenu';
 import DNACategory from './Components/CharacterCreator/Menu/DNACategory';
 import HairCategory from './Components/CharacterCreator/Menu/HairCategory';
-import { type CharacterAppearance, getBestUndershirtsForTop, getDefaultAppearance, getRandomAppearance, randomizeClothes, randomizeDNA, randomizeEyes, randomizeFace, randomizeFacialHair, randomizeHair } from '@shared/Models/Character/Character';
-import { triggerEvent } from 'src/Hooks/Fetch';
+import { type CharacterAppearance, getBestUndershirtsForTop, getDefaultAppearance, getRandomAppearance, randomizeClothes, randomizeDNA, randomizeEyes, randomizeFace, randomizeFacialHair, randomizeHair, type SaveCharacterAppearanceResponse } from '@shared/Models/Character/Character';
+import { fetchServerData, triggerEvent } from 'src/Hooks/Fetch';
 import FacialHairCategory from './Components/CharacterCreator/Menu/FacialHairCategory';
 import Toolbar from './Components/CharacterCreator/Toolbar';
 import EyesCategory from './Components/CharacterCreator/Menu/EyesCategory';
 import FaceShapeCategory from './Components/CharacterCreator/Menu/FaceShapeCategory';
 import ClothesCategory from './Components/CharacterCreator/Menu/ClothesCategory';
 import { useRageEvent } from 'src/Hooks/RageEventProvider';
+import { useNotifications } from 'src/Hooks/NotificationsProvider';
+import ConfirmationModal from './Components/CharacterCreator/ConfirmationModal';
 
 export default function CharacterCreatorInterface() {
     const [hiding, _setHiding] = useState(false);
@@ -21,6 +23,10 @@ export default function CharacterCreatorInterface() {
     const [isTransitioning, setIsTransitioning] = useState(false);
     const grabBoxRef = useRef<HTMLDivElement>(null);
     const [characterAppearance, _setCharacterAppearance] = useState<CharacterAppearance>(getDefaultAppearance());
+    const [isSaving, setIsSaving] = useState(false);
+    const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
+    const [hidingInterface, setHidingInterface] = useState(false);
+    const { addNotification } = useNotifications();
 
     const changeAppearance = (key: keyof CharacterAppearance, value: any, appearance: CharacterAppearance) => {
         appearance = { ...appearance, [key]: value };
@@ -125,6 +131,25 @@ export default function CharacterCreatorInterface() {
 
         updateFullCharacterAppearance(appearance);
     }
+
+    const saveCharacter = async () => {
+        setIsSaving(true);
+        setConfirmationModalOpen(false);
+
+        try {
+            const result = await fetchServerData<SaveCharacterAppearanceResponse>('characterCreator:saveCharacter', characterAppearance);
+            addNotification('Character Creator', result.message ?? 'Failed to save character', result.success ? 'success' : 'error');
+
+            if (result.success) {
+                setHidingInterface(true);
+                triggerEvent('characterCreator:finished');
+            }
+        } catch (error) {
+            addNotification('Character Creator', 'Error saving character', 'error');
+        }
+
+        setIsSaving(false);
+    }
     
     // Initialize displayed category
     useEffect(() => {
@@ -164,7 +189,7 @@ export default function CharacterCreatorInterface() {
     });
     
     return (
-        <div className={csx(styles.container, hiding && styles.hiding)}>
+        <div className={csx(styles.container, hiding && styles.hiding, hidingInterface && styles.hidingInterface)}>
             <Categories isTransitioning={isTransitioning} activeCategory={activeCategory} setActiveCategory={handleCategoryChange} />
 
             <RightMenu isTransitioning={isTransitioning}>
@@ -208,7 +233,16 @@ export default function CharacterCreatorInterface() {
                 characterAppearance={characterAppearance}
                 randomizeAppearance={randomizeAppearance}
                 onFullUpdate={updateFullCharacterAppearance}
+                saveCharacter={() => setConfirmationModalOpen(true)}
+                isSaving={isSaving}
             />
+
+            {confirmationModalOpen && (
+                <ConfirmationModal
+                    onConfirm={saveCharacter}
+                    onCancel={() => setConfirmationModalOpen(false)}
+                />
+            )}
         </div>
     );
 }
