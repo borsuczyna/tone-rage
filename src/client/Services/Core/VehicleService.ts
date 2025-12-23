@@ -1,10 +1,12 @@
 import { ElementDataEntity } from "@shared-rage/Models/ElementDataType";
 import ElementDataService from "../Infrastructure/ElementDataService";
+import EventService from "../Infrastructure/EventService";
 
 export default class VehicleService {
     public static init() {
         mp.events.add('entityStreamIn', this.onEntityStreamIn.bind(this));
         ElementDataService.registerListener('lightsState', this.onLightsStateChange.bind(this));
+        EventService.registerEventHandler('spawn:onSpawned', this.onSpawned.bind(this));
 
         // Disable engine auto start
         mp.events.add('playerReady', this.disableVehicleEngineAutoStart.bind(this));
@@ -36,5 +38,10 @@ export default class VehicleService {
         mp.game.vehicle.defaultEngineBehaviour = false;
         mp.game.controls.useDefaultVehicleEntering = false;
         mp.players.local.setConfigFlag(429, true);
+    }
+
+    private static onSpawned() {
+        this.disableVehicleEngineAutoStart();
+        mp.game.audio.freezeRadioStation('OFF');
     }
 }
