@@ -28,6 +28,7 @@ import WinterSeason from './Features/Core/WinterSeason';
 import UserService from './Services/Core/UserService';
 import GreenScreen from './Features/GreenScreen/GreenScreen';
 import CharacterCreator from './Features/CharacterCreator/CharacterCreator';
+import PlayerNametags from './Features/Nametags/PlayerNametags';
 // import TopsMaker from './Features/GreenScreen/TopsMaker';
 
 (async () => {
@@ -59,7 +60,7 @@ import CharacterCreator from './Features/CharacterCreator/CharacterCreator';
 	await Atm.init();
 	await WorldInteraction.init();
 	await VehicleInteraction.init();
-    // await PlayerNametags.init();
+    await PlayerNametags.init();
     await WinterSeason.init();
     await CharacterCreator.init();
 

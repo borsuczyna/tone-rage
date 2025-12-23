@@ -44,7 +44,7 @@ async function initializeServer() {
         // Features
         await Atm.init();
         await CharacterCreator.init();
-        // await WinterSeason.init();
+        await WinterSeason.init();
 
         // Tests
         await Tests.getPositionCommandTest();

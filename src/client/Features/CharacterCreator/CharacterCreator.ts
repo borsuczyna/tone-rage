@@ -20,9 +20,21 @@ export default class CharacterCreator {
     private static cameraY: number = 0;
     private static category: number = 0;
 
+    // Bound function references for proper event removal
+    private static boundUpdateHairOverlay = this.updateHairOverlay.bind(this);
+    private static boundOnEntityStreamIn = this.onEntityStreamIn.bind(this);
+    private static boundRenderLoop = this.renderLoop.bind(this);
+    private static boundOnClick = this.onClick.bind(this);
+    private static boundOnScroll = this.onScroll.bind(this);
+    private static boundOnUpdateAppearance = this.onUpdateAppearance.bind(this);
+    private static boundOnCursorEnterGrabBox = this.onCursorEnterExitGrabBox.bind(this, true);
+    private static boundOnCursorLeaveGrabBox = this.onCursorEnterExitGrabBox.bind(this, false);
+    private static boundOnCategoryChanged = this.onCategoryChanged.bind(this);
+    private static boundFinished = this.finished.bind(this);
+
     public static init() {
-        EventService.registerEventHandler('characterCreator:updateHairOverlay', this.updateHairOverlay.bind(this));
-        mp.events.add('entityStreamIn', this.onEntityStreamIn.bind(this));
+        EventService.registerEventHandler('characterCreator:updateHairOverlay', this.boundUpdateHairOverlay);
+        mp.events.add('entityStreamIn', this.boundOnEntityStreamIn);
     }
 
     public static setVisible(visible: boolean) {
@@ -32,8 +44,8 @@ export default class CharacterCreator {
         mp.game.ui.displayRadar(false);
 
         if (visible) {
-			mp.events.add('render', this.renderLoop.bind(this));
-            mp.events.add('click', this.onClick.bind(this));
+			mp.events.add('render', this.boundRenderLoop);
+            mp.events.add('click', this.boundOnClick);
             
             this.camera = mp.cameras.new('spawnCamera', new mp.Vector3(0, 0, 300), new mp.Vector3(0, 0, 0), 60);
 			this.camera.setActive(true);
@@ -42,16 +54,17 @@ export default class CharacterCreator {
             this.playerMatrix = new Matrix(mp.players.local);
             this.playerMatrix.dontUpdate = true;
 
-            KeyboardService.registerKeyHandler('MouseWheelDown', this.onScroll.bind(this));
-            KeyboardService.registerKeyHandler('MouseWheelUp', this.onScroll.bind(this));
+            KeyboardService.registerKeyHandler('MouseWheelDown', this.boundOnScroll);
+            KeyboardService.registerKeyHandler('MouseWheelUp', this.boundOnScroll);
 
-            EventService.registerEventHandler('characterCreator:updateAppearance', this.onUpdateAppearance.bind(this));
-            EventService.registerEventHandler('characterCreator:cursorEnterGrabBox', this.onCursorEnterExitGrabBox.bind(this, true).bind(this));
-            EventService.registerEventHandler('characterCreator:cursorLeaveGrabBox', this.onCursorEnterExitGrabBox.bind(this, false).bind(this));
-            EventService.registerEventHandler('characterCreator:categoryChanged', this.onCategoryChanged.bind(this));
-            EventService.registerEventHandler('characterCreator:finished', this.finished.bind(this));
+            EventService.registerEventHandler('characterCreator:updateAppearance', this.boundOnUpdateAppearance);
+            EventService.registerEventHandler('characterCreator:cursorEnterGrabBox', this.boundOnCursorEnterGrabBox);
+            EventService.registerEventHandler('characterCreator:cursorLeaveGrabBox', this.boundOnCursorLeaveGrabBox);
+            EventService.registerEventHandler('characterCreator:categoryChanged', this.boundOnCategoryChanged);
+            EventService.registerEventHandler('characterCreator:finished', this.boundFinished);
         } else {
-            mp.events.remove('render', this.renderLoop.bind(this));
+            mp.events.remove('render', this.boundRenderLoop);
+            mp.events.remove('click', this.boundOnClick);
 
             if (this.camera) {
                 this.camera.setActive(false);
@@ -63,14 +76,14 @@ export default class CharacterCreator {
 
             this.playerMatrix = null;
 
-            KeyboardService.unregisterKeyHandler('MouseWheelDown', this.onScroll.bind(this));
-            KeyboardService.unregisterKeyHandler('MouseWheelUp', this.onScroll.bind(this));
+            KeyboardService.unregisterKeyHandler('MouseWheelDown', this.boundOnScroll);
+            KeyboardService.unregisterKeyHandler('MouseWheelUp', this.boundOnScroll);
 
-            EventService.removeEventHandler('characterCreator:updateAppearance', this.onUpdateAppearance.bind(this));
-            EventService.removeEventHandler('characterCreator:cursorEnterGrabBox', this.onCursorEnterExitGrabBox.bind(this, true).bind(this));
-            EventService.removeEventHandler('characterCreator:cursorLeaveGrabBox', this.onCursorEnterExitGrabBox.bind(this, false).bind(this));
-            EventService.removeEventHandler('characterCreator:categoryChanged', this.onCategoryChanged.bind(this));
-            EventService.removeEventHandler('characterCreator:finished', this.finished.bind(this));
+            EventService.removeEventHandler('characterCreator:updateAppearance', this.boundOnUpdateAppearance);
+            EventService.removeEventHandler('characterCreator:cursorEnterGrabBox', this.boundOnCursorEnterGrabBox);
+            EventService.removeEventHandler('characterCreator:cursorLeaveGrabBox', this.boundOnCursorLeaveGrabBox);
+            EventService.removeEventHandler('characterCreator:categoryChanged', this.boundOnCategoryChanged);
+            EventService.removeEventHandler('characterCreator:finished', this.boundFinished);
 
             this.onUpdateAppearance(getDefaultAppearance());
         }

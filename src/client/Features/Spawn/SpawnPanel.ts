@@ -9,22 +9,27 @@ export default class SpawnPanel {
 	private static selectedSpawn: SpawnLocation | null = null;
 	private static camera: CameraMp | null = null;
 
+	// Bound function references for proper event removal
+	private static boundHandleSpawnPreview = this.handleSpawnPreview.bind(this);
+	private static boundHandleSpawnSelect = this.handleSpawnSelect.bind(this);
+	private static boundRenderLoop = this.renderLoop.bind(this);
+
 	public static async setVisible(visible: boolean) {
 		InterfaceService.setInterfaceVisible('SpawnSelectionInterface', visible);
 		InterfaceService.setCursorVisible(visible, visible);
 
 		if (visible) {
-			EventService.registerEventHandler('spawn:preview', this.handleSpawnPreview.bind(this));
-			EventService.registerEventHandler('spawn:select', this.handleSpawnSelect.bind(this));
-			mp.events.add('render', this.renderLoop.bind(this));
+			EventService.registerEventHandler('spawn:preview', this.boundHandleSpawnPreview);
+			EventService.registerEventHandler('spawn:select', this.boundHandleSpawnSelect);
+			mp.events.add('render', this.boundRenderLoop);
 
 			this.camera = mp.cameras.new('spawnCamera', new mp.Vector3(0, 0, 300), new mp.Vector3(0, 0, 0), 60);
 			this.camera.setActive(true);
 			mp.game.cam.renderScriptCams(true, false, 0, true, false, 0);
 		} else {
-			EventService.removeEventHandler('spawn:preview', this.handleSpawnPreview.bind(this));
-			EventService.removeEventHandler('spawn:select', this.handleSpawnSelect.bind(this));
-			mp.events.remove('render', this.renderLoop.bind(this));
+			EventService.removeEventHandler('spawn:preview', this.boundHandleSpawnPreview);
+			EventService.removeEventHandler('spawn:select', this.boundHandleSpawnSelect);
+			mp.events.remove('render', this.boundRenderLoop);
 
 			if (this.camera) {
 				this.camera.setActive(false);

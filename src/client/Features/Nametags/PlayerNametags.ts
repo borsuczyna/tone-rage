@@ -12,7 +12,13 @@ export default class PlayerNametags {
     }
 
     private static renderNametags() {
+        const localPlayerDimension = mp.players.local.dimension;
+        const isInCharacterCreator = ElementDataService.get(mp.players.local, 'inCharacterCreation');
+        if (isInCharacterCreator) return;
+
         mp.players.forEachInStreamRange((player: PlayerMp) => {
+            if (player.dimension !== localPlayerDimension) return;
+
             const userId = ElementDataService.get(player, 'userId');
             if (!userId) return;
 
