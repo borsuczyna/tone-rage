@@ -10,9 +10,9 @@ export default class SpawnPanel {
 	private static camera: CameraMp | null = null;
 
 	// Bound function references for proper event removal
-	private static boundHandleSpawnPreview = this.handleSpawnPreview.bind(this);
-	private static boundHandleSpawnSelect = this.handleSpawnSelect.bind(this);
-	private static boundRenderLoop = this.renderLoop.bind(this);
+	private static boundHandleSpawnPreview = SpawnPanel.handleSpawnPreview.bind(SpawnPanel);
+	private static boundHandleSpawnSelect = SpawnPanel.handleSpawnSelect.bind(SpawnPanel);
+	private static boundRenderLoop = SpawnPanel.renderLoop.bind(SpawnPanel);
 
 	public static async setVisible(visible: boolean) {
 		InterfaceService.setInterfaceVisible('SpawnSelectionInterface', visible);

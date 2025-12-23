@@ -21,16 +21,16 @@ export default class CharacterCreator {
     private static category: number = 0;
 
     // Bound function references for proper event removal
-    private static boundUpdateHairOverlay = this.updateHairOverlay.bind(this);
-    private static boundOnEntityStreamIn = this.onEntityStreamIn.bind(this);
-    private static boundRenderLoop = this.renderLoop.bind(this);
-    private static boundOnClick = this.onClick.bind(this);
-    private static boundOnScroll = this.onScroll.bind(this);
-    private static boundOnUpdateAppearance = this.onUpdateAppearance.bind(this);
-    private static boundOnCursorEnterGrabBox = this.onCursorEnterExitGrabBox.bind(this, true);
-    private static boundOnCursorLeaveGrabBox = this.onCursorEnterExitGrabBox.bind(this, false);
-    private static boundOnCategoryChanged = this.onCategoryChanged.bind(this);
-    private static boundFinished = this.finished.bind(this);
+    private static boundUpdateHairOverlay = CharacterCreator.updateHairOverlay.bind(CharacterCreator);
+    private static boundOnEntityStreamIn = CharacterCreator.onEntityStreamIn.bind(CharacterCreator);
+    private static boundRenderLoop = CharacterCreator.renderLoop.bind(CharacterCreator);
+    private static boundOnClick = CharacterCreator.onClick.bind(CharacterCreator);
+    private static boundOnScroll = CharacterCreator.onScroll.bind(CharacterCreator);
+    private static boundOnUpdateAppearance = CharacterCreator.onUpdateAppearance.bind(CharacterCreator);
+    private static boundOnCursorEnterGrabBox = CharacterCreator.onCursorEnterExitGrabBox.bind(CharacterCreator, true);
+    private static boundOnCursorLeaveGrabBox = CharacterCreator.onCursorEnterExitGrabBox.bind(CharacterCreator, false);
+    private static boundOnCategoryChanged = CharacterCreator.onCategoryChanged.bind(CharacterCreator);
+    private static boundFinished = CharacterCreator.finished.bind(CharacterCreator);
 
     public static init() {
         EventService.registerEventHandler('characterCreator:updateHairOverlay', this.boundUpdateHairOverlay);
@@ -64,7 +64,6 @@ export default class CharacterCreator {
             EventService.registerEventHandler('characterCreator:finished', this.boundFinished);
         } else {
             mp.events.remove('render', this.boundRenderLoop);
-            mp.events.remove('click', this.boundOnClick);
 
             if (this.camera) {
                 this.camera.setActive(false);
