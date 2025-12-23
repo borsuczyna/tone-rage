@@ -4,6 +4,7 @@ import ImageSelector from './ImageSelector';
 import ColorPicker from './ColorPicker';
 import CustomSlider from './CustomSlider';
 import RandomizeButton from './RandomizeButton';
+import translate from '@shared/Translation/Translation';
 
 interface FacialHairCategoryProps {
     characterAppearance: CharacterAppearance;
@@ -17,12 +18,12 @@ export default function FacialHairCategory({
     randomize
 }: FacialHairCategoryProps) {
     if (characterAppearance.gender !== CharacterGender.Male) {
-        return <div className={styles.label}>No facial hair options for female characters.</div>;
+        return <div className={styles.label}>{translate('character.creator.no.facial.hair.female')}</div>;
     }
     
     return (
         <>
-            <div className={styles.label}>Facial Hair Style</div>
+            <div className={styles.label}>{translate('character.creator.facial.hair.style')}</div>
             <ImageSelector 
                 path={'/creator/heads'}
                 selectedStyle={characterAppearance.beardStyle}
@@ -33,7 +34,7 @@ export default function FacialHairCategory({
                 isOverlay={true}
             />
 
-            <div className={styles.smallLabel}>Color</div>
+            <div className={styles.smallLabel}>{translate('character.creator.facial.hair.color')}</div>
             <ColorPicker 
                 selectedColor={hairColors[characterAppearance.beardColor].hex}
                 onColorChange={(colorHex) => {
@@ -46,7 +47,7 @@ export default function FacialHairCategory({
             />
 
             <CustomSlider 
-                label="Length"
+                label={translate('character.creator.facial.hair.length')}
                 value={characterAppearance.beardLength}
                 onChange={(length) => setCharacterAppearance([['beardLength', length]])}
                 min={0}

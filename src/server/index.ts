@@ -20,6 +20,7 @@ import VehicleService from './Services/Core/VehicleService';
 import WinterSeason from './Features/Core/WinterSeason';
 import Tests from './Tests/Tests';
 import CharacterCreator from './Features/CharacterCreator/CharacterCreator';
+import AdminDuty from './Features/Admin/Duty';
 
 async function initializeServer() {
     try {
@@ -45,6 +46,7 @@ async function initializeServer() {
         await Atm.init();
         await CharacterCreator.init();
         await WinterSeason.init();
+        await AdminDuty.init();
 
         // Tests
         await Tests.getPositionCommandTest();

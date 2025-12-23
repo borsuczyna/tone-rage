@@ -108,7 +108,7 @@ export default class UserService {
 		ElementDataService.set(client, 'bankMoney', user.bankMoney, ShareMode.Server);
 		ElementDataService.set(client, 'level', user.level, ShareMode.SpecificClient);
 		ElementDataService.set(client, 'exp', user.exp, ShareMode.SpecificClient);
-		ElementDataService.set(client, 'adminLevel', user.adminLevel, ShareMode.Everywhere);
+		ElementDataService.set(client, 'adminLevel', user.adminLevel, ShareMode.Local);
 		ElementDataService.set(client, 'avatar', user.avatar, ShareMode.Everywhere);
 		ElementDataService.set(client, 'characterVisuals', user.characterVisuals, ShareMode.SpecificClient);
 		client.name = user.username;

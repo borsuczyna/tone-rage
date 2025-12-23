@@ -80,7 +80,7 @@ export default class DrawingService {
     private static getPlayerNametagTextureKey(player: PlayerMp): string {
         const name = player.name;
         const avatar = ElementDataService.get(player, 'avatar');
-        const adminLevel = ElementDataService.get(player, 'adminLevel') || 0;
+        const adminLevel = ElementDataService.get(player, 'adminDuty') || 0;
         const emblemas = EmblemaService.getPlayerEmblems(player, adminLevel);
 
         return `nametag_${name}_${avatar || 'noavatar'}_${emblemas.join(';')}`;
@@ -94,9 +94,7 @@ export default class DrawingService {
 
         const name = player.name;
         const avatar = ElementDataService.get(player, 'avatar') || '';
-        const adminLevel = (ElementDataService.get(player, 'adminLevel') || 0) as AdminLevel;
-        // const adminLevelName = adminLevel != AdminLevel.User ? adminLevels[adminLevel] : undefined;
-        // const adminLevelColor = adminLevel != AdminLevel.User ? adminLevelColors[adminLevel] : undefined;
+        const adminLevel = (ElementDataService.get(player, 'adminDuty') || 0) as AdminLevel;
         const adminLevelName = adminLevels[adminLevel];
         const adminLevelColor = adminLevelColors[adminLevel];
         const emblemas = EmblemaService.getPlayerEmblems(player, adminLevel);

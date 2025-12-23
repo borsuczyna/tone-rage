@@ -740,8 +740,10 @@ export function encodeCharacterAppearance(appearance: CharacterAppearance): stri
     const jsonString = JSON.stringify(appearance);
     let encoded: string;
     if (typeof btoa === 'function') {
+        // @ts-ignore
         encoded = btoa(jsonString);
     } else {
+        // @ts-ignore
         encoded = Buffer.from(jsonString, 'utf-8').toString('base64');
     }
     // Add simple obfuscation by reversing and adding prefix/suffix
@@ -759,8 +761,10 @@ export function decodeCharacterAppearance(encodedData: string): CharacterAppeara
         const reversed = cleaned.split('').reverse().join('');
         let decoded: string;
         if (typeof atob === 'function') {
+            // @ts-ignore
             decoded = atob(reversed);
         } else {
+            // @ts-ignore
             decoded = Buffer.from(reversed, 'base64').toString('utf-8');
         }
         const appearance = JSON.parse(decoded) as CharacterAppearance;

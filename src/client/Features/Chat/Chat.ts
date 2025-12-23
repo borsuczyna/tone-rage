@@ -98,7 +98,7 @@ export default class Chat {
         emblemas = emblemas || [];
 
         if (typeof owner !== 'string') {
-            const adminLevel = ElementDataService.get(owner, 'adminLevel') || 0;
+            const adminLevel = ElementDataService.get(owner, 'adminDuty') || 0;
             const newEmblemas = EmblemaService.getPlayerEmblems(owner, adminLevel);
             emblemas = emblemas.concat(newEmblemas);
         }

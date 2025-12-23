@@ -1,5 +1,4 @@
 import styles from '../../Styles/ChatInterface.module.css';
-import Switch from '../Switch';
 import Button from '../Button';
 import type { ChatSettings } from './types';
 
@@ -74,16 +73,6 @@ export default function ChatSettings({
                             value={settings.zoom}
                             onChange={(e) => updateSettings({ zoom: Number(e.target.value) })}
                             className={styles.settingSlider}
-                        />
-                    </div>
-                    
-                    <div className={styles.settingGroup}>
-                        <Switch
-                            id="showAvatars"
-                            label="Show player avatars"
-                            checked={settings.showAvatars}
-                            onChange={(checked) => updateSettings({ showAvatars: checked })}
-                            size="medium"
                         />
                     </div>
                 </div>

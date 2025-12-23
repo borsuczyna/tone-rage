@@ -5,6 +5,7 @@ import CustomSlider from './CustomSlider';
 import ImageSelector from './ImageSelector';
 import ColorPicker from './ColorPicker';
 import RandomizeButton from './RandomizeButton';
+import translate from '@shared/Translation/Translation';
 
 interface FaceShapeCategoryProps {
     characterAppearance: CharacterAppearance;
@@ -19,9 +20,9 @@ export default function FaceShapeCategory({
 }: FaceShapeCategoryProps) {
     return (
         <>
-            <div className={styles.label}>Skin Details</div>
+            <div className={styles.label}>{translate('character.creator.face.shape')}</div>
 
-            <div className={styles.subLabel}>Blemishes</div>
+            <div className={styles.subLabel}>{translate('character.creator.overlay.blemishes')}</div>
             <ImageSelector 
                 path={'/creator/heads'}
                 selectedStyle={characterAppearance.blemishesStyle}
@@ -33,14 +34,14 @@ export default function FaceShapeCategory({
             />
 
             <CustomSlider
-                label="Opacity"
+                label={translate('character.creator.overlay.opacity')}
                 value={characterAppearance.blemishesOpacity}
                 onChange={(value) => setCharacterAppearance([['blemishesOpacity', value]])}
                 min={0}
                 max={100}
             />
 
-            <div className={styles.subLabel}>Ageing</div>
+            <div className={styles.subLabel}>{translate('character.creator.overlay.ageing')}</div>
             <ImageSelector
                 path={'/creator/heads'}
                 selectedStyle={characterAppearance.ageingStyle}
@@ -52,14 +53,14 @@ export default function FaceShapeCategory({
             />
 
             <CustomSlider
-                label="Opacity"
+                label={translate('character.creator.overlay.opacity')}
                 value={characterAppearance.ageingOpacity}
                 onChange={(value) => setCharacterAppearance([['ageingOpacity', value]])}
                 min={0}
                 max={100}
             />
 
-            <div className={styles.subLabel}>Makeup</div>
+            <div className={styles.subLabel}>{translate('character.creator.overlay.makeup')}</div>
 
             <ImageSelector
                 path={'/creator/heads'}
@@ -72,14 +73,14 @@ export default function FaceShapeCategory({
             />
 
             <CustomSlider
-                label="Opacity"
+                label={translate('character.creator.overlay.opacity')}
                 value={characterAppearance.makeupOpacity}
                 onChange={(value) => setCharacterAppearance([['makeupOpacity', value]])}
                 min={0}
                 max={100}
             />
 
-            <div className={styles.subLabel}>Blush</div>
+            <div className={styles.subLabel}>{translate('character.creator.overlay.blush')}</div>
 
             <ImageSelector
                 path={'/creator/heads'}
@@ -91,7 +92,7 @@ export default function FaceShapeCategory({
                 isOverlay={true}
             />
 
-            <div className={styles.smallLabel}>Color</div>
+            <div className={styles.smallLabel}>{translate('character.creator.overlay.color')}</div>
             <ColorPicker 
                 selectedColor={hairColors[characterAppearance.blushColor].hex}
                 onColorChange={(colorHex) => {
@@ -104,14 +105,14 @@ export default function FaceShapeCategory({
             />
 
             <CustomSlider
-                label="Opacity"
+                label={translate('character.creator.overlay.opacity')}
                 value={characterAppearance.blushOpacity}
                 onChange={(value) => setCharacterAppearance([['blushOpacity', value]])}
                 min={0}
                 max={100}
             />
 
-            <div className={styles.subLabel}>Complexion</div>
+            <div className={styles.subLabel}>{translate('character.creator.overlay.complexion')}</div>
 
             <ImageSelector
                 path={'/creator/heads'}
@@ -124,14 +125,14 @@ export default function FaceShapeCategory({
             />
 
             <CustomSlider
-                label="Opacity"
+                label={translate('character.creator.overlay.opacity')}
                 value={characterAppearance.complexionOpacity}
                 onChange={(value) => setCharacterAppearance([['complexionOpacity', value]])}
                 min={0}
                 max={100}
             />
 
-            <div className={styles.subLabel}>Sun Damage</div>
+            <div className={styles.subLabel}>{translate('character.creator.overlay.sun.damage')}</div>
 
             <ImageSelector
                 path={'/creator/heads'}
@@ -144,14 +145,14 @@ export default function FaceShapeCategory({
             />
 
             <CustomSlider
-                label="Opacity"
+                label={translate('character.creator.overlay.opacity')}
                 value={characterAppearance.sunDamageOpacity}
                 onChange={(value) => setCharacterAppearance([['sunDamageOpacity', value]])}
                 min={0}
                 max={100}
             />
 
-            <div className={styles.subLabel}>Lipstick</div>
+            <div className={styles.subLabel}>{translate('character.creator.overlay.lipstick')}</div>
 
             <ImageSelector
                 path={'/creator/heads'}
@@ -163,7 +164,7 @@ export default function FaceShapeCategory({
                 isOverlay={true}
             />
 
-            <div className={styles.smallLabel}>Color</div>
+            <div className={styles.smallLabel}>{translate('character.creator.overlay.color')}</div>
             <ColorPicker 
                 selectedColor={hairColors[characterAppearance.lipstickColor].hex}
                 onColorChange={(colorHex) => {
@@ -176,14 +177,14 @@ export default function FaceShapeCategory({
             />
 
             <CustomSlider
-                label="Opacity"
+                label={translate('character.creator.overlay.opacity')}
                 value={characterAppearance.lipstickOpacity}
                 onChange={(value) => setCharacterAppearance([['lipstickOpacity', value]])}
                 min={0}
                 max={100}
             />
 
-            <div className={styles.subLabel}>Freckles</div>
+            <div className={styles.subLabel}>{translate('character.creator.overlay.freckles')}</div>
 
             <ImageSelector
                 path={'/creator/heads'}
@@ -196,18 +197,18 @@ export default function FaceShapeCategory({
             />
 
             <CustomSlider
-                label="Opacity"
+                label={translate('character.creator.overlay.opacity')}
                 value={characterAppearance.frecklesOpacity}
                 onChange={(value) => setCharacterAppearance([['frecklesOpacity', value]])}
                 min={0}
                 max={100}
             />
 
-            <div className={styles.label}>Nose</div>
+            <div className={styles.label}>{translate('character.creator.face.nose.width')}</div>
             
             <Control2D
-                labelX="Width"
-                labelY="Height"
+                labelX={translate('character.creator.face.nose.width')}
+                labelY={translate('character.creator.face.nose.height')}
                 valueX={characterAppearance.noseWidth}
                 valueY={characterAppearance.noseHeight}
                 onChange={(width, height) => setCharacterAppearance([['noseWidth', width], ['noseHeight', height]])}
@@ -218,8 +219,8 @@ export default function FaceShapeCategory({
             />
 
             <Control2D
-                labelX="Length"
-                labelY="Tip"
+                labelX={translate('character.creator.face.nose.length')}
+                labelY={translate('character.creator.face.nose.tip')}
                 valueX={characterAppearance.noseLength}
                 valueY={characterAppearance.noseTip}
                 onChange={(length, tip) => setCharacterAppearance([['noseLength', length], ['noseTip', tip]])}
@@ -230,8 +231,8 @@ export default function FaceShapeCategory({
             />
 
             <Control2D
-                labelX="Bridge"
-                labelY="Bridge shift"
+                labelX={translate('character.creator.face.nose.bridge')}
+                labelY={translate('character.creator.face.nose.bridge.shift')}
                 valueX={characterAppearance.noseBridge}
                 valueY={characterAppearance.noseBridgeShift}
                 onChange={(bridge, bridgeShift) => setCharacterAppearance([['noseBridge', bridge], ['noseBridgeShift', bridgeShift]])}
@@ -241,11 +242,11 @@ export default function FaceShapeCategory({
                 maxY={100}
             />
 
-            <div className={styles.label}>Eyebrows</div>
+            <div className={styles.label}>{translate('character.creator.categories.eyebrows')}</div>
             
             <Control2D
-                labelX="Forward"
-                labelY="Height"
+                labelX={translate('character.creator.face.eyebrow.width')}
+                labelY={translate('character.creator.face.eyebrow.height')}
                 valueX={characterAppearance.eyebrowWidth}
                 valueY={characterAppearance.eyebrowHeight}
                 onChange={(width, height) => setCharacterAppearance([['eyebrowWidth', width], ['eyebrowHeight', height]])}
@@ -255,11 +256,11 @@ export default function FaceShapeCategory({
                 maxY={100}
             />
 
-            <div className={styles.label}>Cheekbones</div>
+            <div className={styles.label}>{translate('character.creator.face.cheekbone.width')}</div>
             
             <Control2D
-                labelX="Width"
-                labelY="Height"
+                labelX={translate('character.creator.face.cheekbone.width')}
+                labelY={translate('character.creator.face.cheekbone.height')}
                 valueX={characterAppearance.cheekboneWidth}
                 valueY={characterAppearance.cheekboneHeight}
                 onChange={(width, height) => setCharacterAppearance([['cheekboneWidth', width], ['cheekboneHeight', height]])}
@@ -269,41 +270,41 @@ export default function FaceShapeCategory({
                 maxY={100}
             />
 
-            <div className={styles.label}>Cheeks</div>
+            <div className={styles.label}>{translate('character.creator.face.cheeks.width')}</div>
             
             <CustomSlider
-                label="Width"
+                label={translate('character.creator.face.cheeks.width')}
                 value={characterAppearance.cheeksWidth}
                 onChange={(value) => setCharacterAppearance([['cheeksWidth', value]])}
                 min={0}
                 max={100}
             />
 
-            <div className={styles.label}>Eyes</div>
+            <div className={styles.label}>{translate('character.creator.face.eyes.opening')}</div>
             
             <CustomSlider
-                label="Opening"
+                label={translate('character.creator.face.eyes.opening')}
                 value={characterAppearance.eyesOpening}
                 onChange={(value) => setCharacterAppearance([['eyesOpening', value]])}
                 min={0}
                 max={100}
             />
 
-            <div className={styles.label}>Lips</div>
+            <div className={styles.label}>{translate('character.creator.face.lips.thickness')}</div>
             
             <CustomSlider
-                label="Thickness"
+                label={translate('character.creator.face.lips.thickness')}
                 value={characterAppearance.lipsThickness}
                 onChange={(value) => setCharacterAppearance([['lipsThickness', value]])}
                 min={0}
                 max={100}
             />
 
-            <div className={styles.label}>Jaw</div>
+            <div className={styles.label}>{translate('character.creator.face.jaw.width')}</div>
             
             <Control2D
-                labelX="Width"
-                labelY="Height"
+                labelX={translate('character.creator.face.jaw.width')}
+                labelY={translate('character.creator.face.jaw.height')}
                 valueX={characterAppearance.jawWidth}
                 valueY={characterAppearance.jawHeight}
                 onChange={(width, height) => setCharacterAppearance([['jawWidth', width], ['jawHeight', height]])}
@@ -314,8 +315,8 @@ export default function FaceShapeCategory({
             />
 
             <Control2D
-                labelX="Chin length"
-                labelY="Chin position"
+                labelX={translate('character.creator.face.chin.length')}
+                labelY={translate('character.creator.face.chin.position')}
                 valueX={characterAppearance.chinLength}
                 valueY={characterAppearance.chinPosition}
                 onChange={(length, position) => setCharacterAppearance([['chinLength', length], ['chinPosition', position]])}
@@ -326,8 +327,8 @@ export default function FaceShapeCategory({
             />
 
             <Control2D
-                labelX="Chin width"
-                labelY="Chin shape"
+                labelX={translate('character.creator.face.chin.width')}
+                labelY={translate('character.creator.face.chin.shape')}
                 valueX={characterAppearance.chinWidth}
                 valueY={characterAppearance.chinShape}
                 onChange={(width, shape) => setCharacterAppearance([['chinWidth', width], ['chinShape', shape]])}
@@ -337,10 +338,10 @@ export default function FaceShapeCategory({
                 maxY={100}
             />
 
-            <div className={styles.label}>Neck</div>
+            <div className={styles.label}>{translate('character.creator.face.neck.width')}</div>
             
             <CustomSlider
-                label="Neck width"
+                label={translate('character.creator.face.neck.width')}
                 value={characterAppearance.neckWidth}
                 onChange={(value) => setCharacterAppearance([['neckWidth', value]])}
                 min={0}

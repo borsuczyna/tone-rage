@@ -2,6 +2,7 @@ import { clothingData, getBestUndershirtsForTop, type CharacterAppearance } from
 import styles from '../../../Styles/CharacterCreatorInterface.module.css';
 import ImageSelector from "./ImageSelector";
 import RandomizeButton from "./RandomizeButton";
+import translate from '@shared/Translation/Translation';
 
 interface ClothesCategoryProps {
     characterAppearance: CharacterAppearance;
@@ -64,9 +65,9 @@ export default function ClothesCategory({
 
     return (
         <>
-            <div className={styles.label}>Clothes</div>
+            <div className={styles.label}>{translate('character.creator.categories.clothes')}</div>
 
-            <div className={styles.subLabel}>Top</div>
+            <div className={styles.subLabel}>{translate('character.creator.clothes.top')}</div>
             <ImageSelector
                 path={'/creator/tops'}
                 selectedStyle={selectedTop ?? 0}
@@ -78,7 +79,7 @@ export default function ClothesCategory({
 
             {undershirts.length > 1 && (
                 <>
-                    <div className={styles.subLabel}>Undershirt</div>
+                    <div className={styles.subLabel}>{translate('character.creator.clothes.undershirt')}</div>
                     <ImageSelector
                         path={'/creator/undershirts'}
                         selectedStyle={selectedUndershirt ?? 0}
@@ -90,7 +91,7 @@ export default function ClothesCategory({
                 </>
             )}
 
-            <div className={styles.subLabel}>Legs</div>
+            <div className={styles.subLabel}>{translate('character.creator.clothes.legs')}</div>
             <ImageSelector
                 path={'/creator/legs'}
                 selectedStyle={selectedLegs ?? 0}
@@ -100,7 +101,7 @@ export default function ClothesCategory({
                 component={4}
             />
 
-            <div className={styles.subLabel}>Shoes</div>
+            <div className={styles.subLabel}>{translate('character.creator.clothes.shoes')}</div>
             <ImageSelector
                 path={'/creator/shoes'}
                 selectedStyle={selectedShoes ?? 0}

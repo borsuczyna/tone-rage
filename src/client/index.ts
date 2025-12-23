@@ -29,6 +29,7 @@ import UserService from './Services/Core/UserService';
 import GreenScreen from './Features/GreenScreen/GreenScreen';
 import CharacterCreator from './Features/CharacterCreator/CharacterCreator';
 import PlayerNametags from './Features/Nametags/PlayerNametags';
+import AdminDuty from './Features/Admin/Duty';
 // import TopsMaker from './Features/GreenScreen/TopsMaker';
 
 (async () => {
@@ -63,6 +64,7 @@ import PlayerNametags from './Features/Nametags/PlayerNametags';
     await PlayerNametags.init();
     await WinterSeason.init();
     await CharacterCreator.init();
+    await AdminDuty.init();
 
     // Tests
     await GreenScreen.init();

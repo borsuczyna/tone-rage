@@ -211,11 +211,17 @@
     "atm.card.expires": "Expires",
     "atm.failedToLoadData": "Failed to load ATM data. Please try again later.",
 
+    "admin.duty.title": "Admin Duty Enabled",
+    "admin.duty.noPermission.message": "You do not have permission to toggle admin duty mode.",
+    "admin.duty.on.message": "Logged into admin duty mode.",
+    "admin.duty.off.message": "Logged out of admin duty mode.",
+
     "character.creator.title": "Character Creator",
     "character.creator.categories.dna": "DNA",
     "character.creator.categories.hair": "Hair",
     "character.creator.categories.facialHair": "Facial hair",
     "character.creator.categories.eyes": "Eyes",
+    "character.creator.categories.eyebrows": "Eyebrows",
     "character.creator.categories.face": "Face",
     "character.creator.categories.clothes": "Clothes",
     
@@ -303,6 +309,17 @@
     "character.creator.feedback.saving": "Saving character...",
     "character.creator.feedback.save.success": "Character saved successfully!",
     "character.creator.feedback.save.error": "Error saving character",
+
+    "character.creator.no.facial.hair.female": "No facial hair options for female characters.",
+    "character.creator.facial.hair.eyebrows": "Eyebrows",
+    "character.creator.eyebrow.length": "Length",
+    "character.creator.eye.color": "Eye color",
+    "character.creator.skin.details": "Skin Details",
+    "character.creator.opacity": "Opacity",
+    "character.creator.width": "Width",
+    "character.creator.opening": "Opening",
+    "character.creator.thickness": "Thickness",
+    "character.creator.neck.width": "Neck width",
 
     "moneyLog.type.unknown": "Unknown",
     "moneyLog.type.salary": "Salary",

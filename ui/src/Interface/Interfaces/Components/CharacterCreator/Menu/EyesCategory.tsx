@@ -4,6 +4,7 @@ import ColorPicker from './ColorPicker';
 import ImageSelector from './ImageSelector';
 import CustomSlider from './CustomSlider';
 import RandomizeButton from './RandomizeButton';
+import translate from '@shared/Translation/Translation';
 
 interface EyesCategoryProps {
     characterAppearance: CharacterAppearance;
@@ -18,8 +19,8 @@ export default function EyesCategory({
 }: EyesCategoryProps) {
     return (
         <>
-            <div className={styles.label}>Eyes</div>
-            <div className={styles.smallLabel}>Eyebrows</div>
+            <div className={styles.label}>{translate('character.creator.categories.eyes')}</div>
+            <div className={styles.smallLabel}>{translate('character.creator.facial.hair.eyebrows')}</div>
             <ImageSelector 
                 path={'/creator/heads'}
                 selectedStyle={characterAppearance.eyebrowStyle}
@@ -29,7 +30,7 @@ export default function EyesCategory({
                 component={2}
                 isOverlay={true}
             />
-            <div className={styles.smallLabel}>Color</div>
+            <div className={styles.smallLabel}>{translate('character.creator.hair.color')}</div>
 
             <ColorPicker 
                 selectedColor={hairColors[characterAppearance.eyebrowColor].hex}
@@ -43,14 +44,14 @@ export default function EyesCategory({
             />
 
             <CustomSlider 
-                label="Length"
+                label={translate('character.creator.eyebrow.length')}
                 value={characterAppearance.eyebrowLength}
                 onChange={(length) => setCharacterAppearance([['eyebrowLength', length]])}
                 min={0}
                 max={100}
             />
             
-            <div className={styles.smallLabel}>Eye color</div>
+            <div className={styles.smallLabel}>{translate('character.creator.eye.color')}</div>
             <ColorPicker 
                 selectedColor={eyeColors[characterAppearance.eyeColor].hex}
                 onColorChange={(colorHex) => {
