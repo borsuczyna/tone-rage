@@ -30,13 +30,13 @@ export default class CharacterCreator {
             return { success: false, message: 'Invalid character data' };
         }
         
-        this.logger.info(`Saving character for player ${client.name} (${client.id})`);
         const success = await UserService.updateCharacterAppearance(client, appearance);
         if (!success) {
             this.logger.error(`Failed to save character appearance for player ${client.name} (${userId})`);
             return { success: false, message: 'Failed to save character, please try again' };
         }
 
+        this.logger.info(`Saved character for player ${client.name} (${client.id})`);
         ElementDataService.set(client, 'characterVisuals', appearance, ShareMode.SpecificClient);
         return { success: true, message: 'Character saved successfully' };
     }

@@ -1,3 +1,5 @@
+import { femaleHairOverlays, maleHairOverlays } from "@shared/Models/Character/Character";
+
 let weaponWheel: any;
 // Natives
 const GET_HASH_NAME_FOR_COMPONENT = "0x0368B3A838070348";
@@ -78,8 +80,33 @@ export function updateEntityHairOverlay(entity: PlayerMp | PedMp) {
         return;
     }
 
+    addHairDecorations(entity);
+    
     const hairIndex = entity.getDrawableVariation(hairComponentIndex);
     applyHairOverlayToEntity(entity, hairIndex);
+}
+
+export function addHairDecorations(player: PlayerMp | PedMp) {
+    const gender = player.model >> 0 === freemodeMaleModel ? 'male' : 'female';
+    const hairStyle = player.getDrawableVariation(hairComponentIndex);
+    
+    if (gender === 'male') {
+        if (maleHairOverlays[hairStyle] && maleHairOverlays[hairStyle].collection && maleHairOverlays[hairStyle].overlay) {
+            // @ts-ignore
+            mp.players.local.addDecorationFromHashes(
+                mp.game.gameplay.getHashKey(maleHairOverlays[hairStyle].collection),
+                mp.game.gameplay.getHashKey(maleHairOverlays[hairStyle].overlay)
+            );
+        }
+    } else {
+        if (femaleHairOverlays[hairStyle] && femaleHairOverlays[hairStyle].collection && femaleHairOverlays[hairStyle].overlay) {
+            // @ts-ignore
+            mp.players.local.addDecorationFromHashes(
+                mp.game.gameplay.getHashKey(femaleHairOverlays[hairStyle].collection),
+                mp.game.gameplay.getHashKey(femaleHairOverlays[hairStyle].overlay)
+            );
+        }
+    }
 }
 
 // ---------------------------------------------------------------

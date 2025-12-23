@@ -735,3 +735,43 @@ export interface SaveCharacterAppearanceResponse {
     success: boolean;
     message?: string;
 }
+
+export function encodeCharacterAppearance(appearance: CharacterAppearance): string {
+    const jsonString = JSON.stringify(appearance);
+    let encoded: string;
+    if (typeof btoa === 'function') {
+        encoded = btoa(jsonString);
+    } else {
+        encoded = Buffer.from(jsonString, 'utf-8').toString('base64');
+    }
+    // Add simple obfuscation by reversing and adding prefix/suffix
+    return `CC_${encoded.split('').reverse().join('')}_DATA`;
+};
+
+export function decodeCharacterAppearance(encodedData: string): CharacterAppearance | null {
+    try {
+        // Remove prefix/suffix and reverse
+        if (!encodedData.startsWith('CC_') || !encodedData.endsWith('_DATA')) {
+            console.warn("Encoded data has invalid format");
+            return null;
+        }
+        const cleaned = encodedData.slice(3, -5); // Remove CC_ and _DATA
+        const reversed = cleaned.split('').reverse().join('');
+        let decoded: string;
+        if (typeof atob === 'function') {
+            decoded = atob(reversed);
+        } else {
+            decoded = Buffer.from(reversed, 'base64').toString('utf-8');
+        }
+        const appearance = JSON.parse(decoded) as CharacterAppearance;
+        
+        // Validate the decoded appearance
+        const [isValid] = validateCharacterAppearance(appearance);
+        if (isValid) {
+            return appearance;
+        }
+        return null;
+    } catch (error) {
+        return null;
+    }
+};

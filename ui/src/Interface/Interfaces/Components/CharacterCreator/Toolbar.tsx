@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import styles from './Styles/Toolbar.module.css';
-import { type CharacterAppearance, validateCharacterAppearance } from '@shared/Models/Character/Character';
+import { type CharacterAppearance, decodeCharacterAppearance, encodeCharacterAppearance } from '@shared/Models/Character/Character';
 import { ArrowDownToLine, ArrowUpToLine, Check, Loader2, RefreshCcw } from 'lucide-react';
 import { useNotifications } from 'src/Hooks/NotificationsProvider';
 import Modal from '../Modal';
@@ -20,39 +20,9 @@ export default function Toolbar({ characterAppearance, randomizeAppearance, onFu
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [pasteValue, setPasteValue] = useState('');
     
-    // Base64 encoding/decoding with additional obfuscation
-    const encodeAppearance = (appearance: CharacterAppearance): string => {
-        const jsonString = JSON.stringify(appearance);
-        const encoded = btoa(jsonString);
-        // Add simple obfuscation by reversing and adding prefix/suffix
-        return `CC_${encoded.split('').reverse().join('')}_DATA`;
-    };
-
-    const decodeAppearance = (encodedData: string): CharacterAppearance | null => {
-        try {
-            // Remove prefix/suffix and reverse
-            if (!encodedData.startsWith('CC_') || !encodedData.endsWith('_DATA')) {
-                return null;
-            }
-            const cleaned = encodedData.slice(3, -5); // Remove CC_ and _DATA
-            const reversed = cleaned.split('').reverse().join('');
-            const decoded = atob(reversed);
-            const appearance = JSON.parse(decoded) as CharacterAppearance;
-            
-            // Validate the decoded appearance
-            const [isValid] = validateCharacterAppearance(appearance);
-            if (isValid) {
-                return appearance;
-            }
-            return null;
-        } catch (error) {
-            return null;
-        }
-    };
-
     const saveToClipboard = async () => {
         try {
-            const encoded = encodeAppearance(characterAppearance);
+            const encoded = encodeCharacterAppearance(characterAppearance);
             
             // Use invisible input method for better compatibility
             if (hiddenInputRef.current) {
@@ -87,7 +57,7 @@ export default function Toolbar({ characterAppearance, randomizeAppearance, onFu
             return;
         }
         
-        const decoded = decodeAppearance(data);
+        const decoded = decodeCharacterAppearance(data);
         
         if (decoded) {
             onFullUpdate(decoded);

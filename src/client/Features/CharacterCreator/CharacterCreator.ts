@@ -4,11 +4,11 @@ import EventService from "@/Services/Infrastructure/EventService";
 import InterfaceService from "@/Services/Infrastructure/InterfaceService";
 import KeyboardService, { KeyState } from "@/Services/Utility/KeyboardService";
 import { InputKey } from "@shared/KeyMap";
-import { CharacterAppearance, CharacterGender, femaleHairOverlays, getBestTorsoForTop, getBestUndershirtsForTop, getDefaultAppearance, maleHairOverlays } from "@shared/Models/Character/Character";
+import { CharacterAppearance, CharacterGender, getBestTorsoForTop, getBestUndershirtsForTop, getDefaultAppearance } from "@shared/Models/Character/Character";
 import TimerService from "@shared/Services/TimerService";
 import SpawnPanel from "../Spawn/SpawnPanel";
 
-export default class CharacterCreatorPanel {
+export default class CharacterCreator {
     private static cameraFov: number = 70;
     private static cameraOffset: Vector3 = new mp.Vector3(0, 4, 1.5);
     private static cameraLookAtOffset: Vector3 = new mp.Vector3(0, 0, 0.5);
@@ -19,6 +19,11 @@ export default class CharacterCreatorPanel {
     private static rotatingPed: [number, number] | null = null;
     private static cameraY: number = 0;
     private static category: number = 0;
+
+    public static init() {
+        EventService.registerEventHandler('characterCreator:updateHairOverlay', this.updateHairOverlay.bind(this));
+        mp.events.add('entityStreamIn', this.onEntityStreamIn.bind(this));
+    }
 
     public static setVisible(visible: boolean) {
         InterfaceService.setInterfaceVisible('CharacterCreatorInterface', visible);
@@ -68,6 +73,19 @@ export default class CharacterCreatorPanel {
             EventService.removeEventHandler('characterCreator:finished', this.finished.bind(this));
 
             this.onUpdateAppearance(getDefaultAppearance());
+        }
+    }
+
+    private static updateHairOverlay(playerId: number) {
+        const player = mp.players.atRemoteId(playerId);
+        if (player) {
+            updateEntityHairOverlay(player);
+        }
+    }
+
+    private static onEntityStreamIn(entity: EntityMp) {
+        if (entity.type === "player") {
+            updateEntityHairOverlay(entity as PlayerMp);
         }
     }
 
@@ -139,24 +157,6 @@ export default class CharacterCreatorPanel {
             0,
             false
         );
-
-        if (appearance.gender === CharacterGender.Male) {
-            if (maleHairOverlays[appearance.hairStyle] && maleHairOverlays[appearance.hairStyle].collection && maleHairOverlays[appearance.hairStyle].overlay) {
-                // @ts-ignore
-                mp.players.local.addDecorationFromHashes(
-                    mp.game.gameplay.getHashKey(maleHairOverlays[appearance.hairStyle].collection),
-                    mp.game.gameplay.getHashKey(maleHairOverlays[appearance.hairStyle].overlay)
-                );
-            }
-        } else {
-            if (femaleHairOverlays[appearance.hairStyle] && femaleHairOverlays[appearance.hairStyle].collection && femaleHairOverlays[appearance.hairStyle].overlay) {
-                // @ts-ignore
-                mp.players.local.addDecorationFromHashes(
-                    mp.game.gameplay.getHashKey(femaleHairOverlays[appearance.hairStyle].collection),
-                    mp.game.gameplay.getHashKey(femaleHairOverlays[appearance.hairStyle].overlay)
-                );
-            }
-        }
 
         const bestTorso = getBestTorsoForTop(appearance.gender, appearance.topStyle);
         const bestUndershirts = getBestUndershirtsForTop(appearance.gender, appearance.topStyle);

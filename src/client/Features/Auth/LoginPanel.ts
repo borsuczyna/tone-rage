@@ -2,7 +2,7 @@ import EventService from '@/Services/Infrastructure/EventService';
 import InterfaceService from '@/Services/Infrastructure/InterfaceService';
 import SpawnPanel from '@/Features/Spawn/SpawnPanel';
 import TimerService from '@shared/Services/TimerService';
-import CharacterCreatorPanel from '../CharacterCreator/CharacterCreatorPanel';
+import CharacterCreator from '../CharacterCreator/CharacterCreator';
 
 export default class LoginPanel {
 	public static async init() {
@@ -25,7 +25,7 @@ export default class LoginPanel {
 		this.setVisible(false);
 
         if (!hasCharacter) {
-            CharacterCreatorPanel.setVisible(true);
+            CharacterCreator.setVisible(true);
             return;
         }
 
