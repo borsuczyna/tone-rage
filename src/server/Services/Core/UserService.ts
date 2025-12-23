@@ -13,6 +13,7 @@ import Dimensions from '@shared-rage/Models/Dimensions';
 import { CharacterAppearance, encodeCharacterAppearance } from '@shared/Models/Character/Character';
 import CharacterCreator from '@/Features/CharacterCreator/CharacterCreator';
 import EventService from '../Infrastructure/EventService';
+import RealTime from '@/Features/Core/RealTime';
 
 interface CreateUserResult {
 	userId: number | null;
@@ -193,6 +194,7 @@ export default class UserService {
         }
 
         ElementDataService.set(client, 'characterVisuals', appearanceString, ShareMode.SpecificClient);
+        ElementDataService.set(client, 'inCharacterCreation', false, ShareMode.SpecificClient);
         return true;
 	}
 
@@ -205,10 +207,12 @@ export default class UserService {
 		client.position = new mp.Vector3(spawn.position[0], spawn.position[1], spawn.position[2]);
 		client.heading = spawn.position[3] || 0;
 		client.alpha = 255;
+        client.dimension = 0;
 		ElementDataService.set(client, 'spawnPosition', spawn.position, ShareMode.SpecificClient);
         EventService.triggerClientEvent(client, 'spawn:onSpawned');
         this.setPlayerFrozen(client, false);
         CharacterCreator.loadCharacterAppearance(client);
+        RealTime.updateTime();
 	}
 
     public static setPlayerFrozen(client: PlayerMp, frozen: boolean) {

@@ -726,8 +726,8 @@ export function getDefaultAppearance(): CharacterAppearance {
         legsTexture: 0,
         shoesStyle: 0,
         shoesTexture: 0,
-        undershirtStyle: 0,
-        undershirtTexture: 15,
+        undershirtStyle: 15,
+        undershirtTexture: 0,
     };
 }
 

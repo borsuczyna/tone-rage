@@ -4,7 +4,6 @@ import EventService from "@/Services/Infrastructure/EventService";
 import FetchService from "@/Services/Infrastructure/FetchService";
 import Logger from "@shared/Logger";
 import { CharacterAppearance, decodeCharacterAppearance, getBestTorsoForTop, getBestUndershirtsForTop, SaveCharacterAppearanceResponse, validateCharacterAppearance } from "@shared/Models/Character/Character";
-import { ShareMode } from "@shared/Models/ElementDataModels";
 
 export default class CharacterCreator {
     private static logger: Logger = Logger.getLogger(CharacterCreator, true);
@@ -38,7 +37,6 @@ export default class CharacterCreator {
         }
 
         this.logger.info(`Saved character for player ${client.name} (${client.id})`);
-        ElementDataService.set(client, 'characterVisuals', appearance, ShareMode.SpecificClient);
         return { success: true, message: 'Character saved successfully' };
     }
 

@@ -6,7 +6,7 @@ export default class RealTime {
         this.updateTime();
     }
 
-    private static updateTime() {
+    public static updateTime() {
         const date = new Date();
         const hours = date.getHours();
         const minutes = date.getMinutes();

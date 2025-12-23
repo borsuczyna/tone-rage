@@ -152,6 +152,7 @@ export default class CharacterCreator {
     }
 
     private static onUpdateAppearance(appearance: CharacterAppearance) {
+        mp.console.logError('call');
         const targetModel = appearance.gender === CharacterGender.Male ? mp.game.joaat('mp_m_freemode_01') : mp.game.joaat('mp_f_freemode_01');
         if (mp.players.local.model !== targetModel) {
             mp.players.local.model = targetModel;
