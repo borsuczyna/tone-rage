@@ -36,11 +36,6 @@ export default class ElementDataService {
 	 * @param shareMode How the data should be shared
 	 */
 	public static set(element: ElementDataEntity, key: string, value: any, shareMode: ShareMode = ShareMode.Local) {
-		// Store locally
-		// let { elementId, elementType } = this.getElementInfo(element);
-		// if (!this.elementData.has(elementId)) {
-		// 	this.elementData.set(elementId, new Map());
-		// }
 		const elementId = this.getElementInfo(element);
 
 		let dataMap = this.elementData.get(elementId);

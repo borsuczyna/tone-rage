@@ -38,24 +38,24 @@ export default function Categories({ activeCategory, setActiveCategory, isTransi
                         <feGaussianBlur stdDeviation="68.4" result="effect1_foregroundBlur_2041_62"/>
                     </filter>
                     <radialGradient id="paint0_radial_2041_62" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(532.591 221.507) rotate(-129.384) scale(262.748 306.665)">
-                        <stop stop-color="#FF637D"/>
-                        <stop offset="1" stop-color="#FF637D" stop-opacity="0"/>
+                        <stop stop-color="#ff1493"/>
+                        <stop offset="1" stop-color="#ff1493" stop-opacity="0"/>
                     </radialGradient>
                     <radialGradient id="paint1_radial_2041_62" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(322.318 524.077) rotate(-153.923) scale(262.747 306.665)">
-                        <stop stop-color="#FF637D"/>
-                        <stop offset="1" stop-color="#FF637D" stop-opacity="0"/>
+                        <stop stop-color="#ff1493"/>
+                        <stop offset="1" stop-color="#ff1493" stop-opacity="0"/>
                     </radialGradient>
                     <radialGradient id="paint2_radial_2041_62" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(229.301 874.203) rotate(-177.517) scale(262.748 306.665)">
-                        <stop stop-color="#FF637D"/>
-                        <stop offset="1" stop-color="#FF637D" stop-opacity="0"/>
+                        <stop stop-color="#ff1493"/>
+                        <stop offset="1" stop-color="#ff1493" stop-opacity="0"/>
                     </radialGradient>
                     <radialGradient id="paint3_radial_2041_62" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(320.667 1229.61) rotate(156.56) scale(262.748 306.665)">
-                        <stop stop-color="#FF637D"/>
-                        <stop offset="1" stop-color="#FF637D" stop-opacity="0"/>
+                        <stop stop-color="#ff1493"/>
+                        <stop offset="1" stop-color="#ff1493" stop-opacity="0"/>
                     </radialGradient>
                     <radialGradient id="paint4_radial_2041_62" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(538.045 1529.85) rotate(128.428) scale(262.747 306.665)">
-                        <stop stop-color="#FF637D"/>
-                        <stop offset="1" stop-color="#FF637D" stop-opacity="0"/>
+                        <stop stop-color="#ff1493"/>
+                        <stop offset="1" stop-color="#ff1493" stop-opacity="0"/>
                     </radialGradient>
                     <clipPath id="clip0_2041_62">
                         <rect width="848" height="1759" fill="white"/>
