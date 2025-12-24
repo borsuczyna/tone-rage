@@ -21,7 +21,7 @@ export default class VehicleInteraction {
                 label: engineState ? translate('interaction_wheel.vehicle.turn-off-engine') : translate('interaction_wheel.vehicle.turn-on-engine'),
                 icon: 'CarFront',
                 action: () => {
-                    EventService.triggerServerEvent('vehicleService:setEngineState', !engineState);
+                    currentVehicle.setEngineOn(!engineState, true, true);
                 },
                 entity: currentVehicle,
                 priority: 10
