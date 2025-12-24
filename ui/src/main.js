@@ -1,7 +1,11 @@
 import { registerFetchResolver } from './Hooks/Fetch';
-import { ChunkAssemblerHandler } from './Hooks/RageEventStore';
+import { ChunkAssemblerHandler, CustomEventHandler } from './Hooks/RageEventStore';
 import { setInterfaceVisible, isInterfaceVisible } from './Hooks/InterfaceVisibilityStore';
+import { updateUserInfo } from './Hooks/UserInfoStore';
+import { addNotification } from './Hooks/NotificationsStore';
+import { chat } from './Hooks/ChatStore';
 import TextureService from './Services/TextureService';
+import { mount } from 'svelte';
 import App from './Interface/App.svelte';
 import './Interface/Interfaces/Styles/Main.css';
 export function isInBrowser() {
@@ -15,7 +19,7 @@ function mountRageInterface() {
     const root = document.getElementById('root');
     if (!root)
         return;
-    new App({
+    mount(App, {
         target: root
     });
 }
@@ -29,6 +33,14 @@ function mountRageEvents() {
     });
     mp.events.add('toggleInterfaceVisibility', (name) => {
         setInterfaceVisible(name, !isInterfaceVisible(name));
+    });
+    // Register event handlers for stores
+    CustomEventHandler.registerEventHandler('updateUserInfo', updateUserInfo);
+    CustomEventHandler.registerEventHandler('addNotification', (data) => {
+        addNotification(data.title, data.message, data.type, data.icon, data.iconFillOpacity);
+    });
+    CustomEventHandler.registerEventHandler('chat:receiveMessage', (message) => {
+        chat.addMessage(message);
     });
 }
 // change rem size

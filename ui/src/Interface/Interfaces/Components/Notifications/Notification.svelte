@@ -17,7 +17,7 @@
 
   $: notificationClasses = [
       styles.notification,
-      styles[data.type.toLowerCase()],
+      styles[data.type],
       data.hiding ? styles.hiding : ''
   ].filter(Boolean).join(' ');
 

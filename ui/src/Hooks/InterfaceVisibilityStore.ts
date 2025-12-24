@@ -4,9 +4,10 @@ type InterfaceMap = Record<string, boolean>;
 
 function createInterfaceVisibilityStore() {
     const { subscribe, update } = writable<InterfaceMap>({
-        // 'ScoreboardInterface': true,
+        // Enable interfaces for testing - comment out for production
         // 'HudInterface': true,
         // 'NotificationsInterface': true,
+        // 'ScoreboardInterface': true,
         // 'AuthInterface': true,
         // 'SpawnSelectionInterface': true
         // 'AtmInterface': true
