@@ -1,5 +1,8 @@
 <script lang="ts">
-  // TODO: Convert from React
+  // TODO: Full conversion from React pending
+  // This is a stub to make the build work
 </script>
 
-<div>ScoreboardInterface - To be converted</div>
+<div style="color: white; padding: 20px;">
+  ScoreboardInterface - Conversion in progress
+</div>
