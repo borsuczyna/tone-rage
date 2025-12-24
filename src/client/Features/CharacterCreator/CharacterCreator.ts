@@ -7,6 +7,8 @@ import { InputKey } from "@shared/KeyMap";
 import { CharacterAppearance, CharacterGender, getBestTorsoForTop, getBestUndershirtsForTop, getDefaultAppearance } from "@shared/Models/Character/Character";
 import TimerService from "@shared/Services/TimerService";
 import SpawnPanel from "../Spawn/SpawnPanel";
+import DrawingService from "@/Services/Rendering/DrawingService";
+import { characterCreationPosition } from "@shared/SpawnsData";
 
 export default class CharacterCreator {
     private static cameraFov: number = 70;
@@ -15,10 +17,11 @@ export default class CharacterCreator {
     private static camera: CameraMp | null = null;
     private static playerMatrix: Matrix | null = null;
     private static zoomLevel: number = 0;
-    private static isCursorInGrabBox: boolean = false;
+    private static isCursorInGrabBox: boolean = true;
     private static rotatingPed: [number, number] | null = null;
     private static cameraY: number = 0;
     private static category: number = 0;
+    private static tableObject: ObjectMp | null = null;
 
     // Bound function references for proper event removal
     private static boundUpdateHairOverlay = CharacterCreator.updateHairOverlay.bind(CharacterCreator);
@@ -51,6 +54,15 @@ export default class CharacterCreator {
 			this.camera.setActive(true);
 			mp.game.cam.renderScriptCams(true, false, 0, true, false, 0);
 
+            const creatorPosition = characterCreationPosition;
+            mp.players.local.position = new mp.Vector3(creatorPosition[0], creatorPosition[1], creatorPosition[2]);
+            mp.players.local.heading = creatorPosition[3] || 0;
+
+            // Spawn table prop under player
+            this.tableObject = mp.objects.new(mp.game.joaat('prop_tablesmall_01'), 
+                new mp.Vector3(creatorPosition[0], creatorPosition[1], creatorPosition[2] - 2), 
+                { rotation: new mp.Vector3(0, 0, 0), alpha: 0, dimension: mp.players.local.dimension });
+
             this.playerMatrix = new Matrix(mp.players.local);
             this.playerMatrix.dontUpdate = true;
 
@@ -72,6 +84,12 @@ export default class CharacterCreator {
             }
 
             mp.game.cam.renderScriptCams(false, false, 0, true, false, 0);
+
+            // Destroy table prop
+            if (this.tableObject) {
+                this.tableObject.destroy();
+                this.tableObject = null;
+            }
 
             this.playerMatrix = null;
 
@@ -126,17 +144,38 @@ export default class CharacterCreator {
             this.rotatingPed = [cursorX, cursorY];
         }
 
-        mp.game.time.setTime(12, 0, 0);
+        mp.game.time.setTime(18, 0, 0);
+        mp.game.misc.setWeatherTypeNowPersist('CLEAR');
         mp.players.local.freezePosition(true);
         mp.players.local.setBlockingOfNonTemporaryEvents(true);
         mp.players.local.taskSetBlockingOfNonTemporaryEvents(true);
+
+        const characterPosition = mp.players.local.position;
+        const s = 10;
+        const a = characterPosition.add(new mp.Vector3(-s, -s, 0));
+        const b = characterPosition.add(new mp.Vector3(s, -s, 0));
+        const c = characterPosition.add(new mp.Vector3(s, s, 0));
+        const d = characterPosition.add(new mp.Vector3(-s, s, 0));
+        const e = characterPosition.add(new mp.Vector3(-s, 0, -s));
+        const f = characterPosition.add(new mp.Vector3(s, 0, -s));
+        const g = characterPosition.add(new mp.Vector3(-s, 0, s));
+        const h = characterPosition.add(new mp.Vector3(s, 0, s));
+        DrawingService.drawPlane3D(a, b, characterPosition, s*2, '/creator/background.png', undefined, false, 512, 512);
+        DrawingService.drawPlane3D(c, d, characterPosition, s*2, '/creator/background.png', undefined, false, 512, 512);
+        DrawingService.drawPlane3D(b, c, characterPosition, s*2, '/creator/background.png', undefined, false, 512, 512);
+        DrawingService.drawPlane3D(d, a, characterPosition, s*2, '/creator/background.png', undefined, false, 512, 512);
+        DrawingService.drawPlane3D(e, f, characterPosition, s*2, '/creator/background.png', undefined, false, 512, 512);
+        DrawingService.drawPlane3D(g, h, characterPosition, s*2, '/creator/background.png', undefined, false, 512, 512);
+    
+        // draw cyan on front left and pink on front right
+        const lightA = this.playerMatrix.getOffsetPosition(new mp.Vector3(-1, 0, 0.5));
+        const lightB = this.playerMatrix.getOffsetPosition(new mp.Vector3(1, 0, 0.5));
+        mp.game.graphics.drawLightWithRange(lightA.x, lightA.y, lightA.z, 255, 0, 166, 10, 20);
+        mp.game.graphics.drawLightWithRange(lightB.x, lightB.y, lightB.z, 0, 140, 255, 10, 20);
     }
 
     private static getCameraTargetPosition(): [Vector3, Vector3, number] {
-        const isFemale = mp.players.local.model === mp.game.joaat('mp_f_freemode_01');
-        const femaleZ = isFemale ? 0.09 : 0;
-
-        if (this.category === 5) { // Clothes
+        if (this.category === 4) { // Clothes
             return [
                 new mp.Vector3(0, 1.25, 0.25 + this.cameraY/10 * this.zoomLevel),
                 new mp.Vector3(0, 0, -0.05 + this.cameraY/15 * this.zoomLevel),
@@ -145,8 +184,8 @@ export default class CharacterCreator {
         }
         
         return [
-            new mp.Vector3(0, 0.72, 0.7 + femaleZ + this.cameraY/45 * this.zoomLevel),
-            new mp.Vector3(0, 0, 0.67 + femaleZ + this.cameraY/55 * this.zoomLevel),
+            new mp.Vector3(0, 0.72, 0.7 + this.cameraY/45 * this.zoomLevel),
+            new mp.Vector3(0, 0, 0.67 + this.cameraY/55 * this.zoomLevel),
             70 - this.zoomLevel * 40
         ];
     }

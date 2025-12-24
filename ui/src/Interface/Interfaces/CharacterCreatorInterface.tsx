@@ -7,7 +7,6 @@ import DNACategory from './Components/CharacterCreator/Menu/DNACategory';
 import HairCategory from './Components/CharacterCreator/Menu/HairCategory';
 import { type CharacterAppearance, getBestUndershirtsForTop, getDefaultAppearance, getRandomAppearance, randomizeClothes, randomizeDNA, randomizeEyes, randomizeFace, randomizeFacialHair, randomizeHair, type SaveCharacterAppearanceResponse } from '@shared/Models/Character/Character';
 import { fetchServerData, triggerEvent } from 'src/Hooks/Fetch';
-import FacialHairCategory from './Components/CharacterCreator/Menu/FacialHairCategory';
 import Toolbar from './Components/CharacterCreator/Toolbar';
 import EyesCategory from './Components/CharacterCreator/Menu/EyesCategory';
 import FaceShapeCategory from './Components/CharacterCreator/Menu/FaceShapeCategory';
@@ -16,6 +15,7 @@ import { useRageEvent } from 'src/Hooks/RageEventProvider';
 import { useNotifications } from 'src/Hooks/NotificationsProvider';
 import ConfirmationModal from './Components/CharacterCreator/ConfirmationModal';
 import translate from '@shared/Translation/Translation';
+import Button from './Components/Button';
 
 export default function CharacterCreatorInterface() {
     const [hiding, _setHiding] = useState(false);
@@ -113,17 +113,15 @@ export default function CharacterCreatorInterface() {
                 break;
             case 1: // Hair
                 appearance = randomizeHair(appearance);
-                break;
-            case 2: // Facial Hair
                 appearance = randomizeFacialHair(appearance);
                 break;
-            case 3: // Eyes
+            case 2: // Eyes
                 appearance = randomizeEyes(appearance);
                 break;
-            case 4: // Face Shape
+            case 3: // Face Shape
                 appearance = randomizeFace(appearance);
                 break;
-            case 5: // Clothes
+            case 4: // Clothes
                 appearance = randomizeClothes(appearance);
                 break;
             default:
@@ -198,33 +196,48 @@ export default function CharacterCreatorInterface() {
                     {displayedCategory == 0 && <DNACategory
                         characterAppearance={characterAppearance}
                         setCharacterAppearance={setCharacterAppearance}
-                        randomize={randomizeCategoryAppearance}
                     />}
                     {displayedCategory == 1 && <HairCategory
                         characterAppearance={characterAppearance}
                         setCharacterAppearance={setCharacterAppearance}
-                        randomize={randomizeCategoryAppearance}
                     />}
-                    {displayedCategory == 2 && <FacialHairCategory
+                    {displayedCategory == 2 && <EyesCategory
                         characterAppearance={characterAppearance}
                         setCharacterAppearance={setCharacterAppearance}
-                        randomize={randomizeCategoryAppearance}
                     />}
-                    {displayedCategory == 3 && <EyesCategory
+                    {displayedCategory == 3 && <FaceShapeCategory
                         characterAppearance={characterAppearance}
                         setCharacterAppearance={setCharacterAppearance}
-                        randomize={randomizeCategoryAppearance}
                     />}
-                    {displayedCategory == 4 && <FaceShapeCategory
+                    {displayedCategory == 4 && <ClothesCategory
                         characterAppearance={characterAppearance}
                         setCharacterAppearance={setCharacterAppearance}
-                        randomize={randomizeCategoryAppearance}
                     />}
-                    {displayedCategory == 5 && <ClothesCategory
-                        characterAppearance={characterAppearance}
-                        setCharacterAppearance={setCharacterAppearance}
-                        randomize={randomizeCategoryAppearance}
-                    />}
+                </div>
+
+                <div className={styles.rightMenuOptions}>
+                    <Button
+                        variant='glass'
+                        size='medium'
+                        onClick={randomizeCategoryAppearance}
+                    >
+                        {translate('character.creator.randomize.category')}
+                    </Button>
+
+                    <Button
+                        variant='primary'
+                        size='medium'
+                        onClick={() => {
+                            if (activeCategory == 4) {
+                                setConfirmationModalOpen(true);
+                            } else {
+                                handleCategoryChange(activeCategory + 1);
+                            }
+                        }}
+                        fullWidth
+                    >
+                        {activeCategory == 4 ? translate('character.creator.finish') : translate('character.creator.next')}
+                    </Button>
                 </div>
             </RightMenu>
 

@@ -157,8 +157,8 @@ function moveUIBuild() {
 const terserMinify =
 	isProduction && !useSWC
 		? terser({
-				keep_classnames: true,
-				keep_fnames: true,
+				keep_classnames: false,
+				keep_fnames: false,
 				output: {
 					comments: false
 				}

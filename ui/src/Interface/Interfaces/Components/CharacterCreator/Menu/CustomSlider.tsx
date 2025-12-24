@@ -8,6 +8,7 @@ interface CustomSliderProps {
     min?: number;
     max?: number;
     step?: number;
+    valueLabelCallback?: (value: number) => string;
 }
 
 export default function CustomSlider({ 
@@ -16,7 +17,8 @@ export default function CustomSlider({
     onChange, 
     min = 0, 
     max = 100, 
-    step = 1 
+    step = 1,
+    valueLabelCallback
 }: CustomSliderProps) {
     const [isDragging, setIsDragging] = useState(false);
     const sliderRef = useRef<HTMLDivElement>(null);
@@ -67,7 +69,7 @@ export default function CustomSlider({
 
     return (
         <div className={styles.customSliderContainer}>
-            <div className={styles.smallLabel}>{label}</div>
+            <div className={styles.sliderLabel}>{label}</div>
             <div className={styles.sliderWrapper}>
                 <div 
                     ref={sliderRef}
@@ -86,6 +88,7 @@ export default function CustomSlider({
                     />
                 </div>
             </div>
+            <div className={styles.sliderLabel} style={{textAlign: 'right'}}>{valueLabelCallback ? valueLabelCallback(value) : value}</div>
         </div>
     );
 }

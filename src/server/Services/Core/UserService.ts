@@ -5,7 +5,7 @@ import EmailValidator from '@shared/EmailValidator';
 import PasswordValidator from '@shared/PasswordValidator';
 import ElementDataService from '@/Services/Infrastructure/ElementDataService';
 import { ShareMode } from '@shared/Models/ElementDataModels';
-import { characterCreationPosition, SpawnLocation } from '@shared/SpawnsData';
+import { SpawnLocation } from '@shared/SpawnsData';
 import Logger from '@shared/Logger';
 import TimerService from '@shared/Services/TimerService';
 import { Config } from '@/Config';
@@ -114,7 +114,7 @@ export default class UserService {
 		client.name = user.username;
 
         if (user.characterVisuals.length === 0) {
-            this.goToCharacterCreation(client);
+            CharacterCreator.goToCharacterCreation(client);
             return;
         }
 	}
@@ -162,22 +162,6 @@ export default class UserService {
     private static onPlayerJoin(client: PlayerMp) {
         this.setPlayerFrozen(client, true);
         client.dimension = Dimensions.LoginRoom;
-    }
-
-    public static goToCharacterCreation(client: PlayerMp) {
-        const userId = ElementDataService.get(client, 'userId') as number | null;
-        if (!userId) {
-            this.logger.error(`Cannot send player ${client.name} to character creation: userId is null`);
-            return;
-        }
-
-        client.dimension = Dimensions.CharacterCreation + userId;
-        client.position = new mp.Vector3(characterCreationPosition[0], characterCreationPosition[1], characterCreationPosition[2]);
-        client.heading = characterCreationPosition[3] || 0;
-        client.alpha = 255;
-        this.updatePlayerFreezePosition(client);
-
-        ElementDataService.set(client, 'inCharacterCreation', true, ShareMode.SpecificClient);
     }
 
 	public static async updateCharacterAppearance(client: PlayerMp, appearance: CharacterAppearance): Promise<boolean> {

@@ -2,6 +2,7 @@ import csx from 'src/Utils/MergeClass';
 import styles from '../../../Styles/CharacterCreatorInterface.module.css';
 import { CharacterGender } from '@shared/Models/Character/Character';
 import translate from '@shared/Translation/Translation';
+import OptionLabel from './OptionLabel';
 
 interface GenderSelectorProps {
     gender: CharacterGender;
@@ -11,7 +12,7 @@ interface GenderSelectorProps {
 export default function GenderSelector({ gender, setGender }: GenderSelectorProps) {
     return (
         <>
-            <div className={styles.label}>{translate('character.creator.gender')}</div>
+            <OptionLabel label={translate('character.creator.gender')} />
             <div className={styles.genderOptions}>
                 <div 
                     className={csx(styles.genderOption, styles.male, gender === CharacterGender.Male && styles.active)} 

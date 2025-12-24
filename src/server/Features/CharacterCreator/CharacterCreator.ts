@@ -2,13 +2,32 @@ import UserService from "@/Services/Core/UserService";
 import ElementDataService from "@/Services/Infrastructure/ElementDataService";
 import EventService from "@/Services/Infrastructure/EventService";
 import FetchService from "@/Services/Infrastructure/FetchService";
+import Dimensions from "@shared-rage/Models/Dimensions";
 import Logger from "@shared/Logger";
 import { CharacterAppearance, decodeCharacterAppearance, getBestTorsoForTop, getBestUndershirtsForTop, SaveCharacterAppearanceResponse, validateCharacterAppearance } from "@shared/Models/Character/Character";
+import { ShareMode } from "@shared/Models/ElementDataModels";
+import { characterCreationPosition } from "@shared/SpawnsData";
 
 export default class CharacterCreator {
     private static logger: Logger = Logger.getLogger(CharacterCreator, true);
     public static init() {
         FetchService.registerFetchListener('characterCreator:saveCharacter', this.onSaveCharacter.bind(this));
+    }
+
+    public static goToCharacterCreation(client: PlayerMp) {
+        const userId = ElementDataService.get(client, 'userId') as number | null;
+        if (!userId) {
+            this.logger.error(`Cannot send player ${client.name} to character creation: userId is null`);
+            return;
+        }
+
+        client.dimension = Dimensions.CharacterCreation + userId;
+        client.position = new mp.Vector3(characterCreationPosition[0], characterCreationPosition[1], characterCreationPosition[2]);
+        client.heading = characterCreationPosition[3] || 0;
+        client.alpha = 255;
+        UserService.updatePlayerFreezePosition(client);
+
+        ElementDataService.set(client, 'inCharacterCreation', true, ShareMode.SpecificClient);
     }
 
     private static async onSaveCharacter(client: PlayerMp, appearance: CharacterAppearance): Promise<SaveCharacterAppearanceResponse> {

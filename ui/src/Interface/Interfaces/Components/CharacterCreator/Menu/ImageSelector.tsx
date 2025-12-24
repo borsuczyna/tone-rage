@@ -57,11 +57,10 @@ export default function ImageSelector({ path, selectedStyle, onStyleChange, avai
     }
 
     return (
-        <div className={styles.parentsMenu}>
-            <div className={styles.parentsList}>
+        <div>
+            <div className={styles.imageSelectorList}>
                 {availableStyles.map((option, index) => (
-                    <div key={optionAsStr(option)} className={csx(styles.parentItem, optionValue(selectedStyle) === optionValue(option) && styles.active)} onClick={() => onStyleChange(optionData(option), index)}>
-                        {/* <img loading="lazy" src={`${pathUrl}/${getName(option)}`} width={64} height={64} /> */}
+                    <div key={optionAsStr(option)} className={csx(styles.imageSelectorItem, optionValue(selectedStyle) === optionValue(option) && styles.active)} onClick={() => onStyleChange(optionData(option), index)}>
                         <PakImage pak={pathUrl} image={getName(option)} width={64} height={64} />
                     </div>
                 ))}

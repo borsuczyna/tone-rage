@@ -1,19 +1,18 @@
 import { clothingData, getBestUndershirtsForTop, type CharacterAppearance } from "@shared/Models/Character/Character";
-import styles from '../../../Styles/CharacterCreatorInterface.module.css';
 import ImageSelector from "./ImageSelector";
-import RandomizeButton from "./RandomizeButton";
 import translate from '@shared/Translation/Translation';
+import CategoryName from "./CategoryName";
+import CreatorInfo from "./CreatorInfo";
+import OptionLabel from "./OptionLabel";
 
 interface ClothesCategoryProps {
     characterAppearance: CharacterAppearance;
     setCharacterAppearance: (values: [keyof CharacterAppearance, any][]) => void;
-    randomize: () => void;
 }
 
 export default function ClothesCategory({
     characterAppearance,
     setCharacterAppearance,
-    randomize
 }: ClothesCategoryProps) {
     const topsData = clothingData.tops[characterAppearance.gender];
     const tops: [number, number][] = [];
@@ -65,9 +64,10 @@ export default function ClothesCategory({
 
     return (
         <>
-            <div className={styles.label}>{translate('character.creator.categories.clothes')}</div>
+            <CategoryName name={translate('character.creator.clothes.title')} />
+            <CreatorInfo />
 
-            <div className={styles.subLabel}>{translate('character.creator.clothes.top')}</div>
+            <OptionLabel label={translate('character.creator.clothes.top')} marginTop />
             <ImageSelector
                 path={'/creator/tops'}
                 selectedStyle={selectedTop ?? 0}
@@ -79,7 +79,7 @@ export default function ClothesCategory({
 
             {undershirts.length > 1 && (
                 <>
-                    <div className={styles.subLabel}>{translate('character.creator.clothes.undershirt')}</div>
+                    <OptionLabel label={translate('character.creator.clothes.undershirt')} />
                     <ImageSelector
                         path={'/creator/undershirts'}
                         selectedStyle={selectedUndershirt ?? 0}
@@ -91,7 +91,7 @@ export default function ClothesCategory({
                 </>
             )}
 
-            <div className={styles.subLabel}>{translate('character.creator.clothes.legs')}</div>
+            <OptionLabel label={translate('character.creator.clothes.legs')} />
             <ImageSelector
                 path={'/creator/legs'}
                 selectedStyle={selectedLegs ?? 0}
@@ -101,7 +101,7 @@ export default function ClothesCategory({
                 component={4}
             />
 
-            <div className={styles.subLabel}>{translate('character.creator.clothes.shoes')}</div>
+            <OptionLabel label={translate('character.creator.clothes.shoes')} />
             <ImageSelector
                 path={'/creator/shoes'}
                 selectedStyle={selectedShoes ?? 0}
@@ -110,8 +110,6 @@ export default function ClothesCategory({
                 gender={characterAppearance.gender}
                 component={6}
             />
-
-            <RandomizeButton style={{marginTop: '0.5rem'}} onClick={randomize} />
         </>
     );
 }

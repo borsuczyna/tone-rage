@@ -26,4 +26,4 @@ export const spawnData: SpawnCategory[] = [
 	}
 ];
 
-export const characterCreationPosition = [-444.0787353515625, 1101.1744384765625, 332.5350036621094, 90];
+export const characterCreationPosition = [-421.4275817871094, 1137.279541015625, 625.8563537597656, 0];

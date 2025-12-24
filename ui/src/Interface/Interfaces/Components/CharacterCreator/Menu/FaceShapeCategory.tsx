@@ -1,28 +1,165 @@
 import { ageingStyles, blemishesStyles, type CharacterAppearance, CharacterGender, complexionStyles, frecklesStyles, hairColors, lipstickStyles, makeupStyles, sunDamageStyles } from '@shared/Models/Character/Character';
-import styles from '../../../Styles/CharacterCreatorInterface.module.css';
 import Control2D from './Control2D';
 import CustomSlider from './CustomSlider';
 import ImageSelector from './ImageSelector';
 import ColorPicker from './ColorPicker';
-import RandomizeButton from './RandomizeButton';
 import translate from '@shared/Translation/Translation';
+import CategoryName from './CategoryName';
+import CreatorInfo from './CreatorInfo';
+import OptionLabel from './OptionLabel';
 
 interface FaceShapeCategoryProps {
     characterAppearance: CharacterAppearance;
     setCharacterAppearance: (values: [keyof CharacterAppearance, any][]) => void;
-    randomize: () => void;
 }
 
 export default function FaceShapeCategory({
     characterAppearance,
     setCharacterAppearance,
-    randomize
 }: FaceShapeCategoryProps) {
     return (
         <>
-            <div className={styles.label}>{translate('character.creator.face.shape')}</div>
+            <CategoryName name={translate('character.creator.face.title')} />
+            <CreatorInfo />
 
-            <div className={styles.subLabel}>{translate('character.creator.overlay.blemishes')}</div>
+            <OptionLabel label={translate('character.creator.face.nose')} marginTop />
+            <Control2D
+                labelX={translate('character.creator.face.width')}
+                labelY={translate('character.creator.face.height')}
+                valueX={characterAppearance.noseWidth}
+                valueY={characterAppearance.noseHeight}
+                onChange={(width, height) => setCharacterAppearance([['noseWidth', width], ['noseHeight', height]])}
+                minX={0}
+                maxX={100}
+                minY={0}
+                maxY={100}
+            />
+
+            <Control2D
+                labelX={translate('character.creator.face.length')}
+                labelY={translate('character.creator.face.tip')}
+                valueX={characterAppearance.noseLength}
+                valueY={characterAppearance.noseTip}
+                onChange={(length, tip) => setCharacterAppearance([['noseLength', length], ['noseTip', tip]])}
+                minX={0}
+                maxX={100}
+                minY={0}
+                maxY={100}
+            />
+
+            <Control2D
+                labelX={translate('character.creator.face.bridge')}
+                labelY={translate('character.creator.face.bridge.shift')}
+                valueX={characterAppearance.noseBridge}
+                valueY={characterAppearance.noseBridgeShift}
+                onChange={(bridge, bridgeShift) => setCharacterAppearance([['noseBridge', bridge], ['noseBridgeShift', bridgeShift]])}
+                minX={0}
+                maxX={100}
+                minY={0}
+                maxY={100}
+            />
+
+            <OptionLabel label={translate('character.creator.categories.eyebrows')} marginTop />
+            <Control2D
+                labelX={translate('character.creator.face.width')}
+                labelY={translate('character.creator.face.height')}
+                valueX={characterAppearance.eyebrowWidth}
+                valueY={characterAppearance.eyebrowHeight}
+                onChange={(width, height) => setCharacterAppearance([['eyebrowWidth', width], ['eyebrowHeight', height]])}
+                minX={0}
+                maxX={100}
+                minY={0}
+                maxY={100}
+            />
+
+            <OptionLabel label={translate('character.creator.categories.cheekbones')} marginTop />
+            <Control2D
+                labelX={translate('character.creator.face.width')}
+                labelY={translate('character.creator.face.height')}
+                valueX={characterAppearance.cheekboneWidth}
+                valueY={characterAppearance.cheekboneHeight}
+                onChange={(width, height) => setCharacterAppearance([['cheekboneWidth', width], ['cheekboneHeight', height]])}
+                minX={0}
+                maxX={100}
+                minY={0}
+                maxY={100}
+            />
+
+            <OptionLabel label={translate('character.creator.face.cheeks')} marginTop />
+            <CustomSlider
+                label={translate('character.creator.face.width')}
+                value={characterAppearance.cheeksWidth}
+                onChange={(value) => setCharacterAppearance([['cheeksWidth', value]])}
+                min={0}
+                max={100}
+                valueLabelCallback={(value) => `${value}%`}
+            />
+
+            <OptionLabel label={translate('character.creator.face.eyes')} marginTop />
+            <CustomSlider
+                label={translate('character.creator.face.opening')}
+                value={characterAppearance.eyesOpening}
+                onChange={(value) => setCharacterAppearance([['eyesOpening', value]])}
+                min={0}
+                max={100}
+            />
+
+            <OptionLabel label={translate('character.creator.face.lips')} marginTop />
+            <CustomSlider
+                label={translate('character.creator.face.thickness')}
+                value={characterAppearance.lipsThickness}
+                onChange={(value) => setCharacterAppearance([['lipsThickness', value]])}
+                min={0}
+                max={100}
+            />
+
+            <OptionLabel label={translate('character.creator.face.jaw')} marginTop />
+            <Control2D
+                labelX={translate('character.creator.face.width')}
+                labelY={translate('character.creator.face.height')}
+                valueX={characterAppearance.jawWidth}
+                valueY={characterAppearance.jawHeight}
+                onChange={(width, height) => setCharacterAppearance([['jawWidth', width], ['jawHeight', height]])}
+                minX={0}
+                maxX={100}
+                minY={0}
+                maxY={100}
+            />
+
+            <Control2D
+                labelX={translate('character.creator.face.length')}
+                labelY={translate('character.creator.face.position')}
+                valueX={characterAppearance.chinLength}
+                valueY={characterAppearance.chinPosition}
+                onChange={(length, position) => setCharacterAppearance([['chinLength', length], ['chinPosition', position]])}
+                minX={0}
+                maxX={100}
+                minY={0}
+                maxY={100}
+            />
+
+            <Control2D
+                labelX={translate('character.creator.face.width')}
+                labelY={translate('character.creator.face.shape')}
+                valueX={characterAppearance.chinWidth}
+                valueY={characterAppearance.chinShape}
+                onChange={(width, shape) => setCharacterAppearance([['chinWidth', width], ['chinShape', shape]])}
+                minX={0}
+                maxX={100}
+                minY={0}
+                maxY={100}
+            />
+
+            <OptionLabel label={translate('character.creator.face.neck')} marginTop />
+            <CustomSlider
+                label={translate('character.creator.face.width')}
+                value={characterAppearance.neckWidth}
+                onChange={(value) => setCharacterAppearance([['neckWidth', value]])}
+                min={0}
+                max={100}
+            />
+            
+            <OptionLabel label={translate('character.creator.overlay.blemishes')} marginTop />
             <ImageSelector 
                 path={'/creator/heads'}
                 selectedStyle={characterAppearance.blemishesStyle}
@@ -41,7 +178,7 @@ export default function FaceShapeCategory({
                 max={100}
             />
 
-            <div className={styles.subLabel}>{translate('character.creator.overlay.ageing')}</div>
+            <OptionLabel label={translate('character.creator.overlay.ageing')} marginTop />
             <ImageSelector
                 path={'/creator/heads'}
                 selectedStyle={characterAppearance.ageingStyle}
@@ -60,8 +197,7 @@ export default function FaceShapeCategory({
                 max={100}
             />
 
-            <div className={styles.subLabel}>{translate('character.creator.overlay.makeup')}</div>
-
+            <OptionLabel label={translate('character.creator.overlay.makeup')} marginTop />
             <ImageSelector
                 path={'/creator/heads'}
                 selectedStyle={characterAppearance.makeupStyle}
@@ -80,8 +216,7 @@ export default function FaceShapeCategory({
                 max={100}
             />
 
-            <div className={styles.subLabel}>{translate('character.creator.overlay.blush')}</div>
-
+            <OptionLabel label={translate('character.creator.overlay.blush')} marginTop />
             <ImageSelector
                 path={'/creator/heads'}
                 selectedStyle={characterAppearance.blushStyle}
@@ -92,7 +227,7 @@ export default function FaceShapeCategory({
                 isOverlay={true}
             />
 
-            <div className={styles.smallLabel}>{translate('character.creator.overlay.color')}</div>
+            <OptionLabel label={translate('character.creator.overlay.color')} marginTop />
             <ColorPicker 
                 selectedColor={hairColors[characterAppearance.blushColor].hex}
                 onColorChange={(colorHex) => {
@@ -112,8 +247,7 @@ export default function FaceShapeCategory({
                 max={100}
             />
 
-            <div className={styles.subLabel}>{translate('character.creator.overlay.complexion')}</div>
-
+            <OptionLabel label={translate('character.creator.overlay.complexion')} marginTop />
             <ImageSelector
                 path={'/creator/heads'}
                 selectedStyle={characterAppearance.complexionStyle}
@@ -132,8 +266,7 @@ export default function FaceShapeCategory({
                 max={100}
             />
 
-            <div className={styles.subLabel}>{translate('character.creator.overlay.sun.damage')}</div>
-
+            <OptionLabel label={translate('character.creator.overlay.sun.damage')} marginTop />
             <ImageSelector
                 path={'/creator/heads'}
                 selectedStyle={characterAppearance.sunDamageStyle}
@@ -152,8 +285,7 @@ export default function FaceShapeCategory({
                 max={100}
             />
 
-            <div className={styles.subLabel}>{translate('character.creator.overlay.lipstick')}</div>
-
+            <OptionLabel label={translate('character.creator.overlay.lipstick')} marginTop />
             <ImageSelector
                 path={'/creator/heads'}
                 selectedStyle={characterAppearance.lipstickStyle}
@@ -164,7 +296,7 @@ export default function FaceShapeCategory({
                 isOverlay={true}
             />
 
-            <div className={styles.smallLabel}>{translate('character.creator.overlay.color')}</div>
+            <OptionLabel label={translate('character.creator.overlay.color')} marginTop />
             <ColorPicker 
                 selectedColor={hairColors[characterAppearance.lipstickColor].hex}
                 onColorChange={(colorHex) => {
@@ -184,8 +316,7 @@ export default function FaceShapeCategory({
                 max={100}
             />
 
-            <div className={styles.subLabel}>{translate('character.creator.overlay.freckles')}</div>
-
+            <OptionLabel label={translate('character.creator.overlay.freckles')} marginTop />
             <ImageSelector
                 path={'/creator/heads'}
                 selectedStyle={characterAppearance.frecklesStyle}
@@ -203,152 +334,6 @@ export default function FaceShapeCategory({
                 min={0}
                 max={100}
             />
-
-            <div className={styles.label}>{translate('character.creator.face.nose.width')}</div>
-            
-            <Control2D
-                labelX={translate('character.creator.face.nose.width')}
-                labelY={translate('character.creator.face.nose.height')}
-                valueX={characterAppearance.noseWidth}
-                valueY={characterAppearance.noseHeight}
-                onChange={(width, height) => setCharacterAppearance([['noseWidth', width], ['noseHeight', height]])}
-                minX={0}
-                maxX={100}
-                minY={0}
-                maxY={100}
-            />
-
-            <Control2D
-                labelX={translate('character.creator.face.nose.length')}
-                labelY={translate('character.creator.face.nose.tip')}
-                valueX={characterAppearance.noseLength}
-                valueY={characterAppearance.noseTip}
-                onChange={(length, tip) => setCharacterAppearance([['noseLength', length], ['noseTip', tip]])}
-                minX={0}
-                maxX={100}
-                minY={0}
-                maxY={100}
-            />
-
-            <Control2D
-                labelX={translate('character.creator.face.nose.bridge')}
-                labelY={translate('character.creator.face.nose.bridge.shift')}
-                valueX={characterAppearance.noseBridge}
-                valueY={characterAppearance.noseBridgeShift}
-                onChange={(bridge, bridgeShift) => setCharacterAppearance([['noseBridge', bridge], ['noseBridgeShift', bridgeShift]])}
-                minX={0}
-                maxX={100}
-                minY={0}
-                maxY={100}
-            />
-
-            <div className={styles.label}>{translate('character.creator.categories.eyebrows')}</div>
-            
-            <Control2D
-                labelX={translate('character.creator.face.eyebrow.width')}
-                labelY={translate('character.creator.face.eyebrow.height')}
-                valueX={characterAppearance.eyebrowWidth}
-                valueY={characterAppearance.eyebrowHeight}
-                onChange={(width, height) => setCharacterAppearance([['eyebrowWidth', width], ['eyebrowHeight', height]])}
-                minX={0}
-                maxX={100}
-                minY={0}
-                maxY={100}
-            />
-
-            <div className={styles.label}>{translate('character.creator.face.cheekbone.width')}</div>
-            
-            <Control2D
-                labelX={translate('character.creator.face.cheekbone.width')}
-                labelY={translate('character.creator.face.cheekbone.height')}
-                valueX={characterAppearance.cheekboneWidth}
-                valueY={characterAppearance.cheekboneHeight}
-                onChange={(width, height) => setCharacterAppearance([['cheekboneWidth', width], ['cheekboneHeight', height]])}
-                minX={0}
-                maxX={100}
-                minY={0}
-                maxY={100}
-            />
-
-            <div className={styles.label}>{translate('character.creator.face.cheeks.width')}</div>
-            
-            <CustomSlider
-                label={translate('character.creator.face.cheeks.width')}
-                value={characterAppearance.cheeksWidth}
-                onChange={(value) => setCharacterAppearance([['cheeksWidth', value]])}
-                min={0}
-                max={100}
-            />
-
-            <div className={styles.label}>{translate('character.creator.face.eyes.opening')}</div>
-            
-            <CustomSlider
-                label={translate('character.creator.face.eyes.opening')}
-                value={characterAppearance.eyesOpening}
-                onChange={(value) => setCharacterAppearance([['eyesOpening', value]])}
-                min={0}
-                max={100}
-            />
-
-            <div className={styles.label}>{translate('character.creator.face.lips.thickness')}</div>
-            
-            <CustomSlider
-                label={translate('character.creator.face.lips.thickness')}
-                value={characterAppearance.lipsThickness}
-                onChange={(value) => setCharacterAppearance([['lipsThickness', value]])}
-                min={0}
-                max={100}
-            />
-
-            <div className={styles.label}>{translate('character.creator.face.jaw.width')}</div>
-            
-            <Control2D
-                labelX={translate('character.creator.face.jaw.width')}
-                labelY={translate('character.creator.face.jaw.height')}
-                valueX={characterAppearance.jawWidth}
-                valueY={characterAppearance.jawHeight}
-                onChange={(width, height) => setCharacterAppearance([['jawWidth', width], ['jawHeight', height]])}
-                minX={0}
-                maxX={100}
-                minY={0}
-                maxY={100}
-            />
-
-            <Control2D
-                labelX={translate('character.creator.face.chin.length')}
-                labelY={translate('character.creator.face.chin.position')}
-                valueX={characterAppearance.chinLength}
-                valueY={characterAppearance.chinPosition}
-                onChange={(length, position) => setCharacterAppearance([['chinLength', length], ['chinPosition', position]])}
-                minX={0}
-                maxX={100}
-                minY={0}
-                maxY={100}
-            />
-
-            <Control2D
-                labelX={translate('character.creator.face.chin.width')}
-                labelY={translate('character.creator.face.chin.shape')}
-                valueX={characterAppearance.chinWidth}
-                valueY={characterAppearance.chinShape}
-                onChange={(width, shape) => setCharacterAppearance([['chinWidth', width], ['chinShape', shape]])}
-                minX={0}
-                maxX={100}
-                minY={0}
-                maxY={100}
-            />
-
-            <div className={styles.label}>{translate('character.creator.face.neck.width')}</div>
-            
-            <CustomSlider
-                label={translate('character.creator.face.neck.width')}
-                value={characterAppearance.neckWidth}
-                onChange={(value) => setCharacterAppearance([['neckWidth', value]])}
-                min={0}
-                max={100}
-            />
-
-            <RandomizeButton style={{marginTop: '0.5rem'}} onClick={randomize} />
         </>
     );
 }
