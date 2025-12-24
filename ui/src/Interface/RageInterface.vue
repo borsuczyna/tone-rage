@@ -17,7 +17,10 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue';
 import { useInterfaceVisibility } from 'src/Hooks/InterfaceVisibilityProvider';
+import { initUserInfoProvider } from 'src/Hooks/UserInfoProvider';
+import { initChatProvider } from 'src/Hooks/ChatProvider';
 import NotificationsInterface from './Interfaces/NotificationsInterface.vue';
 import AuthInterface from './Interfaces/AuthInterface.vue';
 import SpawnSelectionInterface from './Interfaces/SpawnSelectionInterface.vue';
@@ -33,4 +36,10 @@ import CharacterCreatorInterface from './Interfaces/CharacterCreatorInterface.vu
 import TopsMakerInterface from './Interfaces/TopsMakerInterface.vue';
 
 const { isInterfaceVisible } = useInterfaceVisibility();
+
+onMounted(() => {
+  // Initialize providers that need event listeners
+  initUserInfoProvider();
+  initChatProvider();
+});
 </script>

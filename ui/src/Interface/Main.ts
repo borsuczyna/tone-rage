@@ -20,10 +20,6 @@ export function mountRageInterface() {
 
     const app = createApp(RageInterface);
     app.mount(rootElement);
-
-    // Initialize providers that need event listeners
-    initUserInfoProvider();
-    initChatProvider();
 }
 
 export function mountRageEvents() {

@@ -8,9 +8,9 @@ interface InterfaceVisibilityState {
 
 const state = reactive<InterfaceVisibilityState>({
     visibleInterfaces: {
+        'HudInterface': true,
+        'NotificationsInterface': true,
         // 'ScoreboardInterface': true,
-        // 'HudInterface': true,
-        // 'NotificationsInterface': true,
         // 'AuthInterface': true,
         // 'SpawnSelectionInterface': true
         // 'AtmInterface': true
