@@ -1,6 +1,6 @@
 import { generateHash } from "@shared/Hash";
 import translate from "@shared/Translation/Translation";
-import { CustomEventHandler } from "./RageEventProvider";
+import { CustomEventHandler } from "./RageEventStore";
 import { chunkData } from "@shared/ChunkingUtils";
 import { encodeData } from "@shared/DataEncoder";
 

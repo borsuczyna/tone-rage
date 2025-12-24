@@ -12,6 +12,12 @@ dist
 dist-ssr
 *.local
 
+# Transpiled TypeScript files
+*.js
+!vite.config.js
+!svelte.config.js
+!eslint.config.js
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
