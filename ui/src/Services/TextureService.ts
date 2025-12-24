@@ -1,4 +1,4 @@
-import { CustomEventHandler } from "src/Hooks/RageEventProvider";
+import { CustomEventHandler } from "src/Hooks/RageEventStore";
 import { defaultTextureDictionary, type MarkerTextureRequest, type NametagTextureRequest, type TextureData, type TextureRequest, type TextureUnloadRequest } from "@shared/Models/TextureData";
 import { triggerEvent } from "src/Hooks/Fetch";
 import SharedConfig from "@shared/SharedConfig";
