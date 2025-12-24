@@ -6,13 +6,13 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted } from 'vue';
-import { useInterfaceVisibility } from '../../../Hooks/InterfaceVisibilityProvider';
-import { addNotification, useNotifications } from '../../../Hooks/NotificationsProvider';
+import { useInterfaceVisibility } from 'src/Hooks/InterfaceVisibilityProvider';
+import { addNotification, useNotifications } from 'src/Hooks/NotificationsProvider';
 import styles from './Styles/NotificationsInterface.module.css';
 import Notification from './Components/Notifications/Notification.vue';
-import { useRageEvent } from '../../../Hooks/RageEventProvider';
+import { useRageEvent } from 'src/Hooks/RageEventProvider';
 import type { NotificationData } from '@shared/Models/NotificationData';
-import AudioService from '../../../Services/AudioService';
+import AudioService from 'src/Services/AudioService';
 
 // Preload notification sounds for better performance
 const notificationSounds = [

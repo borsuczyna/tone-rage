@@ -73,7 +73,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useUserInfo } from '../../../Hooks/UserInfoProvider';
+import { useUserInfo } from 'src/Hooks/UserInfoProvider';
 import styles from './Styles/HudInterface.module.css';
 import translate from '@shared/Translation/Translation';
 import { formatMoney } from '@shared/MoneyHelper';

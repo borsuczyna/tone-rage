@@ -9,7 +9,8 @@ export default defineConfig(({ mode }) => ({
     alias: {
       '@shared': path.resolve(__dirname, '../src/shared'),
       'src': path.resolve(__dirname, 'src')
-    }
+    },
+    extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.json', '.vue']
   },
   build: {
     // Disable minification and other optimizations for fast builds in development mode

@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { useInterfaceVisibility } from '../Hooks/InterfaceVisibilityProvider';
+import { useInterfaceVisibility } from 'src/Hooks/InterfaceVisibilityProvider';
 import NotificationsInterface from './Interfaces/NotificationsInterface.vue';
 import AuthInterface from './Interfaces/AuthInterface.vue';
 import SpawnSelectionInterface from './Interfaces/SpawnSelectionInterface.vue';
